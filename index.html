@@ -1016,20 +1016,16 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .ai-chat-send{background:var(--accent);color:var(--accent-fg);border:none;border-radius:8px;padding:7px 12px;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;cursor:pointer;transition:opacity .15s;flex-shrink:0}
 .ai-chat-send:hover{opacity:.85}
 .ai-chat-send:disabled{opacity:.4;cursor:not-allowed}
-/* ── WHITEBOARD ── */
-.wb-toolbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg2);border-radius:var(--rs);margin-bottom:10px;flex-wrap:wrap}
-.wb-tool-btn{background:var(--surface);border:.5px solid var(--border2);color:var(--text2);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;padding:5px 11px;border-radius:var(--rs);cursor:pointer;transition:all .15s}
-.wb-tool-btn:hover{border-color:var(--accent);color:var(--text)}
-.wb-tool-btn.active{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.wb-color-dot{width:18px;height:18px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0}
-.wb-color-dot.active{border-color:var(--text);transform:scale(1.2)}
-.wb-canvas-wrap{position:relative;border:.5px solid var(--border2);border-radius:var(--rs);overflow:hidden;background:var(--surface);cursor:crosshair;user-select:none;display:block}
-.wb-canvas{display:block;width:100%;height:100%;touch-action:none;position:relative;z-index:1}
-.wb-sticky-layer{position:absolute;inset:0;pointer-events:none}
-.wb-sticky{position:absolute;pointer-events:all;background:#fef08a;border-radius:6px;padding:8px 10px;font-size:11px;font-family:'Syne',sans-serif;color:#1a1a00;min-width:110px;max-width:200px;box-shadow:0 3px 10px rgba(0,0,0,.15);cursor:move;user-select:none;word-break:break-word;line-height:1.4}
-.dark .wb-sticky{background:#3d3d00;color:#fef08a}
-.wb-sticky-del{position:absolute;top:3px;right:5px;background:none;border:none;cursor:pointer;font-size:11px;opacity:.4;color:inherit;padding:0;line-height:1}
-.wb-sticky-del:hover{opacity:1}
+/* ── INTEL TAB ── */
+.intel-empty{text-align:center;padding:48px 20px;color:var(--text3);font-size:11px;font-family:'DM Mono',monospace;line-height:1.9}
+.intel-empty-icon{font-size:28px;opacity:.12;margin-bottom:10px}
+/* ── MISSIONS MINI-KANBAN ── */
+.mini-kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.mini-kanban-col{background:var(--bg2);border-radius:var(--r);padding:12px}
+.mini-kanban-col-hdr{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.mini-kanban-count{background:var(--bg3);color:var(--text3);font-family:'DM Mono',monospace;padding:1px 6px;border-radius:100px;font-size:9px}
+.mini-task-card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--rs);padding:9px 11px;margin-bottom:7px;cursor:pointer;transition:border-color .15s}
+.mini-task-card:hover{border-color:var(--accent)}
 .session-biz-tag{display:inline-flex;align-items:center;gap:4px;font-size:8px;font-weight:700;padding:1px 6px;border-radius:100px;margin-left:6px}
 /* Calendar filter bar */
 .cal-filter-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 14px;background:var(--bg2);border-radius:var(--rs);margin-bottom:10px;border:.5px solid var(--border)}
@@ -1037,15 +1033,6 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .cal-filter-chip:hover{border-color:var(--accent);color:var(--text)}
 .cal-filter-chip.active{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 .cal-filter-chip .cal-filter-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-/* Whiteboard text node */
-.wb-text-node{position:absolute;pointer-events:all;cursor:move;user-select:none;min-width:80px;max-width:380px}
-.wb-text-node-inner{outline:none;word-break:break-word;white-space:pre-wrap;cursor:text;padding:6px 8px;border-radius:6px;border:2px dashed transparent;transition:border-color .15s,background .15s;line-height:1.5;min-height:28px}
-.wb-text-node-inner:focus{border-color:var(--accent);background:var(--surface);cursor:text;box-shadow:0 0 0 3px rgba(var(--accent-rgb,14,14,13),.08)}
-.wb-text-node:focus-within{z-index:100}
-.wb-text-node:not(:focus-within):hover .wb-text-node-inner{border-color:var(--border2);background:var(--surface);opacity:.85}
-.wb-text-node-del{position:absolute;top:-10px;right:-10px;width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;border:none;cursor:pointer;font-size:10px;display:none;align-items:center;justify-content:center;line-height:1;z-index:10}
-.wb-text-node:hover .wb-text-node-del,.wb-text-node:focus-within .wb-text-node-del{display:flex}
-.wb-hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);background:var(--surface);border:.5px solid var(--border2);padding:4px 10px;border-radius:100px;pointer-events:none;opacity:.7;white-space:nowrap}
 
 /* ── AUTH SCREEN ── */
 .auth-overlay{position:fixed;inset:0;z-index:9999;background:var(--bg);display:none;align-items:center;justify-content:center;transition:opacity .4s ease}
@@ -3448,269 +3435,6 @@ function showQCConfirm(msg){
 }
 
 // ── WHITEBOARD ──
-const WB_STATE = {}; // keyed by bizId: {tool, color, size, drawing, paths, stickies}
-function getWB(bizId){
-  if(!WB_STATE[bizId])WB_STATE[bizId]={tool:'pen',color:'#f0f0ee',size:4,drawing:false,paths:[],stickies:[],textNodes:[]};
-  if(!S.whiteboards)S.whiteboards={};
-  if(S.whiteboards[bizId]&&!WB_STATE[bizId]._loaded){
-    WB_STATE[bizId].paths=S.whiteboards[bizId].paths||[];
-    WB_STATE[bizId].stickies=S.whiteboards[bizId].stickies||[];
-    WB_STATE[bizId].textNodes=S.whiteboards[bizId].textNodes||[];
-    WB_STATE[bizId]._loaded=true;
-  }
-  return WB_STATE[bizId];
-}
-function saveWBData(bizId){
-  if(!S.whiteboards)S.whiteboards={};
-  const wb=WB_STATE[bizId];if(!wb)return;
-  S.whiteboards[bizId]={paths:wb.paths,stickies:wb.stickies,textNodes:wb.textNodes||[]};
-  save();
-}
-function initWhiteboard(bizId){
-  const canvas=document.getElementById('wb-canvas-'+bizId);
-  const wrap=document.getElementById('wb-wrap-'+bizId);
-  if(!canvas||!wrap)return;
-  // Prevent re-init if already initialized (check for listener flag)
-  if(canvas._wbInit)return;
-  canvas._wbInit=true;
-  const wb=getWB(bizId);
-  // Size canvas to wrap
-  function resizeCanvas(){
-    const prevW=canvas.width,prevH=canvas.height;
-    canvas.width=wrap.clientWidth;
-    canvas.height=wrap.clientHeight||460;
-    if(prevW!==canvas.width||prevH!==canvas.height)redrawWB(bizId);
-  }
-  resizeCanvas();
-  const ctx=canvas.getContext('2d');
-  ctx.lineCap='round';ctx.lineJoin='round';
-  redrawWB(bizId);
-  renderWBStickies(bizId);
-  renderWBTexts(bizId);
-  // Set initial layer pointer events
-  const stickyL=document.getElementById('wb-stickies-'+bizId);
-  const textL=document.getElementById('wb-texts-'+bizId);
-  if(stickyL)stickyL.style.pointerEvents='none';
-  // Text layer ALWAYS stays interactive — text nodes need to receive clicks/keyboard
-  if(textL)textL.style.pointerEvents='all';
-  canvas.style.pointerEvents='all';
-
-  // Add hint overlay
-  const hintEl=document.createElement('div');
-  hintEl.className='wb-hint';
-  hintEl.id='wb-hint-'+bizId;
-  hintEl.textContent='Pen: draw · T: add text · Double-click: quick add text';
-  wrap.appendChild(hintEl);
-  setTimeout(()=>{if(hintEl)hintEl.style.opacity='0';},3000);
-
-  let lastX,lastY;
-  function getPos(e){
-    const r=canvas.getBoundingClientRect();
-    const cl=e.touches?e.touches[0]:e;
-    return{x:(cl.clientX-r.left)*(canvas.width/r.width),y:(cl.clientY-r.top)*(canvas.height/r.height)};
-  }
-  function startDraw(e){
-    const wb2=getWB(bizId);
-    if(wb2.tool==='sticky')return;
-    if(wb2.tool==='text'){const {x,y}=getPos(e);addWBTextAt(bizId,x,y);return;}
-    e.preventDefault();wb2.drawing=true;
-    const {x,y}=getPos(e);lastX=x;lastY=y;
-    wb2.paths.push({color:wb2.color,size:wb2.size,eraser:wb2.tool==='eraser',points:[{x,y}]});
-  }
-  function draw(e){
-    const wb2=getWB(bizId);
-    if(!wb2.drawing)return;e.preventDefault();
-    const {x,y}=getPos(e);
-    const path=wb2.paths[wb2.paths.length-1];if(!path)return;
-    path.points.push({x,y});
-    ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(x,y);
-    if(path.eraser){ctx.globalCompositeOperation='destination-out';ctx.lineWidth=wb2.size*4;}
-    else{ctx.globalCompositeOperation='source-over';ctx.strokeStyle=wb2.color;ctx.lineWidth=wb2.size;}
-    ctx.stroke();ctx.globalCompositeOperation='source-over';
-    lastX=x;lastY=y;
-  }
-  function endDraw(){const wb2=getWB(bizId);if(!wb2.drawing)return;wb2.drawing=false;saveWBData(bizId);}
-  // Double-click on canvas adds text node regardless of tool
-  canvas.addEventListener('dblclick',function(e){
-    const {x,y}=getPos(e);
-    addWBTextAt(bizId,x,y);
-  });
-  canvas.addEventListener('mousedown',startDraw);
-  canvas.addEventListener('mousemove',draw);
-  canvas.addEventListener('mouseup',endDraw);
-  canvas.addEventListener('mouseleave',endDraw);
-  canvas.addEventListener('touchstart',startDraw,{passive:false});
-  canvas.addEventListener('touchmove',draw,{passive:false});
-  canvas.addEventListener('touchend',endDraw);
-}
-function redrawWB(bizId){
-  const canvas=document.getElementById('wb-canvas-'+bizId);if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  const wb=WB_STATE[bizId];if(!wb)return;
-  wb.paths.forEach(path=>{
-    if(!path.points||path.points.length<1)return;
-    ctx.beginPath();ctx.lineCap='round';ctx.lineJoin='round';
-    if(path.eraser){ctx.globalCompositeOperation='destination-out';ctx.lineWidth=path.size*4;}
-    else{ctx.globalCompositeOperation='source-over';ctx.strokeStyle=path.color;ctx.lineWidth=path.size;}
-    path.points.forEach((p,i)=>{if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y);});
-    ctx.stroke();
-  });
-  ctx.globalCompositeOperation='source-over';
-}
-function renderWBStickies(bizId){
-  const layer=document.getElementById('wb-stickies-'+bizId);if(!layer)return;
-  const wb2=getWB(bizId);
-  layer.style.pointerEvents=(wb2&&wb2.tool==='sticky')?'all':'none';
-  const wb=getWB(bizId);
-  layer.innerHTML=wb.stickies.map((s,i)=>`
-    <div class="wb-sticky" id="wbs-${bizId}-${i}" style="left:${s.x}px;top:${s.y}px" onmousedown="dragSticky(event,${bizId},${i})">
-      <button class="wb-sticky-del" onclick="delWBSticky(${bizId},${i})">✕</button>
-      <div contenteditable="true" onblur="updateStickyText(${bizId},${i},this.textContent)" style="padding-right:12px;min-height:20px;outline:none">${s.text||''}</div>
-    </div>`).join('');
-}
-function setWBTool(bizId,tool){
-  const wb=getWB(bizId);wb.tool=tool;
-  ['pen','text','eraser','sticky'].forEach(t=>{const el=document.getElementById('wb-'+t+'-'+bizId);if(el)el.classList.toggle('active',t===tool);});
-  const wrap=document.getElementById('wb-wrap-'+bizId);
-  if(wrap){
-    if(tool==='text')wrap.style.cursor='text';
-    else if(tool==='eraser')wrap.style.cursor='cell';
-    else wrap.style.cursor='crosshair';
-  }
-  // Update layer pointer events based on active tool
-  const stickyLayer=document.getElementById('wb-stickies-'+bizId);
-  const textLayer=document.getElementById('wb-texts-'+bizId);
-  const canvas=document.getElementById('wb-canvas-'+bizId);
-  if(stickyLayer)stickyLayer.style.pointerEvents=tool==='sticky'?'all':'none';
-  // Text layer always interactive so existing text nodes stay editable
-  if(textLayer)textLayer.style.pointerEvents='all';
-  if(canvas)canvas.style.pointerEvents=(tool==='pen'||tool==='eraser'||tool==='text')?'all':'none';
-}
-function setWBColor(bizId,color,dot){
-  const wb=getWB(bizId);wb.color=color;
-  const toolbar=document.getElementById('wb-toolbar-'+bizId);
-  if(toolbar)toolbar.querySelectorAll('.wb-color-dot').forEach(d=>d.classList.remove('active'));
-  if(dot)dot.classList.add('active');
-}
-function setWBSize(bizId){
-  const sel=document.getElementById('wb-size-'+bizId);
-  const wb=getWB(bizId);if(sel)wb.size=parseInt(sel.value)||4;
-}
-function addWBSticky(bizId){
-  const wb=getWB(bizId);
-  const wrap=document.getElementById('wb-wrap-'+bizId);
-  const w=wrap?wrap.clientWidth:400;
-  wb.stickies.push({x:Math.random()*(w-140)+20,y:Math.random()*180+20,text:'New note'});
-  saveWBData(bizId);renderWBStickies(bizId);
-}
-function delWBSticky(bizId,idx){
-  const wb=getWB(bizId);wb.stickies.splice(idx,1);saveWBData(bizId);renderWBStickies(bizId);
-}
-function updateStickyText(bizId,idx,text){
-  const wb=getWB(bizId);if(wb.stickies[idx])wb.stickies[idx].text=text;saveWBData(bizId);
-}
-function dragSticky(e,bizId,idx){
-  const wb=getWB(bizId);
-  const s=wb.stickies[idx];if(!s)return;
-  const el=document.getElementById('wbs-'+bizId+'-'+idx);if(!el)return;
-  const startX=e.clientX-s.x,startY=e.clientY-s.y;
-  function move(ev){s.x=ev.clientX-startX;s.y=ev.clientY-startY;el.style.left=s.x+'px';el.style.top=s.y+'px';}
-  function up(){document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);saveWBData(bizId);}
-  document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
-}
-function clearWB(bizId){
-  if(!confirm('Clear this whiteboard? This cannot be undone.'))return;
-  const wb=getWB(bizId);wb.paths=[];wb.stickies=[];wb.textNodes=[];
-  WB_STATE[bizId]._loaded=false;
-  saveWBData(bizId);
-  redrawWB(bizId);renderWBStickies(bizId);renderWBTexts(bizId);
-}
-function saveWBSnapshot(bizId){
-  const canvas=document.getElementById('wb-canvas-'+bizId);if(!canvas)return;
-  const a=document.createElement('a');
-  a.href=canvas.toDataURL('image/png');
-  a.download=`whiteboard-${bizId}-${new Date().toISOString().slice(0,10)}.png`;
-  a.click();
-}
-
-// ── WHITEBOARD TEXT TOOL ──
-function renderWBTexts(bizId){
-  const layer=document.getElementById('wb-texts-'+bizId);if(!layer)return;
-  // ALWAYS keep text layer interactive — text nodes must be clickable/typeable in all tool modes
-  layer.style.pointerEvents='all';
-  const wb=getWB(bizId);
-  layer.innerHTML=(wb.textNodes||[]).map((t,i)=>`
-    <div class="wb-text-node" id="wbt-${bizId}-${i}" style="left:${t.x}px;top:${t.y}px" onmousedown="dragWBText(event,${bizId},${i})">
-      <div class="wb-text-node-inner" contenteditable="true"
-        style="font-size:${t.size||16}px;color:${t.color||'var(--text)'};font-family:'Syne',sans-serif;font-weight:${t.bold?700:500}"
-        onblur="updateWBTextContent(${bizId},${i},this.textContent)"
-        oninput="updateWBTextContent(${bizId},${i},this.textContent)"
-        onkeydown="event.stopPropagation();event.stopImmediatePropagation()"
-        onkeypress="event.stopPropagation();event.stopImmediatePropagation()"
-        onmousedown="event.stopPropagation()"
-        onclick="this.focus()">${t.text||''}</div>
-      <button class="wb-text-node-del" onclick="delWBText(${bizId},${i})">✕</button>
-    </div>`).join('');
-}
-
-function addWBTextAt(bizId, x, y){
-  const wb=getWB(bizId);
-  if(!wb.textNodes)wb.textNodes=[];
-  const sizeEl=document.getElementById('wb-fontsize-'+bizId);
-  const size=sizeEl?parseInt(sizeEl.value)||16:16;
-  // Switch to text tool if not already
-  if(wb.tool!=='text')setWBTool(bizId,'text');
-  wb.textNodes.push({x,y,text:'',color:wb.color||'var(--text)',size,bold:false});
-  saveWBData(bizId);
-  renderWBTexts(bizId);
-  // Auto-focus new text node and clear placeholder
-  setTimeout(()=>{
-    const idx=wb.textNodes.length-1;
-    const el=document.getElementById('wbt-'+bizId+'-'+idx);
-    if(el){
-      const inner=el.querySelector('.wb-text-node-inner');
-      if(inner){
-        inner.textContent='';
-        inner.focus();
-        // Place cursor at end
-        const range=document.createRange();
-        range.selectNodeContents(inner);
-        range.collapse(false);
-        const sel=window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
-    }
-  },40);
-}
-
-function selectAll(el){
-  const range=document.createRange();range.selectNodeContents(el);
-  const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
-}
-
-function delWBText(bizId,idx){
-  const wb=getWB(bizId);if(!wb.textNodes)return;
-  wb.textNodes.splice(idx,1);saveWBData(bizId);renderWBTexts(bizId);
-}
-
-function updateWBTextContent(bizId,idx,text){
-  const wb=getWB(bizId);if(!wb.textNodes||!wb.textNodes[idx])return;
-  wb.textNodes[idx].text=text;saveWBData(bizId);
-}
-
-function dragWBText(e,bizId,idx){
-  // Don't drag if clicking on the editable inner area
-  if(e.target.classList.contains('wb-text-node-inner'))return;
-  const wb=getWB(bizId);
-  const t=wb.textNodes&&wb.textNodes[idx];if(!t)return;
-  const el=document.getElementById('wbt-'+bizId+'-'+idx);if(!el)return;
-  const startX=e.clientX-t.x,startY=e.clientY-t.y;
-  function move(ev){t.x=ev.clientX-startX;t.y=ev.clientY-startY;el.style.left=t.x+'px';el.style.top=t.y+'px';}
-  function up(){document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);saveWBData(bizId);}
-  document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
-}
 
 // ── CALENDAR FILTERS ──
 let calFilterBiz='all', calFilterType='all', calFilterFrom='', calFilterTo='';
@@ -3914,7 +3638,6 @@ function showPage(page, bizId) {
     currentBizId=bizId;
     document.querySelectorAll('.biz-item').forEach(el=>{if(parseInt(el.dataset.bizid)===bizId)el.classList.add('active-biz');});
     renderBizProfile(bizId);
-    if(currentBizTab==='whiteboard')setTimeout(()=>initWhiteboard(bizId),50);
   }
   if(S.lastBriefingTs&&page==='dashboard'){}
 }
@@ -4387,59 +4110,137 @@ function renderBizProfile(bizId){
   const bizExp=bizEntries.reduce((a,e)=>a+e.exp,0);
   const bizNet=bizRev-bizExp;
 
-  const tabContent = {
-    overview: (()=>{
-      // Revenue goal progress
-      const goalAmt=biz.revenueGoal||0;
-      const goalPct=goalAmt>0?Math.min(100,Math.round((bizRev/goalAmt)*100)):0;
-      const goalBar=goalAmt>0?`
+  // Normalise tab name (handle old whiteboard/strategy tab names from stored state)
+  const TAB_MAP={whiteboard:'intel',strategy:'missions'};
+  const activeTab=TAB_MAP[currentBizTab]||currentBizTab||'overview';
+  if(activeTab!==currentBizTab) currentBizTab=activeTab;
+
+  // Shared computed data
+  const now=new Date();
+  const ym=now.toISOString().slice(0,7);
+  const monthEntries=bizEntries.filter(e=>e.date===ym);
+  const monthRev=monthEntries.reduce((a,e)=>a+e.rev,0);
+  const monthExp=monthEntries.reduce((a,e)=>a+e.exp,0);
+  const revGoalAmt=biz.revenueGoal||0;
+  const revGoalPct=revGoalAmt>0?Math.min(100,Math.round((bizRev/revGoalAmt)*100)):0;
+  const bizGoals=(S.goals||[]).filter(g=>g.bizId===bizId);
+  const bizGoalsDone=bizGoals.filter(g=>g.done).length;
+  const bizGoalPct=bizGoals.length?Math.round((bizGoalsDone/bizGoals.length)*100):0;
+  const activeTasks=bizTasks.filter(t=>t.status!=='Done');
+  const daysLeft=new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-now.getDate();
+  const bizNotes=(S.notes||[]).filter(n=>n.bizId===bizId).slice().reverse();
+
+  // ── OVERVIEW / COMMAND CENTER ──────────────────────────────────
+  const overviewTab=(()=>{
+    const revGoalBar=revGoalAmt>0?`
+      <div class="card mb12">
         <div class="rev-goal-wrap">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)">Revenue Goal Progress</div>
-            <div style="font-size:11px;font-weight:800;font-family:'DM Mono',monospace;color:${goalPct>=100?'var(--green)':color}">${goalPct}%</div>
+            <div style="font-size:11px;font-weight:800;font-family:'DM Mono',monospace;color:${revGoalPct>=100?'var(--green)':color}">${revGoalPct}%</div>
           </div>
-          <div class="rev-goal-bar-bg"><div class="rev-goal-bar-fill" style="width:${goalPct}%;background:${goalPct>=100?'var(--green)':color}"></div></div>
-          <div class="rev-goal-label"><span>$${bizRev.toLocaleString()} earned</span><span>Goal: $${goalAmt.toLocaleString()}</span></div>
-        </div>`:'';
-      // Pinned notes (latest 2 for this biz)
-      const pinnedNotes=S.notes.filter(n=>n.bizId===bizId).slice().reverse().slice(0,2);
-      const pinnedHtml=pinnedNotes.length?`
-        <div class="card" style="flex:1">
-          <div class="sec-hdr"><div class="sec-title">Pinned Intel</div><button class="btn btn-g btn-sm" onclick="showPage('intel')">View All</button></div>
-          ${pinnedNotes.map(n=>`<div class="pinned-note-card" style="border-left-color:${color}">
-            <div class="pinned-note-title">${n.title}</div>
-            <div class="pinned-note-body">${n.body||''}</div>
-            <div class="pinned-note-meta">${n.date}</div>
-          </div>`).join('')}
-        </div>`:'';
-      return`
-      <div class="g3 mb12">
-        <div class="card card-sm"><div class="cl">Revenue</div><div class="cv pos">$${bizRev.toLocaleString()}</div><div class="cs">YTD</div></div>
-        <div class="card card-sm"><div class="cl">Expenses</div><div class="cv neg">$${bizExp.toLocaleString()}</div><div class="cs">YTD</div></div>
-        <div class="card card-sm"><div class="cl">Net</div><div class="cv ${bizNet>=0?'pos':'neg'}">$${Math.abs(bizNet).toLocaleString()}</div><div class="cs">YTD</div></div>
-      </div>
-      ${goalAmt>0?`<div class="card mb12">${goalBar}</div>`:''}
-      <div class="row">
-        <div class="card" style="flex:1">
-          <div class="sec-hdr"><div class="sec-title">Active Missions</div><button class="btn btn-g btn-sm" onclick="openAddTaskForBiz(${bizId})">+ Mission</button></div>
-          ${bizTasks.filter(t=>t.status!=='Done').length?bizTasks.filter(t=>t.status!=='Done').map(t=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--bg2);border-radius:var(--rs);margin-bottom:6px"><div><div style="font-size:11px;font-weight:600;color:var(--text)">${t.title}</div><div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace">${t.type} · ${t.status}</div></div><span class="badge ${t.priority==='High'?'b-red':t.priority==='Medium'?'b-amber':'b-green'}">${t.priority}</span></div>`).join(''):
-          '<div style="font-size:10px;color:var(--text3)">No active missions for this business.</div>'}
+          <div class="rev-goal-bar-bg"><div class="rev-goal-bar-fill" style="width:${revGoalPct}%;background:${revGoalPct>=100?'var(--green)':color}"></div></div>
+          <div class="rev-goal-label"><span>$${bizRev.toLocaleString()} earned</span><span>Goal: $${revGoalAmt.toLocaleString()}</span></div>
         </div>
-        <div class="card" style="flex:1">
-          <div class="sec-hdr"><div class="sec-title">Business Focus</div></div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.7">${biz.focus||'<span style="color:var(--text3);font-size:10px">No focus description added.</span>'}</div>
-          ${biz.tagline?`<div style="font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:8px;font-style:italic">"${biz.tagline}"</div>`:''}
-          <div style="margin-top:14px;padding-top:12px;border-top:.5px solid var(--border)">
-            <span class="badge b-muted" style="margin-right:6px">${biz.type||'Business'}</span>
-            <span class="badge ${biz.status==='Active'?'b-green':biz.status==='Building'?'b-amber':'b-muted'}">${biz.status}</span>
-            ${biz.website?`<a href="${biz.website}" target="_blank" style="font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-left:8px;text-decoration:underline">${biz.website}</a>`:''}
-          </div>
-        </div>
-        ${pinnedHtml}
+      </div>`:'';
+
+    const goalsCard=bizGoals.length?`
+      <div class="card">
+        <div class="sec-hdr"><div class="sec-title">Goals</div><button class="btn btn-g btn-sm" onclick="showPage('goals')">View All</button></div>
+        ${bizGoals.slice(0,4).map(g=>{
+          const pct=g.done?100:(g.target>0?Math.min(100,Math.round(((g.progress||0)/g.target)*100)):0);
+          return`<div style="margin-bottom:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+              <div style="font-size:11px;font-weight:600;color:var(--text)">${g.text}</div>
+              <span style="font-size:9px;font-weight:800;font-family:'DM Mono',monospace;color:${g.done?'var(--green)':color}">${pct}%</span>
+            </div>
+            <div style="height:4px;background:var(--bg3);border-radius:100px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${g.done?'var(--green)':color};border-radius:100px;transition:width .4s ease"></div>
+            </div>
+          </div>`;
+        }).join('')}
+        ${bizGoals.length>4?`<div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;text-align:center;padding:4px 0;cursor:pointer" onclick="showPage('goals')">+${bizGoals.length-4} more goals →</div>`:''}
+      </div>`:'';
+
+    const missionsCard=`
+      <div class="card">
+        <div class="sec-hdr"><div class="sec-title">Active Missions</div><button class="btn btn-g btn-sm" onclick="openAddTaskForBiz(${bizId})">+ Mission</button></div>
+        ${activeTasks.length?activeTasks.slice(0,5).map(t=>`
+          <div class="mini-task-card" onclick="openTaskDetail(${t.id})">
+            <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:5px">${t.title}</div>
+            <div style="display:flex;gap:4px;align-items:center">
+              <span class="badge ${t.priority==='High'?'b-red':t.priority==='Medium'?'b-amber':'b-green'}" style="font-size:7px">${t.priority}</span>
+              <span class="badge b-muted" style="font-size:7px">${t.type}</span>
+              <span style="font-size:8px;color:var(--text3);font-family:'DM Mono',monospace;margin-left:auto">${t.status}</span>
+            </div>
+          </div>`).join('')+(activeTasks.length>5?`<div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;text-align:center;padding:4px 0;cursor:pointer" onclick="switchBizTab(${bizId},'missions')">+${activeTasks.length-5} more → Missions board</div>`:'')+
+          `<div style="margin-top:8px;padding-top:8px;border-top:.5px solid var(--border);display:flex;justify-content:space-between">
+            <span style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace">${bizTasks.filter(t=>t.status==='Done').length} completed</span>
+            <span class="link-style" onclick="switchBizTab(${bizId},'missions')" style="font-size:9px;cursor:pointer;color:var(--accent)">Full Board →</span>
+          </div>`:
+          `<div style="font-size:10px;color:var(--text3)">No active missions yet. <span style="text-decoration:underline;cursor:pointer;color:var(--accent)" onclick="openAddTaskForBiz(${bizId})">Add one →</span></div>`}
       </div>`;
-    })(),
-    strategy: `
-      <div class="sec-hdr"><div class="sec-title">Work Streams &amp; Strategy</div><button class="btn btn-p btn-sm" onclick="openAddStream(${bizId})">+ New Stream</button></div>
+
+    const profileCard=`
+      <div class="card" style="min-width:210px;max-width:270px">
+        <div class="sec-hdr mb10"><div class="sec-title">Profile</div><button class="btn btn-g btn-sm" onclick="switchBizTab(${bizId},'settings')">Edit</button></div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.7">${biz.focus||'<span style="color:var(--text3);font-size:10px">No description added yet.</span>'}</div>
+        ${biz.tagline?`<div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:8px;font-style:italic">"${biz.tagline}"</div>`:''}
+        <div style="margin-top:12px;padding-top:10px;border-top:.5px solid var(--border);display:flex;flex-wrap:wrap;gap:5px">
+          <span class="badge b-muted">${biz.type||'Business'}</span>
+          <span class="badge ${biz.status==='Active'?'b-green':biz.status==='Building'?'b-amber':'b-muted'}">${biz.status}</span>
+          ${biz.founded?`<span class="badge b-muted">Est. ${biz.founded}</span>`:''}
+        </div>
+        ${biz.website?`<a href="${biz.website}" target="_blank" style="font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:8px;display:block;text-decoration:underline">${biz.website}</a>`:''}
+        ${biz.targetMarket?`<div style="margin-top:8px;font-size:9px;color:var(--text3);line-height:1.6"><span style="font-weight:700;text-transform:uppercase;letter-spacing:.05em">Target:</span> ${biz.targetMarket}</div>`:''}
+        <div style="margin-top:14px;padding:10px 12px;background:var(--bg2);border-radius:var(--rs);text-align:center">
+          <div style="font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)">Days Left This Month</div>
+          <div style="font-size:26px;font-weight:800;color:var(--text);font-family:'DM Mono',monospace;margin-top:2px">${daysLeft}</div>
+        </div>
+      </div>`;
+
+    return`
+      <div class="g4 mb12">
+        <div class="card card-sm"><div class="cl">Month Revenue</div><div class="cv pos">$${monthRev.toLocaleString()}</div><div class="cs">${monthExp>0?'Exp $'+monthExp.toLocaleString():'No expenses this month'}</div></div>
+        <div class="card card-sm"><div class="cl">YTD Revenue</div><div class="cv ${bizRev>0?'pos':''}">$${bizRev.toLocaleString()}</div><div class="cs">${revGoalAmt>0?revGoalPct+'% of $'+revGoalAmt.toLocaleString()+' goal':'No revenue goal set'}</div></div>
+        <div class="card card-sm"><div class="cl">Net Profit YTD</div><div class="cv ${bizNet>=0?'pos':'neg'}">${bizNet>=0?'+':'−'}$${Math.abs(bizNet).toLocaleString()}</div><div class="cs">Revenue − Expenses</div></div>
+        <div class="card card-sm"><div class="cl">Goals</div><div class="cv">${bizGoals.length?bizGoalsDone+'/'+bizGoals.length:'—'}</div><div class="cs">${bizGoals.length?bizGoalPct+'% complete':'No goals yet'}</div></div>
+      </div>
+      ${revGoalBar}
+      <div class="row">
+        <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+          ${missionsCard}
+          ${goalsCard}
+        </div>
+        ${profileCard}
+      </div>`;
+  })();
+
+  // ── MISSIONS (mini-kanban + work streams) ─────────────────────
+  const missionsTab=(()=>{
+    const cols=['Planned','In Progress','Done'];
+    const kanban=`<div class="mini-kanban">
+      ${cols.map(col=>{
+        const colTasks=bizTasks.filter(t=>t.status===col);
+        return`<div class="mini-kanban-col">
+          <div class="mini-kanban-col-hdr">
+            <span class="mini-kanban-count">${colTasks.length}</span>${col}
+          </div>
+          ${colTasks.length?colTasks.map(t=>`
+            <div class="mini-task-card" onclick="openTaskDetail(${t.id})">
+              <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:5px">${t.title}</div>
+              <div style="display:flex;gap:4px;flex-wrap:wrap">
+                <span class="badge ${t.priority==='High'?'b-red':t.priority==='Medium'?'b-amber':'b-green'}" style="font-size:7px">${t.priority}</span>
+                <span class="badge b-muted" style="font-size:7px">${t.type}</span>
+              </div>
+            </div>`).join(''):`<div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;padding:6px 0;text-align:center">Empty</div>`}
+          <button class="add-col-btn" onclick="openAddTaskForBiz(${bizId})" style="margin-top:4px">+ Add Mission</button>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+    const streamsSection=`
+      <div class="sec-hdr"><div class="sec-title">Work Streams</div><button class="btn btn-p btn-sm" onclick="openAddStream(${bizId})">+ New Stream</button></div>
       ${streams.length?streams.map(s=>`
         <div class="stream-card">
           <div class="fb mb8">
@@ -4452,23 +4253,28 @@ function renderBizProfile(bizId){
           </div>
           <div class="stream-body">${s.body}</div>
           <div class="stream-meta">${s.date}</div>
-        </div>`).join(''):
-        `<div class="empty-state"><div class="empty-state-icon">◎</div><div class="empty-state-text">No work streams yet.<br>Add strategy docs, plans, and ongoing work<br>for ${biz.name} here.</div></div>`}`,
-    financials: (()=>{
-      // Build monthly chart data — last 6 months
-      const now=new Date();
-      const months=[];
-      for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,label:d.toLocaleString('en-US',{month:'short'})});}
-      const monthData=months.map(m=>{const mes=bizEntries.filter(e=>e.date===m.key);return{...m,rev:mes.reduce((a,e)=>a+e.rev,0),exp:mes.reduce((a,e)=>a+e.exp,0)};});
-      const maxVal=Math.max(...monthData.map(m=>Math.max(m.rev,m.exp)),1);
-      const chartBars=monthData.map(m=>{const rh=Math.round((m.rev/maxVal)*72);const eh=Math.round((m.exp/maxVal)*72);return`<div class="fin-chart-month-group">
-        <div class="fin-chart-bars-pair">
-          <div class="fin-bar" style="height:${Math.max(rh,2)}px;background:var(--green);opacity:.8" title="Rev $${m.rev.toLocaleString()}"></div>
-          <div class="fin-bar" style="height:${Math.max(eh,2)}px;background:var(--red);opacity:.7" title="Exp $${m.exp.toLocaleString()}"></div>
-        </div>
-        <div class="fin-chart-month-label">${m.label}</div>
-      </div>`;}).join('');
-      return`
+        </div>`).join(''):`<div class="empty-state"><div class="empty-state-icon">◎</div><div class="empty-state-text">No work streams yet.<br>Add strategy docs, plans, and ongoing work<br>for ${biz.name} here.</div></div>`}`;
+
+    return`
+      <div class="sec-hdr mb10"><div class="sec-title">Missions Board</div><button class="btn btn-p btn-sm" onclick="openAddTaskForBiz(${bizId})">+ Mission</button></div>
+      ${bizTasks.length?kanban:`<div class="empty-state" style="margin-bottom:16px"><div class="empty-state-icon">◎</div><div class="empty-state-text">No missions for ${biz.name} yet.<br>Add your first task below or hit + Mission above.</div></div>`}
+      ${streamsSection}`;
+  })();
+
+  // ── FINANCIALS ────────────────────────────────────────────────
+  const financialsTab=(()=>{
+    const months=[];
+    for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,label:d.toLocaleString('en-US',{month:'short'})});}
+    const monthData=months.map(m=>{const mes=bizEntries.filter(e=>e.date===m.key);return{...m,rev:mes.reduce((a,e)=>a+e.rev,0),exp:mes.reduce((a,e)=>a+e.exp,0)};});
+    const maxVal=Math.max(...monthData.map(m=>Math.max(m.rev,m.exp)),1);
+    const chartBars=monthData.map(m=>{const rh=Math.round((m.rev/maxVal)*72);const eh=Math.round((m.exp/maxVal)*72);return`<div class="fin-chart-month-group">
+      <div class="fin-chart-bars-pair">
+        <div class="fin-bar" style="height:${Math.max(rh,2)}px;background:var(--green);opacity:.8" title="Rev $${m.rev.toLocaleString()}"></div>
+        <div class="fin-bar" style="height:${Math.max(eh,2)}px;background:var(--red);opacity:.7" title="Exp $${m.exp.toLocaleString()}"></div>
+      </div>
+      <div class="fin-chart-month-label">${m.label}</div>
+    </div>`;}).join('');
+    return`
       <div class="sec-hdr"><div class="sec-title">Financial Log</div><button class="btn btn-p btn-sm" onclick="openAddEntryForBiz(${bizId})">+ Entry</button></div>
       <div class="fin-chart-wrap">
         <div style="display:flex;justify-content:space-between;align-items:center">
@@ -4481,10 +4287,35 @@ function renderBizProfile(bizId){
           <div class="fin-chart-legend-item"><div class="fin-chart-legend-dot" style="background:var(--red)"></div>Expenses</div>
         </div>
       </div>
-      ${bizEntries.length?`<div class="card" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Revenue</th><th>Expense</th><th>Net</th><th></th></tr></thead><tbody>${bizEntries.slice().reverse().map(e=>{const net=e.rev-e.exp;return`<tr><td class="mono" style="font-size:10px">${e.day||e.date}</td><td>${e.desc}</td><td><span class="badge b-muted">${e.cat}</span></td><td class="mono pos">$${e.rev.toLocaleString()}</td><td class="mono neg">$${e.exp.toLocaleString()}</td><td class="mono ${net>=0?'pos':'neg'}" style="font-weight:700">${net>=0?'+':'−'} $${Math.abs(net).toLocaleString()}</td><td><button class="btn btn-g btn-sm" onclick="deleteEntry(${e.id});renderBizProfile(${bizId})" style="font-size:9px">✕</button></td></tr>`;}).join('')}</tbody></table></div></div>`:
-        `<div class="empty-state"><div class="empty-state-icon">◇</div><div class="empty-state-text">No financial entries for ${biz.name} yet.</div></div>`}`;
-    })(),
-    settings: `
+      ${bizEntries.length?`<div class="card" style="padding:0;overflow:hidden"><div style="overflow-x:auto"><table class="dt"><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Revenue</th><th>Expense</th><th>Net</th><th></th></tr></thead><tbody>${bizEntries.slice().reverse().map(e=>{const net=e.rev-e.exp;return`<tr><td class="mono" style="font-size:10px">${e.day||e.date}</td><td>${e.desc}</td><td><span class="badge b-muted">${e.cat}</span></td><td class="mono pos">$${e.rev.toLocaleString()}</td><td class="mono neg">$${e.exp.toLocaleString()}</td><td class="mono ${net>=0?'pos':'neg'}" style="font-weight:700">${net>=0?'+':'−'} $${Math.abs(net).toLocaleString()}</td><td><button class="btn btn-g btn-sm" onclick="deleteEntry(${e.id});renderBizProfile(${bizId})" style="font-size:9px">✕</button></td></tr>`;}).join('')}</tbody></table></div></div>`:`<div class="empty-state"><div class="empty-state-icon">◇</div><div class="empty-state-text">No financial entries for ${biz.name} yet.</div></div>`}`;
+  })();
+
+  // ── INTEL (business notes) ─────────────────────────────────────
+  const intelTab=`
+    <div class="sec-hdr mb12">
+      <div class="sec-title">Business Intel</div>
+      <button class="btn btn-p btn-sm" onclick="openAddNoteForBiz(${bizId})">+ Add Note</button>
+    </div>
+    ${bizNotes.length?`<div class="g2">${bizNotes.map(n=>`
+      <div class="note-card" style="border-left:3px solid ${color}">
+        <div class="fb mb8">
+          <span style="font-size:9px;font-family:'DM Mono',monospace;color:var(--text3)">${n.date}</span>
+          <div style="display:flex;gap:5px">
+            <button class="btn btn-g btn-sm" onclick="openEditNote(${n.id})" style="font-size:9px">Edit</button>
+            <button class="btn btn-g btn-sm" onclick="S.notes=S.notes.filter(x=>x.id!==${n.id});save();renderBizProfile(${bizId})" style="font-size:9px;color:var(--red)">✕</button>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px">${n.title}</div>
+        <div class="note-body-text">${n.body||''}</div>
+      </div>`).join('')}</div>`:`
+    <div class="intel-empty">
+      <div class="intel-empty-icon">◈</div>
+      No intel notes for ${biz.name} yet.<br>
+      Add market research, strategy notes,<br>key contacts, and insights here.
+    </div>`}`;
+
+  // ── SETTINGS / CONTROL PANEL ──────────────────────────────────
+  const settingsTab=`
       <div class="cp-section">
         <div class="cp-section-title">Identity</div>
         <div class="cp-grid">
@@ -4497,7 +4328,7 @@ function renderBizProfile(bizId){
         </div>
       </div>
       <div class="cp-section">
-        <div class="cp-section-title">Market & Operations</div>
+        <div class="cp-section-title">Market &amp; Operations</div>
         <div class="cp-grid">
           <div class="cp-field"><label>Website</label><input type="text" id="cp-website" placeholder="https://..." value="${(biz.website||'').replace(/"/g,'&quot;')}"></div>
           <div class="cp-field"><label>Founded / Start Date</label><input type="text" id="cp-founded" placeholder="e.g. Jan 2024" value="${(biz.founded||'').replace(/"/g,'&quot;')}"></div>
@@ -4516,35 +4347,9 @@ function renderBizProfile(bizId){
       <div class="cp-save-row">
         <button class="btn btn-p" onclick="saveControlPanel(${bizId})">Save Changes</button>
         <button class="btn btn-danger btn-sm" onclick="deleteBusiness(${bizId})" style="margin-left:auto">Delete Business</button>
-      </div>`,
-    whiteboard: `
-      <div style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
-        <div style="font-size:10px;font-weight:800;color:var(--text)">◫ Planning Whiteboard</div>
-        <div style="font-size:9px;font-family:'DM Mono',monospace;color:var(--text3)">Draw · Annotate · Sticky notes</div>
-      </div>
-      <div class="wb-toolbar" id="wb-toolbar-${bizId}">
-        <button class="wb-tool-btn active" id="wb-pen-${bizId}" onclick="setWBTool(${bizId},'pen')">✏ Pen</button>
-        <button class="wb-tool-btn" id="wb-text-${bizId}" onclick="setWBTool(${bizId},'text')">T Text</button>
-        <button class="wb-tool-btn" id="wb-eraser-${bizId}" onclick="setWBTool(${bizId},'eraser')">◻ Eraser</button>
-        <button class="wb-tool-btn" id="wb-sticky-${bizId}" onclick="addWBSticky(${bizId})">+ Sticky</button>
-        <div style="width:.5px;height:20px;background:var(--border2);margin:0 2px"></div>
-        ${['#f0f0ee','#e88080','#52c497','#6fa3e8','#f5a623','#c084fc','#f0f0ee'].map((c,i)=>`<div class="wb-color-dot ${i===0?'active':''}" style="background:${c}" onclick="setWBColor(${bizId},'${c}',this)" title="${c}"></div>`).join('')}
-        <div style="width:.5px;height:20px;background:var(--border2);margin:0 2px"></div>
-        <select id="wb-size-${bizId}" onchange="setWBSize(${bizId})" style="width:auto;padding:3px 6px;font-size:10px">
-          <option value="2">Thin</option><option value="4" selected>Medium</option><option value="8">Thick</option><option value="16">Bold</option>
-        </select>
-        <select id="wb-fontsize-${bizId}" style="width:auto;padding:3px 6px;font-size:10px" title="Text size">
-          <option value="12">12px</option><option value="16" selected>16px</option><option value="20">20px</option><option value="28">28px</option><option value="36">36px</option><option value="48">48px</option>
-        </select>
-        <button class="wb-tool-btn" onclick="clearWB(${bizId})" style="margin-left:auto;color:var(--red)">Clear</button>
-        <button class="wb-tool-btn" onclick="saveWBSnapshot(${bizId})">↓ Save</button>
-      </div>
-      <div class="wb-canvas-wrap" id="wb-wrap-${bizId}" style="height:460px">
-        <canvas class="wb-canvas" id="wb-canvas-${bizId}" style="position:absolute;inset:0;z-index:1"></canvas>
-        <div class="wb-sticky-layer" id="wb-stickies-${bizId}" style="z-index:2"></div>
-        <div class="wb-sticky-layer" id="wb-texts-${bizId}" style="z-index:3;pointer-events:all"></div>
-      </div>`,
-  };
+      </div>`;
+
+  const tabContent={overview:overviewTab,missions:missionsTab,financials:financialsTab,intel:intelTab,settings:settingsTab};
 
   document.getElementById('bizProfileContent').innerHTML=`
     <div class="ph">
@@ -4556,22 +4361,23 @@ function renderBizProfile(bizId){
         </div>
       </div>
       <div class="pa">
+        <button class="btn btn-p btn-sm" onclick="openAddTaskForBiz(${bizId})">+ Mission</button>
         <button class="btn btn-g btn-sm" onclick="switchBizTab(${bizId},'settings')">⚙ Settings</button>
       </div>
     </div>
     <div class="biz-profile-card">
       <div class="biz-tabs">
-        <div class="biz-tab ${currentBizTab==='overview'?'active':''}" onclick="switchBizTab(${bizId},'overview')">Overview</div>
-        <div class="biz-tab ${currentBizTab==='strategy'?'active':''}" onclick="switchBizTab(${bizId},'strategy')">Strategy &amp; Work</div>
+        <div class="biz-tab ${currentBizTab==='overview'?'active':''}" onclick="switchBizTab(${bizId},'overview')">Command Center</div>
+        <div class="biz-tab ${currentBizTab==='missions'?'active':''}" onclick="switchBizTab(${bizId},'missions')">Missions</div>
         <div class="biz-tab ${currentBizTab==='financials'?'active':''}" onclick="switchBizTab(${bizId},'financials')">Financials</div>
-        <div class="biz-tab ${currentBizTab==='whiteboard'?'active':''}" onclick="switchBizTab(${bizId},'whiteboard')">◫ Whiteboard</div>
-        <div class="biz-tab ${currentBizTab==='settings'?'active':''}" onclick="switchBizTab(${bizId},'settings')">⚙ Control Panel</div>
+        <div class="biz-tab ${currentBizTab==='intel'?'active':''}" onclick="switchBizTab(${bizId},'intel')">Intel</div>
+        <div class="biz-tab ${currentBizTab==='settings'?'active':''}" onclick="switchBizTab(${bizId},'settings')">⚙ Settings</div>
       </div>
       <div class="biz-tab-content" id="bizTabContent">${tabContent[currentBizTab]||tabContent.overview}</div>
     </div>`;
 }
 
-function switchBizTab(bizId, tab){currentBizTab=tab;renderBizProfile(bizId);if(tab==='whiteboard')setTimeout(()=>initWhiteboard(bizId),50);}
+function switchBizTab(bizId, tab){currentBizTab=tab;renderBizProfile(bizId);}
 
 function openAddTaskForBiz(bizId){
   document.getElementById('taskTitle').value='';document.getElementById('taskNotes').value='';
@@ -4584,6 +4390,13 @@ function openAddEntryForBiz(bizId){
   ['entryDate','entryDesc','entryCat','entryRev','entryExp'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('entryDate').value=new Date().toISOString().slice(0,7);
   refreshSelects();document.getElementById('entryBiz').value=bizId;openModal('entryModal');
+}
+function openAddNoteForBiz(bizId){
+  document.getElementById('noteTitle').value='';
+  document.getElementById('noteBody').value='';
+  refreshSelects();
+  document.getElementById('noteBiz').value=bizId;
+  openModal('noteModal');
 }
 function deleteBusiness(bizId){
   if(!confirm('Delete this business and all its data?'))return;
@@ -5524,7 +5337,7 @@ function saveEditNote(){
   n.bizId=parseInt(document.getElementById('editNoteBiz').value)||null;
   n.title=document.getElementById('editNoteTitle').value.trim()||n.title;
   n.body=document.getElementById('editNoteBody').value.trim();
-  save();closeModal('editNoteModal');renderNotes();
+  save();closeModal('editNoteModal');renderNotes();if(currentPage==='bizprofile'&&currentBizId)renderBizProfile(currentBizId);
 }
 
 // GOAL
