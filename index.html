@@ -925,7 +925,12 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 }
 .appear-accent-dot:hover { transform: scale(1.18); }
 .appear-accent-dot.active { border-color: var(--text); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--text); transform: scale(1.05); }
-.appear-footer { margin-top: 16px; display: flex; gap: 7px; padding-top: 14px; border-top: .5px solid var(--border2); }
+.appear-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; padding-bottom:14px; border-bottom:.5px solid var(--border2); }
+.appear-hdr-title { font-size:13px; font-weight:800; color:var(--text); letter-spacing:-.01em; line-height:1.2; }
+.appear-hdr-sub { font-size:9px; color:var(--text3); font-family:'DM Mono',monospace; margin-top:3px; letter-spacing:.03em; }
+.appear-close-x { background:none; border:.5px solid var(--border2); color:var(--text3); cursor:pointer; width:28px; height:28px; border-radius:50%; font-size:12px; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; }
+.appear-close-x:hover { background:var(--bg2); color:var(--text); border-color:var(--accent); }
+.appear-footer { margin-top: 16px; display: flex; gap: 7px; padding-top: 14px; border-top: .5px solid var(--border2); align-items:center; }
 /* ── KANBAN DRAG & DROP ── */
 .k-col { transition: background .15s, border-color .15s; }
 .k-col.drag-over { background: color-mix(in srgb, var(--accent) 6%, var(--bg2)); border: 1.5px dashed var(--accent); border-radius: var(--r); }
@@ -1150,23 +1155,30 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
         <span id="appearChevron" style="font-size:8px;opacity:.5">▾</span>
       </button>
       <div class="appear-dropdown" id="appearDropdown">
-        <div style="font-size:8px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.08em;margin-bottom:14px;text-transform:uppercase;opacity:.7">Appearance · Live Preview</div>
-        <div class="appear-section-lbl">Color Scheme</div>
+        <div class="appear-hdr">
+          <div>
+            <div class="appear-hdr-title" id="appearHdrTitle">Stratus</div>
+            <div class="appear-hdr-sub" id="appearHdrSub">Light · Saves automatically</div>
+          </div>
+          <button class="appear-close-x" onclick="closeAppearDropdown()">✕</button>
+        </div>
+        <div class="appear-section-lbl">Theme</div>
         <div class="appear-theme-grid" id="appearThemeGrid"></div>
         <div class="appear-section-lbl">Mode</div>
         <div class="appear-mode-row">
-          <div class="appear-mode-chip" id="modeLight" onclick="appearSetMode('light')">☀️ Light</div>
-          <div class="appear-mode-chip" id="modeDark" onclick="appearSetMode('dark')">🌙 Dark</div>
+          <div class="appear-mode-chip" id="modeLight" onclick="appearSetMode('light')">☀ Light</div>
+          <div class="appear-mode-chip" id="modeDark" onclick="appearSetMode('dark')">◐ Dark</div>
         </div>
-        <div class="appear-section-lbl">Accent Color</div>
+        <div class="appear-section-lbl">Accent</div>
         <div class="appear-accent-dots" id="appearAccentDots"></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
-          <input type="color" id="appearCustomAccent" style="width:26px;height:26px;padding:2px;border-radius:6px;cursor:pointer;border:.5px solid var(--border2);background:transparent" onchange="appearSetAccent(this.value)">
-          <span style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace">Custom</span>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+          <input type="color" id="appearCustomAccent" style="width:28px;height:28px;padding:2px;border-radius:8px;cursor:pointer;border:.5px solid var(--border2);background:transparent" onchange="appearSetAccent(this.value)">
+          <span style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.04em">Custom color</span>
+          <span style="font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-left:auto" id="appearAccentLabel"></span>
         </div>
         <div class="appear-footer">
-          <button class="btn btn-p btn-sm" style="flex:1;justify-content:center" onclick="appearSave()">✓ Apply & Save</button>
-          <button class="btn btn-g btn-sm" onclick="closeAppearDropdown()">Close</button>
+          <div id="appearSavedFeedback" style="font-size:9px;font-family:'DM Mono',monospace;color:var(--green);display:none;align-items:center;gap:4px;flex:1;letter-spacing:.04em">✓ Saved</div>
+          <button class="btn btn-g" style="flex:1;justify-content:center" onclick="closeAppearDropdown()">Done</button>
         </div>
       </div>
     </div>
@@ -7139,19 +7151,33 @@ const _origShowPageGoals = showPage;
 // APPEARANCE DROPDOWN (Topbar Quick Access)
 // ══════════════════════════════════════════
 
+function _appearSaveAndFlash(){
+  save();
+  const fb = document.getElementById('appearSavedFeedback');
+  if(fb){ fb.style.display='flex'; clearTimeout(fb._t); fb._t=setTimeout(()=>fb.style.display='none',1400); }
+}
+
 function renderAppearDropdown(){
   const p = S.profile||{};
   const activeTheme = p.theme||'stratus';
   const activeAccent = p.accent||'';
   const isDark = S.dark;
+  const themeMeta = THEMES[activeTheme]||THEMES.stratus;
 
-  // Theme grid
+  // Header: theme name + mode
+  const ht = document.getElementById('appearHdrTitle');
+  const hs = document.getElementById('appearHdrSub');
+  if(ht) ht.textContent = themeMeta.name;
+  if(hs) hs.textContent = (isDark?'Dark':'Light') + ' · Saves automatically';
+
+  // Theme grid — mode-aware background + bars from theme palette
   const tg = document.getElementById('appearThemeGrid');
   if(tg) tg.innerHTML = Object.entries(THEMES).map(([key,t])=>{
     const colors = isDark ? t.dark : t.light;
+    const bars = [colors.text, colors.accent, colors.bg2, colors.text3];
     return`<div class="appear-swatch ${activeTheme===key?'active':''}" onclick="appearSetTheme('${key}')" title="${t.name}">
       <div class="appear-swatch-preview" style="background:${colors.bg}">
-        ${t.preview.map(col=>`<div class="appear-swatch-bar" style="background:${col};opacity:.85"></div>`).join('')}
+        ${bars.map(col=>`<div class="appear-swatch-bar" style="background:${col}"></div>`).join('')}
       </div>
       <div class="appear-swatch-name">${t.name}</div>
     </div>`;
@@ -7169,11 +7195,18 @@ function renderAppearDropdown(){
     `<div class="appear-accent-dot ${activeAccent===a.color?'active':''}" style="background:${a.color}" onclick="appearSetAccent('${a.color}')" title="${a.label}"></div>`
   ).join('');
 
-  // Update custom accent input
+  // Accent label
+  const al = document.getElementById('appearAccentLabel');
+  if(al){
+    const preset = ACCENT_PRESETS.find(a=>a.color===activeAccent);
+    al.textContent = preset ? preset.label : (activeAccent?activeAccent:'');
+  }
+
+  // Custom accent input
   const cai = document.getElementById('appearCustomAccent');
   if(cai && activeAccent) cai.value = activeAccent;
 
-  // Update swatch in button
+  // Button swatch
   updateAppearSwatch();
 }
 
@@ -7191,6 +7224,7 @@ function appearSetTheme(key){
   if(!S.profile) S.profile={};
   S.profile.theme = key;
   applyTheme();
+  _appearSaveAndFlash();
   renderAppearDropdown();
   renderThemePanel();
 }
@@ -7198,10 +7232,12 @@ function appearSetTheme(key){
 function appearSetMode(mode){
   S.dark = (mode==='dark');
   document.body.classList.toggle('dark', S.dark);
+  const app = document.getElementById('app');
+  if(app) app.classList.toggle('dark', S.dark);
   applyTheme();
+  _appearSaveAndFlash();
   renderAppearDropdown();
   renderThemePanel();
-  // Update old dark toggle if on profile page
   const dt = document.getElementById('darkToggle');
   if(dt) dt.checked = S.dark;
 }
@@ -7210,6 +7246,7 @@ function appearSetAccent(color){
   if(!S.profile) S.profile={};
   S.profile.accent = color;
   applyTheme();
+  _appearSaveAndFlash();
   renderAppearDropdown();
   renderThemePanel();
 }
@@ -7218,13 +7255,6 @@ function appearSave(){
   save();
   applyTheme();
   closeAppearDropdown();
-  // Brief flash feedback
-  const btn = document.getElementById('appearToggleBtn');
-  if(btn){
-    const orig = btn.innerHTML;
-    btn.innerHTML = '<span style="color:var(--green);font-size:10px;font-weight:800">✓ Saved</span>';
-    setTimeout(()=>{ btn.innerHTML=orig; updateAppearSwatch(); }, 1500);
-  }
 }
 
 function toggleAppearDropdown(e){
@@ -7246,6 +7276,14 @@ function closeAppearDropdown(){
   const ch = document.getElementById('appearChevron');
   if(ch) ch.textContent='▾';
 }
+
+// Close on Escape key
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape'){
+    const dd = document.getElementById('appearDropdown');
+    if(dd && dd.classList.contains('open')) closeAppearDropdown();
+  }
+});
 
 // Close dropdown on outside click
 document.addEventListener('click', function(e){
