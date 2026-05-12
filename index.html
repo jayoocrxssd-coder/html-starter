@@ -882,22 +882,22 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 }
 .appear-dropdown {
   display: none; position: absolute; top: calc(100% + 10px); right: 0;
-  width: 380px; background: var(--surface);
-  border: .5px solid var(--border2); border-radius: 16px;
-  box-shadow: 0 16px 48px rgba(0,0,0,.2);
-  z-index: 999; padding: 18px;
+  width: 270px; background: var(--surface);
+  border: .5px solid var(--border2); border-radius: 14px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.18);
+  z-index: 999; padding: 14px;
   animation: appear-drop .18s cubic-bezier(.34,1.4,.64,1);
 }
 .appear-dropdown.open { display: block; }
 @keyframes appear-drop { from { opacity:0; transform: translateY(-6px) scale(.97); } to { opacity:1; transform: translateY(0) scale(1); } }
 .appear-section-lbl {
-  font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--text3); margin: 14px 0 8px;
-  display: flex; align-items: center; gap: 7px;
+  font-size: 8px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--text3); margin: 10px 0 6px;
+  display: flex; align-items: center; gap: 6px;
 }
 .appear-section-lbl::after { content: ''; flex: 1; height: .5px; background: var(--border2); }
 .appear-section-lbl:first-child { margin-top: 0; }
-.appear-theme-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 4px; }
+.appear-theme-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 5px; margin-bottom: 4px; }
 .appear-swatch {
   border-radius: 8px; overflow: hidden; cursor: pointer;
   border: 2px solid transparent; transition: all .15s; position: relative;
@@ -905,32 +905,32 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .appear-swatch:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.12); }
 .appear-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent)40; }
 .appear-swatch.active::after { content: '✓'; position: absolute; top: 3px; right: 5px; font-size: 8px; font-weight: 800; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.4); }
-.appear-swatch-preview { height: 50px; display: flex; gap: 2px; padding: 4px; border-radius: 4px 4px 0 0; }
+.appear-swatch-preview { height: 32px; display: flex; gap: 2px; padding: 3px; border-radius: 4px 4px 0 0; }
 .appear-swatch-bar { border-radius: 2px; flex: 1; }
 .appear-swatch-name { font-size: 8px; font-weight: 700; text-align: center; padding: 5px 2px 4px; background: var(--bg2); color: var(--text3); letter-spacing: .04em; text-transform: uppercase; border-radius: 0 0 4px 4px; }
 .appear-mode-row { display: flex; gap: 0; background: var(--bg2); border-radius: 10px; padding: 3px; }
 .appear-mode-chip {
-  flex: 1; text-align: center; padding: 7px 0; border-radius: 8px; cursor: pointer;
-  font-size: 10px; font-weight: 700; color: var(--text3);
+  flex: 1; text-align: center; padding: 5px 0; border-radius: 7px; cursor: pointer;
+  font-size: 9px; font-weight: 700; color: var(--text3);
   transition: all .15s; letter-spacing: .02em;
   border: none; background: transparent;
 }
 .appear-mode-chip:hover { border-color: var(--accent); color: var(--text); }
 .appear-mode-chip.active { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
-.appear-accent-dots { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 4px; }
+.appear-accent-dots { display: grid; grid-template-columns: repeat(6,1fr); gap: 5px; margin-bottom: 4px; }
 .appear-accent-dot {
-  width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
-  border: 2px solid transparent; transition: all .15s; flex-shrink: 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,.15);
+  width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: all .15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,.12);
 }
 .appear-accent-dot:hover { transform: scale(1.18); }
-.appear-accent-dot.active { border-color: var(--text); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--text); transform: scale(1.05); }
-.appear-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; padding-bottom:14px; border-bottom:.5px solid var(--border2); }
-.appear-hdr-title { font-size:13px; font-weight:800; color:var(--text); letter-spacing:-.01em; line-height:1.2; }
+.appear-accent-dot.active { border-color: var(--text); box-shadow: 0 0 0 2px var(--bg), 0 0 0 3.5px var(--text); transform: scale(1.05); }
+.appear-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding-bottom:10px; border-bottom:.5px solid var(--border2); }
+.appear-hdr-title { font-size:11px; font-weight:800; color:var(--text); letter-spacing:-.01em; line-height:1.2; }
 .appear-hdr-sub { font-size:9px; color:var(--text3); font-family:'DM Mono',monospace; margin-top:3px; letter-spacing:.03em; }
 .appear-close-x { background:none; border:.5px solid var(--border2); color:var(--text3); cursor:pointer; width:28px; height:28px; border-radius:50%; font-size:12px; display:flex; align-items:center; justify-content:center; transition:all .15s; flex-shrink:0; }
 .appear-close-x:hover { background:var(--bg2); color:var(--text); border-color:var(--accent); }
-.appear-footer { margin-top: 16px; display: flex; gap: 7px; padding-top: 14px; border-top: .5px solid var(--border2); align-items:center; }
+.appear-footer { margin-top: 10px; display: flex; gap: 7px; padding-top: 10px; border-top: .5px solid var(--border2); align-items:center; }
 /* ── KANBAN DRAG & DROP ── */
 .k-col { transition: background .15s, border-color .15s; }
 .k-col.drag-over { background: color-mix(in srgb, var(--accent) 6%, var(--bg2)); border: 1.5px dashed var(--accent); border-radius: var(--r); }
@@ -1171,10 +1171,10 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
         </div>
         <div class="appear-section-lbl">Accent</div>
         <div class="appear-accent-dots" id="appearAccentDots"></div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
-          <input type="color" id="appearCustomAccent" style="width:28px;height:28px;padding:2px;border-radius:8px;cursor:pointer;border:.5px solid var(--border2);background:transparent" onchange="appearSetAccent(this.value)">
-          <span style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.04em">Custom color</span>
-          <span style="font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-left:auto" id="appearAccentLabel"></span>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:7px">
+          <input type="color" id="appearCustomAccent" style="width:22px;height:22px;padding:1px;border-radius:6px;cursor:pointer;border:.5px solid var(--border2);background:transparent" onchange="appearSetAccent(this.value)">
+          <span style="font-size:8px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.04em">Custom</span>
+          <span style="font-size:8px;font-family:'DM Mono',monospace;color:var(--text3);margin-left:auto" id="appearAccentLabel"></span>
         </div>
         <div class="appear-footer">
           <div id="appearSavedFeedback" style="font-size:9px;font-family:'DM Mono',monospace;color:var(--green);display:none;align-items:center;gap:4px;flex:1;letter-spacing:.04em">✓ Saved</div>
