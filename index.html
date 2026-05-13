@@ -19,6 +19,7 @@ html,body{height:100%;font-family:'Syne',sans-serif;background:var(--bg);color:v
 .topbar{height:var(--top);background:var(--surface);border-bottom:.5px solid var(--border2);display:flex;align-items:center;padding:0 20px;gap:11px;flex-shrink:0;z-index:200}
 .logo{font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text);display:flex;align-items:center;gap:8px}
 .logo-mark{width:22px;height:22px;background:var(--accent);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--accent-fg);font-weight:800;letter-spacing:0;flex-shrink:0}
+.logo-svg{width:22px;height:22px;flex-shrink:0;color:var(--accent);transition:color .3s}
 .logo-slash{opacity:.25;margin:0 3px}
 .tsep{width:.5px;height:22px;background:var(--border2);flex-shrink:0}
 .topbar-timer{font-family:'DM Mono',monospace;font-size:15px;font-weight:500;letter-spacing:.06em;color:var(--text);min-width:76px;transition:color .2s}
@@ -1124,7 +1125,13 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="logo">
-    <div class="logo-mark">⬡</div>
+    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
+      <path d="M50 6L55 30 45 30Z"/>
+      <path d="M62 18L8 42 20 58 70 34Z"/>
+      <path d="M38 18L30 34 80 58 92 42Z"/>
+      <path d="M43 60L26 95 48 70Z"/>
+      <path d="M57 60L52 70 74 95Z"/>
+    </svg>
     WAR ROOM
   </div>
   <div class="tsep"></div>
@@ -8680,7 +8687,13 @@ async function handleAuth(){
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-card">
     <div class="auth-logo">
-      <div class="auth-logo-mark">⬡</div>
+      <svg class="logo-svg" style="width:24px;height:24px" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true">
+        <path d="M50 6L55 30 45 30Z"/>
+        <path d="M62 18L8 42 20 58 70 34Z"/>
+        <path d="M38 18L30 34 80 58 92 42Z"/>
+        <path d="M43 60L26 95 48 70Z"/>
+        <path d="M57 60L52 70 74 95Z"/>
+      </svg>
       WAR ROOM
     </div>
     
