@@ -139,7 +139,7 @@ button { border: none; background: none; font-family: inherit; }
 .hero-title em { font-style: italic; color: var(--gold-light); }
 .hero-sub { font-size: 15px; font-weight: 300; line-height: 1.8; color: rgba(248,242,232,.62); letter-spacing: .04em; margin-bottom: 52px; max-width: 480px; margin-left: auto; margin-right: auto; opacity: 0; transform: translateY(14px); animation: fadeUp 1s .95s forwards; }
 .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; opacity: 0; animation: fadeUp .9s 1.15s forwards; }
-.hero-badge { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: fadeUp .9s 1.4s forwards; }
+.hero-badge { position: absolute; bottom: 40px; left: 0; right: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0; animation: fadeUp .9s 1.4s forwards; }
 .hero-location { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(248,242,232,.35); }
 .scroll-chevron { width: 20px; height: 20px; border-right: 1.5px solid var(--gold); border-bottom: 1.5px solid var(--gold); transform: rotate(45deg); animation: bounce 2s infinite; margin-top: 4px; }
 @keyframes fadeUp { to { opacity: 1; transform: none; } }
@@ -184,7 +184,8 @@ button { border: none; background: none; font-family: inherit; }
 .why-num { font-size: 10px; letter-spacing: .12em; color: var(--gold); flex-shrink: 0; padding-top: 4px; }
 .why-text h3 { font-family: var(--serif); font-size: 20px; font-weight: 300; color: var(--cream); margin-bottom: 10px; }
 .why-text p { font-size: 13px; line-height: 1.85; color: rgba(248,242,232,.5); }
-.why-placeholder { height: 500px; background: rgba(248,242,232,.04); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.why-visual { width: 100%; }
+.why-placeholder { width: 100%; height: 500px; background: rgba(248,242,232,.04); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .why-placeholder-stripe { position: absolute; inset: 0; background-image: repeating-linear-gradient(-45deg,transparent,transparent 20px,rgba(248,242,232,.015) 20px,rgba(248,242,232,.015) 21px); }
 .why-gold-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--gold); }
 .why-placeholder-inner { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(248,242,232,.12); text-align: center; font-family: monospace; line-height: 2; }
@@ -596,7 +597,7 @@ footer { background: var(--charcoal); padding: 80px 60px 40px; }
     <h2 class="cta-banner-title reveal reveal-delay-1">Let's make your<br><em>moment</em> happen.</h2>
     <div class="cta-banner-actions reveal reveal-delay-2">
       <a href="#" class="btn-charcoal" data-page="booking">Start Your Inquiry</a>
-      <a href="#" class="btn-outline-cream" data-page="packages">View All Packages</a>
+      <a href="#" class="btn-gold-outline" data-page="packages">View All Packages</a>
     </div>
   </section>
 
