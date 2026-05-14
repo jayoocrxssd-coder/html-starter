@@ -1,96 +1,946 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <title>Vercel HTML Starter</title>
-    <meta
-      name="description"
-      content="High-performance HTML based website template."
-    />
-  </head>
-  <body>
-    <h1>Vercel HTML Starter</h1>
-    <p>
-      This template is a simple, but powerful single
-      <code>index.html</code> file deployed to
-      <a href="https://vercel.com">Vercel</a>. When your site is deployed, all
-      static assets (like HTML, JavaScript, CSS, images, and more) are deployed
-      globally to every
-      <a href="https://vercel.com/docs/concepts/edge-network/overview"
-        >Vercel Edge Network</a
-      >
-      region.
-    </p>
-    <h2>Simple, privacy-friendly analytics</h2>
-    <p>
-      Want to understand your visitor traffic? Vercel Analytics gives you
-      first-party, privacy-friendly traffic analytics for your HTML site. This
-      template is already configured using the following script:
-    </p>
-    <pre><code>&lt;script defer src="/_vercel/insights/script.js"&gt;&lt;/script&gt;</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/analytics">Vercel Analytics</a>.
-    </p>
-    <h2>Integrated with git</h2>
-    <p>
-      Deploying updates to your site is as simple as
-      <code>git push</code> thanks to Vercel's advanced
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-      Support for GitHub, GitLab, Bitbucket is zero-configuration, and with the
-      flexible Vercel CLI and API, you can integrate with any tool possible.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-    </p>
-    <h2>Fast <code>gzip</code> compression</h2>
-    <p>
-      To help ensure the smallest possible file sizes for your static assets,
-      the Vercel Edge Network compresses files by default using
-      <code>gzip</code>. You can also optionally use
-      <code>brotli</code> compressesion if you prefer.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/edge-network/compression"
-        >compression</a
-      >.
-    </p>
-    <h2>Advanced routing configuration</h2>
-    <p>
-      Vercel gives you a variety of ways to configure the routing of your
-      website. For example, adding redirects, rewrites, or headers to your page.
-      While you can use <code>vercel.json</code> to define these through JSON,
-      you can also express your routing configuration as code using
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-    <p>
-      Middleware runs before the
-      <a href="https://vercel.com/docs/concepts/edge-network/caching"
-        >Vercel Edge Network Cache</a
-      >, so you can configure routing exactly as your application needs. For
-      example, this template uses <code>middleware.js</code> defined in the root
-      of the repository to add additional security headers to the site:
-    </p>
-    <pre><code>referrer-policy: origin-when-cross-origin
-strict-transport-security: max-age=31536000; includeSubDomains; preload
-x-content-type-options: nosniff
-x-dns-prefetch-control: on
-x-frame-options: DENY</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>PokéLike — Gen 2–5</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0f1a;
+      --card-bg: #161d2e;
+      --surface: #1e2535;
+      --text: #e8edf5;
+      --subtext: #6b7a99;
+      --like: #3fb950;
+      --nope: #f85149;
+      --accent: #58a6ff;
+      --gold: #ffd93d;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100svh;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      width: 100%;
+      max-width: 480px;
+      padding: 14px 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      font-size: 1.75rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #ff6b6b 0%, #ffd93d 40%, #6bcb77 70%, #4d96ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .gen-label {
+      font-size: 0.65rem;
+      color: var(--subtext);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .progress-track {
+      width: 100%;
+      max-width: 340px;
+      height: 3px;
+      background: var(--surface);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 18px;
+      font-size: 0.78rem;
+      color: var(--subtext);
+    }
+
+    .stat-like { color: #ff6b8b; font-weight: 700; }
+
+    /* ── CARD AREA ── */
+    .card-area {
+      flex: 1;
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      position: relative;
+      min-height: 0;
+    }
+
+    .card-stack {
+      position: relative;
+      width: min(300px, 80vw);
+      height: min(400px, 68vh);
+    }
+
+    .pokemon-card {
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      overflow: hidden;
+      user-select: none;
+      touch-action: none;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      will-change: transform;
+    }
+
+    .back-card {
+      transform: scale(0.94) translateY(12px);
+      z-index: 1;
+      pointer-events: none;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+
+    .front-card {
+      z-index: 2;
+      cursor: grab;
+      transition: box-shadow 0.2s;
+    }
+
+    .front-card:active { cursor: grabbing; }
+
+    .fly-right {
+      animation: flyRight 0.38s cubic-bezier(0.55,0,1,0.45) forwards;
+      pointer-events: none;
+    }
+
+    .fly-left {
+      animation: flyLeft 0.38s cubic-bezier(0.55,0,1,0.45) forwards;
+      pointer-events: none;
+    }
+
+    @keyframes flyRight {
+      to { transform: translateX(150%) rotate(25deg); opacity: 0; }
+    }
+
+    @keyframes flyLeft {
+      to { transform: translateX(-150%) rotate(-25deg); opacity: 0; }
+    }
+
+    .card-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .card-circle {
+      position: absolute;
+      width: 220%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      top: -80%;
+      right: -60%;
+      background: rgba(255,255,255,0.07);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .card-sprite-area {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: calc(100% - 110px);
+      padding: 16px;
+    }
+
+    .card-sprite {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 24px rgba(0,0,0,0.45));
+      image-rendering: -webkit-optimize-contrast;
+    }
+
+    .front-card:not(.fly-right):not(.fly-left) .card-sprite {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .card-info {
+      position: relative;
+      z-index: 2;
+      height: 110px;
+      padding: 12px 18px 14px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.75) 30%, rgba(0,0,0,0.92) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .pokemon-number {
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .pokemon-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
+      text-transform: capitalize;
+      letter-spacing: -0.3px;
+      line-height: 1.1;
+      margin-bottom: 7px;
+    }
+
+    .type-badges {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .type-badge {
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #fff;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    /* ── SWIPE LABELS ── */
+    .swipe-label {
+      position: absolute;
+      z-index: 10;
+      padding: 5px 13px;
+      border-radius: 6px;
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      border: 3px solid;
+      opacity: 0;
+      pointer-events: none;
+      top: 28px;
+    }
+
+    .label-like {
+      right: 18px;
+      color: #3fb950;
+      border-color: #3fb950;
+      transform: rotate(12deg);
+    }
+
+    .label-nope {
+      left: 18px;
+      color: #f85149;
+      border-color: #f85149;
+      transform: rotate(-12deg);
+    }
+
+    /* ── CARD LOADING ── */
+    .card-loading {
+      position: absolute;
+      inset: 0;
+      background: var(--card-bg);
+      border-radius: 22px;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .card-loading.hidden { display: none; }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(255,255,255,0.08);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    .loading-text {
+      font-size: 0.75rem;
+      color: var(--subtext);
+      letter-spacing: 1px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── BUTTONS ── */
+    .action-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      padding: 8px 0 6px;
+      flex-shrink: 0;
+    }
+
+    .btn-action {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      transition: transform 0.14s ease, box-shadow 0.14s ease;
+      background: var(--surface);
+    }
+
+    .btn-action:hover { transform: scale(1.12); }
+    .btn-action:active { transform: scale(0.93); }
+
+    .btn-nope  { color: var(--nope); }
+    .btn-nope:hover  { box-shadow: 0 6px 20px rgba(248,81,73,0.4); }
+    .btn-like  { color: var(--like); }
+    .btn-like:hover  { box-shadow: 0 6px 20px rgba(63,185,80,0.4); }
+    .btn-view  { color: var(--gold); font-size: 1.1rem; }
+    .btn-view:hover  { box-shadow: 0 6px 20px rgba(255,217,61,0.3); }
+
+    .kbd-hint {
+      text-align: center;
+      font-size: 0.65rem;
+      color: #2e3549;
+      padding-bottom: 10px;
+      flex-shrink: 0;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── DONE SCREEN ── */
+    #done-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      text-align: center;
+      padding: 32px 24px;
+      flex: 1;
+    }
+
+    #done-screen.visible { display: flex; }
+
+    .done-emoji { font-size: 4rem; }
+    .done-title { font-size: 2rem; font-weight: 900; letter-spacing: -1px; }
+    .done-sub   { color: var(--subtext); font-size: 0.9rem; }
+
+    .btn-primary {
+      padding: 12px 32px;
+      border-radius: 30px;
+      border: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.14s;
+      letter-spacing: 0.3px;
+    }
+    .btn-primary:hover { transform: scale(1.05); }
+
+    .grad-warm { background: linear-gradient(90deg, #ff6b6b, #ffd93d); color: #0b0f1a; }
+    .grad-cool { background: linear-gradient(90deg, #4d96ff, #6bcb77); color: #0b0f1a; }
+
+    /* ── RESULTS OVERLAY ── */
+    #results-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7,10,18,0.97);
+      z-index: 200;
+      flex-direction: column;
+      align-items: center;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 28px 16px 32px;
+      gap: 6px;
+    }
+
+    #results-overlay.visible { display: flex; }
+
+    .results-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 18px;
+      flex-shrink: 0;
+    }
+
+    .results-title {
+      font-size: 1.8rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #ff6b6b, #ffd93d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .results-subtitle { color: var(--subtext); font-size: 0.85rem; }
+
+    .pokemon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 10px;
+      width: 100%;
+      max-width: 580px;
+      margin-bottom: 24px;
+    }
+
+    .grid-item {
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 10px 6px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.15s;
+    }
+
+    .grid-item:hover { transform: scale(1.06); }
+
+    .grid-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+    }
+
+    .grid-item-name {
+      font-size: 0.6rem;
+      text-transform: capitalize;
+      color: var(--subtext);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .grid-empty {
+      color: var(--subtext);
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 32px;
+      grid-column: 1/-1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">PokéLike</div>
+    <div class="gen-label">Generations II · III · IV · V</div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="stats-row">
+      <span id="counter">0 / 498</span>
+      <span class="stat-like">&#10084; <span id="like-count">0</span></span>
+    </div>
+  </div>
+
+  <!-- CARD AREA -->
+  <div class="card-area" id="card-area">
+    <div class="card-stack" id="card-stack">
+      <div class="card-loading" id="initial-loader">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading Pok&#233;mon&hellip;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONE SCREEN -->
+  <div id="done-screen">
+    <div class="done-emoji">&#127881;</div>
+    <div class="done-title">All done!</div>
+    <div class="done-sub" id="done-sub">You rated all 498 Pok&#233;mon</div>
+    <button class="btn-primary grad-warm" onclick="restart()">Play Again</button>
+    <button class="btn-primary grad-cool" style="margin-top:4px" onclick="showResults()">View My Likes &#9733;</button>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="action-buttons" id="action-buttons">
+    <button class="btn-action btn-nope" onclick="vote('nope')" title="Nope (&larr; key)">&#10005;</button>
+    <button class="btn-action btn-view" onclick="showResults()" title="View liked Pok&#233;mon">&#9733;</button>
+    <button class="btn-action btn-like" onclick="vote('like')" title="Like (&rarr; key)">&#9829;</button>
+  </div>
+  <div class="kbd-hint">&larr; Nope &nbsp;&middot;&nbsp; Like &rarr;</div>
+
+  <!-- RESULTS OVERLAY -->
+  <div id="results-overlay">
+    <div class="results-header">
+      <div class="results-title">Your Favourites &#10084;</div>
+      <div class="results-subtitle" id="results-subtitle">You haven't liked any yet</div>
+    </div>
+    <div class="pokemon-grid" id="pokemon-grid"></div>
+    <button class="btn-primary grad-warm" onclick="closeResults()">Back to Game</button>
+  </div>
+
+<script>
+// ── CONSTANTS ──────────────────────────────────────────────────────────────
+
+const GEN_START = 152;
+const GEN_END   = 649;
+const TOTAL     = GEN_END - GEN_START + 1; // 498
+
+const artwork = id =>
+  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
+const sprite  = id =>
+  `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+
+const TYPE_COLORS = {
+  normal:   ['#9B9B6A','#C8C69A'], fire:     ['#E8612C','#F4945A'],
+  water:    ['#3A6FD8','#6998EE'], grass:    ['#4DAB39','#7DCB63'],
+  electric: ['#D4A800','#F5D040'], ice:      ['#4BB8B8','#86D4D4'],
+  fighting: ['#B02020','#D05858'], poison:   ['#8A2FAA','#B46CC8'],
+  ground:   ['#C08030','#DDB06A'], flying:   ['#7060E0','#A898F0'],
+  psychic:  ['#E0185A','#F55888'], bug:      ['#82A010','#B0CC38'],
+  rock:     ['#9A8230','#C8AE68'], ghost:    ['#4A3880','#7258A8'],
+  dragon:   ['#4420D8','#7050F8'], dark:     ['#42322A','#705848'],
+  steel:    ['#6A8898','#9ABCD0'], fairy:    ['#C85898','#EC88BE'],
+};
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+
+let order        = [];
+let currentIndex = 0;
+let likedPokemon = [];
+let cache        = {};
+let isAnimating  = false;
+let frontCard    = null;
+let backCard     = null;
+
+// ── PERSISTENCE ────────────────────────────────────────────────────────────
+
+function saveState() {
+  try {
+    localStorage.setItem('pokelike-v2', JSON.stringify({ order, currentIndex, likedPokemon }));
+  } catch (_) {}
+}
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem('pokelike-v2') || 'null');
+    if (s && Array.isArray(s.order) && s.order.length === TOTAL) {
+      order = s.order; currentIndex = s.currentIndex; likedPokemon = s.likedPokemon || [];
+      return true;
+    }
+  } catch (_) {}
+  return false;
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function capitalise(str) {
+  return str.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function padId(id) {
+  return '#' + String(id).padStart(3, '0');
+}
+
+// ── DATA FETCHING ──────────────────────────────────────────────────────────
+
+async function fetchPokemon(id) {
+  if (cache[id]) return cache[id];
+  try {
+    const res  = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`,
+      { signal: AbortSignal.timeout(9000) });
+    const data = await res.json();
+    const poke = { id, name: data.name, types: data.types.map(t => t.type.name) };
+    cache[id] = poke;
+    return poke;
+  } catch (_) {
+    const poke = { id, name: `pokemon-${id}`, types: ['normal'] };
+    cache[id] = poke;
+    return poke;
+  }
+}
+
+function preload(from, count = 6) {
+  for (let i = from; i < Math.min(from + count, order.length); i++) {
+    const id = order[i];
+    fetchPokemon(id);
+    const img = new Image();
+    img.src = artwork(id);
+  }
+}
+
+// ── CARD BUILDING ──────────────────────────────────────────────────────────
+
+function buildCard(poke, extraClass) {
+  const primary  = poke.types[0] || 'normal';
+  const colors   = TYPE_COLORS[primary] || TYPE_COLORS.normal;
+  const secColor = poke.types[1]
+    ? (TYPE_COLORS[poke.types[1]] || TYPE_COLORS.normal)[0]
+    : colors[1];
+
+  const card = document.createElement('div');
+  card.className = `pokemon-card ${extraClass}`;
+  card.dataset.id = poke.id;
+
+  card.innerHTML = `
+    <div class="card-bg" style="background:linear-gradient(160deg,${colors[0]} 0%,${secColor} 100%)"></div>
+    <div class="card-circle"></div>
+    <div class="swipe-label label-like">LIKE!</div>
+    <div class="swipe-label label-nope">NOPE</div>
+    <div class="card-sprite-area">
+      <img class="card-sprite"
+           src="${artwork(poke.id)}"
+           onerror="this.onerror=null;this.src='${sprite(poke.id)}'"
+           alt="${capitalise(poke.name)}"
+           draggable="false" />
+    </div>
+    <div class="card-info">
+      <div class="pokemon-number">${padId(poke.id)}</div>
+      <div class="pokemon-name">${capitalise(poke.name)}</div>
+      <div class="type-badges">
+        ${poke.types.map(t => `<span class="type-badge">${t}</span>`).join('')}
+      </div>
+    </div>`;
+
+  return card;
+}
+
+// ── DRAG / TOUCH ───────────────────────────────────────────────────────────
+
+let drag = null;
+
+function attachDrag(card) {
+  card.addEventListener('mousedown',  dragStart, { passive: false });
+  card.addEventListener('touchstart', dragStart, { passive: false });
+}
+
+function dragStart(e) {
+  if (isAnimating) return;
+  const pt = e.touches ? e.touches[0] : e;
+  drag = { x0: pt.clientX, y0: pt.clientY };
+  document.addEventListener('mousemove',  dragMove, { passive: false });
+  document.addEventListener('touchmove',  dragMove, { passive: false });
+  document.addEventListener('mouseup',    dragEnd);
+  document.addEventListener('touchend',   dragEnd);
+}
+
+function dragMove(e) {
+  if (!drag) return;
+  e.preventDefault();
+  const pt  = e.touches ? e.touches[0] : e;
+  const dx  = pt.clientX - drag.x0;
+  const dy  = pt.clientY - drag.y0;
+  const rot = dx / window.innerWidth * 30;
+
+  frontCard.style.transform  = `translate(${dx}px,${dy * 0.4}px) rotate(${rot}deg)`;
+  frontCard.style.transition = 'none';
+
+  const ratio   = Math.min(Math.abs(dx) / 80, 1);
+  const likeEl  = frontCard.querySelector('.label-like');
+  const nopeEl  = frontCard.querySelector('.label-nope');
+
+  if (dx > 0) { likeEl.style.opacity = ratio; nopeEl.style.opacity = 0; }
+  else        { nopeEl.style.opacity = ratio; likeEl.style.opacity = 0; }
+}
+
+function dragEnd() {
+  document.removeEventListener('mousemove', dragMove);
+  document.removeEventListener('touchmove', dragMove);
+  document.removeEventListener('mouseup',   dragEnd);
+  document.removeEventListener('touchend',  dragEnd);
+
+  if (!drag) return;
+  const dx = (drag._lastDx || 0);
+  drag = null;
+
+  // read actual translate from style
+  const m = frontCard.style.transform.match(/translate\(([^,]+)px/);
+  const actualDx = m ? parseFloat(m[1]) : 0;
+
+  frontCard.style.transition = '';
+  frontCard.querySelector('.label-like').style.opacity = 0;
+  frontCard.querySelector('.label-nope').style.opacity = 0;
+
+  if (Math.abs(actualDx) > 80) {
+    vote(actualDx > 0 ? 'like' : 'nope');
+  } else {
+    frontCard.style.transform = '';
+  }
+}
+
+// patch dragMove to track last dx
+const _origDragMove = dragMove;
+// (already inline above — handle via closure instead)
+
+function attachDragFull(card) {
+  let startX = 0, startY = 0;
+
+  function start(e) {
+    if (isAnimating) return;
+    const pt = e.touches ? e.touches[0] : e;
+    startX = pt.clientX; startY = pt.clientY;
+
+    function move(e2) {
+      e2.preventDefault();
+      const pt2 = e2.touches ? e2.touches[0] : e2;
+      const dx  = pt2.clientX - startX;
+      const dy  = pt2.clientY - startY;
+      const rot = dx / window.innerWidth * 30;
+
+      card.style.transform  = `translate(${dx}px,${dy * 0.4}px) rotate(${rot}deg)`;
+      card.style.transition = 'none';
+
+      const ratio  = Math.min(Math.abs(dx) / 80, 1);
+      const likeEl = card.querySelector('.label-like');
+      const nopeEl = card.querySelector('.label-nope');
+      if (dx > 0) { likeEl.style.opacity = ratio; nopeEl.style.opacity = 0; }
+      else        { nopeEl.style.opacity = ratio; likeEl.style.opacity = 0; }
+    }
+
+    function end() {
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('touchmove', move);
+      document.removeEventListener('mouseup',   end);
+      document.removeEventListener('touchend',  end);
+
+      card.style.transition = '';
+      const likeEl = card.querySelector('.label-like');
+      const nopeEl = card.querySelector('.label-nope');
+      if (likeEl) likeEl.style.opacity = 0;
+      if (nopeEl) nopeEl.style.opacity = 0;
+
+      const m  = card.style.transform.match(/translate\(([^,]+)px/);
+      const dx = m ? parseFloat(m[1]) : 0;
+
+      if (Math.abs(dx) > 80) {
+        vote(dx > 0 ? 'like' : 'nope');
+      } else {
+        card.style.transform = '';
+      }
+    }
+
+    document.addEventListener('mousemove', move, { passive: false });
+    document.addEventListener('touchmove', move, { passive: false });
+    document.addEventListener('mouseup',   end);
+    document.addEventListener('touchend',  end);
+  }
+
+  card.addEventListener('mousedown',  start, { passive: false });
+  card.addEventListener('touchstart', start, { passive: false });
+}
+
+// ── VOTING ─────────────────────────────────────────────────────────────────
+
+function vote(action) {
+  if (isAnimating || !frontCard || currentIndex >= order.length) return;
+  isAnimating = true;
+
+  const id   = order[currentIndex];
+  const poke = cache[id];
+
+  if (action === 'like' && poke) {
+    likedPokemon.push({ id: poke.id, name: poke.name, types: poke.types });
+    document.getElementById('like-count').textContent = likedPokemon.length;
+  }
+
+  const labelEl = frontCard.querySelector(action === 'like' ? '.label-like' : '.label-nope');
+  if (labelEl) labelEl.style.opacity = 1;
+
+  frontCard.classList.add(action === 'like' ? 'fly-right' : 'fly-left');
+
+  if (backCard) {
+    backCard.classList.remove('back-card');
+    backCard.classList.add('front-card');
+    attachDragFull(backCard);
+  }
+
+  frontCard.addEventListener('animationend', () => {
+    frontCard.remove();
+    frontCard = backCard;
+    backCard  = null;
+
+    currentIndex++;
+    updateProgress();
+    saveState();
+    isAnimating = false;
+
+    if (currentIndex >= order.length) { showDone(); return; }
+    loadBackCard();
+    preload(currentIndex + 2, 4);
+  }, { once: true });
+}
+
+// ── CARD MANAGEMENT ────────────────────────────────────────────────────────
+
+async function loadBackCard() {
+  const nextIdx = currentIndex + 1;
+  if (nextIdx >= order.length) return;
+
+  const id   = order[nextIdx];
+  const poke = await fetchPokemon(id);
+  const card = buildCard(poke, 'back-card');
+  const stack = document.getElementById('card-stack');
+  stack.insertBefore(card, stack.firstChild);
+  backCard = card;
+}
+
+// ── PROGRESS ───────────────────────────────────────────────────────────────
+
+function updateProgress() {
+  const pct = (currentIndex / TOTAL) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('counter').textContent = `${currentIndex} / ${TOTAL}`;
+}
+
+// ── SCREENS ────────────────────────────────────────────────────────────────
+
+function showDone() {
+  document.getElementById('card-area').style.display    = 'none';
+  document.getElementById('action-buttons').style.display = 'none';
+  document.querySelector('.kbd-hint').style.display     = 'none';
+  document.getElementById('done-screen').classList.add('visible');
+  document.getElementById('done-sub').textContent =
+    `You liked ${likedPokemon.length} out of ${TOTAL} Pokémon`;
+}
+
+function showResults() {
+  const grid     = document.getElementById('pokemon-grid');
+  const subtitle = document.getElementById('results-subtitle');
+
+  subtitle.textContent = likedPokemon.length === 0
+    ? "You haven't liked any yet"
+    : `You liked ${likedPokemon.length} Pokémon`;
+
+  grid.innerHTML = likedPokemon.length === 0
+    ? '<div class="grid-empty">Go rate some Pokémon first! ✨</div>'
+    : likedPokemon.map(p => `
+        <div class="grid-item">
+          <img src="${artwork(p.id)}"
+               onerror="this.onerror=null;this.src='${sprite(p.id)}'"
+               alt="${capitalise(p.name)}" loading="lazy" />
+          <div class="grid-item-name">${capitalise(p.name)}</div>
+        </div>`).join('');
+
+  document.getElementById('results-overlay').classList.add('visible');
+}
+
+function closeResults() {
+  document.getElementById('results-overlay').classList.remove('visible');
+}
+
+// ── RESTART ────────────────────────────────────────────────────────────────
+
+function restart() {
+  order        = shuffle(Array.from({ length: TOTAL }, (_, i) => GEN_START + i));
+  currentIndex = 0;
+  likedPokemon = [];
+  saveState();
+
+  document.getElementById('like-count').textContent = '0';
+  document.getElementById('done-screen').classList.remove('visible');
+  document.getElementById('card-area').style.display    = '';
+  document.getElementById('action-buttons').style.display = '';
+  document.querySelector('.kbd-hint').style.display     = '';
+  updateProgress();
+
+  document.getElementById('card-stack').innerHTML = '';
+  frontCard = null;
+  backCard  = null;
+  init();
+}
+
+// ── KEYBOARD ───────────────────────────────────────────────────────────────
+
+document.addEventListener('keydown', e => {
+  if (document.getElementById('results-overlay').classList.contains('visible')) {
+    if (e.key === 'Escape') closeResults();
+    return;
+  }
+  if (e.key === 'ArrowLeft'  || e.key === 'a') vote('nope');
+  if (e.key === 'ArrowRight' || e.key === 'd') vote('like');
+});
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+
+async function init() {
+  const loader = document.getElementById('initial-loader');
+  preload(currentIndex, 8);
+
+  const poke = await fetchPokemon(order[currentIndex]);
+  const card = buildCard(poke, 'front-card');
+  attachDragFull(card);
+
+  const stack = document.getElementById('card-stack');
+  if (loader) loader.classList.add('hidden');
+  stack.appendChild(card);
+  frontCard = card;
+
+  updateProgress();
+  await loadBackCard();
+  preload(currentIndex + 2, 6);
+}
+
+// ── BOOT ───────────────────────────────────────────────────────────────────
+
+if (!loadState()) {
+  order = shuffle(Array.from({ length: TOTAL }, (_, i) => GEN_START + i));
+}
+
+document.getElementById('like-count').textContent = likedPokemon.length;
+updateProgress();
+
+if (currentIndex >= order.length) {
+  showDone();
+} else {
+  init();
+}
+</script>
+</body>
 </html>
