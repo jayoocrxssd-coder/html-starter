@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NQ SENTINEL — Trading Intelligence Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.1/dist/chartjs-chart-financial.min.js"></script>
+<style>
+  :root {
+    --bg:#080c12; --surface:#0d1420; --surface2:#111b2a;
+    --border:rgba(0,200,255,.12); --border2:rgba(0,200,255,.25);
+    --accent:#00c8ff; --accent2:#00ff9d; --warn:#ffb800; --danger:#ff3d5a;
+    --text:#e8f4ff; --muted:#4a6580;
+    --mono:'Space Mono',monospace; --sans:'Syne',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 0%,rgba(0,200,255,.04) 0%,transparent 70%),radial-gradient(ellipse 40% 30% at 80% 100%,rgba(0,255,157,.03) 0%,transparent 70%);pointer-events:none;z-index:0;}
+
+  /* HEADER */
+  header{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;background:rgba(8,12,18,.97);backdrop-filter:blur(10px);}
+  .logo{display:flex;align-items:center;gap:12px;}
+  .logo-icon{width:36px;height:36px;border:1.5px solid var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:16px;}
+  .logo-text{font-size:20px;font-weight:800;letter-spacing:3px;}
+  .logo-sub{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;}
+  .header-right{display:flex;align-items:center;gap:20px;}
+  .live-badge{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--accent2);letter-spacing:1px;}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);animation:pulse 1.5s infinite;}
+  .ws-status{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:4px;letter-spacing:1px;}
+  .ws-status.connected{background:rgba(0,255,157,.1);color:var(--accent2);}
+  .ws-status.disconnected{background:rgba(255,61,90,.1);color:var(--danger);}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+  .session-clock{font-family:var(--mono);font-size:13px;letter-spacing:1px;}
+
+  /* LAYOUT */
+  .main{display:grid;grid-template-columns:260px 1fr 280px;min-height:calc(100vh - 73px);position:relative;z-index:1;}
+
+  /* SIDEBARS */
+  .sidebar-left{border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;max-height:calc(100vh - 73px);}
+  .sidebar-right{border-left:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:20px;overflow-y:auto;max-height:calc(100vh - 73px);}
+  .center{display:flex;flex-direction:column;}
+
+  /* SECTION LABEL */
+  .section-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .card-sm{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+
+  /* PRICE HERO */
+  .price-hero{padding:24px 28px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;}
+  .price-main{font-family:var(--mono);font-size:42px;font-weight:700;letter-spacing:-1px;transition:color .3s;}
+  .price-main.up{color:var(--accent2);} .price-main.down{color:var(--danger);}
+  .price-change{font-family:var(--mono);font-size:16px;padding:4px 10px;border-radius:6px;margin-bottom:8px;}
+  .price-change.up{background:rgba(0,255,157,.12);color:var(--accent2);}
+  .price-change.down{background:rgba(255,61,90,.12);color:var(--danger);}
+  .price-label{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:6px;}
+
+  /* TF TABS */
+  .tf-tabs{display:flex;gap:4px;padding:14px 28px;border-bottom:1px solid var(--border);}
+  .tf-tab{font-family:var(--mono);font-size:11px;padding:5px 12px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;letter-spacing:1px;transition:all .2s;}
+  .tf-tab.active,.tf-tab:hover{background:rgba(0,200,255,.1);color:var(--accent);border-color:var(--accent);}
+
+  /* CHART */
+  .chart-area{padding:20px 28px;flex:1;min-height:280px;position:relative;}
+
+  /* ALERT HISTORY STRIP */
+  .alert-hist{border-bottom:1px solid var(--border);padding:10px 28px;display:flex;gap:12px;overflow-x:auto;scrollbar-width:thin;}
+  .alert-chip{flex-shrink:0;border-radius:6px;padding:6px 12px;display:flex;flex-direction:column;gap:2px;border:1px solid var(--border);background:var(--surface);min-width:120px;}
+  .alert-chip.long{border-color:rgba(0,255,157,.25);} .alert-chip.short{border-color:rgba(255,61,90,.25);}
+  .chip-dir{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;}
+  .chip-dir.long{color:var(--accent2);} .chip-dir.short{color:var(--danger);}
+  .chip-price{font-family:var(--mono);font-size:13px;}
+  .chip-rr{font-family:var(--mono);font-size:10px;color:var(--muted);}
+  .chip-ts{font-family:var(--mono);font-size:9px;color:var(--muted);}
+
+  /* BIAS */
+  .bias-block{display:flex;flex-direction:column;gap:10px;}
+  .bias-value{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:2px;}
+  .bias-value.BULL{color:var(--accent2);} .bias-value.BEAR{color:var(--danger);} .bias-value.NEUTRAL{color:var(--warn);}
+  .bias-bar-wrap{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+  .bias-bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+  .bias-bar-fill.BULL{background:var(--accent2);} .bias-bar-fill.BEAR{background:var(--danger);} .bias-bar-fill.NEUTRAL{background:var(--warn);}
+  .tf-bias-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);}
+  .tf-bias-row:last-child{border-bottom:none;}
+  .tf-name{font-family:var(--mono);font-size:11px;color:var(--muted);width:32px;}
+  .tf-status{font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:4px;letter-spacing:1px;}
+  .tf-status.BULL{background:rgba(0,255,157,.1);color:var(--accent2);}
+  .tf-status.BEAR{background:rgba(255,61,90,.1);color:var(--danger);}
+  .tf-status.NEUTRAL{background:rgba(255,184,0,.1);color:var(--warn);}
+
+  /* SESSION LEVELS */
+  .session-level{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+  .session-level:last-child{border-bottom:none;}
+  .level-tag{font-family:var(--mono);font-size:10px;padding:3px 7px;border-radius:4px;letter-spacing:1px;}
+  .level-tag.asia{background:rgba(255,184,0,.12);color:var(--warn);}
+  .level-tag.london{background:rgba(0,200,255,.12);color:var(--accent);}
+  .level-tag.ny{background:rgba(0,255,157,.12);color:var(--accent2);}
+  .level-tag.daily{background:rgba(255,61,90,.12);color:var(--danger);}
+  .level-price{font-family:var(--mono);font-size:13px;}
+
+  /* SIGNAL CARD */
+  .signal-card{background:var(--surface);border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+  .signal-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);}
+  .signal-type{font-family:var(--mono);font-size:11px;letter-spacing:2px;font-weight:700;}
+  .signal-type.LONG{color:var(--accent2);} .signal-type.SHORT{color:var(--danger);}
+  .signal-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
+  .signal-row{display:flex;justify-content:space-between;align-items:center;}
+  .signal-row-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;}
+  .signal-row-val{font-family:var(--mono);font-size:13px;}
+  .signal-row-val.entry{color:var(--accent);}
+  .signal-row-val.sl{color:var(--danger);}
+  .signal-row-val.tp{color:var(--accent2);}
+  .confluences{display:flex;flex-direction:column;gap:4px;padding-top:8px;border-top:1px solid var(--border);margin-top:4px;}
+  .conf-item{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;color:var(--accent2);}
+  .rr-badge{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;background:rgba(0,200,255,.1);color:var(--accent);letter-spacing:1px;}
+  .signal-none{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center;padding:20px 0;}
+
+  /* DELTA BARS */
+  .delta-bar-wrap{display:flex;align-items:center;gap:8px;margin-top:4px;}
+  .delta-label{font-family:var(--mono);font-size:10px;color:var(--muted);width:36px;}
+  .delta-track{flex:1;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden;position:relative;}
+  .delta-fill-buy{position:absolute;left:50%;top:0;bottom:0;background:var(--accent2);border-radius:0 4px 4px 0;transition:width .8s ease;}
+  .delta-fill-sell{position:absolute;right:50%;top:0;bottom:0;background:var(--danger);border-radius:4px 0 0 4px;transition:width .8s ease;}
+  .delta-val{font-family:var(--mono);font-size:11px;min-width:60px;text-align:right;}
+  .delta-val.pos{color:var(--accent2);} .delta-val.neg{color:var(--danger);}
+
+  /* NEWS */
+  .news-item{padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;}
+  .news-item:last-child{border-bottom:none;}
+  .news-impact{width:6px;height:6px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+  .news-impact.high{background:var(--danger);} .news-impact.med{background:var(--warn);} .news-impact.low{background:var(--muted);}
+  .news-time{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+  .news-title{font-size:12px;line-height:1.4;}
+  .news-title a{color:var(--text);text-decoration:none;}
+  .news-title a:hover{color:var(--accent);}
+  .news-source{font-family:var(--mono);font-size:9px;color:var(--muted);}
+
+  /* BOTTOM BAR */
+  .bottom-bar{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);padding:14px 28px;gap:20px;background:var(--surface);margin-top:auto;}
+  .bottom-stat-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;}
+  .bottom-stat-val{font-family:var(--mono);font-size:18px;font-weight:700;}
+
+  /* ALERT DELIVERY STATUS */
+  .status-dot{width:5px;height:5px;border-radius:50%;display:inline-block;margin-right:4px;}
+  .status-dot.green{background:var(--accent2);} .status-dot.red{background:var(--danger);}
+
+  /* TOAST NOTIFICATION */
+  .notif-pill{position:fixed;bottom:80px;right:28px;background:var(--surface);border:1px solid rgba(0,200,255,.4);border-radius:12px;padding:14px 18px;max-width:300px;display:none;flex-direction:column;gap:6px;z-index:200;box-shadow:0 0 40px rgba(0,200,255,.1);animation:slideIn .3s ease;}
+  .notif-pill.show{display:flex;}
+  @keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .notif-title{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:2px;font-weight:700;}
+  .notif-msg{font-family:var(--mono);font-size:12px;line-height:1.5;}
+  .notif-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;}
+
+  ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:var(--bg);} ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon"><i class="fas fa-satellite-dish"></i></div>
+    <div>
+      <div class="logo-text">NQ SENTINEL</div>
+      <div class="logo-sub">TRADING INTELLIGENCE SYSTEM</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="ws-status disconnected" id="ws-status">● CONNECTING</span>
+    <div class="live-badge"><span class="live-dot"></span>LIVE FEED</div>
+    <div class="session-clock" id="clock">--:--:-- ET</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">NQ / MNQ</div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- SIDEBAR LEFT -->
+  <div class="sidebar-left">
+
+    <div>
+      <div class="section-label">HTF Bias Stack</div>
+      <div class="bias-block">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:var(--mono);font-size:11px;color:var(--muted);">OVERALL</span>
+          <span class="bias-value NEUTRAL" id="overall-bias">—</span>
+        </div>
+        <div class="bias-bar-wrap">
+          <div class="bias-bar-fill NEUTRAL" id="bias-bar" style="width:50%"></div>
+        </div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);" id="bias-score">Confluence score: —</div>
+      </div>
+      <div style="margin-top:14px;display:flex;flex-direction:column;gap:2px;" id="tf-bias-rows">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Session Levels</div>
+      <div id="session-levels">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:10px 0;">Loading…</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CENTER -->
+  <div class="center">
+
+    <!-- PRICE HERO -->
+    <div class="price-hero">
+      <div>
+        <div class="price-label">NQ FUTURES — LIVE (15-min delayed)</div>
+        <div class="price-main" id="live-price">—</div>
+      </div>
+      <div class="price-change up" id="price-change">—</div>
+      <div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--muted);">LAST UPDATE</div>
+        <div style="font-family:var(--mono);font-size:13px;" id="last-update">—</div>
+      </div>
+    </div>
+
+    <!-- ALERT HISTORY -->
+    <div class="alert-hist">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;align-self:center;white-space:nowrap;margin-right:4px;">ALERTS</div>
+      <div id="alert-chips" style="display:flex;gap:12px;">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--muted);align-self:center;">No signals yet</div>
+      </div>
+    </div>
+
+    <!-- TF TABS -->
+    <div class="tf-tabs">
+      <button class="tf-tab active" onclick="setTF(this)">5M</button>
+      <button class="tf-tab" onclick="setTF(this)">15M</button>
+      <button class="tf-tab" onclick="setTF(this)">30M</button>
+      <button class="tf-tab" onclick="setTF(this)">1H</button>
+      <button class="tf-tab" onclick="setTF(this)">4H</button>
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-area">
+      <div style="position:relative;width:100%;height:260px;">
+        <canvas id="priceChart"></canvas>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;">
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+          <span style="display:inline-block;width:10px;height:2px;background:#00c8ff;margin-right:4px;vertical-align:middle;"></span>PRICE
+        </span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+          <span style="display:inline-block;width:10px;height:2px;background:rgba(255,184,0,.7);margin-right:4px;vertical-align:middle;"></span>FVG ZONE
+        </span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">
+          <span style="display:inline-block;width:10px;height:2px;background:rgba(0,200,255,.5);margin-right:4px;vertical-align:middle;"></span>SESSION LEVEL
+        </span>
+      </div>
+    </div>
+
+    <!-- VOLUME DELTA -->
+    <div style="padding:14px 28px;border-top:1px solid var(--border);">
+      <div class="section-label">Order Flow — Volume Delta (recent bars)</div>
+      <div id="delta-bars"></div>
+    </div>
+
+    <!-- BOTTOM STATS -->
+    <div class="bottom-bar">
+      <div>
+        <div class="bottom-stat-label">SIGNALS TODAY</div>
+        <div class="bottom-stat-val" style="color:var(--text);" id="stat-signals">0</div>
+      </div>
+      <div>
+        <div class="bottom-stat-label">LAST BIAS</div>
+        <div class="bottom-stat-val" style="color:var(--accent);" id="stat-bias">—</div>
+      </div>
+      <div>
+        <div class="bottom-stat-label">PRICE DELTA</div>
+        <div class="bottom-stat-val" id="stat-delta">—</div>
+      </div>
+      <div>
+        <div class="bottom-stat-label">DATA DELAY</div>
+        <div class="bottom-stat-val" style="color:var(--warn);">~15 MIN</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR RIGHT -->
+  <div class="sidebar-right">
+
+    <div>
+      <div class="section-label">Active Signal</div>
+      <div id="signal-panel">
+        <div class="signal-none">No active signal<br>Scanning every 60s…</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Alert Delivery</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="card-sm" style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:var(--mono);font-size:11px;">
+            <i class="fab fa-telegram" style="color:var(--accent);margin-right:6px;"></i>Telegram
+          </span>
+          <span id="tg-status"><span class="status-dot green"></span><span style="font-family:var(--mono);font-size:10px;color:var(--accent2);">CONFIGURED</span></span>
+        </div>
+        <div class="card-sm" style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:var(--mono);font-size:11px;">
+            <i class="fas fa-sms" style="color:var(--accent);margin-right:6px;"></i>SMS / Twilio
+          </span>
+          <span id="sms-status"><span class="status-dot green"></span><span style="font-family:var(--mono);font-size:10px;color:var(--accent2);">CONFIGURED</span></span>
+        </div>
+        <div class="card-sm" style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:var(--mono);font-size:11px;">
+            <i class="fas fa-robot" style="color:var(--accent);margin-right:6px;"></i>Signal Engine
+          </span>
+          <span><span class="status-dot green"></span><span style="font-family:var(--mono);font-size:10px;color:var(--accent2);" id="engine-status">SCANNING</span></span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label">Live News</div>
+      <div id="news-feed">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:10px 0;">Loading news…</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="notif-pill" id="notif">
+  <div style="display:flex;align-items:center;justify-content:space-between;">
+    <span class="notif-title" id="notif-title">⚡ SIGNAL FIRED</span>
+    <button class="notif-close" onclick="hideNotif()">✕</button>
+  </div>
+  <div class="notif-msg" id="notif-msg"></div>
+  <div style="font-family:var(--mono);font-size:10px;color:var(--muted);" id="notif-sub"></div>
+</div>
+
+<script>
+// ── Clock ──────────────────────────────────────────────────────────────────
+function updateClock() {
+  const et = new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'}));
+  const p  = n => String(n).padStart(2,'0');
+  document.getElementById('clock').textContent = p(et.getHours())+':'+p(et.getMinutes())+':'+p(et.getSeconds())+' ET';
+}
+setInterval(updateClock,1000); updateClock();
+
+// ── Price Chart ────────────────────────────────────────────────────────────
+const priceCtx = document.getElementById('priceChart').getContext('2d');
+let priceChart = new Chart(priceCtx, {
+  type:'line',
+  data:{labels:[],datasets:[{
+    data:[],borderColor:'#00c8ff',borderWidth:1.5,pointRadius:0,
+    tension:0.2,fill:true,
+    backgroundColor:(c)=>{
+      const g=c.chart.ctx.createLinearGradient(0,0,0,260);
+      g.addColorStop(0,'rgba(0,200,255,.12)'); g.addColorStop(1,'rgba(0,200,255,0)');
+      return g;
+    }
+  }]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'NQ: '+c.raw.toFixed(2)}}},
+    scales:{
+      x:{ticks:{color:'#4a6580',font:{family:'Space Mono',size:9},maxTicksLimit:8},grid:{color:'rgba(255,255,255,.04)'}},
+      y:{ticks:{color:'#4a6580',font:{family:'Space Mono',size:9}},grid:{color:'rgba(255,255,255,.04)'},position:'right'}
+    },
+    animation:{duration:300}
+  }
+});
+
+function updateChart(candles) {
+  if(!candles || !candles.length) return;
+  priceChart.data.labels   = candles.map(c=>{const d=new Date(c.t);return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');});
+  priceChart.data.datasets[0].data = candles.map(c=>c.c);
+  priceChart.update('none');
+}
+
+// ── TF tab switcher (display only — data granularity fixed at server) ──────
+function setTF(el) {
+  document.querySelectorAll('.tf-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── Render bias stack ──────────────────────────────────────────────────────
+function renderBias(bias) {
+  const el = document.getElementById('overall-bias');
+  el.textContent  = bias.overall;
+  el.className    = 'bias-value '+bias.overall;
+
+  const bar = document.getElementById('bias-bar');
+  bar.style.width = bias.score+'%';
+  bar.className   = 'bias-bar-fill '+bias.overall;
+
+  document.getElementById('bias-score').textContent = 'Confluence score: '+bias.score+'/100';
+
+  const container = document.getElementById('tf-bias-rows');
+  container.innerHTML = '';
+  const tfs = ['4h','1h','30m','15m','5m','1m'];
+  tfs.forEach(tf=>{
+    const v = bias.tfs[tf] || 'NEUTRAL';
+    const detail = {
+      BULL:'Higher highs', BEAR:'Lower lows', NEUTRAL:'Ranging'
+    }[v];
+    container.innerHTML += `
+      <div class="tf-bias-row">
+        <span class="tf-name">${tf.toUpperCase()}</span>
+        <span class="tf-status ${v}">${v}</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">${detail}</span>
+      </div>`;
+  });
+  document.getElementById('stat-bias').textContent = bias.overall;
+  document.getElementById('stat-bias').style.color = bias.overall==='BULL'?'var(--accent2)':bias.overall==='BEAR'?'var(--danger)':'var(--warn)';
+}
+
+// ── Render session levels ──────────────────────────────────────────────────
+function renderLevels(lvls) {
+  const map = [
+    ['PDH','daily','PDH'],['PDL','daily','PDL'],
+    ['ASIA_H','asia','ASIA H'],['ASIA_L','asia','ASIA L'],
+    ['LDN_H','london','LDN H'],['LDN_L','london','LDN L'],
+    ['NY_H','ny','NY H'],['NY_L','ny','NY L'],
+  ];
+  const el = document.getElementById('session-levels');
+  el.innerHTML = '';
+  map.forEach(([key,cls,label])=>{
+    const val = lvls[key];
+    if(val == null) return;
+    el.innerHTML += `
+      <div class="session-level">
+        <span class="level-tag ${cls}">${label}</span>
+        <span class="level-price">${val.toLocaleString('en-US',{minimumFractionDigits:2})}</span>
+      </div>`;
+  });
+}
+
+// ── Render signal panel ────────────────────────────────────────────────────
+function renderSignal(sig) {
+  const el = document.getElementById('signal-panel');
+  if(!sig) { el.innerHTML = '<div class="signal-none">No active signal<br>Scanning every 60s…</div>'; return; }
+
+  const dir   = sig.direction;
+  const arrow = dir==='LONG'?'▲':'▼';
+  const ts    = new Date(sig.ts*1000).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',timeZone:'America/New_York'});
+
+  const confl = (sig.confluences||[]).map(c=>`<div class="conf-item"><i class="fas fa-check-circle" style="font-size:9px"></i>${c}</div>`).join('');
+
+  el.innerHTML = `
+    <div class="signal-card">
+      <div class="signal-header">
+        <span class="signal-type ${dir}">${arrow} ${dir}</span>
+        <span class="rr-badge">1:${sig.rr} RR</span>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">${ts} ET</span>
+      </div>
+      <div class="signal-body">
+        <div class="signal-row"><span class="signal-row-label">ENTRY</span><span class="signal-row-val entry">${sig.entry.toLocaleString('en-US',{minimumFractionDigits:2})}</span></div>
+        <div class="signal-row"><span class="signal-row-label">STOP LOSS</span><span class="signal-row-val sl">${sig.stop_loss.toLocaleString('en-US',{minimumFractionDigits:2})}</span></div>
+        <div class="signal-row"><span class="signal-row-label">TP1 (2R)</span><span class="signal-row-val tp">${sig.tp1.toLocaleString('en-US',{minimumFractionDigits:2})}</span></div>
+        <div class="signal-row"><span class="signal-row-label">TP2 (4R)</span><span class="signal-row-val tp">${sig.tp2.toLocaleString('en-US',{minimumFractionDigits:2})}</span></div>
+        <div class="signal-row"><span class="signal-row-label">RISK (pts)</span><span class="signal-row-val">${sig.risk_pts} pts</span></div>
+        ${confl ? `<div class="confluences">${confl}</div>` : ''}
+      </div>
+    </div>`;
+}
+
+// ── Render alert history strip ─────────────────────────────────────────────
+let knownSignalTs = 0;
+function renderHistory(history) {
+  const el = document.getElementById('alert-chips');
+  if(!history || !history.length) return;
+
+  el.innerHTML = history.map(s=>{
+    const arrow = s.direction==='LONG'?'▲':'▼';
+    const ts    = new Date(s.ts*1000).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',timeZone:'America/New_York'});
+    const cls   = s.direction==='LONG'?'long':'short';
+    return `
+      <div class="alert-chip ${cls}">
+        <span class="chip-dir ${cls}">${arrow} ${s.direction}</span>
+        <span class="chip-price">${s.entry.toLocaleString('en-US',{minimumFractionDigits:2})}</span>
+        <span class="chip-rr">RR 1:${s.rr}</span>
+        <span class="chip-ts">${ts} ET</span>
+      </div>`;
+  }).join('');
+
+  document.getElementById('stat-signals').textContent = history.length;
+
+  // Fire toast for new signal
+  if(history.length && history[0].ts > knownSignalTs) {
+    knownSignalTs = history[0].ts;
+    const s = history[0];
+    showNotif(
+      `⚡ ${s.direction} SIGNAL`,
+      `NQ ${s.direction} | Entry: ${s.entry} | SL: ${s.stop_loss} | TP1: ${s.tp1}`,
+      `📊 RR 1:${s.rr} | Risk: ${s.risk_pts} pts`
+    );
+  }
+}
+
+// ── Render volume delta ────────────────────────────────────────────────────
+function renderDelta(bars) {
+  const el = document.getElementById('delta-bars');
+  if(!bars || !bars.length) return;
+  el.innerHTML = bars.slice().reverse().map(b=>{
+    const isPos  = b.delta >= 0;
+    const pct    = Math.min(Math.abs(b.delta) / 5000 * 50, 48);
+    const valStr = (isPos?'+':'')+b.delta.toLocaleString();
+    return `
+      <div class="delta-bar-wrap">
+        <span class="delta-label">${b.label}</span>
+        <div class="delta-track">
+          ${isPos
+            ? `<div class="delta-fill-buy" style="width:${pct}%"></div>`
+            : `<div class="delta-fill-sell" style="width:${pct}%"></div>`}
+        </div>
+        <span class="delta-val ${isPos?'pos':'neg'}">${valStr}</span>
+      </div>`;
+  }).join('');
+}
+
+// ── Render news ────────────────────────────────────────────────────────────
+function renderNews(news) {
+  const el = document.getElementById('news-feed');
+  if(!news || !news.length) { el.innerHTML = '<div style="font-family:var(--mono);font-size:11px;color:var(--muted);">No news data</div>'; return; }
+  el.innerHTML = news.slice(0,8).map(n=>`
+    <div class="news-item">
+      <div class="news-impact ${n.impact}"></div>
+      <span class="news-time">${n.time}</span>
+      <div>
+        <div class="news-title">${n.url ? `<a href="${n.url}" target="_blank" rel="noopener">${n.title}</a>` : n.title}</div>
+        ${n.source ? `<div class="news-source">${n.source}</div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+// ── Price display ──────────────────────────────────────────────────────────
+let lastPrice = 0;
+function renderPrice(price, change, changePct, lastUpdate) {
+  const el  = document.getElementById('live-price');
+  const chEl= document.getElementById('price-change');
+
+  if(price !== lastPrice) {
+    el.className = 'price-main '+(price > lastPrice ? 'up' : 'down');
+    lastPrice = price;
+  }
+  el.textContent = price.toLocaleString('en-US',{minimumFractionDigits:2});
+
+  const sign = change >= 0 ? '▲ +' : '▼ ';
+  chEl.className   = 'price-change '+(change>=0?'up':'down');
+  chEl.textContent = sign+Math.abs(change).toFixed(2)+' ('+(change>=0?'+':'')+changePct.toFixed(2)+'%)';
+
+  const statDelta = document.getElementById('stat-delta');
+  statDelta.textContent = (change>=0?'+':'')+change.toFixed(2);
+  statDelta.style.color = change>=0?'var(--accent2)':'var(--danger)';
+
+  if(lastUpdate) {
+    const d = new Date(lastUpdate*1000);
+    document.getElementById('last-update').textContent = d.toLocaleTimeString('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',second:'2-digit'})+' ET';
+  }
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+let notifTimer = null;
+function showNotif(title, msg, sub) {
+  document.getElementById('notif-title').textContent = title;
+  document.getElementById('notif-msg').textContent   = msg;
+  document.getElementById('notif-sub').textContent   = sub || '';
+  const n = document.getElementById('notif');
+  n.classList.add('show');
+  clearTimeout(notifTimer);
+  notifTimer = setTimeout(hideNotif, 8000);
+}
+function hideNotif() { document.getElementById('notif').classList.remove('show'); }
+
+// ── Full state handler ─────────────────────────────────────────────────────
+function applyState(data) {
+  if(data.price)          renderPrice(data.price, data.change, data.change_pct, data.last_update);
+  if(data.candles)        updateChart(data.candles);
+  if(data.bias)           renderBias(data.bias);
+  if(data.levels)         renderLevels(data.levels);
+  if(data.signal !== undefined) renderSignal(data.signal);
+  if(data.signal_history) renderHistory(data.signal_history);
+  if(data.news)           renderNews(data.news);
+  if(data.delta_bars)     renderDelta(data.delta_bars);
+}
+
+// ── WebSocket ──────────────────────────────────────────────────────────────
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  const ws    = new WebSocket(`${proto}://${location.host}/ws`);
+  const badge = document.getElementById('ws-status');
+
+  ws.onopen = () => {
+    badge.textContent = '● CONNECTED';
+    badge.className   = 'ws-status connected';
+    document.getElementById('engine-status').textContent = 'SCANNING';
+  };
+
+  ws.onmessage = (e) => {
+    try {
+      const msg = JSON.parse(e.data);
+      if(msg.type === 'full_state') applyState(msg.data);
+    } catch(err) { console.warn('WS parse error:', err); }
+  };
+
+  ws.onclose = () => {
+    badge.textContent = '● DISCONNECTED';
+    badge.className   = 'ws-status disconnected';
+    document.getElementById('engine-status').textContent = 'OFFLINE';
+    setTimeout(connect, 3000);  // auto-reconnect
+  };
+
+  ws.onerror = () => ws.close();
+
+  // keep-alive ping
+  setInterval(() => { if(ws.readyState === 1) ws.send('ping'); }, 30000);
+}
+
+// ── Bootstrap ──────────────────────────────────────────────────────────────
+// Fetch initial state via REST, then open WebSocket for live updates
+fetch('/api/state')
+  .then(r => r.json())
+  .then(data => applyState(data))
+  .catch(() => {})
+  .finally(() => connect());
+</script>
+</body>
+</html>
