@@ -282,6 +282,76 @@ async def api_state():
     return JSONResponse(_public_state())
 
 
+@app.get("/api/demo")
+async def api_demo():
+    """Seed state with realistic mock data for preview / offline use."""
+    import random, math
+    base = 20084.50
+    now  = time.time()
+
+    # Simulate 120 × 5m candles
+    candles = []
+    p = 19960.0
+    for i in range(120):
+        o = p
+        c = o + (random.random() - 0.47) * 14
+        h = max(o, c) + random.random() * 6
+        l = min(o, c) - random.random() * 6
+        ts_iso = __import__('datetime').datetime.utcfromtimestamp(now - (119 - i) * 300).strftime('%Y-%m-%dT%H:%M:%S+00:00')
+        candles.append({"t": ts_iso, "o": round(o,2), "h": round(h,2), "l": round(l,2), "c": round(c,2), "v": random.randint(800,4000)})
+        p = c
+    price = candles[-1]["c"]
+
+    state.update({
+        "price":      round(price, 2),
+        "change":     round(price - 19942.25, 2),
+        "change_pct": round((price - 19942.25) / 19942.25 * 100, 2),
+        "last_update": now,
+        "candles": candles,
+        "levels": {
+            "PDH": 20184.25, "PDL": 19876.50,
+            "ASIA_H": 20042.75, "ASIA_L": 19961.00,
+            "LDN_H": 20108.50, "LDN_L": 19924.25,
+            "NY_H": 20156.00,  "NY_L": 19998.75,
+        },
+        "bias": {
+            "overall": "BULL", "score": 72,
+            "tfs": {"4h":"BULL","1h":"BULL","30m":"NEUTRAL","15m":"BULL","5m":"BULL","1m":"NEUTRAL"},
+        },
+        "signal": {
+            "direction": "LONG", "entry": 20012.75, "stop_loss": 19989.50,
+            "tp1": 20059.25, "tp2": 20106.00, "risk_pts": 23.25, "rr": 2.5,
+            "confluences": [
+                "4H bullish bias (HTF)", "15m CHoCH confirmed",
+                "5m bullish FVG (20,005.00–20,015.50)",
+                "NY session low swept (19,998.75)",
+            ],
+            "bias_4h": "BULL", "bias_1h": "BULL", "vol_delta": 3340.0,
+            "ts": now - 420,
+        },
+        "signal_history": [
+            {"direction":"LONG","entry":20012.75,"stop_loss":19989.50,"tp1":20059.25,"tp2":20106.00,"risk_pts":23.25,"rr":2.5,"confluences":[],"bias_4h":"BULL","bias_1h":"BULL","vol_delta":3340,"ts":now-420},
+            {"direction":"SHORT","entry":20108.25,"stop_loss":20131.50,"tp1":20061.75,"tp2":20015.25,"risk_pts":23.25,"rr":2.8,"confluences":[],"bias_4h":"BEAR","bias_1h":"BEAR","vol_delta":-1820,"ts":now-3600},
+            {"direction":"LONG","entry":19842.50,"stop_loss":19819.25,"tp1":19889.00,"tp2":19935.50,"risk_pts":23.25,"rr":3.2,"confluences":[],"bias_4h":"BULL","bias_1h":"BULL","vol_delta":2100,"ts":now-7200},
+        ],
+        "news": [
+            {"time":"2:00 PM","title":"FOMC Minutes Release — Fed signals steady rates","source":"Reuters","impact":"high","url":"","score":0.12},
+            {"time":"3:30 PM","title":"Crude Oil Inventories draw larger than expected","source":"Bloomberg","impact":"med","url":"","score":0.08},
+            {"time":"4:00 PM","title":"Nasdaq futures extend gains amid tech rally","source":"Yahoo Finance","impact":"med","url":"","score":0.21},
+            {"time":"10:15 AM","title":"Fed Speaker Waller: inflation path remains uncertain","source":"WSJ","impact":"high","url":"","score":-0.05},
+            {"time":"9:45 AM","title":"QQQ options flow turns bullish — call volume spikes","source":"Alpha Vantage","impact":"med","url":"","score":0.18},
+            {"time":"9:30 AM","title":"US equity markets open higher on strong jobs data","source":"MarketWatch","impact":"low","url":"","score":0.09},
+        ],
+        "delta_bars": [
+            {"label":"12:09","delta":1420},{"label":"12:08","delta":-840},
+            {"label":"12:07","delta":2100},{"label":"12:06","delta":180},
+            {"label":"12:05","delta":3340},
+        ],
+    })
+    await ws_manager.broadcast({"type": "full_state", "data": _public_state()})
+    return JSONResponse({"ok": True, "price": state["price"]})
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
     await ws_manager.connect(ws)
