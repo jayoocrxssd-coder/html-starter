@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>War Room Priority Checklist</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #F5F6F8;
+      color: #1A1D23;
+      min-height: 100vh;
+      padding: 32px 16px 64px;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      max-width: 680px;
+      margin: 0 auto 28px;
+    }
+    .page-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #111318;
+    }
+    .page-subtitle {
+      font-size: 13px;
+      color: #6B7280;
+      margin-top: 4px;
+    }
+
+    /* ── Global progress bar ── */
+    .global-progress {
+      max-width: 680px;
+      margin: 0 auto 32px;
+      background: #fff;
+      border: 1px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .gp-label { font-size: 13px; font-weight: 500; color: #374151; white-space: nowrap; }
+    .gp-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: #E5E7EB;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .gp-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1D9E75, #16C784);
+      border-radius: 99px;
+      transition: width 0.35s ease;
+      width: 0%;
+    }
+    .gp-count {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1D9E75;
+      min-width: 48px;
+      text-align: right;
+    }
+
+    /* ── Section card ── */
+    .section-card {
+      max-width: 680px;
+      margin: 0 auto 16px;
+      background: #fff;
+      border: 1px solid #E5E7EB;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 20px 14px;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid #F0F1F3;
+    }
+    .section-head:hover { background: #FAFAFA; }
+
+    .phase-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 99px;
+      flex-shrink: 0;
+    }
+    .badge-red    { background: #FCEBEB; color: #A32D2D; }
+    .badge-amber  { background: #FEF3C7; color: #92400E; }
+    .badge-teal   { background: #D1FAE5; color: #065F46; }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111318;
+      flex: 1;
+    }
+
+    .section-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-sub {
+      font-size: 11px;
+      color: #9CA3AF;
+    }
+    .section-tally {
+      font-size: 11px;
+      font-weight: 600;
+      color: #6B7280;
+      background: #F3F4F6;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+    .section-tally.all-done { background: #D1FAE5; color: #065F46; }
+
+    /* mini progress bar under header */
+    .section-bar-bg {
+      height: 3px;
+      background: #F0F1F3;
+    }
+    .section-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1D9E75, #16C784);
+      transition: width 0.35s ease;
+      width: 0%;
+    }
+
+    /* chevron */
+    .chevron {
+      width: 16px;
+      height: 16px;
+      color: #9CA3AF;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .section-card.collapsed .chevron { transform: rotate(-90deg); }
+
+    /* ── Item list ── */
+    .section-body { padding: 4px 0; }
+    .section-card.collapsed .section-body { display: none; }
+
+    .wr-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 13px 20px;
+      border-bottom: 1px solid #F3F4F6;
+      transition: background 0.1s;
+    }
+    .wr-item:last-child { border-bottom: none; }
+    .wr-item:hover { background: #FAFAFA; }
+
+    .item-num {
+      font-size: 11px;
+      font-weight: 600;
+      color: #D1D5DB;
+      min-width: 18px;
+      margin-top: 3px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .wr-check {
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid #D1D5DB;
+      border-radius: 5px;
+      background: #fff;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+    }
+    .wr-check:hover { border-color: #1D9E75; }
+    .wr-check:active { transform: scale(0.9); }
+    .wr-check.done {
+      background: #1D9E75;
+      border-color: #1D9E75;
+    }
+    .wr-check.done::after {
+      content: '';
+      width: 5px;
+      height: 9px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg) translateY(-1px);
+      display: block;
+    }
+
+    .wr-text { flex: 1; min-width: 0; }
+
+    .wr-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111318;
+      line-height: 1.4;
+      transition: color 0.15s;
+    }
+    .wr-label.done-text {
+      text-decoration: line-through;
+      color: #9CA3AF;
+    }
+    .wr-desc {
+      font-size: 12px;
+      color: #6B7280;
+      margin-top: 3px;
+      line-height: 1.55;
+    }
+    .wr-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-top: 6px;
+      display: inline-block;
+    }
+    .tag-fire   { background: #FFEDD5; color: #9A3412; }
+    .tag-code   { background: #DBEAFE; color: #1E40AF; }
+    .tag-config { background: #EDE9FE; color: #4C1D95; }
+    .tag-ux     { background: #FEF9C3; color: #854D0E; }
+
+    /* ── Reset button ── */
+    .reset-wrap {
+      max-width: 680px;
+      margin: 8px auto 0;
+      text-align: right;
+    }
+    .reset-btn {
+      font-size: 12px;
+      color: #9CA3AF;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 2px;
+    }
+    .reset-btn:hover { color: #EF4444; }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <div class="page-title">War Room · Priority Stack</div>
+    <div class="page-subtitle">16 tasks across 3 phases — work top to bottom</div>
+  </div>
+
+  <div class="global-progress">
+    <span class="gp-label">Overall progress</span>
+    <div class="gp-bar-bg"><div class="gp-bar-fill" id="globalBar"></div></div>
+    <span class="gp-count" id="globalCount">0 / 16</span>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="section-card" id="s1">
+    <div class="section-head" onclick="toggleSection('s1')">
+      <span class="phase-badge badge-red">Phase 1</span>
+      <span class="section-title">Firebase Setup</span>
+      <div class="section-meta">
+        <span class="section-sub">Heaviest lift — do this first</span>
+        <span class="section-tally" id="tally-s1">0 / 6</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 6 8 10 12 6"/>
+      </svg>
+    </div>
+    <div class="section-bar-bg"><div class="section-bar-fill" id="bar-s1"></div></div>
+    <div class="section-body">
+      <div class="wr-item">
+        <span class="item-num">1</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Create Firebase project</div>
+          <div class="wr-desc">Go to console.firebase.google.com — new project linked to your Google Cloud account</div>
+          <span class="wr-tag tag-config">config</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">2</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Connect existing Google OAuth to Firebase Auth</div>
+          <div class="wr-desc">Firebase Auth supports Google provider natively — wire your existing Client ID in</div>
+          <span class="wr-tag tag-code">code</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">3</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Define Firestore schema</div>
+          <div class="wr-desc">warrooms/{roomId}/shared, /pl, /members/{uid} — lock in structure before writing data</div>
+          <span class="wr-tag tag-code">code</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">4</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Write Firestore security rules</div>
+          <div class="wr-desc">Owners read/write all. Operators blocked from /pl and /settings. Members can only write their own /members/{uid}</div>
+          <span class="wr-tag tag-fire">critical</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">5</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Replace localStorage with Firestore reads/writes</div>
+          <div class="wr-desc">Migrate: businesses, transactions, calendar events, tasks, profile — all go to Firestore</div>
+          <span class="wr-tag tag-code">code</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">6</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Add currentPlan field to user document</div>
+          <div class="wr-desc">Store "personal", "small_business", or "enterprise" — defaults to personal on account creation</div>
+          <span class="wr-tag tag-code">code</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2 -->
+  <div class="section-card" id="s2">
+    <div class="section-head" onclick="toggleSection('s2')">
+      <span class="phase-badge badge-amber">Phase 2</span>
+      <span class="section-title">Room + Invite System</span>
+      <div class="section-meta">
+        <span class="section-sub">The UX moment</span>
+        <span class="section-tally" id="tally-s2">0 / 5</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 6 8 10 12 6"/>
+      </svg>
+    </div>
+    <div class="section-bar-bg"><div class="section-bar-fill" id="bar-s2"></div></div>
+    <div class="section-body">
+      <div class="wr-item">
+        <span class="item-num">1</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Owner creates War Room → unique room ID generated</div>
+          <div class="wr-desc">Auto-generate roomId on first account creation, store under user's UID</div>
+          <span class="wr-tag tag-code">code</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">2</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Invite link / email system</div>
+          <div class="wr-desc">Generate a shareable invite URL with the roomId embedded — member clicks it to join</div>
+          <span class="wr-tag tag-ux">UX</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">3</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Role assignment on join</div>
+          <div class="wr-desc">First user = Owner. All subsequent joined via invite = Operator by default</div>
+          <span class="wr-tag tag-code">code</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">4</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Plan badge + upgrade CTA in Settings</div>
+          <div class="wr-desc">Show "Personal · $11/mo" with an Upgrade button — placeholder for now, Stripe wired later</div>
+          <span class="wr-tag tag-ux">UX</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">5</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Workspace cap enforcement on Personal plan</div>
+          <div class="wr-desc">Block adding a 2nd business profile — show soft upgrade prompt instead of hard error</div>
+          <span class="wr-tag tag-code">code</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 3 -->
+  <div class="section-card" id="s3">
+    <div class="section-head" onclick="toggleSection('s3')">
+      <span class="phase-badge badge-teal">Phase 3</span>
+      <span class="section-title">Live Sync + Polish</span>
+      <div class="section-meta">
+        <span class="section-sub">Version 2.0 launch</span>
+        <span class="section-tally" id="tally-s3">0 / 5</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="4 6 8 10 12 6"/>
+      </svg>
+    </div>
+    <div class="section-bar-bg"><div class="section-bar-fill" id="bar-s3"></div></div>
+    <div class="section-body">
+      <div class="wr-item">
+        <span class="item-num">1</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Real-time listeners on shared boards</div>
+          <div class="wr-desc">Firestore onSnapshot() on mission board, calendar, whiteboard — changes push instantly to all members</div>
+          <span class="wr-tag tag-code">code</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">2</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Presence indicators</div>
+          <div class="wr-desc">Show who's currently in the room — green dot on member avatars, "3 online" in header</div>
+          <span class="wr-tag tag-ux">UX</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">3</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Task assignment with push notifications</div>
+          <div class="wr-desc">Owner assigns task to Operator — they get a notification badge + optional email/push</div>
+          <span class="wr-tag tag-ux">UX</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">4</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">Stripe billing tied to plan tier</div>
+          <div class="wr-desc">Wire Stripe Checkout — Personal $11/mo, Small Business $14/mo. Stripe webhook updates currentPlan in Firestore</div>
+          <span class="wr-tag tag-fire">critical</span>
+        </div>
+      </div>
+      <div class="wr-item">
+        <span class="item-num">5</span>
+        <div class="wr-check" onclick="toggle(this)"></div>
+        <div class="wr-text">
+          <div class="wr-label">P&amp;L visibility toggle (owner-controlled)</div>
+          <div class="wr-desc">Settings toggle: "Show P&amp;L to team" — Firestore rule enforced, not just a UI hide</div>
+          <span class="wr-tag tag-fire">critical</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reset-wrap">
+    <button class="reset-btn" onclick="resetAll()">Reset all</button>
+  </div>
+
+  <script>
+    const SECTIONS = {
+      s1: { total: 6 },
+      s2: { total: 5 },
+      s3: { total: 5 },
+    };
+
+    function toggle(el) {
+      el.classList.toggle('done');
+      const label = el.nextElementSibling.querySelector('.wr-label');
+      label.classList.toggle('done-text');
+      updateProgress();
+    }
+
+    function toggleSection(id) {
+      document.getElementById(id).classList.toggle('collapsed');
+    }
+
+    function updateProgress() {
+      let totalDone = 0, totalAll = 0;
+
+      for (const [id, cfg] of Object.entries(SECTIONS)) {
+        const card = document.getElementById(id);
+        const done = card.querySelectorAll('.wr-check.done').length;
+        const total = cfg.total;
+        totalDone += done;
+        totalAll += total;
+
+        const pct = total ? Math.round((done / total) * 100) : 0;
+        document.getElementById('bar-' + id).style.width = pct + '%';
+
+        const tally = document.getElementById('tally-' + id);
+        tally.textContent = done + ' / ' + total;
+        tally.classList.toggle('all-done', done === total);
+      }
+
+      const globalPct = totalAll ? Math.round((totalDone / totalAll) * 100) : 0;
+      document.getElementById('globalBar').style.width = globalPct + '%';
+      document.getElementById('globalCount').textContent = totalDone + ' / ' + totalAll;
+    }
+
+    function resetAll() {
+      document.querySelectorAll('.wr-check.done').forEach(el => {
+        el.classList.remove('done');
+        el.nextElementSibling.querySelector('.wr-label').classList.remove('done-text');
+      });
+      updateProgress();
+    }
+
+    updateProgress();
+  </script>
+</body>
+</html>
