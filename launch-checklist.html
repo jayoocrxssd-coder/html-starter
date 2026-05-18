@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WAR ROOM — Launch Checklist</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f0f0e;
+      color: #f0f0ee;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      padding: 48px 24px 80px;
+    }
+    .wrap { max-width: 780px; margin: 0 auto; }
+    header { margin-bottom: 40px; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 13px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: #f0f0ee;
+      text-decoration: none; margin-bottom: 32px;
+    }
+    .logo-mark {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: #f0f0ee; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 900; color: #0f0f0e; letter-spacing: 1px;
+    }
+    h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+    .subtitle { color: #9a9a98; font-size: 15px; line-height: 1.5; }
+
+    .phase {
+      margin-top: 40px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .phase-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 20px 24px;
+      background: rgba(255,255,255,.03);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .phase-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; flex-shrink: 0;
+    }
+    .phase-num.done   { background: #1ea96b; color: #fff; }
+    .phase-num.active { background: #f0b429; color: #0f0f0e; }
+    .phase-num.todo   { background: rgba(255,255,255,.1); color: #9a9a98; }
+    .phase-title { font-size: 16px; font-weight: 700; }
+    .phase-tag {
+      margin-left: auto; font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px; letter-spacing: 1px;
+    }
+    .tag-done   { background: rgba(30,169,107,.15); color: #1ea96b; }
+    .tag-active { background: rgba(240,180,41,.15);  color: #f0b429; }
+    .tag-todo   { background: rgba(255,255,255,.06); color: #9a9a98; }
+
+    .items { list-style: none; padding: 8px 0; }
+    .item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 24px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .item:last-child { border-bottom: none; }
+    .cb {
+      width: 20px; height: 20px; border-radius: 6px;
+      flex-shrink: 0; margin-top: 1px; cursor: pointer;
+      border: 1.5px solid rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s, border-color .15s;
+      position: relative;
+    }
+    .cb.checked { background: #1ea96b; border-color: #1ea96b; }
+    .cb.checked::after {
+      content: '';
+      display: block;
+      width: 5px; height: 9px;
+      border: 2px solid #fff;
+      border-top: none; border-left: none;
+      transform: rotate(45deg) translate(-1px, -1px);
+    }
+    .item-body { flex: 1; }
+    .item-label {
+      font-size: 14px; font-weight: 500; line-height: 1.4;
+      color: #f0f0ee;
+    }
+    .item-label.done-text { color: #525250; text-decoration: line-through; }
+    .item-note {
+      margin-top: 4px; font-size: 12px; color: #9a9a98; line-height: 1.5;
+    }
+    .item-note code {
+      font-family: 'SF Mono', ui-monospace, monospace;
+      font-size: 11px;
+      background: rgba(255,255,255,.07);
+      padding: 1px 5px; border-radius: 4px;
+      color: #d0d0ce;
+    }
+    .item-note a { color: #5b9af5; text-decoration: none; }
+    .item-note a:hover { text-decoration: underline; }
+
+    .progress-bar {
+      margin-top: 40px;
+      background: rgba(255,255,255,.06);
+      border-radius: 8px; overflow: hidden; height: 8px;
+    }
+    .progress-fill {
+      height: 100%; background: #1ea96b;
+      border-radius: 8px;
+      transition: width .4s ease;
+    }
+    .progress-label {
+      display: flex; justify-content: space-between;
+      margin-top: 8px; font-size: 12px; color: #9a9a98;
+    }
+
+    footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,.07);
+      font-size: 12px; color: #525250; text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">
+      <div class="logo-mark">WR</div>
+      WAR ROOM
+    </div>
+    <h1>Launch Checklist</h1>
+    <p class="subtitle">Everything needed to go from local files to a live, production app. Check off each item as you complete it — progress saves in your browser.</p>
+  </header>
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num done">1</div>
+      <div class="phase-title">File Structure &amp; Routing</div>
+      <span class="phase-tag tag-done">DONE</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb checked" data-id="p1-1"></div>
+        <div class="item-body">
+          <div class="item-label done-text">Landing page saved as <code>index.html</code></div>
+          <div class="item-note">This is your root URL (<code>/</code>). Already done — landing page is in place.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb checked" data-id="p1-2"></div>
+        <div class="item-body">
+          <div class="item-label done-text">App saved as <code>app.html</code></div>
+          <div class="item-note">Accessible at <code>/app.html</code> on the same origin. Already done.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb checked" data-id="p1-3"></div>
+        <div class="item-body">
+          <div class="item-label done-text">Auth redirect wired up</div>
+          <div class="item-note">Landing page patches <code>closeAuthOverlay()</code> to set <code>wr_access</code> in localStorage and redirect to <code>/app.html</code>. App gate redirects back to <code>/</code> if token is missing. Already done.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num active">2</div>
+      <div class="phase-title">Authentication</div>
+      <span class="phase-tag tag-active">UP NEXT</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p2-1"></div>
+        <div class="item-body">
+          <div class="item-label">Replace the dev backdoor with real auth</div>
+          <div class="item-note">The current login accepts <code>admin / cres-dev-only</code> as a hardcoded bypass. Replace <code>handleAuth()</code> with a real sign-up/sign-in API call. Options: <a href="https://supabase.com/docs/guides/auth" target="_blank">Supabase Auth</a>, <a href="https://clerk.com" target="_blank">Clerk</a>, or Firebase Auth — all have free tiers.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p2-2"></div>
+        <div class="item-body">
+          <div class="item-label">Store a real JWT / session token</div>
+          <div class="item-note">After sign-in, store the provider's JWT in localStorage (or a cookie). Replace the current <code>wr_access = '1'</code> flag with the actual token so the app can make authenticated API calls later.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p2-3"></div>
+        <div class="item-body">
+          <div class="item-label">Handle token expiry &amp; sign-out</div>
+          <div class="item-note">Add a sign-out button in the app that clears <code>wr_access</code> (and the provider token) and redirects to <code>/</code>. Add expiry checks so stale tokens redirect back to login.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p2-4"></div>
+        <div class="item-body">
+          <div class="item-label">Wire up Google Sign-In (optional)</div>
+          <div class="item-note">The landing page already has a Google Sign-In button (<code>handleGoogleSignIn()</code>) that's currently a placeholder. Hook it to a real OAuth flow — Supabase and Clerk both handle this out-of-the-box.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num todo">3</div>
+      <div class="phase-title">Data Persistence (Beyond localStorage)</div>
+      <span class="phase-tag tag-todo">LATER</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p3-1"></div>
+        <div class="item-body">
+          <div class="item-label">Decide on a database</div>
+          <div class="item-note">Right now all data lives in <code>stratusWR_v31</code> in localStorage — one browser, one device. For multi-device sync you need a DB. Recommended: <a href="https://supabase.com" target="_blank">Supabase</a> (Postgres, free tier), or keep localStorage and add optional export/import.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p3-2"></div>
+        <div class="item-body">
+          <div class="item-label">Add a sync/save API endpoint</div>
+          <div class="item-note">Create a <code>POST /api/save</code> and <code>GET /api/load</code> route that reads/writes the user's data blob. The app already serialises everything as a single JSON object — pipe that to the DB.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p3-3"></div>
+        <div class="item-body">
+          <div class="item-label">Wire the app's save/load to use the API</div>
+          <div class="item-note">Replace (or augment) the <code>localStorage.setItem('stratusWR_v31', ...)</code> calls in the app with fetch calls to your new API. Keep localStorage as an offline cache.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num todo">4</div>
+      <div class="phase-title">AXIS AI Integration</div>
+      <span class="phase-tag tag-todo">LATER</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p4-1"></div>
+        <div class="item-body">
+          <div class="item-label">Get an OpenAI (or compatible) API key</div>
+          <div class="item-note">AXIS makes calls with <code>Authorization: Bearer &lt;apiKey&gt;</code>. The user currently pastes their own key in the app settings. For production, proxy calls through your own backend so the key stays server-side.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p4-2"></div>
+        <div class="item-body">
+          <div class="item-label">Create an API proxy route</div>
+          <div class="item-note">Add a <code>POST /api/axis</code> serverless function that forwards the request to OpenAI with your secret key. This protects your key and lets you add rate-limiting per user.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p4-3"></div>
+        <div class="item-body">
+          <div class="item-label">Pass user data context to AXIS</div>
+          <div class="item-note">For AXIS to answer questions about "your actual P&amp;L", the app needs to inject the user's data as system context in the API call. Pipe the <code>stratusWR_v31</code> blob (or a summary of it) into the system prompt.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num todo">5</div>
+      <div class="phase-title">Deployment</div>
+      <span class="phase-tag tag-todo">LATER</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p5-1"></div>
+        <div class="item-body">
+          <div class="item-label">Deploy to Vercel (already configured)</div>
+          <div class="item-note">This repo is a Vercel HTML starter. Push to your GitHub repo and connect it to Vercel — <code>index.html</code> serves at <code>/</code> and <code>app.html</code> at <code>/app.html</code> automatically. Both files share the same origin so localStorage works across them.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p5-2"></div>
+        <div class="item-body">
+          <div class="item-label">Point a custom domain</div>
+          <div class="item-note">In Vercel dashboard → Project Settings → Domains. Add your domain (e.g. <code>warroom.app</code>). Vercel provisions SSL automatically.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p5-3"></div>
+        <div class="item-body">
+          <div class="item-label">Add environment variables for secrets</div>
+          <div class="item-note">Store API keys in Vercel → Project Settings → Environment Variables. Never commit them to the repo. Access them in serverless functions via <code>process.env.MY_KEY</code>.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p5-4"></div>
+        <div class="item-body">
+          <div class="item-label">Test the full flow end-to-end</div>
+          <div class="item-note">Visit your domain → sign up → get redirected to <code>/app.html</code> → create a mission → refresh → data persists. Also test: sign out, direct-navigate to <code>/app.html</code> while logged out → should redirect to <code>/</code>.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num todo">6</div>
+      <div class="phase-title">Launch &amp; Growth</div>
+      <span class="phase-tag tag-todo">LATER</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p6-1"></div>
+        <div class="item-body">
+          <div class="item-label">Export the waitlist from localStorage</div>
+          <div class="item-note">The landing page stores signups in <code>warroom_waitlist</code> in localStorage — only visible in the browser that collected them. Wire the signup form to a proper backend (e.g. Supabase table, Airtable, or Mailchimp) so you don't lose leads.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p6-2"></div>
+        <div class="item-body">
+          <div class="item-label">Set up a transactional email for signups</div>
+          <div class="item-note">Use <a href="https://resend.com" target="_blank">Resend</a> or SendGrid to send a welcome email when someone joins the waitlist or creates an account. Free tiers cover early-stage volume.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p6-3"></div>
+        <div class="item-body">
+          <div class="item-label">Add analytics</div>
+          <div class="item-note">This Vercel template already includes <code>/_vercel/insights/script.js</code> (Vercel Analytics). Enable it in the Vercel dashboard → Analytics tab. Add Posthog or Mixpanel for event-level tracking (button clicks, feature usage).</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p6-4"></div>
+        <div class="item-body">
+          <div class="item-label">Remove or gate the dev backdoor</div>
+          <div class="item-note">Before public launch, remove the <code>admin / cres-dev-only</code> hardcoded credentials from the landing page <code>handleAuth()</code> function, or restrict it to internal IPs.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div style="margin-top: 40px;">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <div class="progress-label">
+      <span id="progressText">0 of 21 items complete</span>
+      <span id="progressPct">0%</span>
+    </div>
+  </div>
+
+  <footer>
+    WAR ROOM · Launch Checklist · Progress saves in your browser
+  </footer>
+</div>
+
+<script>
+  var STORE_KEY = 'wr_checklist';
+  var cbs = Array.from(document.querySelectorAll('.cb'));
+  var total = cbs.length;
+
+  function save() {
+    var state = {};
+    cbs.forEach(function(cb) { state[cb.dataset.id] = cb.classList.contains('checked'); });
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  }
+
+  function load() {
+    try {
+      var state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+      cbs.forEach(function(cb) {
+        if (state[cb.dataset.id]) {
+          cb.classList.add('checked');
+          var label = cb.closest('.item').querySelector('.item-label');
+          if (label) label.classList.add('done-text');
+        }
+      });
+    } catch(e) {}
+  }
+
+  function updateProgress() {
+    var done = cbs.filter(function(cb) { return cb.classList.contains('checked'); }).length;
+    var pct = Math.round(done / total * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = done + ' of ' + total + ' items complete';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  cbs.forEach(function(cb) {
+    // Don't allow unchecking pre-done items (phases 1 are locked)
+    var locked = cb.closest('.item') &&
+                 cb.closest('.phase') &&
+                 cb.closest('.phase').querySelector('.phase-num.done');
+
+    cb.addEventListener('click', function() {
+      if (locked) return;
+      cb.classList.toggle('checked');
+      var label = cb.closest('.item').querySelector('.item-label');
+      if (label) label.classList.toggle('done-text', cb.classList.contains('checked'));
+      save();
+      updateProgress();
+    });
+  });
+
+  load();
+  updateProgress();
+</script>
+</body>
+</html>
