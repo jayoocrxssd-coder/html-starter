@@ -281,22 +281,22 @@
       <li class="item">
         <div class="cb" data-id="p5-1"></div>
         <div class="item-body">
-          <div class="item-label">Deploy to Vercel (already configured)</div>
-          <div class="item-note">This repo is a Vercel HTML starter. Push to your GitHub repo and connect it to Vercel — <code>index.html</code> serves at <code>/</code> and <code>app.html</code> at <code>/app.html</code> automatically. Both files share the same origin so localStorage works across them.</div>
+          <div class="item-label">Deploy to Netlify</div>
+          <div class="item-note">Push this branch to GitHub, then go to <a href="https://app.netlify.com" target="_blank">app.netlify.com</a> → Add new site → Import from Git. Set publish directory to <code>.</code> (root). <code>index.html</code> serves at <code>/</code> and <code>app.html</code> at <code>/app.html</code> automatically. The <code>netlify.toml</code> already in the repo sets security headers and publish dir.</div>
         </div>
       </li>
       <li class="item">
         <div class="cb" data-id="p5-2"></div>
         <div class="item-body">
           <div class="item-label">Point a custom domain</div>
-          <div class="item-note">In Vercel dashboard → Project Settings → Domains. Add your domain (e.g. <code>warroom.app</code>). Vercel provisions SSL automatically.</div>
+          <div class="item-note">Netlify dashboard → Site settings → Domain management → Add custom domain. Netlify provisions SSL via Let's Encrypt automatically — just point your DNS records as instructed.</div>
         </div>
       </li>
       <li class="item">
         <div class="cb" data-id="p5-3"></div>
         <div class="item-body">
           <div class="item-label">Add environment variables for secrets</div>
-          <div class="item-note">Store API keys in Vercel → Project Settings → Environment Variables. Never commit them to the repo. Access them in serverless functions via <code>process.env.MY_KEY</code>.</div>
+          <div class="item-note">Store API keys in Netlify → Site settings → Environment variables. Never commit them to the repo. Access them in Netlify Functions via <code>process.env.MY_KEY</code>. Add a <code>netlify/functions/</code> folder when you're ready to add serverless routes (AXIS proxy, auth API, etc.).</div>
         </div>
       </li>
       <li class="item">
