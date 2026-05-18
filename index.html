@@ -8,6 +8,23 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
     />
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBcdKlkPBlLxs6barPZDAgoPlB9iU82Zkg",
+        authDomain: "createwarrom.firebaseapp.com",
+        projectId: "createwarrom",
+        storageBucket: "createwarrom.firebasestorage.app",
+        messagingSenderId: "394212942606",
+        appId: "1:394212942606:web:99b7bb6e3d46c840f12d5f",
+        measurementId: "G-HDE0905K1P"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
     <title>Vercel HTML Starter</title>
     <meta
       name="description"
