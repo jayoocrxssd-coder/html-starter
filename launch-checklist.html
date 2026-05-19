@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WAR ROOM — Launch Checklist</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f0f0e;
+      color: #f0f0ee;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      padding: 48px 24px 80px;
+    }
+    .wrap { max-width: 820px; margin: 0 auto; }
+    header { margin-bottom: 40px; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 13px; font-weight: 700; letter-spacing: 4px;
+      text-transform: uppercase; color: #f0f0ee;
+      text-decoration: none; margin-bottom: 32px;
+    }
+    .logo-mark {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: #f0f0ee; display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 900; color: #0f0f0e; letter-spacing: 1px;
+    }
+    h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+    .subtitle { color: #9a9a98; font-size: 15px; line-height: 1.5; max-width: 600px; }
+
+    .phase {
+      margin-top: 36px;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .phase-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 24px;
+      background: rgba(255,255,255,.03);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .phase-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; flex-shrink: 0;
+    }
+    .phase-num.done   { background: #1ea96b; color: #fff; }
+    .phase-num.active { background: #f0b429; color: #0f0f0e; }
+    .phase-num.todo   { background: rgba(255,255,255,.1); color: #9a9a98; }
+    .phase-title { font-size: 16px; font-weight: 700; flex: 1; }
+    .phase-tag {
+      font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 20px; letter-spacing: 1px;
+      white-space: nowrap;
+    }
+    .tag-done   { background: rgba(30,169,107,.15); color: #1ea96b; }
+    .tag-active { background: rgba(240,180,41,.15);  color: #f0b429; }
+    .tag-todo   { background: rgba(255,255,255,.06); color: #9a9a98; }
+
+    .items { list-style: none; padding: 6px 0; }
+    .item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 13px 24px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .item:last-child { border-bottom: none; }
+    .cb {
+      width: 20px; height: 20px; border-radius: 6px;
+      flex-shrink: 0; margin-top: 1px; cursor: pointer;
+      border: 1.5px solid rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s, border-color .15s;
+      position: relative;
+      user-select: none;
+    }
+    .cb.checked { background: #1ea96b; border-color: #1ea96b; }
+    .cb.checked::after {
+      content: '';
+      display: block;
+      width: 5px; height: 9px;
+      border: 2px solid #fff;
+      border-top: none; border-left: none;
+      transform: rotate(45deg) translate(-1px, -1px);
+    }
+    .cb.locked { opacity: .5; cursor: default; }
+    .item-body { flex: 1; min-width: 0; }
+    .item-label {
+      font-size: 14px; font-weight: 500; line-height: 1.4;
+      color: #f0f0ee;
+    }
+    .item-label.done-text { color: #525250; text-decoration: line-through; }
+    .item-note {
+      margin-top: 5px; font-size: 12px; color: #9a9a98; line-height: 1.6;
+    }
+    .item-note code {
+      font-family: 'SF Mono', ui-monospace, monospace;
+      font-size: 11px;
+      background: rgba(255,255,255,.07);
+      padding: 1px 5px; border-radius: 4px;
+      color: #d0d0ce;
+    }
+    .item-note a { color: #5b9af5; text-decoration: none; }
+    .item-note a:hover { text-decoration: underline; }
+    .badge {
+      display: inline-block;
+      font-size: 9px; font-weight: 700; letter-spacing: .06em;
+      border-radius: 4px; padding: 1px 6px; margin-left: 6px;
+      vertical-align: middle; text-transform: uppercase;
+    }
+    .badge-critical { background: rgba(220,38,38,.2); color: #f87171; }
+    .badge-done     { background: rgba(30,169,107,.2); color: #6ee7b7; }
+
+    .progress-bar {
+      margin-top: 40px;
+      background: rgba(255,255,255,.06);
+      border-radius: 8px; overflow: hidden; height: 8px;
+    }
+    .progress-fill {
+      height: 100%; background: #1ea96b;
+      border-radius: 8px;
+      transition: width .4s ease;
+    }
+    .progress-label {
+      display: flex; justify-content: space-between;
+      margin-top: 8px; font-size: 12px; color: #9a9a98;
+    }
+    .note-box {
+      margin-top: 8px;
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 12px; color: #9a9a98; line-height: 1.7;
+    }
+    .note-box strong { color: #f0f0ee; }
+    footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,.07);
+      font-size: 12px; color: #525250; text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">
+      <div class="logo-mark">WR</div>
+      WAR ROOM
+    </div>
+    <h1>Launch Checklist</h1>
+    <p class="subtitle">Everything needed to go from these files to a live, polished product. Check off each item — progress saves in your browser.</p>
+  </header>
+
+  <!-- PHASE 1: DONE -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num done">1</div>
+      <div class="phase-title">Core Files &amp; Auth Flow</div>
+      <span class="phase-tag tag-done">DONE</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb checked locked" data-id="p1-1"></div>
+        <div class="item-body">
+          <div class="item-label done-text">Landing page (<code>index.html</code>) &amp; app (<code>app.html</code>) in place</div>
+          <div class="item-note">Both files exist at root. <code>netlify.toml</code> publishes from <code>.</code> so they serve at <code>/</code> and <code>/app.html</code>.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb checked locked" data-id="p1-2"></div>
+        <div class="item-body">
+          <div class="item-label done-text">Account creation &amp; sign-in work end-to-end <span class="badge badge-done">fixed</span></div>
+          <div class="item-note"><code>handleAuth()</code> validates email + password, creates accounts in <code>localStorage.wr_accounts</code> (hashed), confirms passwords match in signup mode, shows correct errors, and on success sets <code>wr_access</code> and redirects to <code>/app.html</code>.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb checked locked" data-id="p1-3"></div>
+        <div class="item-body">
+          <div class="item-label done-text">Auth gate on <code>app.html</code> secured <span class="badge badge-done">fixed</span></div>
+          <div class="item-note"><code>?bypass=1</code> URL exploit removed. App now strictly checks <code>wr_access</code> in localStorage before loading. Anyone without a token is redirected to <code>/</code>.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb checked locked" data-id="p1-4"></div>
+        <div class="item-body">
+          <div class="item-label done-text">Sign-out clears session &amp; redirects to landing <span class="badge badge-done">fixed</span></div>
+          <div class="item-note"><code>signOut()</code> now removes <code>wr_access</code>, <code>wr_user_email</code>, and <code>wr_user_google</code> from localStorage, then does <code>window.location.replace('/')</code>. Previously it only showed the in-app overlay without invalidating the token.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb checked locked" data-id="p1-5"></div>
+        <div class="item-body">
+          <div class="item-label done-text">Dev backdoor removed <span class="badge badge-done">fixed</span></div>
+          <div class="item-note">The hardcoded <code>admin / cres-dev-only</code> credential bypass in <code>handleAuth()</code> has been removed. No special credentials grant access.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb checked locked" data-id="p1-6"></div>
+        <div class="item-body">
+          <div class="item-label done-text">HTML injection (XSS) mitigated <span class="badge badge-done">fixed</span></div>
+          <div class="item-note"><code>esc()</code> helper added to <code>app.html</code>. Business names, goal text, and other user-entered values are escaped before insertion into <code>innerHTML</code> — option tags, calendar legend, debrief buttons.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb checked locked" data-id="p1-7"></div>
+        <div class="item-body">
+          <div class="item-label done-text">Security headers configured</div>
+          <div class="item-note"><code>netlify.toml</code> sets <code>X-Frame-Options: DENY</code>, <code>X-Content-Type-Options: nosniff</code>, <code>HSTS</code>, and <code>Referrer-Policy</code> on all routes.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 2: Upgrade Auth -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num active">2</div>
+      <div class="phase-title">Upgrade to Production Auth</div>
+      <span class="phase-tag tag-active">UP NEXT</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p2-1"></div>
+        <div class="item-body">
+          <div class="item-label">Replace localStorage account store with a real auth provider <span class="badge badge-critical">recommended</span></div>
+          <div class="item-note">Accounts currently live only in the visitor's browser — they vanish on private mode or a new device. Replace <code>handleAuth()</code> in <code>index.html</code> with a provider call. Best options: <a href="https://supabase.com/docs/guides/auth" target="_blank">Supabase Auth</a> (free, Postgres-backed), <a href="https://clerk.com" target="_blank">Clerk</a> (drop-in UI), or extend the Firebase Auth already imported in <code>app.html</code>.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p2-2"></div>
+        <div class="item-body">
+          <div class="item-label">Store a real JWT, not a static <code>'1'</code> flag</div>
+          <div class="item-note">After sign-in, store the provider's JWT. The app gate should decode and validate the token (check expiry, signature). Add expiry checks so stale sessions auto-redirect to <code>/</code>.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p2-3"></div>
+        <div class="item-body">
+          <div class="item-label">Wire Google Sign-In to a real OAuth flow</div>
+          <div class="item-note">Both the landing page <code>handleGoogleSignIn()</code> and the app's Google button simulate the flow. Connect them to your chosen provider's Google OAuth — Supabase and Clerk handle this with no extra code on your end.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p2-4"></div>
+        <div class="item-body">
+          <div class="item-label">Add "Forgot password?" link to the auth card</div>
+          <div class="item-note">The auth overlay in <code>index.html</code> has no password reset option. Add a link below the password field that triggers the provider's reset email. Required — users will need this from day one.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 3: Waitlist -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num active">3</div>
+      <div class="phase-title">Waitlist &amp; Lead Capture</div>
+      <span class="phase-tag tag-active">UP NEXT</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p3-1"></div>
+        <div class="item-body">
+          <div class="item-label">Send waitlist emails to a real backend <span class="badge badge-critical">before launch</span></div>
+          <div class="item-note"><code>handleSignup()</code> saves emails only to <code>localStorage.warroom_waitlist</code> — visible only in that browser session. Every signup on a different device is lost. Fix: add a Netlify Function at <code>netlify/functions/waitlist.js</code> that writes to a Supabase table or Airtable on submit.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p3-2"></div>
+        <div class="item-body">
+          <div class="item-label">Send a confirmation email on waitlist signup</div>
+          <div class="item-note">Use <a href="https://resend.com" target="_blank">Resend</a> (free 100 emails/day) or SendGrid to auto-send a "You're on the list" email. Keeps leads warm and confirms your email deliverability before launch.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p3-3"></div>
+        <div class="item-body">
+          <div class="item-label">Replace the static joiner count (<code>2,147</code>) with a live number</div>
+          <div class="item-note">The hero shows a hardcoded starting count. Fetch the real waitlist count from your backend on page load, or update the value manually as it grows. A real number builds more trust than a static one.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 4: Firebase -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num active">4</div>
+      <div class="phase-title">Firebase Config &amp; Security Rules</div>
+      <span class="phase-tag tag-active">REVIEW</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p4-1"></div>
+        <div class="item-body">
+          <div class="item-label">Verify Firestore Security Rules lock down user data <span class="badge badge-critical">security</span></div>
+          <div class="item-note">Firebase config (<code>projectId: "createwarrom"</code>) is in <code>app.html</code>. The Web API key is fine to be public, but Firestore rules must restrict reads/writes to the authenticated user. Go to <a href="https://console.firebase.google.com" target="_blank">Firebase Console</a> → Firestore → Rules and verify — default rules allow public access.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p4-2"></div>
+        <div class="item-body">
+          <div class="item-label">Add your production domain to Firebase Auth authorized domains</div>
+          <div class="item-note">Firebase Auth only allows sign-in from listed domains. Go to Firebase Console → Authentication → Settings → Authorized domains. Add your custom domain and <code>yourapp.netlify.app</code> before going live.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p4-3"></div>
+        <div class="item-body">
+          <div class="item-label">Remove unused Firebase service imports</div>
+          <div class="item-note"><code>app.html</code> imports Firebase Analytics, Auth, Firestore, and Drive. Remove imports for any services not actively used to reduce bundle weight and attack surface.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 5: Data Persistence -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num todo">5</div>
+      <div class="phase-title">Data Persistence (Multi-device Sync)</div>
+      <span class="phase-tag tag-todo">LATER</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p5-1"></div>
+        <div class="item-body">
+          <div class="item-label">Decide: localStorage-only or add a database</div>
+          <div class="item-note">All War Room data lives in <code>stratusWR_v31</code> in localStorage — one browser, one device. For v1 this is fine. For multi-device sync add Supabase Postgres or extend the Firebase Firestore already imported. The app serialises everything as a single JSON object — easy to pipe to a DB.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p5-2"></div>
+        <div class="item-body">
+          <div class="item-label">Add Export / Import data buttons</div>
+          <div class="item-note">Even localStorage-only, give users a way to download their data as JSON and re-import it. Prevents total data loss on browser wipe. The app already serialises to one JSON blob — add a download link and a file-input restore button in Settings.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 6: AXIS AI -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num todo">6</div>
+      <div class="phase-title">AXIS AI (Anthropic)</div>
+      <span class="phase-tag tag-todo">LATER</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p6-1"></div>
+        <div class="item-body">
+          <div class="item-label">Move Anthropic key to a server-side proxy <span class="badge badge-critical">security</span></div>
+          <div class="item-note">Users currently paste their own key into Settings — it's stored in localStorage and sent directly from the browser. For a hosted product, proxy calls through <code>POST /api/axis</code> (a Netlify Function) with your key as an env var. Protects the key and enables rate limiting.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p6-2"></div>
+        <div class="item-body">
+          <div class="item-label">Inject user context into the AXIS system prompt</div>
+          <div class="item-note">AXIS answers generic questions well but doesn't know the user's actual P&amp;L, missions, or calendar. Pass a summary of <code>stratusWR_v31</code> as a system prompt prefix so AXIS can answer "What's my profit this month?" with real data.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p6-3"></div>
+        <div class="item-body">
+          <div class="item-label">Add per-user rate limiting on the AXIS proxy</div>
+          <div class="item-note">Without rate limiting a single user can burn your API budget. Track calls per user JWT in Redis/Upstash (free tier: 10k req/day) and return <code>429</code> when the limit is hit.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 7: Deploy -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num todo">7</div>
+      <div class="phase-title">Deploy &amp; Go Live</div>
+      <span class="phase-tag tag-todo">LATER</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p7-1"></div>
+        <div class="item-body">
+          <div class="item-label">Push repo to GitHub and connect to Netlify</div>
+          <div class="item-note">Go to <a href="https://app.netlify.com" target="_blank">app.netlify.com</a> → Add new site → Import from Git → select this repo. Set publish directory to <code>.</code> (root). The <code>netlify.toml</code> already handles security headers and publish dir. <code>index.html</code> serves at <code>/</code> and <code>app.html</code> at <code>/app.html</code> automatically.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p7-2"></div>
+        <div class="item-body">
+          <div class="item-label">Add secrets as Netlify environment variables</div>
+          <div class="item-note">Store Supabase URL/key, Anthropic API key (for proxy), email API key in Netlify → Site settings → Environment variables. Never commit them to the repo. Access in Netlify Functions via <code>process.env.MY_KEY</code>.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p7-3"></div>
+        <div class="item-body">
+          <div class="item-label">Point a custom domain &amp; verify SSL</div>
+          <div class="item-note">Netlify → Domain management → Add custom domain. SSL via Let's Encrypt is automatic. The HSTS header in <code>netlify.toml</code> enforces HTTPS once SSL is active. Also add your domain to Firebase Auth authorized domains (Phase 4).</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p7-4"></div>
+        <div class="item-body">
+          <div class="item-label">Run the full user flow end-to-end on the live domain</div>
+          <div class="item-note">Visit your domain → create account → land on <code>/app.html</code> → complete onboarding → create a mission → refresh → data persists. Then: sign out → verify redirect to <code>/</code> → navigate directly to <code>/app.html</code> → must redirect back to <code>/</code>.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p7-5"></div>
+        <div class="item-body">
+          <div class="item-label">Test on iOS Safari and Android Chrome</div>
+          <div class="item-note">Test: auth overlay tap-to-close, onboarding wizard, focus timer behaviour when the tab is backgrounded (iOS throttles timers). The app has <code>apple-mobile-web-app-capable</code> meta — also test "Add to Home Screen" flow.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PHASE 8: Launch -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-num todo">8</div>
+      <div class="phase-title">Launch &amp; Growth</div>
+      <span class="phase-tag tag-todo">LATER</span>
+    </div>
+    <ul class="items">
+      <li class="item">
+        <div class="cb" data-id="p8-1"></div>
+        <div class="item-body">
+          <div class="item-label">Add a <code>favicon.ico</code> and PWA manifest</div>
+          <div class="item-note">No favicon is referenced in either HTML file. Add <code>/favicon.ico</code> and a <code>/manifest.json</code> with app name, icons, and <code>display: standalone</code> for "Add to Home Screen". The app already has <code>apple-mobile-web-app-capable</code> meta — finish the PWA setup.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p8-2"></div>
+        <div class="item-body">
+          <div class="item-label">Add Open Graph + Twitter card meta tags to <code>index.html</code></div>
+          <div class="item-note">The current <code>&lt;meta description&gt;</code> is in place but no <code>og:image</code>, <code>og:title</code>, or <code>twitter:card</code>. Add these so link previews look polished when shared on Twitter/LinkedIn/Slack. Create a 1200×630px preview image.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p8-3"></div>
+        <div class="item-body">
+          <div class="item-label">Add <code>robots.txt</code></div>
+          <div class="item-note">Create <code>/robots.txt</code> to block <code>/app.html</code> from search crawlers (private app content) while allowing the landing page to be indexed. Example: <code>Disallow: /app.html</code> under <code>User-agent: *</code>.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p8-4"></div>
+        <div class="item-body">
+          <div class="item-label">Add analytics &amp; error monitoring</div>
+          <div class="item-note">Add <a href="https://posthog.com" target="_blank">PostHog</a> (free) for event tracking (account created, onboarding completed, AXIS message sent). Add <a href="https://sentry.io" target="_blank">Sentry</a> (free 5k errors/month) to catch JS errors in production you'd never otherwise know about.</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p8-5"></div>
+        <div class="item-body">
+          <div class="item-label">Add Terms of Service and Privacy Policy</div>
+          <div class="item-note">Required before collecting emails or account data at scale. Add links in the auth card footer and landing page footer. Use <a href="https://getterms.io" target="_blank">GetTerms.io</a> as a starting point — update to reflect your actual data practices (Firebase analytics, localStorage, Anthropic API calls).</div>
+        </div>
+      </li>
+      <li class="item">
+        <div class="cb" data-id="p8-6"></div>
+        <div class="item-body">
+          <div class="item-label">Set up transactional email for account events</div>
+          <div class="item-note">Use <a href="https://resend.com" target="_blank">Resend</a> or SendGrid to send: welcome email on account creation, password reset confirmation, beta key delivery. Wire through your Netlify Functions. Free tiers cover early-stage volume.</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div style="margin-top: 40px;">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <div class="progress-label">
+      <span id="progressText">Calculating...</span>
+      <span id="progressPct">0%</span>
+    </div>
+  </div>
+
+  <div class="note-box" style="margin-top: 20px;">
+    <strong>Minimum Viable Launch path:</strong> Phase 1 is done. Complete Phases 2 (upgrade auth), 3 (lead capture), 4 (Firebase rules), and 7 (deploy) before going public. Phases 5, 6, and 8 can follow in the first weeks post-launch.
+  </div>
+
+  <footer>
+    WAR ROOM &middot; Launch Checklist &middot; v5.1 &middot; Progress saves in your browser
+  </footer>
+</div>
+
+<script>
+  var STORE_KEY = 'wr_checklist_v2';
+  var cbs = Array.from(document.querySelectorAll('.cb'));
+  var total = cbs.length;
+
+  function save() {
+    var state = {};
+    cbs.forEach(function(cb) { state[cb.dataset.id] = cb.classList.contains('checked'); });
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+
+  function load() {
+    try {
+      var state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+      cbs.forEach(function(cb) {
+        if (state[cb.dataset.id] || cb.classList.contains('locked')) {
+          cb.classList.add('checked');
+          var label = cb.closest('.item').querySelector('.item-label');
+          if (label) label.classList.add('done-text');
+        }
+      });
+    } catch(e) {}
+  }
+
+  function updateProgress() {
+    var done = cbs.filter(function(cb) { return cb.classList.contains('checked'); }).length;
+    var pct = Math.round(done / total * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = done + ' of ' + total + ' items complete';
+    document.getElementById('progressPct').textContent = pct + '%';
+  }
+
+  cbs.forEach(function(cb) {
+    var isLocked = cb.classList.contains('locked');
+    cb.addEventListener('click', function() {
+      if (isLocked) return;
+      cb.classList.toggle('checked');
+      var label = cb.closest('.item').querySelector('.item-label');
+      if (label) label.classList.toggle('done-text', cb.classList.contains('checked'));
+      save();
+      updateProgress();
+    });
+  });
+
+  load();
+  updateProgress();
+</script>
+</body>
+</html>
