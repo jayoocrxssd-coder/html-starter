@@ -178,8 +178,8 @@ All callers updated to `async`/`await`:
 #### 1. Email signup now triggers onboarding
 `handleAuth()` in signup mode previously called `closeAppAuthOverlay()` and stopped. Added a chained `setTimeout` that calls `initOnboarding()` if `!S.onboarded` after the overlay closes.
 
-#### 2. Email auth now creates a Supabase session
-Both `signUp` and `signIn` paths in `handleAuth()` now call `_sb.auth.signUp()` / `_sb.auth.signInWithPassword()` when the Supabase client is available. This triggers `onAuthStateChange` → `syncFromCloud()` → sets `currentUser`, enabling cloud sync for email/password users (previously only Google sign-in users got cloud sync).
+#### 2. Email auth now creates a Firebase Auth session
+Both `signUp` and `signIn` paths in `handleAuth()` now call `_fbAuth.createUserWithEmailAndPassword()` / `_fbAuth.signInWithEmailAndPassword()` when Firebase is available. This triggers `onAuthStateChanged` → `syncFromCloud()` → sets `currentUser`, enabling cloud sync for email/password users (previously only Google sign-in users got cloud sync).
 
 #### 3. Fixed undefined `startOnboarding` call in Google sign-in
 `handleGoogleSignIn()` called `startOnboarding()` (undefined). Changed to `initOnboarding()`.
@@ -195,10 +195,65 @@ Added a `#changelog` section to `index.html` (landing page) with three entries c
 | Check | Result |
 |---|---|
 | Email signup → onboarding wizard appears | ✅ |
-| Email signup → Supabase auth session created | ✅ |
-| Email sign-in → Supabase auth session restored | ✅ |
+| Email signup → Firebase Auth session created | ✅ |
+| Email sign-in → Firebase Auth session restored | ✅ |
 | `startOnboarding` → `initOnboarding` | ✅ |
 | `obFinish` retries cloud save | ✅ |
 | Landing page changelog section renders | ✅ |
 | Footer "Changelog" link scrolls to section | ✅ |
 | Nav "Changelog" link added | ✅ |
+
+---
+
+## v5.3 — Supabase → Firebase Migration (2026-05-20)
+
+**Branch:** `claude/fix-onboarding-sync-blog-MfPRc`
+
+### Changes Applied
+
+Removed Supabase entirely. All cloud sync and auth now runs on Firebase (same project as Google sign-in: `createwarrom`).
+
+| Area | Old (Supabase) | New (Firebase) |
+|---|---|---|
+| SDK load | `supabase-js@2` UMD from jsDelivr | `firebase-app/auth/firestore-compat` v10.12.0 from gstatic |
+| Client init | `createClient(URL, KEY)` | `firebase.initializeApp(FB_CONFIG)` |
+| Cloud storage | `_sb.from('war_room_data').upsert()` | `_fbDb.collection('war_room_data').doc(uid).set()` |
+| Cloud load | `_sb.from(...).select().eq().single()` | `_fbDb.collection(...).doc(uid).get()` |
+| Auth listener | `_sb.auth.onAuthStateChange(event, session)` | `_fbAuth.onAuthStateChanged(user)` |
+| Email signup | `_sb.auth.signUp()` | `_fbAuth.createUserWithEmailAndPassword()` |
+| Email signin | `_sb.auth.signInWithPassword()` | `_fbAuth.signInWithEmailAndPassword()` |
+| Sign out | `_sb.auth.signOut()` | `_fbAuth.signOut()` |
+| Google sign-in | No Firebase session created | `_fbAuth.signInWithCredential(GoogleProvider.credential(null, token))` |
+| User ID field | `currentUser.id` | `currentUser.uid` |
+
+### Firebase Setup Required
+
+In Firebase Console (project `createwarrom`):
+1. **Firestore** → Create database → start in production mode
+2. **Firestore Rules** → Add rule allowing authenticated users to read/write their own document:
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /war_room_data/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+3. **Authentication** → Sign-in method → Enable **Email/Password** and **Google**
+4. **Authentication** → Settings → Add your deployed domain to **Authorized Domains**
+
+### Verification Checklist
+
+| Check | Result |
+|---|---|
+| No Supabase references in bundle | ✅ |
+| `initFirebase()` loads app/auth/firestore SDKs | ✅ |
+| `saveToCloud` uses Firestore `.set()` | ✅ |
+| `loadFromCloud` uses Firestore `.get()` | ✅ |
+| Email signup → Firebase `createUserWithEmailAndPassword` | ✅ |
+| Email signin → Firebase `signInWithEmailAndPassword` | ✅ |
+| Google sign-in → Firebase `signInWithCredential` | ✅ |
+| `onAuthStateChanged` drives `currentUser` | ✅ |
+| Sign out → Firebase `signOut()` | ✅ |
