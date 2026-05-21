@@ -927,6 +927,40 @@ input[type=text] {
             </div>
           </div>
 
+          <!-- AXIS AI -->
+          <div class="card" style="margin-bottom:10px;padding:0;overflow:hidden">
+            <div onclick="toggleAccordion('acc-axis','chev-axis')" style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:28px;height:28px;border-radius:8px;background:var(--accent-bg,#22c55e1a);border:1px solid var(--accent,#22c55e)44;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="var(--accent,#22c55e)" stroke-width="1.4"/><path d="M5 7l1.5 1.5L9.5 5" stroke="var(--accent,#22c55e)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="section-title">AXIS · AI</div>
+              </div>
+              <svg id="chev-axis" width="18" height="18" viewBox="0 0 18 18" fill="none" style="transition:transform 0.28s cubic-bezier(.22,1,.36,1);flex-shrink:0">
+                <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="#8e8e93" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div id="acc-axis" style="max-height:0;overflow:hidden;transition:max-height 0.35s cubic-bezier(.22,1,.36,1)">
+              <div style="padding:0 18px 18px">
+                <div style="height:1px;background:var(--card2);margin-bottom:14px"></div>
+                <div style="font-size:12px;color:var(--muted);line-height:1.55;margin-bottom:14px">Paste your Anthropic API key to power AXIS AI features. Stored locally on your device only.</div>
+                <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px">Anthropic API Key</div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <input id="axis-api-key" type="password" placeholder="sk-ant-api..." autocomplete="off"
+                    style="flex:1;background:var(--card2);border:none;border-radius:10px;padding:11px 13px;color:var(--white);font-family:'Outfit',sans-serif;font-size:13px;outline:none;font-family:monospace">
+                  <button onclick="toggleAxisKeyVisibility()" id="axis-eye-btn" style="background:var(--card2);border:none;border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--muted);display:flex;align-items:center">
+                    <svg id="axis-eye-icon" width="18" height="18" viewBox="0 0 18 18" fill="none"><ellipse cx="9" cy="9" rx="7" ry="4.5" stroke="currentColor" stroke-width="1.4"/><circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="1.4"/></svg>
+                  </button>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:10px">
+                  <button onclick="saveAxisKey()" style="flex:1;padding:11px;border-radius:100px;border:none;background:var(--accent,#22c55e);color:#000;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Save key</button>
+                  <button onclick="clearAxisKey()" style="padding:11px 16px;border-radius:100px;border:1px solid #3a3a3c;background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Clear</button>
+                </div>
+                <div id="axis-key-status" style="font-size:11px;margin-top:8px;text-align:center;color:var(--muted);display:none"></div>
+              </div>
+            </div>
+          </div>
+
           <!-- DANGER ZONE -->
           <div class="card" style="margin-bottom:10px">
             <div class="section-title" style="margin-bottom:6px">Developer</div>
@@ -2729,6 +2763,63 @@ input[type=text] {
   if (!hadSavedData) {
     buildOnboarding();
   }
+
+  // ── AXIS API KEY ──────────────────────────────────────
+  const AXIS_KEY_STORE = 'stratus_axis_key';
+
+  function loadAxisKey() {
+    const key = localStorage.getItem(AXIS_KEY_STORE) || '';
+    const inp = document.getElementById('axis-api-key');
+    if (inp) inp.value = key;
+    updateAxisStatus(key ? 'Key saved — AXIS is active.' : '');
+  }
+
+  function saveAxisKey() {
+    const inp = document.getElementById('axis-api-key');
+    const key = inp ? inp.value.trim() : '';
+    if (!key) {
+      showAxisStatus('Enter a key first.', '#ff453a');
+      return;
+    }
+    if (!key.startsWith('sk-ant-')) {
+      showAxisStatus('Key should start with sk-ant-...', '#ff453a');
+      return;
+    }
+    localStorage.setItem(AXIS_KEY_STORE, key);
+    showAxisStatus('Key saved — AXIS is active.', 'var(--accent,#22c55e)');
+  }
+
+  function clearAxisKey() {
+    localStorage.removeItem(AXIS_KEY_STORE);
+    const inp = document.getElementById('axis-api-key');
+    if (inp) inp.value = '';
+    showAxisStatus('Key cleared.', 'var(--muted)');
+  }
+
+  function showAxisStatus(msg, color) {
+    const el = document.getElementById('axis-key-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = color || 'var(--muted)';
+    el.style.display = 'block';
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.style.display = 'none'; }, 3000);
+  }
+
+  function updateAxisStatus(msg) {
+    const el = document.getElementById('axis-key-status');
+    if (!el) return;
+    if (msg) { el.textContent = msg; el.style.color = 'var(--accent,#22c55e)'; el.style.display = 'block'; }
+    else { el.style.display = 'none'; }
+  }
+
+  function toggleAxisKeyVisibility() {
+    const inp = document.getElementById('axis-api-key');
+    if (!inp) return;
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  loadAxisKey();
 
 </script>
 </body>
