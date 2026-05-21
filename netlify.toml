@@ -1,0 +1,29 @@
+[build]
+  functions = "netlify/functions"
+  publish   = "."
+
+# Security headers (replaces Vercel middleware.js)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Referrer-Policy          = "origin-when-cross-origin"
+    X-Frame-Options          = "DENY"
+    X-Content-Type-Options   = "nosniff"
+    X-DNS-Prefetch-Control   = "on"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# Route /api/* → Netlify Functions so app.html fetch calls work unchanged
+[[redirects]]
+  from   = "/api/stripe-checkout"
+  to     = "/.netlify/functions/stripe-checkout"
+  status = 200
+
+[[redirects]]
+  from   = "/api/stripe-portal"
+  to     = "/.netlify/functions/stripe-portal"
+  status = 200
+
+[[redirects]]
+  from   = "/api/stripe-webhook"
+  to     = "/.netlify/functions/stripe-webhook"
+  status = 200
