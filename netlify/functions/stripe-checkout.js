@@ -15,6 +15,7 @@ function getAdminApp() {
 }
 
 const PLAN_PRICES = {
+  personal:       process.env.STRIPE_PRICE_PERSONAL,
   small_business: process.env.STRIPE_PRICE_SMALL_BUSINESS,
   enterprise:     process.env.STRIPE_PRICE_ENTERPRISE,
 };

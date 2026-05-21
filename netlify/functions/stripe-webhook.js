@@ -9,6 +9,7 @@ function getAdminApp() {
 
 function planFromPriceId(priceId) {
   const map = {
+    [process.env.STRIPE_PRICE_PERSONAL]:       'personal',
     [process.env.STRIPE_PRICE_SMALL_BUSINESS]: 'small_business',
     [process.env.STRIPE_PRICE_ENTERPRISE]:     'enterprise',
   };

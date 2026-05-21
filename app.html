@@ -9693,9 +9693,12 @@ async function handleUpgradeClick() {
     if (ov) ov.style.display = 'flex';
     return;
   }
-  var plan = (S.profile && S.profile.currentPlan) || 'personal';
-  var next = { personal: 'small_business', small_business: 'enterprise' }[plan];
-  if (!next) { showToast('You are already on the top plan.'); return; }
+  var stripeStatus = S.profile && S.profile.stripeStatus;
+  var isActive = stripeStatus === 'active' || stripeStatus === 'trialing';
+  // No active subscription → subscribe to Personal plan
+  // Already active on Personal → no next tier available yet
+  if (isActive) { showToast('More plans coming soon — you\'re already locked in.'); return; }
+  var targetPlan = 'personal';
   try {
     showToast('Opening checkout…');
     var token = await currentUser.getIdToken();
@@ -9703,7 +9706,7 @@ async function handleUpgradeClick() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       body: JSON.stringify({
-        plan: next,
+        plan: targetPlan,
         successUrl: window.location.origin + '/app.html?checkout=success',
         cancelUrl:  window.location.origin + '/app.html'
       })
