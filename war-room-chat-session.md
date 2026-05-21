@@ -205,7 +205,7 @@ Added a `#changelog` section to `index.html` (landing page) with three entries c
 
 ---
 
-## v5.3 — Supabase → Firebase Migration (2026-05-20)
+## v5.3 — Supabase → Firebase Migration (2026-05-21)
 
 **Branch:** `claude/fix-onboarding-sync-blog-MfPRc`
 
@@ -257,3 +257,167 @@ service cloud.firestore {
 | Google sign-in → Firebase `signInWithCredential` | ✅ |
 | `onAuthStateChanged` drives `currentUser` | ✅ |
 | Sign out → Firebase `signOut()` | ✅ |
+
+---
+
+## v5.4 — Bug Sweep (2026-05-21)
+
+**Branch:** `claude/fix-onboarding-sync-blog-MfPRc`  
+**Commit:** `203d690`
+
+### Changes Applied
+
+#### 1. Firestore document delete on data reset
+`resetAllData()` previously only cleared `localStorage`. Now also calls `_fbDb.collection('war_room_data').doc(currentUser.uid).delete()` before reloading, so the cloud document is wiped too.
+
+#### 2. `window._fbDb` conflict resolved
+A `<script type="module">` block was assigning the modular Firestore SDK instance to `window._fbDb`. `handlePendingJoin()` then called compat-style `.collection()` on it and crashed. Fixed by removing the modular assignment and having `initFirebase()` set `window._fbDb = _fbDb` (compat instance).
+
+#### 3. `_cloudSynced` hoisted to module scope
+`_cloudSynced` was declared inside the boot IIFE — `signOut()` couldn't reset it. Hoisted to module scope so sign-out properly clears the flag, allowing cloud sync to run again on next login.
+
+#### 4. Landing page → app redirect
+All three auth success paths in `index.html` (`handleGoogleSignIn`, `handleAuth` signup, `handleAuth` signin) now call `window.location.replace('app.html')` so the user actually lands in the app.
+
+#### 5. Null guards and clipboard error fixes
+Added null checks throughout event handlers to prevent `Cannot read properties of null` crashes when DOM elements are missing. Fixed clipboard write errors by wrapping in try/catch.
+
+### Verification Checklist
+
+| Check | Result |
+|---|---|
+| Data reset also deletes Firestore document | ✅ |
+| No `window._fbDb` modular/compat conflict | ✅ |
+| `_cloudSynced` resets correctly on sign-out | ✅ |
+| Landing page auth redirects to `app.html` | ✅ |
+| Null guard crashes resolved | ✅ |
+
+---
+
+## v5.4a — JSON Escaping Fix (2026-05-21)
+
+**Branch:** `claude/fix-onboarding-sync-blog-MfPRc`  
+**Commit:** `d831cfc`
+
+### Problem
+
+> `"Error unpacking: Unterminated string in JSON at position 137260 (line 1 column 137261)"`
+
+### Root Cause
+
+The WAR ROOM bundle stores the entire app HTML as a JSON string inside `<script type="__bundler/template">`. The re-bundling script used raw `json.dumps()` output without escaping `</` sequences. When the browser's HTML parser encountered `</script` inside the JSON blob it closed the outer `<script>` tag immediately, truncating the JSON and causing the unpack error at runtime.
+
+### Fix
+
+After `json.dumps(template)`, every `</` is replaced with `<\/` before writing:
+
+```python
+new_json = json.dumps(template, ensure_ascii=False)
+new_json = new_json.replace('</', '<\\/')  # prevent HTML parser closing <script> early
+```
+
+`\/` is a valid JSON escape for `/` — `JSON.parse()` handles it transparently at runtime.
+
+### Verification
+
+```python
+assert new_json.lower().find('</script') == -1   # no raw </script in JSON string
+assert json.loads(new_json) == template           # round-trip matches source
+```
+
+Both `app.html` and `index.html` re-bundled and verified clean.
+
+---
+
+## v5.4b — User Data Isolation (2026-05-21)
+
+**Branch:** `claude/fix-onboarding-sync-blog-MfPRc`  
+**Commit:** `d9c9512`
+
+### Problem
+
+Data from one account was visible when logging in with a different email on the same device.
+
+### Root Cause
+
+Two bugs combined:
+
+1. **`signOut()` did not clear `stratusWR_v31`** — The app's main data key stayed in `localStorage` after sign-out. When the next user signed in, `load()` ran before Firebase auth resolved and populated `S` with the previous user's data.
+
+2. **`loadFromCloud()` had a cross-user localStorage fallback** — If a new account had no Firestore document yet (or no businesses in it), the code explicitly copied businesses from `localStorage` into `S`, seeding the new account with the previous user's data.
+
+### Fixes
+
+**`signOut()`** — add `localStorage.removeItem('stratusWR_v31')`:
+```js
+async function signOut() {
+  ...
+  localStorage.removeItem('stratusWR_v31');  // ← added
+  window.location.replace('/');
+}
+```
+
+**`syncFromCloud()`** — reset `S` to `DEFAULT` before loading this user's cloud data:
+```js
+async function syncFromCloud(user) {
+  if(_cloudSynced) return;
+  _cloudSynced = true;
+  currentUser = user;
+  S = JSON.parse(JSON.stringify(DEFAULT));  // ← added: wipe stale state
+  ...
+}
+```
+
+**`loadFromCloud()`** — removed the localStorage businesses fallback entirely:
+```js
+// Removed block:
+// if(!S.businesses.length){
+//   const local = localStorage.getItem('stratusWR_v31');
+//   if(local){ ...copy businesses from localStorage... }
+// }
+```
+
+### Verification Checklist
+
+| Check | Result |
+|---|---|
+| Sign out clears `stratusWR_v31` from localStorage | ✅ |
+| New user auth resets `S` to `DEFAULT` before cloud load | ✅ |
+| No localStorage businesses fallback bleeding across accounts | ✅ |
+| Fresh account starts empty if no Firestore document exists | ✅ |
+
+---
+
+## Firebase Console Setup Checklist
+
+Required one-time setup in [Firebase Console](https://console.firebase.google.com) → project `createwarrom`:
+
+- [ ] **Authentication** → Sign-in method → Enable **Google**
+- [ ] **Authentication** → Sign-in method → Enable **Email/Password**
+- [ ] **Authentication** → Settings → Authorized Domains → add your deployed domain
+- [ ] **Firestore** → Create database (production mode)
+- [ ] **Firestore** → Rules → paste:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /war_room_data/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+---
+
+## Known Limitations (current)
+
+| Item | Notes |
+|---|---|
+| `wr_access = '1'` auth gate | Client-side only — by design for standalone app |
+| PBKDF2 salt is deterministic | Derived from email, not random. Per-user unique but not random-salt strength |
+| Firebase API key is public | Expected for Firebase web apps. Security enforced via Firestore rules |
+| Admin login is a stub | Modal exists but no real admin backend implemented |
+| Google Drive OAuth | Client ID `190616282170-...` needs authorized origins set in Google Cloud Console |
+| AXIS AI Anthropic key | User must enter their own key in Settings → AXIS AI |
