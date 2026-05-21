@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAR ROOM — Bug Report v5.4</title>
+<style>
+  :root {
+    --bg: #0f0f0e; --bg2: #1a1a18; --bg3: #242422;
+    --ink: #f0f0ee; --text2: #a8a8a4; --text3: #66665e;
+    --green: #10b981; --green-bg: rgba(16,185,129,.1);
+    --red: #ef4444; --red-bg: rgba(239,68,68,.1);
+    --amber: #f59e0b; --amber-bg: rgba(245,158,11,.1);
+    --blue: #3b82f6; --blue-bg: rgba(59,130,246,.1);
+    --border: rgba(255,255,255,.07);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; padding:40px 24px; max-width:1100px; margin:0 auto; }
+  h1 { font-size:28px; font-weight:800; letter-spacing:-.03em; margin-bottom:4px; }
+  .meta { font-size:11px; color:var(--text3); font-family:'DM Mono',monospace; letter-spacing:.06em; margin-bottom:40px; }
+  .meta span { color:var(--green); }
+
+  .section-label { font-size:10px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--text3); margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+  .section-label::after { content:''; flex:1; height:.5px; background:var(--border); }
+
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:48px; }
+  @media(max-width:700px){ .grid { grid-template-columns:1fr; } }
+
+  .card { background:var(--bg2); border:.5px solid var(--border); border-radius:14px; padding:20px; display:flex; flex-direction:column; gap:14px; }
+  .card-header { display:flex; align-items:flex-start; gap:12px; }
+  .badge { flex-shrink:0; font-size:9px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:3px 9px; border-radius:100px; white-space:nowrap; }
+  .badge.fixed   { background:var(--green-bg); color:var(--green); }
+  .badge.needs   { background:var(--amber-bg); color:var(--amber); }
+  .badge.critical{ background:var(--red-bg);   color:var(--red);   }
+  .badge.high    { background:rgba(239,68,68,.06); color:var(--red); }
+  .badge.medium  { background:var(--amber-bg); color:var(--amber); }
+  .badge.low     { background:var(--bg3); color:var(--text2); }
+
+  .card-title { font-size:13px; font-weight:700; line-height:1.3; color:var(--ink); }
+  .card-desc  { font-size:11px; color:var(--text2); line-height:1.7; }
+  .card-location { font-size:10px; font-family:'DM Mono',monospace; color:var(--text3); background:var(--bg3); padding:4px 10px; border-radius:6px; display:inline-block; }
+  .card-fix   { font-size:10px; color:var(--green); background:var(--green-bg); border-radius:8px; padding:8px 12px; line-height:1.6; }
+  .card-action{ font-size:10px; color:var(--amber); background:var(--amber-bg); border-radius:8px; padding:8px 12px; line-height:1.6; }
+
+  code { font-family:'DM Mono',monospace; font-size:10px; background:var(--bg3); padding:1px 5px; border-radius:4px; color:#a8d8ea; }
+
+  .summary-bar { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:40px; }
+  .stat-card { background:var(--bg2); border:.5px solid var(--border); border-radius:12px; padding:16px; text-align:center; }
+  .stat-num { font-size:32px; font-weight:800; letter-spacing:-.04em; line-height:1; }
+  .stat-num.green { color:var(--green); }
+  .stat-num.amber { color:var(--amber); }
+  .stat-num.red   { color:var(--red);   }
+  .stat-lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--text3); margin-top:6px; }
+
+  footer { margin-top:56px; padding-top:20px; border-top:.5px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  footer .brand { font-size:11px; font-weight:800; letter-spacing:.08em; color:var(--text3); }
+  footer .ver   { font-size:10px; font-family:'DM Mono',monospace; color:var(--text3); }
+</style>
+</head>
+<body>
+
+<h1>WAR ROOM · Bug Audit</h1>
+<div class="meta">v5.4 · 2026-05-21 · Branch: <span>claude/fix-onboarding-sync-blog-MfPRc</span> · 15 issues catalogued</div>
+
+<!-- Summary -->
+<div class="summary-bar">
+  <div class="stat-card"><div class="stat-num green">9</div><div class="stat-lbl">Fixed (this build)</div></div>
+  <div class="stat-card"><div class="stat-num amber">6</div><div class="stat-lbl">Needs your input</div></div>
+  <div class="stat-card"><div class="stat-num red">3</div><div class="stat-lbl">Critical severity</div></div>
+  <div class="stat-card"><div class="stat-num" style="color:var(--ink)">15</div><div class="stat-lbl">Total found</div></div>
+</div>
+
+<!-- ═══ LIST 1: FIXED ═══ -->
+<div class="section-label">List 1 — Fixed in this build</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge fixed">Fixed</span>
+      <div class="card-title">Stale Supabase delete call crashes data-reset</div>
+    </div>
+    <div class="card-location">app.html · line ~6092</div>
+    <div class="card-desc">The "reset all data" function still referenced <code>_sb.from('war_room_data').delete()</code> — Supabase is gone. <code>_sb</code> was <code>null</code> so the cloud delete was silently skipped. Also used <code>currentUser.id</code> (Supabase) instead of <code>currentUser.uid</code> (Firebase).</div>
+    <div class="card-fix">✓ Replaced with <code>_fbDb.collection('war_room_data').doc(currentUser.uid).delete()</code> — now correctly deletes from Firestore on full data reset.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge fixed">Fixed</span>
+      <div class="card-title">window._fbDb conflict — handlePendingJoin crashes</div>
+    </div>
+    <div class="card-location">app.html · lines 1576, 9133, 9149</div>
+    <div class="card-desc">The <code>&lt;script type="module"&gt;</code> block set <code>window._fbDb = getFirestore(app)</code> using the MODULAR Firebase SDK. <code>handlePendingJoin()</code> then called <code>window._fbDb.collection()</code> which doesn't exist in the modular SDK — instant crash.</div>
+    <div class="card-fix">✓ Removed the modular Firestore assignment. <code>initFirebase()</code> now sets <code>window._fbDb = _fbDb</code> (compat SDK) which supports <code>.collection()</code> calls.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge fixed">Fixed</span>
+      <div class="card-title">Cloud data never reloads after sign-out / sign-in</div>
+    </div>
+    <div class="card-location">app.html · lines 9120, 9860, 9895</div>
+    <div class="card-desc"><code>_cloudSynced</code> was declared inside the boot IIFE's closure and set to <code>true</code> on first sync. After sign-out and sign-in in the same session, <code>onAuthStateChanged</code> fired again but <code>syncFromCloud()</code> returned immediately — data never re-loaded.</div>
+    <div class="card-fix">✓ Hoisted <code>_cloudSynced</code> to module scope. <code>signOut()</code> now resets it to <code>false</code> so the next sign-in re-pulls cloud data correctly.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge fixed">Fixed</span>
+      <div class="card-title">Broken Firebase Google credential in app</div>
+    </div>
+    <div class="card-location">app.html · line ~9417</div>
+    <div class="card-desc"><code>GoogleAuthProvider.credential(null, access_token)</code> — The GSI OAuth2 token client returns only an access token, not an id_token. Firebase Auth requires <code>id_token</code> as the first argument. Passing <code>null</code> causes the credential to silently fail or throw, breaking cloud sync for Google sign-in users in the app.</div>
+    <div class="card-fix">✓ Removed the broken call entirely. Google Drive access still works (uses access_token for Drive API). Firebase Auth for cloud sync uses the landing page Google sign-in instead.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge fixed">Fixed</span>
+      <div class="card-title">Landing page sign-in doesn't navigate to the app</div>
+    </div>
+    <div class="card-location">index.html · lines 2779, 2788, 2865</div>
+    <div class="card-desc">All three auth paths on the landing page (email signup, email sign-in, Google sign-in) called <code>closeAuthOverlay()</code> and stopped. The user would see "Access granted" but stay on the landing page with no way to reach <code>app.html</code>.</div>
+    <div class="card-fix">✓ Added <code>window.location.replace('app.html')</code> to all three success paths, chained 400ms after the overlay closes.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge fixed">Fixed</span>
+      <div class="card-title">_fbDb.collection called without null guard</div>
+    </div>
+    <div class="card-location">app.html · saveToCloud + loadFromCloud</div>
+    <div class="card-desc">If Firebase Firestore failed to initialise (network offline, SDK load error), <code>_fbDb</code> would be <code>null</code> but <code>saveToCloud()</code> and <code>loadFromCloud()</code> only checked <code>if(!_fbDb)</code> at the top. If the Firestore object existed but had no <code>collection</code> method (wrong SDK instance), the call would still throw.</div>
+    <div class="card-fix">✓ Guards now check <code>!_fbDb || !_fbDb.collection</code> before proceeding, making both functions safe against any partial-init state.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge fixed">Fixed</span>
+      <div class="card-title">Clipboard write errors are silently swallowed</div>
+    </div>
+    <div class="card-location">app.html · lines 9710, 9750</div>
+    <div class="card-desc"><code>navigator.clipboard.writeText()</code> calls for "Copy Room ID" and "Copy Invite Link" had no <code>.catch()</code>. If the user denies clipboard permission, the promise rejects silently — the user gets no feedback that the copy failed.</div>
+    <div class="card-fix">✓ Added <code>.catch()</code> on both calls to show a toast: "Could not copy — try manually."</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge fixed">Fixed · Earlier builds</span>
+      <div class="card-title">Email signup never triggered onboarding</div>
+    </div>
+    <div class="card-location">app.html · handleAuth() signup branch</div>
+    <div class="card-desc">After email/password signup, the auth overlay closed but <code>initOnboarding()</code> was never called. New users landed on a blank dashboard with no setup wizard.</div>
+    <div class="card-fix">✓ Fixed in v5.2 — overlay close now chains into <code>initOnboarding()</code> if <code>!S.onboarded</code>.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge fixed">Fixed · Earlier builds</span>
+      <div class="card-title">Email auth had no Firebase session (no cloud sync)</div>
+    </div>
+    <div class="card-location">app.html · handleAuth()</div>
+    <div class="card-desc">Email/password auth only wrote to <code>localStorage.wr_accounts</code> and set <code>wr_access = '1'</code>. <code>currentUser</code> was never set, so <code>saveToCloud()</code> was a no-op for all email users.</div>
+    <div class="card-fix">✓ Fixed in v5.2/v5.3 — auth paths now call Firebase Auth, triggering <code>onAuthStateChanged</code> → sets <code>currentUser</code> → cloud sync active.</div>
+  </div>
+
+</div>
+
+<!-- ═══ LIST 2: NEEDS YOUR INPUT ═══ -->
+<div class="section-label">List 2 — Needs your input / backend config</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge critical">Critical</span>
+      <div class="card-title">Firebase Auth: Email/Password provider not enabled</div>
+    </div>
+    <div class="card-location">Firebase Console → Authentication → Sign-in method</div>
+    <div class="card-desc">Until you enable the Email/Password provider in your Firebase project, <code>createUserWithEmailAndPassword()</code> and <code>signInWithEmailAndPassword()</code> will throw <code>auth/operation-not-allowed</code>. No email account can be created or used.</div>
+    <div class="card-action">⚙ Firebase Console → <b>Authentication</b> → <b>Sign-in method</b> → Enable <b>Email/Password</b></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge critical">Critical</span>
+      <div class="card-title">Firestore database not created / security rules missing</div>
+    </div>
+    <div class="card-location">Firebase Console → Firestore Database</div>
+    <div class="card-desc">Cloud sync writes to <code>war_room_data/{uid}</code> in Firestore. If the database doesn't exist, all saves silently fail. Without security rules, data is either unreadable or fully public.</div>
+    <div class="card-action">⚙ Create the Firestore database (production mode), then set this rule:<br><br>
+<code>match /war_room_data/{userId} {<br>
+&nbsp;&nbsp;allow read, write: if request.auth != null<br>
+&nbsp;&nbsp;&amp;&amp; request.auth.uid == userId;<br>
+}</code></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge critical">Critical</span>
+      <div class="card-title">Admin login always shows "Invalid credentials"</div>
+    </div>
+    <div class="card-location">app.html · submitAdminLogin() · line ~9516</div>
+    <div class="card-desc">The <code>submitAdminLogin()</code> function has no credential comparison — the "Invalid credentials" block runs unconditionally after the empty-fields check. Admin login is completely non-functional. The code was left as a stub.</div>
+    <div class="card-action">⚙ Decide: do you want a local admin (define a username + hashed password in the function), or remove the admin modal entirely? I can implement either — just tell me which.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge high">High</span>
+      <div class="card-title">Firebase authorized domains not configured</div>
+    </div>
+    <div class="card-location">Firebase Console → Authentication → Settings</div>
+    <div class="card-desc">Firebase Auth rejects OAuth flows from domains not on its allowlist. Google sign-in on the landing page will throw <code>auth/unauthorized-domain</code> on any domain other than <code>localhost</code> unless your Vercel domain is added.</div>
+    <div class="card-action">⚙ Firebase Console → <b>Authentication</b> → <b>Settings</b> → <b>Authorized domains</b> → Add your Vercel URL (e.g. <code>yourapp.vercel.app</code>)</div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge high">High</span>
+      <div class="card-title">Google Drive OAuth client ID needs authorized origins</div>
+    </div>
+    <div class="card-location">Google Cloud Console → OAuth 2.0 Client IDs</div>
+    <div class="card-desc">The Drive backup feature uses client ID <code>190616282170-hkcq2...apps.googleusercontent.com</code>. The Google Identity Services token client will fail on any origin not listed under "Authorized JavaScript origins" in Google Cloud Console.</div>
+    <div class="card-action">⚙ Google Cloud Console → <b>APIs &amp; Services</b> → <b>Credentials</b> → find this client ID → add your deployed origin to <b>Authorized JavaScript origins</b></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge medium">Medium</span>
+      <div class="card-title">AXIS AI — Anthropic API key required</div>
+    </div>
+    <div class="card-location">app.html · Settings → AXIS → API Key field</div>
+    <div class="card-desc">AXIS sends requests directly to <code>api.anthropic.com/v1/messages</code> using whatever key is stored in <code>S.profile.anthropicKey</code>. No key = "Connection issue. Check your API key in Settings" on every message. The key is stored only in your browser's local data.</div>
+    <div class="card-action">⚙ Open the app → Settings → AXIS section → paste your Anthropic API key (<code>sk-ant-api...</code>). Get one at <b>console.anthropic.com</b></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="brand">◈ WAR ROOM · Bug Report</div>
+  <div class="ver">v5.4 · 2026-05-21 · 9 fixed · 6 pending</div>
+</footer>
+
+</body>
+</html>
