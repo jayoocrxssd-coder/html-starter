@@ -1,5 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" style="--bg: #f4f4f2; --bg2: #ececea; --bg3: #e2e2e0; --surface: #ffffff; --border: rgba(0,0,0,.07); --border2: rgba(0,0,0,.13); --text: #0e0e0d; --text2: #525250; --text3: #9a9a98; --accent: #0e0e0d; --accent-fg: #f4f4f2; --r: 10px; --rs: 6px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+  // Redirect mobile users to mobile-optimized app
+  (function(){
+    var w = window.screen.width;
+    var ua = navigator.userAgent;
+    var isMobile = w <= 768 || /Mobi|Android|iPhone|iPad|iPod/i.test(ua);
+    if (isMobile && window.location.pathname.indexOf('app-mobile') === -1) {
+      window.location.replace('app-mobile.html');
+    }
+  })();
+</script>
+
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="War Room — Your personal business command center">
