@@ -2263,6 +2263,18 @@
 </footer>
 
 <script>
+  /* ── Dynamic script loader (used by Firebase lazy-load) ── */
+  function _loadScript(src) {
+    return new Promise(function(resolve, reject) {
+      if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = function() { reject(new Error('Failed to load ' + src)); };
+      document.head.appendChild(s);
+    });
+  }
+
   /* ── Live clock ── */
   function pad(n) { return String(n).padStart(2, '0'); }
   function tickClock() {
@@ -2790,7 +2802,7 @@ You are loyal to the operator's mission.`;
       }
     }
   }
-  function handleForgotPassword() {
+  async function handleForgotPassword() {
     const emailEl = document.getElementById('authEmail');
     const email = (emailEl ? emailEl.value : '').trim().toLowerCase();
     const errEl = document.getElementById('authError');
@@ -2798,7 +2810,15 @@ You are loyal to the operator's mission.`;
     if (errEl) errEl.textContent = '';
     if (sucEl) sucEl.textContent = '';
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (errEl) errEl.textContent = 'Enter your email address first.'; return; }
-    if (!window._fbAuthApp) { if (errEl) errEl.textContent = 'Cloud service unavailable.'; return; }
+    if (!window._fbAuthApp) {
+      try {
+        await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+        await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js');
+        window._fbAuthApp = firebase.apps.length
+          ? firebase.apps[0]
+          : firebase.initializeApp({ apiKey: 'AIzaSyBcdKlkPBlLxs6barPZDAgoPlB9iU82Zkg', authDomain: 'createwarrom.firebaseapp.com', projectId: 'createwarrom' });
+      } catch(e) { if (errEl) errEl.textContent = 'Cloud service unavailable. Please check your connection.'; return; }
+    }
     firebase.auth().sendPasswordResetEmail(email)
       .then(() => { if (sucEl) sucEl.textContent = '\u2713 Reset email sent. Check your inbox.'; })
       .catch(e => {
@@ -2808,7 +2828,7 @@ You are loyal to the operator's mission.`;
       });
   }
   async function handleResetPassword() {
-    handleForgotPassword();
+    await handleForgotPassword();
   }
 
   /* ── Google Sign-In ── */
