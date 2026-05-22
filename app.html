@@ -8,6 +8,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="WAR ROOM">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="robots" content="noindex, nofollow">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230e0e0d'/><text y='.9em' font-size='72' x='50%' dominant-baseline='middle' text-anchor='middle' fill='white' font-weight='900'>W</text></svg>">
 <title>WAR ROOM</title>
 
 <link rel="preconnect" href="https://cdn.jsdelivr.net/" crossorigin="">
@@ -1095,13 +1097,8 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .mob-menu-btn { display: none; }
 .mob-bottom-nav { display: none; }
 .mob-appear-btn { display: none; }
-.mob-more-drawer { display: none; }
+.mob-more-drawer { display: none; 
 
-/* ══════════════════════════════
-   GLOBAL MOBILE POLISH
-   ══════════════════════════════ */
-/* iOS: prevent input zoom — font-size must be ≥16px on mobile */
-@media (max-width: 768px) {
   input[type=text],
   input[type=number],
   input[type=time],
@@ -1316,6 +1313,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   /* Focus state: keep outline for accessibility but style it */
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   :focus:not(:focus-visible) { outline: none; }
+
 }
 
 /* ══════════════════════════════
@@ -8944,6 +8942,8 @@ document.addEventListener('click', function(e){
   }
 });
 
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
 // Reposition dropdown on resize (fixed positioning uses viewport coords)
 window.addEventListener('resize', function(){
   const dd = document.getElementById('appearDropdown');
@@ -12865,7 +12865,7 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px color-mix(in srgb, 
     // Watch class changes on nav-items
     const navObs = new MutationObserver(()=>requestAnimationFrame(positionPill));
     sidebar.querySelectorAll('.nav-item').forEach(n => navObs.observe(n,{attributes:true,attributeFilter:['class']}));
-    sidebar.addEventListener('scroll', positionPill);
+    sidebar.addEventListener('scroll', positionPill, { passive: true });
     window.addEventListener('resize', positionPill);
     setTimeout(positionPill, 100);
     setTimeout(positionPill, 600);
