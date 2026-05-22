@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e0e0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WAR ROOM">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://warroom.app/">
+<title>WAR ROOM — Your personal business command center</title>
+<meta name="description" content="One command center for every mission you run. P&amp;L, focus, intel, AXIS AI — nothing else.">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="WAR ROOM — Your personal business command center">
+<meta property="og:description" content="One command center for every mission you run. P&amp;L, focus, intel, AXIS AI — nothing else.">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WAR ROOM — Your personal business command center">
+<meta name="twitter:description" content="One command center for every mission you run. P&amp;L, focus, intel, AXIS AI — nothing else.">
+<!-- Apple touch icon -->
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230e0e0d'/><text y='.9em' font-size='72' x='50%' dominant-baseline='middle' text-anchor='middle' fill='white' font-weight='900'>W</text></svg>">
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap">
+
+<style>
+  /* ── CSS Variables ──────────────────────────── */
+  :root {
+    --bg: #f4f4f2;
+    --surface: #ffffff;
+    --ink: #0e0e0d;
+    --ink2: #525250;
+    --ink3: #9a9a98;
+    --border: rgba(0,0,0,.07);
+    --border2: rgba(0,0,0,.13);
+    --red: #e53e3e;
+    --green: #22a366;
+    --amber: #d97706;
+  }
+
+  /* ── Reset ──────────────────────────────────── */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Syne', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+  }
+
+  ::selection { background: var(--ink); color: var(--bg); }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input { font-family: inherit; }
+
+  /* ── Focus styles ───────────────────────────── */
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* ── Topbar ─────────────────────────────────── */
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    height: calc(52px + env(safe-area-inset-top));
+    padding-top: env(safe-area-inset-top);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    background: rgba(244,244,242,.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 0.5px solid var(--border2);
+  }
+
+  .topbar-inner {
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .btn-login {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--ink);
+    transition: background .15s, color .15s, border-color .15s;
+  }
+
+  .btn-login:hover, .btn-login:active {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* ── Hero ───────────────────────────────────── */
+  .hero {
+    min-height: 85svh;
+    padding-top: calc(52px + env(safe-area-inset-top) + 32px);
+    padding-bottom: 40px;
+    padding-left: max(18px, env(safe-area-inset-left));
+    padding-right: max(18px, env(safe-area-inset-right));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink3);
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    padding: 7px 12px;
+    border-radius: 100px;
+    margin-bottom: 22px;
+  }
+
+  .hero-eyebrow .eye-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--ink2);
+    line-height: 1.55;
+    margin-bottom: 28px;
+    max-width: 380px;
+  }
+
+  .btn-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 52px;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: opacity .15s, transform .15s;
+    cursor: pointer;
+    margin-bottom: 14px;
+  }
+
+  .btn-cta:hover, .btn-cta:active { opacity: .82; transform: translateY(-1px); }
+
+  .hero-signin-link {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink2);
+    margin-bottom: 22px;
+    min-height: 44px;
+    line-height: 44px;
+    cursor: pointer;
+    transition: color .15s;
+  }
+
+  .hero-signin-link:hover { color: var(--ink); }
+
+  .hero-meta {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink3);
+    letter-spacing: 0.04em;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* ── Features strip ─────────────────────────── */
+  .features {
+    padding: 0 18px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .features-head {
+    margin-bottom: 8px;
+  }
+
+  .section-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink3);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 0.5px;
+    background: var(--ink3);
+    flex-shrink: 0;
+  }
+
+  .feat-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 16px;
+    padding: 20px 20px 18px;
+  }
+
+  .feat-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .feat-glyph {
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--bg);
+    border: 0.5px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .feat-title {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .feat-desc {
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.5;
+  }
+
+  /* ── Pricing ────────────────────────────────── */
+  .pricing {
+    padding: 0 18px 48px;
+  }
+
+  .pricing-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .pricing-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 20px;
+    padding: 24px 20px 20px;
+    position: relative;
+  }
+
+  .pricing-card.featured {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--red);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 14px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .pricing-tier {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 10px;
+  }
+
+  .pricing-card.featured .pricing-tier { color: rgba(255,255,255,.5); }
+
+  .pricing-price {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pricing-price sup {
+    font-size: 22px;
+    font-weight: 700;
+    vertical-align: super;
+    letter-spacing: 0;
+  }
+
+  .pricing-price .per {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0;
+    opacity: .5;
+  }
+
+  .pricing-annual {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--green);
+    margin-bottom: 8px;
+    min-height: 18px;
+  }
+
+  .pricing-card.featured .pricing-annual { color: #6ee7b7; }
+
+  .pricing-desc {
+    font-size: 12px;
+    color: var(--ink2);
+    line-height: 1.5;
+    margin-bottom: 18px;
+  }
+
+  .pricing-card.featured .pricing-desc { color: rgba(255,255,255,.6); }
+
+  .pricing-divider {
+    height: 0.5px;
+    background: var(--border2);
+    margin-bottom: 16px;
+  }
+
+  .pricing-card.featured .pricing-divider { background: rgba(255,255,255,.15); }
+
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .pricing-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink2);
+    line-height: 1.4;
+  }
+
+  .pricing-card.featured .pricing-features li { color: rgba(255,255,255,.8); }
+
+  .pf-check {
+    flex-shrink: 0;
+    margin-top: 1px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(34,163,102,.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pricing-card.featured .pf-check { background: rgba(255,255,255,.15); }
+
+  .pricing-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .15s;
+    border: 0.5px solid var(--ink);
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .pricing-cta:hover, .pricing-cta:active { opacity: .82; }
+
+  .pricing-card.featured .pricing-cta {
+    background: var(--bg);
+    color: var(--ink);
+    border-color: var(--bg);
+  }
+
+  .pricing-cta.ghost {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--border2);
+  }
+
+  .pricing-cta.ghost:hover {
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+
+  /* ── Footer ─────────────────────────────────── */
+  .site-footer {
+    border-top: 0.5px solid var(--border2);
+    padding: 24px max(18px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .footer-copy {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink3);
+    letter-spacing: 0.04em;
+  }
+
+  .footer-privacy {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink3);
+    letter-spacing: 0.04em;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    transition: color .15s;
+  }
+
+  .footer-privacy:hover { color: var(--ink); }
+
+  /* ── Auth Overlay (bottom sheet) ────────────── */
+  .auth-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,.6);
+    display: none;
+    align-items: flex-end;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: opacity .25s ease;
+  }
+
+  .auth-overlay.open {
+    display: flex;
+  }
+
+  .auth-overlay.fading {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .auth-backdrop {
+    position: absolute;
+    inset: 0;
+  }
+
+  .auth-card {
+    position: relative;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    padding: 28px 20px max(24px, env(safe-area-inset-bottom));
+    box-shadow: 0 -16px 60px rgba(0,0,0,.22);
+    max-height: 92svh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    animation: sheetUp .3s cubic-bezier(.32,1.4,.5,1);
+  }
+
+  @keyframes sheetUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .auth-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--border2);
+    border-radius: 100px;
+    margin: 0 auto 20px;
+  }
+
+  .auth-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    background: var(--bg);
+    border: 0.5px solid var(--border2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--ink2);
+    font-size: 16px;
+    transition: background .15s;
+  }
+
+  .auth-close-btn:hover { background: var(--border2); color: var(--ink); }
+
+  .auth-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 20px;
+  }
+
+  .auth-logo-mark {
+    width: 24px;
+    height: 24px;
+    background: var(--ink);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--bg);
+    font-weight: 800;
+  }
+
+  .auth-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 5px;
+  }
+
+  .auth-sub {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink3);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+
+  .auth-tabs {
+    display: flex;
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+
+  .auth-tab {
+    flex: 1;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: transparent;
+    border: none;
+    color: var(--ink3);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: 'Syne', -apple-system, sans-serif;
+  }
+
+  .auth-tab.active { background: var(--ink); color: var(--bg); }
+
+  .auth-google-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 48px;
+    padding: 0 16px;
+    background: #fff;
+    border: 0.5px solid #dadce0;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #3c4043;
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+    transition: box-shadow .15s;
+    font-family: 'Syne', -apple-system, sans-serif;
+  }
+
+  .auth-google-btn:hover { box-shadow: 0 1px 6px rgba(0,0,0,.15); }
+
+  .auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .auth-divider-line {
+    flex: 1;
+    height: 0.5px;
+    background: var(--border2);
+  }
+
+  .auth-divider-text {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--ink3);
+    text-transform: uppercase;
+  }
+
+  .auth-input {
+    width: 100%;
+    background: var(--bg);
+    border: 0.5px solid var(--border2);
+    color: var(--ink);
+    font-family: 'Syne', -apple-system, sans-serif;
+    font-size: 16px;
+    padding: 14px;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color .15s;
+    margin-bottom: 10px;
+  }
+
+  .auth-input:focus { border-color: var(--ink); }
+
+  .auth-btn {
+    width: 100%;
+    min-height: 48px;
+    background: var(--ink);
+    color: var(--bg);
+    border: none;
+    font-family: 'Syne', -apple-system, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .15s;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .auth-btn:hover { opacity: .85; }
+  .auth-btn:disabled { opacity: .45; cursor: not-allowed; }
+
+  .auth-forgot {
+    display: block;
+    text-align: right;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink3);
+    margin-top: -4px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: color .15s;
+    min-height: 44px;
+    line-height: 44px;
+  }
+
+  .auth-forgot:hover { color: var(--ink); }
+
+  .auth-error {
+    font-size: 11px;
+    color: var(--red);
+    font-family: 'DM Mono', monospace;
+    margin-top: 8px;
+    min-height: 16px;
+  }
+
+  .auth-success {
+    font-size: 11px;
+    color: var(--green);
+    font-family: 'DM Mono', monospace;
+    margin-top: 8px;
+  }
+
+  .auth-footer-note {
+    font-size: 9px;
+    color: var(--ink3);
+    font-family: 'DM Mono', monospace;
+    margin-top: 18px;
+    text-align: center;
+    line-height: 1.8;
+  }
+
+  /* ── Reduced motion ─────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ TOPBAR ══════════ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">◈</div>
+      <span>WAR&nbsp;ROOM</span>
+    </div>
+    <button class="btn-login" onclick="openAuthOverlay('signin')">Log In</button>
+  </div>
+</header>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="eye-dot"></span>
+    Now in beta — Reserve access
+  </div>
+  <h1>Your business runs on war.</h1>
+  <p class="hero-sub">One command center for every mission you run. P&amp;L, focus, intel, AXIS AI — nothing else.</p>
+  <button class="btn-cta" onclick="openAuthOverlay('signup')">GET ACCESS →</button>
+  <span class="hero-signin-link" onclick="openAuthOverlay('signin')">Already have access? Sign in →</span>
+  <div class="hero-meta">127 operators on the waitlist · Free during beta</div>
+</section>
+
+<!-- ══════════ FEATURES STRIP ══════════ -->
+<section class="features">
+  <div class="features-head">
+    <div class="section-label">The Modules</div>
+  </div>
+
+  <div class="feat-card">
+    <div class="feat-card-head">
+      <div class="feat-glyph">◎</div>
+      <div class="feat-title">Mission Board</div>
+    </div>
+    <p class="feat-desc">Every business, every mission, tracked and ranked.</p>
+  </div>
+
+  <div class="feat-card">
+    <div class="feat-card-head">
+      <div class="feat-glyph">◷</div>
+      <div class="feat-title">Focus Timer</div>
+    </div>
+    <p class="feat-desc">Pomodoro built for operators. No distractions.</p>
+  </div>
+
+  <div class="feat-card">
+    <div class="feat-card-head">
+      <div class="feat-glyph">◉</div>
+      <div class="feat-title">AXIS AI</div>
+    </div>
+    <p class="feat-desc">Your AI co-pilot. Knows your P&amp;L, your goals, your intel.</p>
+  </div>
+</section>
+
+<!-- ══════════ PRICING ══════════ -->
+<section class="pricing">
+  <div class="section-label">Pricing</div>
+
+  <div class="pricing-cards">
+    <!-- Free tier -->
+    <div class="pricing-card">
+      <div class="pricing-tier">Operator</div>
+      <div class="pricing-price"><sup>$</sup>0<span class="per"> /mo</span></div>
+      <div class="pricing-annual">Free during beta</div>
+      <p class="pricing-desc">Everything you need to start running missions.</p>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Mission Board
+        </li>
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          P&amp;L Tracker
+        </li>
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Focus Timer
+        </li>
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          AXIS (10 queries/day)
+        </li>
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          1 business
+        </li>
+      </ul>
+      <button class="pricing-cta ghost" onclick="openAuthOverlay('signup')">Get Started →</button>
+    </div>
+
+    <!-- Pro tier -->
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Most Popular</div>
+      <div class="pricing-tier">War Room Pro</div>
+      <div class="pricing-price"><sup>$</sup>12<span class="per"> /mo</span></div>
+      <div class="pricing-annual">or $97/yr — 2 months free</div>
+      <p class="pricing-desc">For the operator running it all at once.</p>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Unlimited businesses
+        </li>
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Unlimited AXIS queries
+        </li>
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Invoicing
+        </li>
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Cloud sync
+        </li>
+        <li>
+          <span class="pf-check">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Priority support
+        </li>
+      </ul>
+      <button class="pricing-cta" onclick="openAuthOverlay('signup')">Get Started →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="site-footer">
+  <div class="footer-copy">WAR ROOM v5.1 · © 2025</div>
+  <a class="footer-privacy" href="mailto:privacy@warroom.app">Privacy Policy</a>
+</footer>
+
+<!-- ══════════ AUTH OVERLAY ══════════ -->
+<div id="authOverlay" class="auth-overlay" role="dialog" aria-modal="true" aria-label="Sign in to WAR ROOM">
+  <div class="auth-backdrop" onclick="closeAuthOverlay()"></div>
+  <div class="auth-card" id="authCard">
+    <div class="auth-handle"></div>
+    <button class="auth-close-btn" onclick="closeAuthOverlay()" aria-label="Close">✕</button>
+
+    <div class="auth-logo">
+      <div class="auth-logo-mark">◈</div>
+      WAR ROOM
+    </div>
+
+    <!-- Sign In view -->
+    <div id="viewSignin">
+      <div class="auth-title">Welcome back.</div>
+      <div class="auth-sub">Sign in to your war room.</div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="setAuthMode('signin')">Sign In</button>
+        <button class="auth-tab" onclick="setAuthMode('signup')">Create Account</button>
+      </div>
+
+      <button class="auth-google-btn" onclick="handleGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <span class="auth-divider-text">or email</span>
+        <div class="auth-divider-line"></div>
+      </div>
+
+      <input class="auth-input" id="signinEmail" type="email" placeholder="operator@yourdomain.com" autocomplete="email">
+      <input class="auth-input" id="signinPassword" type="password" placeholder="Password" autocomplete="current-password">
+      <span class="auth-forgot" onclick="setAuthMode('forgot')">Forgot password?</span>
+      <button class="auth-btn" id="signinBtn" onclick="handleAuthSubmit()">Sign In →</button>
+      <div class="auth-error" id="signinError"></div>
+
+      <div class="auth-footer-note">
+        By signing in you agree to the WAR ROOM Terms of Service.<br>
+        No spam. Your data stays yours.
+      </div>
+    </div>
+
+    <!-- Sign Up view -->
+    <div id="viewSignup" style="display:none">
+      <div class="auth-title">Reserve your seat.</div>
+      <div class="auth-sub">Free during beta. No credit card needed.</div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab" onclick="setAuthMode('signin')">Sign In</button>
+        <button class="auth-tab active" onclick="setAuthMode('signup')">Create Account</button>
+      </div>
+
+      <button class="auth-google-btn" onclick="handleGoogleSignIn()">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <span class="auth-divider-text">or email</span>
+        <div class="auth-divider-line"></div>
+      </div>
+
+      <input class="auth-input" id="signupEmail" type="email" placeholder="operator@yourdomain.com" autocomplete="email">
+      <input class="auth-input" id="signupPassword" type="password" placeholder="Password (min 8 chars)" autocomplete="new-password">
+      <button class="auth-btn" id="signupBtn" onclick="handleAuthSubmit()">Create Account →</button>
+      <div class="auth-error" id="signupError"></div>
+
+      <div class="auth-footer-note">
+        By creating an account you agree to the WAR ROOM Terms of Service.<br>
+        Free during beta. Cancel anytime.
+      </div>
+    </div>
+
+    <!-- Forgot password view -->
+    <div id="viewForgot" style="display:none">
+      <div class="auth-title">Reset password.</div>
+      <div class="auth-sub">Enter your email to get a reset link.</div>
+
+      <input class="auth-input" id="forgotEmail" type="email" placeholder="operator@yourdomain.com" autocomplete="email">
+      <button class="auth-btn" id="forgotBtn" onclick="handleForgotPassword()">Send Reset Link →</button>
+      <div class="auth-error" id="forgotError"></div>
+      <div class="auth-success" id="forgotSuccess" style="display:none"></div>
+
+      <span class="auth-forgot" style="text-align:left" onclick="setAuthMode('signin')">← Back to sign in</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── Firebase lazy loader ── */
+  const FB_CONFIG = {
+    apiKey: 'AIzaSyBcdKlkPBlLxs6barPZDAgoPlB9iU82Zkg',
+    authDomain: 'createwarrom.firebaseapp.com',
+    projectId: 'createwarrom'
+  };
+
+  let _fbLoaded = false;
+  let _fbLoading = null;
+
+  function _loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  async function _initFirebase() {
+    if (_fbLoaded) return;
+    if (_fbLoading) return _fbLoading;
+    _fbLoading = (async () => {
+      await _loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
+      await _loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js');
+      if (!firebase.apps.length) firebase.initializeApp(FB_CONFIG);
+      _fbLoaded = true;
+    })();
+    return _fbLoading;
+  }
+
+  /* ── Overlay state ── */
+  let _currentMode = 'signin';
+
+  function openAuthOverlay(mode) {
+    mode = mode || 'signin';
+    const overlay = document.getElementById('authOverlay');
+    setAuthMode(mode, true);
+    overlay.style.display = 'flex';
+    // force reflow then trigger opacity
+    overlay.offsetHeight;
+    overlay.classList.add('open');
+    overlay.classList.remove('fading');
+    document.body.style.overflow = 'hidden';
+    _initFirebase();
+  }
+
+  function closeAuthOverlay() {
+    const overlay = document.getElementById('authOverlay');
+    overlay.classList.add('fading');
+    setTimeout(() => {
+      overlay.classList.remove('open', 'fading');
+      overlay.style.display = 'none';
+      document.body.style.overflow = '';
+      _clearErrors();
+    }, 250);
+  }
+
+  function setAuthMode(mode, skipReset) {
+    _currentMode = mode;
+    const views = ['viewSignin', 'viewSignup', 'viewForgot'];
+    const map = { signin: 'viewSignin', signup: 'viewSignup', forgot: 'viewForgot' };
+    views.forEach(id => {
+      document.getElementById(id).style.display = (id === map[mode]) ? 'block' : 'none';
+    });
+    if (!skipReset) _clearErrors();
+  }
+
+  function _clearErrors() {
+    ['signinError', 'signupError', 'forgotError'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = '';
+    });
+    const fs = document.getElementById('forgotSuccess');
+    if (fs) fs.style.display = 'none';
+  }
+
+  function _setLoading(btnId, loading) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.disabled = loading;
+    if (loading) {
+      btn._origText = btn.textContent;
+      btn.textContent = 'Please wait…';
+    } else {
+      btn.textContent = btn._origText || btn.textContent;
+    }
+  }
+
+  function _showError(elId, msg) {
+    const el = document.getElementById(elId);
+    if (el) el.textContent = msg;
+  }
+
+  function _friendlyError(code) {
+    const map = {
+      'auth/user-not-found': 'No account with that email.',
+      'auth/wrong-password': 'Incorrect password.',
+      'auth/invalid-email': 'Enter a valid email address.',
+      'auth/email-already-in-use': 'That email already has an account. Sign in instead.',
+      'auth/weak-password': 'Password must be at least 8 characters.',
+      'auth/too-many-requests': 'Too many attempts. Try again later.',
+      'auth/popup-closed-by-user': 'Google sign-in was cancelled.',
+      'auth/network-request-failed': 'Network error. Check your connection.'
+    };
+    return map[code] || 'Something went wrong. Try again.';
+  }
+
+  async function handleAuthSubmit() {
+    await _initFirebase();
+
+    if (_currentMode === 'signin') {
+      const email = document.getElementById('signinEmail').value.trim();
+      const pass  = document.getElementById('signinPassword').value;
+      if (!email || !pass) { _showError('signinError', 'Enter your email and password.'); return; }
+      _setLoading('signinBtn', true);
+      _showError('signinError', '');
+      try {
+        await firebase.auth().signInWithEmailAndPassword(email, pass);
+        window.location.replace('app.html');
+      } catch (e) {
+        _showError('signinError', _friendlyError(e.code));
+        _setLoading('signinBtn', false);
+      }
+    } else if (_currentMode === 'signup') {
+      const email = document.getElementById('signupEmail').value.trim();
+      const pass  = document.getElementById('signupPassword').value;
+      if (!email) { _showError('signupError', 'Enter your email.'); return; }
+      if (pass.length < 8) { _showError('signupError', 'Password must be at least 8 characters.'); return; }
+      _setLoading('signupBtn', true);
+      _showError('signupError', '');
+      try {
+        await firebase.auth().createUserWithEmailAndPassword(email, pass);
+        window.location.replace('app.html');
+      } catch (e) {
+        _showError('signupError', _friendlyError(e.code));
+        _setLoading('signupBtn', false);
+      }
+    }
+  }
+
+  async function handleGoogleSignIn() {
+    await _initFirebase();
+    const errorEl = _currentMode === 'signup' ? 'signupError' : 'signinError';
+    _showError(errorEl, '');
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      await firebase.auth().signInWithPopup(provider);
+      window.location.replace('app.html');
+    } catch (e) {
+      _showError(errorEl, _friendlyError(e.code));
+    }
+  }
+
+  async function handleForgotPassword() {
+    await _initFirebase();
+    const email = document.getElementById('forgotEmail').value.trim();
+    if (!email) { _showError('forgotError', 'Enter your email address.'); return; }
+    _setLoading('forgotBtn', true);
+    _showError('forgotError', '');
+    const success = document.getElementById('forgotSuccess');
+    success.style.display = 'none';
+    try {
+      await firebase.auth().sendPasswordResetEmail(email);
+      success.textContent = 'Reset link sent. Check your inbox.';
+      success.style.display = 'block';
+      _setLoading('forgotBtn', false);
+    } catch (e) {
+      _showError('forgotError', _friendlyError(e.code));
+      _setLoading('forgotBtn', false);
+    }
+  }
+
+  /* ── Keyboard / backdrop handling ── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const overlay = document.getElementById('authOverlay');
+      if (overlay.classList.contains('open')) closeAuthOverlay();
+    }
+  });
+</script>
+</body>
+</html>
