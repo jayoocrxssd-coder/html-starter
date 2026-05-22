@@ -1344,6 +1344,69 @@
     .hero-eyebrow { font-size: 9px; }
   }
 
+
+  /* ─── Portrait / narrow phone (≤ 480px) ─── */
+  @media (max-width: 480px) {
+    /* Topbar: hide all non-essential items to avoid overflow */
+    .topbar-time, .topbar-right .btn-ghost { display: none !important; }
+    .topbar-inner { padding: 10px 14px; }
+    .brand-mark { width: 24px; height: 24px; font-size: 11px; }
+    .brand-name { font-size: 9px; letter-spacing: .12em; }
+
+    /* Hero: compact vertical rhythm */
+    .hero { padding: max(24px, calc(env(safe-area-inset-top) + 16px)) 14px 20px; gap: 20px; }
+    .hero h1 { font-size: clamp(30px, 9vw, 40px); }
+    .hero-eyebrow { font-size: 8px; gap: 6px; padding: 5px 10px; }
+    .hero-sub { font-size: 14px; line-height: 1.6; }
+
+    /* Status card: flatten fully on portrait (no 3D tilt) */
+    .status-card { transform: none !important; width: 100% !important; box-sizing: border-box; }
+    .hero-right { width: 100%; overflow: hidden; }
+
+    /* Bento grid: truly single column (handles 390px–480px iPhones) */
+    .bento { grid-template-columns: 1fr !important; grid-auto-rows: auto !important; }
+    .mod, .mod-jarvis, .mod-tracker, .mod-axis { grid-column: span 1 !important; }
+    .mod { min-height: 160px; }
+    .mod-jarvis, .mod-tracker { min-height: 220px; }
+
+    /* Signup forms: full width */
+    .signup { flex-direction: column; gap: 8px; padding: 10px 0; }
+    .signup input, .signup button { width: 100%; box-sizing: border-box; }
+    .signup-meta { flex-direction: column; gap: 8px; }
+
+    /* Marquee: contain it */
+    .marquee { overflow: hidden; }
+
+    /* Demo section: already hidden demo-side, stack the grid cards */
+    .demo-g4 { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+    .demo-g2 { grid-template-columns: 1fr !important; }
+
+    /* Sections: tighter padding */
+    section { padding: 44px 14px; }
+    .sec-head { margin-bottom: 28px; }
+    .cta-stage { padding: 28px 14px; }
+    .jarvis-stage { padding: 20px 14px; }
+    .jarvis-stage h3 { font-size: 22px; }
+
+    /* Pricing: tighter */
+    .pricing-card { padding: 20px 14px 18px; }
+
+    /* Compare cards: ensure they don't overflow */
+    .compare-card { padding: 16px 14px; }
+
+    /* Stats: single column and smaller numbers */
+    .stats-grid { grid-template-columns: 1fr !important; }
+    .stat .sv { font-size: 36px; }
+
+    /* Auth overlay: full-height bottom sheet with enough room */
+    .auth-card { padding: 24px 16px; }
+    .auth-card .auth-title { font-size: 20px; }
+
+    /* Footer */
+    footer { padding: 24px 14px max(20px, env(safe-area-inset-bottom)); }
+    footer .links { flex-wrap: wrap; gap: 4px; }
+  }
+
   /* ── Smooth scroll ── */
   html { scroll-behavior: smooth; }
 

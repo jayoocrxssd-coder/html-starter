@@ -1097,7 +1097,8 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .mob-menu-btn { display: none; }
 .mob-bottom-nav { display: none; }
 .mob-appear-btn { display: none; }
-.mob-more-drawer { display: none; 
+.mob-more-drawer { display: none; }
+@media (max-width: 768px) {
 
   input[type=text],
   input[type=number],
@@ -1314,6 +1315,61 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   :focus:not(:focus-visible) { outline: none; }
 
+}
+
+
+
+/* ── Portrait-specific fixes (≤768px portrait orientation) ── */
+@media (max-width: 768px) and (orientation: portrait) {
+  /* Kanban: full-width single column in portrait (swipe not needed on narrow screens) */
+  .kanban-wrap {
+    display: grid !important; flex-direction: unset !important;
+    grid-template-columns: 1fr !important; overflow-x: unset;
+    scroll-snap-type: unset;
+  }
+  .k-col { min-width: unset !important; max-width: 100% !important; flex-shrink: unset; }
+
+  /* Alarm popup: anchor to bottom instead of top-right (avoids notch area) */
+  .alarm-popup {
+    top: auto !important; right: auto !important;
+    bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+    left: 50%; transform: translateX(-50%);
+    min-width: calc(100vw - 32px); max-width: calc(100vw - 32px);
+    border-radius: 14px;
+  }
+
+  /* Video call chat panel: hide on portrait to reclaim space */
+  .vcall-chat-panel { display: none !important; }
+
+  /* Content padding: reduce horizontal to give more reading width */
+  .content { padding: 14px 12px !important; }
+
+  /* Shell height: use dynamic viewport to avoid browser chrome overlap */
+  .shell { height: 100dvh !important; }
+
+  /* Topbar: tighter height on portrait */
+  .topbar { min-height: var(--top, 52px); }
+
+  /* Bottom nav label: hide text on very small portrait screens */
+  @media (max-width: 390px) {
+    .mob-nav-label { display: none !important; }
+    .mob-bottom-nav { height: 58px; }
+    .mob-nav-item { padding: 8px 0; }
+  }
+}
+
+/* ── index-style portrait fixes for narrower views ── */
+@media (max-width: 480px) {
+  /* Alarm popup: ensure it never overflows horizontally */
+  .alarm-popup { min-width: unset; width: calc(100vw - 32px); max-width: calc(100vw - 32px); }
+
+  /* Kanban columns: single column at ≤480px portrait */
+  .kanban-wrap {
+    display: grid !important;
+    grid-template-columns: 1fr !important; overflow-x: unset;
+    scroll-snap-type: unset;
+  }
+  .k-col { min-width: unset !important; max-width: 100% !important; }
 }
 
 /* ══════════════════════════════
