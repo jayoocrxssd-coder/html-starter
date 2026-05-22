@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e0e0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WAR ROOM">
+<meta name="mobile-web-app-capable" content="yes">
 <title>WAR ROOM — Your personal business command center</title>
 <meta name="description" content="A single command center for every business you run. Missions, P&amp;L, focus timer, intel notes, calendar, bills — and AXIS, your AI co-pilot.">
 
@@ -1380,6 +1385,92 @@
     .stat { border-right: none; }
     .topbar-time { display: none; }
     .demo-g4 { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── MOBILE GLOBAL ── */
+  * { -webkit-tap-highlight-color: transparent; }
+  html { overflow-x: hidden; }
+  body { overflow-x: hidden; overscroll-behavior-x: none; }
+
+  /* ── TOPBAR SAFE AREA ── */
+  .topbar {
+    padding-top: max(14px, env(safe-area-inset-top));
+    padding-left: max(28px, env(safe-area-inset-left));
+    padding-right: max(28px, env(safe-area-inset-right));
+  }
+  .topbar-inner {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* ── TOUCH TARGETS — minimum 44×44px ── */
+  .btn, .btn-ghost, .btn-login {
+    min-height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .pricing-cta { min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .auth-btn { min-height: 44px; }
+  .auth-google-btn { min-height: 44px; }
+  .auth-tab { min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .auth-close-btn { width: 44px; height: 44px; }
+
+  /* ── AUTH INPUT: prevent iOS zoom (font-size >= 16px) ── */
+  .auth-input { font-size: 16px !important; }
+  .signup input { font-size: 16px; }
+
+  /* ── IOS SCROLL FIX on scrollable containers ── */
+  .jarvis-chat-body { -webkit-overflow-scrolling: touch; }
+
+  /* ── DVH fallback for 100vh ── */
+  .hero { min-height: min(100svh, 100vh); }
+
+  /* ── FOOTER SAFE AREA ── */
+  footer {
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+  }
+
+  /* ── AUTH OVERLAY — full-screen on mobile with keyboard handling ── */
+  @media (max-width: 640px) {
+    .auth-overlay {
+      align-items: flex-end;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 20px 20px 0 0;
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+    }
+  }
+
+  /* ── TOPBAR NAV: show hamburger on mobile ── */
+  @media (max-width: 980px) {
+    .topbar-inner { padding: max(12px, env(safe-area-inset-top)) 18px 12px; }
+  }
+
+  /* ── HERO full-column on small screens ── */
+  @media (max-width: 640px) {
+    .hero { padding: max(32px, calc(env(safe-area-inset-top) + 20px)) 16px 24px; gap: 28px; }
+    section { padding: 56px 16px; }
+    .sec-head { margin-bottom: 36px; }
+    .bento { grid-template-columns: 1fr 1fr !important; grid-auto-rows: 180px !important; }
+    .mod-jarvis, .mod-tracker, .mod-axis { grid-column: span 2 !important; }
+    .cta-stage { padding: 32px 18px; }
+    .jarvis-stage { padding: 24px 18px; }
+    .jarvis-stage h3 { font-size: 26px; }
+    .compare-card { padding: 20px 18px; }
+    .pricing-card { padding: 24px 18px 20px; }
+    footer { padding: 28px 16px max(20px, env(safe-area-inset-bottom)); }
+    footer .wrap { flex-direction: column; gap: 14px; }
+    .stat .sv { font-size: 40px; }
+    .hero h1 { font-size: clamp(36px, 11vw, 56px); }
+    .hero-sub { font-size: 16px; }
+    .status-card { transform: none !important; }
+    .hero-right { width: 100%; }
+  }
+
+  @media (max-width: 400px) {
+    .bento { grid-template-columns: 1fr !important; }
+    .mod-jarvis, .mod-tracker, .mod-axis { grid-column: span 1 !important; }
   }
 </style>
 </head>
