@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" style="--bg: #f4f4f2; --bg2: #ececea; --bg3: #e2e2e0; --surface: #ffffff; --border: rgba(0,0,0,.07); --border2: rgba(0,0,0,.13); --text: #0e0e0d; --text2: #525250; --text3: #9a9a98; --accent: #0e0e0d; --accent-fg: #f4f4f2; --r: 10px; --rs: 6px;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<script>(function(){var mob=window.innerWidth<=768||/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);if(mob)document.documentElement.setAttribute('data-mob','1')})()</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>(function(){var mob=/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||window.innerWidth<=768;if(mob)document.documentElement.setAttribute('data-mob','1')})()</script>
 <meta name="description" content="War Room — Your personal business command center">
 <meta name="theme-color" content="#0f0f0e">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1864,7 +1864,7 @@ html[data-mob],html[data-mob] body{height:100%;overflow:hidden;padding:0;margin:
 #m-shell button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer;font-size:inherit}
 #m-shell input,#m-shell select,#m-shell textarea{font-family:inherit;font-size:16px}
 #m-shell a{color:inherit;text-decoration:none}
-#m-shell .shell{display:flex;flex-direction:column;height:100vh;height:100dvh}
+#m-shell .shell{display:flex;flex-direction:column;flex:1;min-height:0}
 #m-shell .topbar{height:var(--top-h);background:var(--surface);border-bottom:.5px solid var(--border2);display:flex;flex-direction:column;flex-shrink:0;z-index:50;position:relative}
 #m-shell .top-r1{height:50px;display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0}
 #m-shell .top-menu{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--text2);border-radius:8px;flex-shrink:0}
@@ -13588,7 +13588,7 @@ function _cConfirmP(msg,okLabel){return new Promise(function(r){_cConfirm(msg,ok
     </div>
     <div class="top-r2">
       <div class="top-crumb" id="m-topCrumb" data-secondary="0">
-        <button class="back" onclick="mGoPage('more')" aria-label="Back">
+        <button class="back" onclick="mGoBack()" aria-label="Back">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
         </button>
         <span class="parent" id="m-crumbParent" style="display:none"></span>
@@ -14151,16 +14151,16 @@ function _cConfirmP(msg,okLabel){return new Promise(function(r){_cConfirm(msg,ok
       <div class="drawer-section">Operations</div>
       <div class="drawer-item" onclick="mGoPage('intel');mCloseDrawer()"><span class="ic">◉</span>Intel Notes<span class="bdg">47</span></div>
       <div class="drawer-item" onclick="mGoPage('tracker');mCloseDrawer()"><span class="ic">◇</span>P&amp;L Tracker</div>
-      <div class="drawer-item"><span class="ic">◉</span>Goals</div>
+      <div class="drawer-item" onclick="mCloseDrawer()"><span class="ic">◉</span>Goals</div>
       <div class="drawer-section">Schedule</div>
       <div class="drawer-item" onclick="mGoPage('timer');mCloseDrawer()"><span class="ic">◷</span>Focus Timer</div>
       <div class="drawer-item" onclick="mGoPage('calendar');mCloseDrawer()"><span class="ic">▦</span>Calendar</div>
       <div class="drawer-section">Finance</div>
       <div class="drawer-item" onclick="mGoPage('bills');mCloseDrawer()"><span class="ic">◫</span>Bills &amp; Expenses<span class="bdg">3</span></div>
-      <div class="drawer-item"><span class="ic">△</span>Invoices<span class="bdg">2</span></div>
+      <div class="drawer-item" onclick="mCloseDrawer()"><span class="ic">△</span>Invoices<span class="bdg">2</span></div>
       <div class="drawer-section">Account</div>
       <div class="drawer-item" onclick="mGoPage('more');mCloseDrawer()"><span class="ic">◐</span>Profile &amp; Settings</div>
-      <div class="drawer-item"><span class="ic">⟳</span>Updates</div>
+      <div class="drawer-item" onclick="mCloseDrawer()"><span class="ic">⟳</span>Updates</div>
     </div>
     <div class="drawer-foot">
       <button class="btn btn-g">☁ Sync</button>
@@ -14194,31 +14194,35 @@ if(document.documentElement.getAttribute('data-mob')){
   }
 
   // ── Page navigation ──
+  var mCurrentPage='dashboard';
   function mGoPage(name){
     document.querySelectorAll('#m-shell .page').forEach(p=>p.classList.remove('active'));
     const tgt=document.getElementById('m-page-'+name);
     if(tgt)tgt.classList.add('active');
-    document.querySelectorAll('#m-shell .tab').forEach(t=>t.classList.toggle('active',t.dataset.page===name));
-    // tab activation: timer/intel/bills route stays on More tab visually
-    if(['timer','intel','bills'].includes(name)){
-      document.querySelectorAll('#m-shell .tab').forEach(t=>t.classList.toggle('active',t.dataset.page==='more'));
-    }
+    // sub-pages (timer/intel/bills) keep the More tab highlighted
+    const tabPage=['timer','intel','bills'].includes(name)?'more':name;
+    document.querySelectorAll('#m-shell .tab').forEach(t=>t.classList.toggle('active',t.dataset.page===tabPage));
     mSetCrumb(name);
-    document.getElementById('m-content').scrollTo({top:0,behavior:'instant'});
+    mCurrentPage=name;
+    const c=document.getElementById('m-content');if(c)c.scrollTo({top:0,behavior:'instant'});
+  }
+  function mGoBack(){
+    const c=M_CRUMB[mCurrentPage];
+    mGoPage(c&&c.parent?c.parent.toLowerCase():'dashboard');
   }
   // ── Sheets ──
   function mOpenSheet(id){
-    document.getElementById('m-'+id).classList.add('on');
-    document.getElementById('m-'+id+'Back').classList.add('on');
+    const el=document.getElementById('m-'+id),bk=document.getElementById('m-'+id+'Back');
+    if(el)el.classList.add('on');if(bk)bk.classList.add('on');
     document.body.style.overflow='hidden';
   }
   function mCloseSheet(id){
-    document.getElementById('m-'+id).classList.remove('on');
-    document.getElementById('m-'+id+'Back').classList.remove('on');
+    const el=document.getElementById('m-'+id),bk=document.getElementById('m-'+id+'Back');
+    if(el)el.classList.remove('on');if(bk)bk.classList.remove('on');
     document.body.style.overflow='';
   }
-  function mOpenDrawer(){document.getElementById('m-drawer').classList.add('on');document.getElementById('m-drawerBack').classList.add('on')}
-  function mCloseDrawer(){document.getElementById('m-drawer').classList.remove('on');document.getElementById('m-drawerBack').classList.remove('on')}
+  function mOpenDrawer(){document.getElementById('m-drawer').classList.add('on');document.getElementById('m-drawerBack').classList.add('on');document.body.style.overflow='hidden'}
+  function mCloseDrawer(){document.getElementById('m-drawer').classList.remove('on');document.getElementById('m-drawerBack').classList.remove('on');document.body.style.overflow=''}
 
   // ── Mission tabs ──
   const mMissionData={
@@ -14355,6 +14359,12 @@ if(document.documentElement.getAttribute('data-mob')){
     m.scrollTop=m.scrollHeight;
     setTimeout(()=>{a.innerHTML="That's a live query — wire AXIS to your actual data inside the full War Room. Try the suggestions above for a demo.";m.scrollTop=m.scrollHeight},700);
   }
+  // ── Re-evaluate device class on resize/rotation ──
+  window.addEventListener('resize',function(){
+    var mob=/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||window.innerWidth<=768;
+    document.documentElement.setAttribute('data-mob',mob?'1':'');
+    if(!mob)document.documentElement.removeAttribute('data-mob');
+  },{passive:true});
 }
 </script>
 </body></html>
