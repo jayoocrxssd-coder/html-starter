@@ -9423,6 +9423,7 @@ let _fbAuth = null;
 let _fbDb = null;
 let currentUser = null;
 let _cloudSynced = false;
+let _cloudSyncedUid = null; // tracks which UID has been synced this session
 let driveToken = null;
 let syncTimeout = null;
 
@@ -9515,6 +9516,7 @@ async function signOut() {
   if(_fbAuth) _fbAuth.signOut().catch(()=>{});
   currentUser = null;
   _cloudSynced = false;
+  _cloudSyncedUid = null;
   window._adminLoggedIn = false;
   localStorage.removeItem('wr_access');
   localStorage.removeItem('wr_user_email');
@@ -9758,6 +9760,7 @@ function handleGoogleSignIn() {
           // Sign into Firebase with the Google access token so cloud sync works
           if(_fbAuth && typeof firebase !== 'undefined' && firebase.auth && firebase.auth.GoogleAuthProvider) {
             try {
+              _cloudSyncedUid = null; // force fresh cloud load on Google login
               const credential = firebase.auth.GoogleAuthProvider.credential(null, res.access_token);
               await _fbAuth.signInWithCredential(credential);
               // onAuthStateChanged will fire and handle syncFromCloud
@@ -9916,6 +9919,7 @@ async function handleAuth(){
     }
   } else {
     try{
+      _cloudSyncedUid = null; // force fresh cloud load on login
       await _fbAuth.signInWithEmailAndPassword(emailVal,passVal);
       localStorage.setItem('wr_access','1');
       localStorage.setItem('wr_user_email',emailVal);
@@ -10197,14 +10201,16 @@ function renderSeatCount() {
   // ── STEP 3: Listen for auth state (sign in / sign out / token refresh) ──
 
   async function syncFromCloud(user) {
-    if(_cloudSynced) return;
+    // Skip if this exact user UID was already synced this session.
+    // Using UID (not a boolean) means a different user signing in always gets a fresh load.
+    if(_cloudSyncedUid === user.uid) return;
+    _cloudSyncedUid = user.uid;
     _cloudSynced = true;
     currentUser = user;
 
     // Snapshot local onboarded flag BEFORE cloud load may overwrite S
     const localOnboarded = S.onboarded;
 
-    // Show sync indicator in topbar
     setSyncState('syncing');
 
     // Update user pill, hide cloud sign-in button
@@ -10218,38 +10224,45 @@ function renderSeatCount() {
     const cloudLoaded = await loadFromCloud();
 
     if(cloudLoaded && S.onboarded) {
-      // Cloud has real onboarded data — it is authoritative, use it
+      // Cloud is authoritative — persist locally so next offline boot is instant
       try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
-      // Dismiss restore overlay (shown on new-device boot) then re-render
       dismissCloudRestoreOverlay(false);
-      // Also dismiss onboarding overlay if it somehow opened before sync completed
+
+      // Dismiss onboarding overlay if it opened before sync completed
       const obOverlay = document.getElementById('obOverlay');
       if(obOverlay && obOverlay.style.display !== 'none') {
         obOverlay.classList.add('fading');
         setTimeout(() => { obOverlay.style.display = 'none'; obOverlay.classList.remove('fading'); }, 400);
       }
+
+      // Full re-render: sidebar nav, badges, and every panel on the active page
       refreshBizNav();
       renderProfileBizGrid();
-      renderDashboard();
+      updateBadges();
+      showPage(currentPage || 'dashboard');
+
     } else if(cloudLoaded && !S.onboarded && localOnboarded) {
-      // Cloud doc exists but contains stale/empty state (onboarded:false).
-      // Local data is fresher (onboarding just completed) — restore from
-      // localStorage (which save() already wrote to) and push up to cloud.
+      // Cloud doc is stale (onboarded:false) but local completed onboarding —
+      // local is authoritative; push it up so cloud catches up.
       dismissCloudRestoreOverlay(false);
       load();
       await saveToCloud(true);
       refreshBizNav();
       renderProfileBizGrid();
-      renderDashboard();
+      updateBadges();
+      showPage(currentPage || 'dashboard');
+
     } else if(!cloudLoaded && localOnboarded) {
-      // No cloud doc yet but local is onboarded — push local data to cloud
+      // No cloud doc yet — push local data up to create the cloud record
       dismissCloudRestoreOverlay(false);
       await saveToCloud(true);
+
     } else {
-      // Neither side onboarded — dismiss restore overlay and start onboarding
+      // Neither side onboarded — start fresh onboarding flow
       dismissCloudRestoreOverlay(false);
       if(!S.onboarded) { showPage('dashboard'); setTimeout(()=>initOnboarding(), 300); }
     }
+
     setSyncState('synced');
   }
 
