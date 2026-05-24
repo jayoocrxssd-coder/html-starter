@@ -9558,6 +9558,42 @@ function updateAppName(){
   document.title=name;
 }
 
+let _cloudRestoreTimeout = null;
+
+function showCloudRestoreOverlay() {
+  const ov = document.getElementById('cloudRestoreOverlay');
+  if(!ov) return;
+  ov.style.display = 'flex';
+  ov.style.opacity = '1';
+  // Animate progress bar to signal activity (caps at 85% — completes on actual load)
+  let pct = 0;
+  const bar = document.getElementById('cloudRestoreBar');
+  const tick = setInterval(() => {
+    pct = Math.min(pct + (pct < 40 ? 8 : pct < 70 ? 3 : 0.5), 85);
+    if(bar) bar.style.width = pct + '%';
+    if(pct >= 85) clearInterval(tick);
+  }, 200);
+  ov._tick = tick;
+  // Safety timeout — if Firebase takes >10s, fall through to onboarding
+  _cloudRestoreTimeout = setTimeout(() => dismissCloudRestoreOverlay(true), 10000);
+}
+
+function dismissCloudRestoreOverlay(fallbackToOnboarding = false) {
+  clearTimeout(_cloudRestoreTimeout);
+  const ov = document.getElementById('cloudRestoreOverlay');
+  if(!ov || ov.style.display === 'none') return;
+  if(ov._tick) clearInterval(ov._tick);
+  const bar = document.getElementById('cloudRestoreBar');
+  if(bar) bar.style.width = '100%';
+  const msg = document.getElementById('cloudRestoreMsg');
+  if(msg && !fallbackToOnboarding) msg.textContent = 'Data restored.';
+  ov.style.opacity = '0';
+  setTimeout(() => {
+    ov.style.display = 'none';
+    if(fallbackToOnboarding && !S.onboarded) { showPage('dashboard'); initOnboarding(); }
+  }, 400);
+}
+
 function bootApp() {
   // ── PHASE 1: Profile resolves first ──────────────────────────
   if(S.dark) document.getElementById('app').classList.add('dark');
@@ -9578,8 +9614,18 @@ function bootApp() {
   // ── PHASE 3: Everything else cascades ────────────────────────
   // Handle update merge flag — skip onboarding for users who just updated
   if(localStorage.getItem('stratusUpdateMerge')){ S.onboarded=true; localStorage.removeItem('stratusUpdateMerge'); }
-  if(!S.onboarded){ showPage('dashboard'); setTimeout(()=>initOnboarding(), 500); }
-  else { showPage('dashboard'); }
+
+  if(!S.onboarded && localStorage.getItem('wr_access')) {
+    // Signed-in user with no local data — show restore overlay while Firebase syncs
+    showPage('dashboard');
+    showCloudRestoreOverlay();
+  } else if(!S.onboarded) {
+    showPage('dashboard');
+    setTimeout(()=>initOnboarding(), 500);
+  } else {
+    showPage('dashboard');
+  }
+
   renderAlarms(); updateAlarmChip(); updateLastBackupLabel();
 
   if(Notification?.permission==='default') Notification.requestPermission();
@@ -10121,7 +10167,7 @@ function renderSeatCount() {
   // ── STEP 2: Init Firebase in background ───────────────────────
   // Non-blocking — app is already running, this just connects cloud
   await initFirebase();
-  if(!_fbAuth) return; // no SDK, stay in local-only mode
+  if(!_fbAuth) { dismissCloudRestoreOverlay(true); return; } // no SDK, fall through
 
   // ── STEP 3: Listen for auth state (sign in / sign out / token refresh) ──
 
@@ -10149,7 +10195,9 @@ function renderSeatCount() {
     if(cloudLoaded && S.onboarded) {
       // Cloud has real onboarded data — it is authoritative, use it
       try { localStorage.setItem('stratusWR_v31', JSON.stringify(S)); } catch(e){}
-      // Dismiss onboarding overlay if it was shown due to empty local state on a new device
+      // Dismiss restore overlay (shown on new-device boot) then re-render
+      dismissCloudRestoreOverlay(false);
+      // Also dismiss onboarding overlay if it somehow opened before sync completed
       const obOverlay = document.getElementById('obOverlay');
       if(obOverlay && obOverlay.style.display !== 'none') {
         obOverlay.classList.add('fading');
@@ -10162,6 +10210,7 @@ function renderSeatCount() {
       // Cloud doc exists but contains stale/empty state (onboarded:false).
       // Local data is fresher (onboarding just completed) — restore from
       // localStorage (which save() already wrote to) and push up to cloud.
+      dismissCloudRestoreOverlay(false);
       load();
       await saveToCloud(true);
       refreshBizNav();
@@ -10169,9 +10218,13 @@ function renderSeatCount() {
       renderDashboard();
     } else if(!cloudLoaded && localOnboarded) {
       // No cloud doc yet but local is onboarded — push local data to cloud
+      dismissCloudRestoreOverlay(false);
       await saveToCloud(true);
+    } else {
+      // Neither side onboarded — dismiss restore overlay and start onboarding
+      dismissCloudRestoreOverlay(false);
+      if(!S.onboarded) { showPage('dashboard'); setTimeout(()=>initOnboarding(), 300); }
     }
-    // If neither side is onboarded, nothing to do — user will go through onboarding
     setSyncState('synced');
   }
 
@@ -10488,6 +10541,18 @@ function renderSeatCount() {
     <div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;text-align:center;margin-top:5px;min-height:12px" id="drive-sync-status-qc"></div>
   </div>
 </div><!-- /qcPanel -->
+
+<!-- ═══ CLOUD RESTORE LOADING OVERLAY ═══ -->
+<div id="cloudRestoreOverlay" style="display:none;position:fixed;inset:0;z-index:9998;background:var(--bg);align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .4s ease">
+  <div style="width:44px;height:44px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--accent-fg);font-weight:800">◈</div>
+  <div style="text-align:center">
+    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:-.01em;color:var(--text)">Restoring your data</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:5px" id="cloudRestoreMsg">Syncing from cloud…</div>
+  </div>
+  <div style="width:160px;height:2px;background:var(--border2);border-radius:2px;overflow:hidden">
+    <div id="cloudRestoreBar" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width .4s ease"></div>
+  </div>
+</div>
 
 <!-- ═══ ONBOARDING OVERLAY ═══ -->
 <div class="ob-overlay" id="obOverlay" style="display:none">
