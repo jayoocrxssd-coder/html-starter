@@ -1853,6 +1853,19 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   // _fbDb is set by initFirebase() compat SDK so handlePendingJoin can use compat .collection() API
 </script></head>
 <body style="font-family: Syne, sans-serif;">
+
+<!-- ═══ CLOUD RESTORE LOADING OVERLAY — must be before main script so getElementById succeeds in bootApp() ═══ -->
+<div id="cloudRestoreOverlay" style="display:none;position:fixed;inset:0;z-index:9998;background:var(--bg);align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .4s ease">
+  <div style="width:44px;height:44px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--accent-fg);font-weight:800">◈</div>
+  <div style="text-align:center">
+    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:-.01em;color:var(--text)">Restoring your data</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:5px" id="cloudRestoreMsg">Syncing from cloud…</div>
+  </div>
+  <div style="width:160px;height:2px;background:var(--border2);border-radius:2px;overflow:hidden">
+    <div id="cloudRestoreBar" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width .4s ease"></div>
+  </div>
+</div>
+
 <div class="shell" id="app">
 
 <!-- TOPBAR -->
@@ -7321,6 +7334,10 @@ function checkLaunchSequence(){
   const lastDay=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
   const todayKey=now.toISOString().slice(0,10);
 
+  // Don't interrupt a cloud restore in progress
+  const restoreOv = document.getElementById('cloudRestoreOverlay');
+  if(restoreOv && restoreOv.style.display !== 'none') return;
+
   // Only trigger if user has businesses set up
   if(!S.businesses.length) return;
 
@@ -10236,6 +10253,9 @@ function renderSeatCount() {
       currentUser = null;
       const pill = document.getElementById('userPill');
       if(pill) pill.style.display = 'none';
+      // If restore overlay is showing (wr_access was set but session expired),
+      // dismiss immediately and fall through to onboarding if needed
+      dismissCloudRestoreOverlay(!S.onboarded);
     }
   });
 
@@ -10542,17 +10562,6 @@ function renderSeatCount() {
   </div>
 </div><!-- /qcPanel -->
 
-<!-- ═══ CLOUD RESTORE LOADING OVERLAY ═══ -->
-<div id="cloudRestoreOverlay" style="display:none;position:fixed;inset:0;z-index:9998;background:var(--bg);align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .4s ease">
-  <div style="width:44px;height:44px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--accent-fg);font-weight:800">◈</div>
-  <div style="text-align:center">
-    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:-.01em;color:var(--text)">Restoring your data</div>
-    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);margin-top:5px" id="cloudRestoreMsg">Syncing from cloud…</div>
-  </div>
-  <div style="width:160px;height:2px;background:var(--border2);border-radius:2px;overflow:hidden">
-    <div id="cloudRestoreBar" style="height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width .4s ease"></div>
-  </div>
-</div>
 
 <!-- ═══ ONBOARDING OVERLAY ═══ -->
 <div class="ob-overlay" id="obOverlay" style="display:none">
