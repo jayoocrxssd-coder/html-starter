@@ -3734,16 +3734,24 @@ function recalculateNextId() {
 }
 
 function save() {
-  try { localStorage.setItem('stratusWR_v31', JSON.stringify(S)); } catch(e){}
+  try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
   saveToCloud();
 }
 function saveImmediate() {
-  try { localStorage.setItem('stratusWR_v31', JSON.stringify(S)); } catch(e){}
+  try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
   saveToCloud(true);
 }
 function load() {
+  // One-time migration: move data from old 'warRoomWR_v31' key to 'warRoomWR_v31'
   try {
-    const d = localStorage.getItem('stratusWR_v31');
+    const legacy = localStorage.getItem('warRoomWR_v31');
+    if (legacy && !localStorage.getItem('warRoomWR_v31')) {
+      localStorage.setItem('warRoomWR_v31', legacy);
+      localStorage.removeItem('warRoomWR_v31');
+    }
+  } catch(e){}
+  try {
+    const d = localStorage.getItem('warRoomWR_v31');
     S = d ? JSON.parse(d) : JSON.parse(JSON.stringify(DEFAULT));
     ['businesses','tasks','entries','notes','goals','goalLog','recent','wins','alarms','sessions','events','bills','employees','backups'].forEach(k => { if (!Array.isArray(S[k])) S[k] = []; });
     if (!S.streams || typeof S.streams !== 'object') S.streams = {};
@@ -5281,7 +5289,7 @@ function exportCSV(){
   });
   const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
-  a.download='stratus-pl-export.csv';a.click();
+  a.download='warroom-pl-export.csv';a.click();
 }
 function openAddEntry(){
   ['entryDate','entryDay','entryDesc','entryCat','entryRev','entryExp'].forEach(id=>document.getElementById(id).value='');
@@ -6372,7 +6380,7 @@ function clearSessions(){
 
 function resetWarRoom(){
   _dangerConfirm('Delete ALL War Room data and start fresh? This cannot be undone.', function(){
-    localStorage.removeItem('stratusWR_v31');
+    localStorage.removeItem('warRoomWR_v31');
     if(currentUser&&_fbDb){_fbDb.collection('war_room_data').doc(currentUser.uid).delete().then(()=>location.reload()).catch(()=>location.reload());}else{location.reload();}
   });
 }
@@ -6531,8 +6539,8 @@ function _applyUpdateExec(){
       _mergeDate: new Date().toISOString(),
     };
     DATA_KEYS.forEach(k=>{ if(S[k]!==undefined) mergePayload[k]=S[k]; });
-    localStorage.setItem('stratusWR_v31', JSON.stringify(mergePayload));
-    localStorage.setItem('stratusUpdateMerge', '1');
+    localStorage.setItem('warRoomWR_v31', JSON.stringify(mergePayload));
+    localStorage.setItem('warRoomUpdateMerge', '1');
     const blob = new Blob([pendingUpdateHTML], {type:'text/html'});
     const url = URL.createObjectURL(blob);
     window.location.href = url;
@@ -6975,9 +6983,9 @@ function closeLaunch(id){
   el.classList.add('fading');
   setTimeout(() => { el.style.display='none'; el.classList.remove('fading'); }, 400);
   // mark today as launched so it doesn't repeat this session
-  if(id==='debriefOverlay') sessionStorage.setItem('stratusDebriefDone', '1');
-  if(id==='eomOverlay') sessionStorage.setItem('stratusEomDone', '1');
-  if(id==='fomOverlay') sessionStorage.setItem('stratusFomDone', '1');
+  if(id==='debriefOverlay') sessionStorage.setItem('warRoomDebriefDone', '1');
+  if(id==='eomOverlay') sessionStorage.setItem('warRoomEomDone', '1');
+  if(id==='fomOverlay') sessionStorage.setItem('warRoomFomDone', '1');
 }
 
 function showLaunch(id){
@@ -7343,17 +7351,17 @@ function checkLaunchSequence(){
 
   // Priority order: EOM > FOM > Daily Debrief
   // End of month — last day, show once per day
-  if(day===lastDay && !sessionStorage.getItem('stratusEomDone')){
+  if(day===lastDay && !sessionStorage.getItem('warRoomEomDone')){
     setTimeout(()=>initEom(), 800);
     return;
   }
   // First of month — 1st day, show once per day
-  if(day===1 && !sessionStorage.getItem('stratusFomDone')){
+  if(day===1 && !sessionStorage.getItem('warRoomFomDone')){
     setTimeout(()=>initFom(), 800);
     return;
   }
   // Daily debrief — every day, once per session
-  if(!sessionStorage.getItem('stratusDebriefDone')){
+  if(!sessionStorage.getItem('warRoomDebriefDone')){
     setTimeout(()=>initDebrief(), 600);
   }
 }
@@ -7874,7 +7882,7 @@ function saveEditBill(){
 
 const THEMES = {
   stratus: {
-    name:'Stratus',
+    name:'Sand',
     light:{bg:'#f4f4f2',bg2:'#ececea',bg3:'#e2e2e0',surface:'#ffffff',border:'rgba(0,0,0,.07)',border2:'rgba(0,0,0,.13)',text:'#0e0e0d',text2:'#525250',text3:'#9a9a98',accent:'#0e0e0d','accent-fg':'#f4f4f2',green:'#1a7048','green-bg':'#e4f4ec',red:'#c53020','red-bg':'#faeae7',amber:'#c07c00','amber-bg':'#f9eccc',blue:'#1e4890','blue-bg':'#e3edf8',violet:'#5825b8','violet-bg':'#eee2fb',pink:'#c02e7a','pink-bg':'#fae4f0'},
     dark:{bg:'#000000',bg2:'#0d0d0d',bg3:'#1a1a1a',surface:'#111111',border:'rgba(255,255,255,.05)',border2:'rgba(255,255,255,.10)',text:'#f5f5f5',text2:'#909090',text3:'#4a4a4a',accent:'#f5f5f5','accent-fg':'#000000',green:'#3de090','green-bg':'#051309',red:'#f06860','red-bg':'#1a0808',amber:'#f0b030','amber-bg':'#160e00',blue:'#5ab0f8','blue-bg':'#030c1c',violet:'#9c6ee8','violet-bg':'#0c0418',pink:'#f068a8','pink-bg':'#190312'},
     preview:['#0e0e0d','#f4f4f2','#ececea','#9a9a98']
@@ -9511,7 +9519,7 @@ async function signOut() {
   localStorage.removeItem('wr_access');
   localStorage.removeItem('wr_user_email');
   localStorage.removeItem('wr_user_google');
-  localStorage.removeItem('stratusWR_v31');
+  localStorage.removeItem('warRoomWR_v31');
   const toast = document.getElementById('signOutToast');
   if(toast) toast.remove();
   window.location.replace('/');
@@ -9630,7 +9638,7 @@ function bootApp() {
 
   // ── PHASE 3: Everything else cascades ────────────────────────
   // Handle update merge flag — skip onboarding for users who just updated
-  if(localStorage.getItem('stratusUpdateMerge')){ S.onboarded=true; localStorage.removeItem('stratusUpdateMerge'); }
+  if(localStorage.getItem('warRoomUpdateMerge')){ S.onboarded=true; localStorage.removeItem('warRoomUpdateMerge'); }
 
   if(!S.onboarded && localStorage.getItem('wr_access')) {
     // Signed-in user with no local data — show restore overlay while Firebase syncs
@@ -10211,7 +10219,7 @@ function renderSeatCount() {
 
     if(cloudLoaded && S.onboarded) {
       // Cloud has real onboarded data — it is authoritative, use it
-      try { localStorage.setItem('stratusWR_v31', JSON.stringify(S)); } catch(e){}
+      try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
       // Dismiss restore overlay (shown on new-device boot) then re-render
       dismissCloudRestoreOverlay(false);
       // Also dismiss onboarding overlay if it somehow opened before sync completed
