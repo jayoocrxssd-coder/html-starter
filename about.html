@@ -7,10 +7,17 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="/css/style.css" />
   <title>About — Moment Studio</title>
-  <meta name="description" content="Learn the story behind Moment Studio — curated event décor based in Orlando, FL." />
+  <meta name="description" content="Meet the team behind Moment Studio — curated event décor based in Orlando, FL. Our story, mission, and service area." />
 </head>
 <body>
 
+<!-- ANNOUNCEMENT BAR -->
+<div class="ann-bar" id="announcementBar">
+  <span>Now booking <strong>Fall & Holiday 2025</strong> — limited dates remaining · <a href="/contact" style="color:#f5e8dc; text-decoration:underline;">Reserve yours today</a></span>
+  <button class="ann-close" onclick="dismissAnnouncement()" aria-label="Dismiss">×</button>
+</div>
+
+<!-- NAV -->
 <nav class="nav">
   <a href="/" class="nav-logo">moment <span>studio</span></a>
   <div class="nav-links">
@@ -20,35 +27,59 @@
     <a href="/contact" class="nav-link">Contact</a>
   </div>
   <a href="/contact" class="nav-cta">Book now</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="/">Home</a>
+  <a href="/about">About</a>
+  <a href="/packages">Packages</a>
+  <a href="/contact">Contact</a>
+  <a href="/contact" class="mnav-cta">Book now</a>
+</div>
 
 <!-- PAGE BANNER -->
 <div class="page-banner">
-  <div class="page-banner-eye">Our story</div>
-  <div class="page-banner-title">Behind every moment<br>is an intention</div>
-  <div class="page-banner-sub">Moment Studio is a full-service event décor studio built on the belief that every celebration — big or small — deserves to feel extraordinary.</div>
+  <div class="page-banner-eye scroll-fade">Our story</div>
+  <h1 class="page-banner-title scroll-fade sd-1">Behind every moment<br>is an intention</h1>
+  <p class="page-banner-sub scroll-fade sd-2">Moment Studio is a full-service event décor studio built on the belief that every celebration — big or small — deserves to feel extraordinary.</p>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat-item scroll-fade">
+    <div class="stat-num" data-count="150" data-suffix="+">150+</div>
+    <div class="stat-label">Events styled</div>
+  </div>
+  <div class="stat-item scroll-fade sd-1">
+    <div class="stat-num" data-count="5" data-suffix="">5</div>
+    <div class="stat-label">Years in Orlando</div>
+  </div>
+  <div class="stat-item scroll-fade sd-2">
+    <div class="stat-num">★★★★★</div>
+    <div class="stat-label">Client rating</div>
+  </div>
+  <div class="stat-item scroll-fade sd-3">
+    <div class="stat-num">100%</div>
+    <div class="stat-label">Styled by us</div>
+  </div>
 </div>
 
 <!-- FOUNDER STORY -->
-<div class="section section-cream" style="padding-top: 48px; padding-bottom: 48px;">
-  <div class="about-story">
-    <div class="about-photo photo-placeholder">
-      <i class="ti ti-camera photo-placeholder-icon"></i>
-      <span class="photo-placeholder-text">Your photo here</span>
+<div class="section section-cream" style="padding-top:60px; padding-bottom:60px;">
+  <div class="about-story scroll-fade">
+    <div class="about-photo ph">
+      <i class="ti ti-camera" style="font-size:36px; color:var(--terra); opacity:0.3;"></i>
+      <span style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--terra); opacity:0.4;">Your photo here</span>
     </div>
     <div class="about-text">
       <div class="about-label">The founder</div>
       <div class="about-heading">Where the love<br>for detail began</div>
-      <p class="about-body">
-        Moment Studio was born from a deep love of creating spaces that feel intentional, warm, and completely personal. After years of watching events fall flat — not because of the people, but because of the missing details — I decided to build something better.
-      </p>
-      <p class="about-body">
-        What started as a passion for styling beautiful tablescapes and intimate setups grew into a full-service studio. Today, Moment Studio handles everything from first concept to final breakdown, so you can be fully present for the moments that matter.
-      </p>
-      <p class="about-body">
-        Every event we touch is treated as if it were our own. We don't do cookie-cutter. We don't do generic. We do yours.
-      </p>
-      <div class="about-signature">
+      <p class="about-body">Moment Studio was born from a deep love of creating spaces that feel intentional, warm, and completely personal. After years of watching events fall flat — not because of the people, but because the details weren't there — I decided to build something better.</p>
+      <p class="about-body">What started as a passion for styling beautiful tablescapes and intimate setups grew into a full-service studio. Today, Moment Studio handles everything from the first consultation to the final breakdown, so you can be fully present for the moments that matter most.</p>
+      <p class="about-body">Every event we touch is treated as if it were our own. We don't do cookie-cutter. We don't do generic. We do yours.</p>
+      <div class="about-sig">
         <div class="about-name">— Your Name Here</div>
         <div class="about-role">Founder, Moment Studio</div>
       </div>
@@ -58,77 +89,94 @@
 
 <!-- SERVICE AREA -->
 <div class="area-strip">
-  <div>
+  <div class="scroll-fade">
     <div class="area-left-label">Where we work</div>
     <div class="area-left-title">Based in Orlando,<br>available beyond</div>
   </div>
   <div class="area-items">
-    <div class="area-item">
+    <div class="area-item scroll-fade">
       <div class="area-item-name">Orlando</div>
       <div class="area-item-note">Home base & primary service area</div>
     </div>
-    <div class="area-item">
+    <div class="area-item scroll-fade sd-1">
       <div class="area-item-name">Central Florida</div>
       <div class="area-item-note">Kissimmee, Sanford, Lake Mary & surrounding</div>
     </div>
-    <div class="area-item">
+    <div class="area-item scroll-fade sd-2">
       <div class="area-item-name">Travel available</div>
-      <div class="area-item-note">Ask about events outside the area</div>
+      <div class="area-item-note">Ask about events outside the region</div>
     </div>
   </div>
 </div>
 
 <!-- STUDIO PHOTOS -->
 <div class="section section-terra">
-  <div class="eye">Our work</div>
-  <div class="title">Moments we've created</div>
-  <div class="sub">A glimpse into the events, setups, and spaces we've had the joy of bringing to life.</div>
-  <div class="photo-grid-3">
-    <div class="photo-placeholder" style="aspect-ratio: 4/5;">
-      <i class="ti ti-photo photo-placeholder-icon"></i>
-      <span class="photo-placeholder-text">Photo coming soon</span>
+  <div class="sec-header">
+    <div class="eye scroll-fade">Our work</div>
+    <div class="title scroll-fade sd-1">Moments we've created</div>
+    <div class="sub scroll-fade sd-2">A glimpse into the events, setups, and spaces we've had the joy of bringing to life.</div>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;" class="scroll-fade sd-1">
+    <div class="ph" style="aspect-ratio:4/5;"><i class="ti ti-photo"></i><span>Photo coming soon</span></div>
+    <div class="ph" style="aspect-ratio:4/5;"><i class="ti ti-photo"></i><span>Photo coming soon</span></div>
+    <div class="ph" style="aspect-ratio:4/5;"><i class="ti ti-photo"></i><span>Photo coming soon</span></div>
+  </div>
+  <div style="text-align:center; margin-top:32px;" class="scroll-fade">
+    <a href="https://www.instagram.com/" class="btn-outline" target="_blank" rel="noopener">
+      <i class="ti ti-brand-instagram" style="vertical-align:middle; margin-right:6px;"></i>Follow us on Instagram
+    </a>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="section section-cream">
+  <div class="sec-header">
+    <div class="eye scroll-fade">Client love</div>
+    <div class="title scroll-fade sd-1">What our clients say</div>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial scroll-fade">
+      <div class="t-stars">★★★★★</div>
+      <div class="t-text">"She listened to every single thing I said and brought it to life better than I could have imagined. I cried when I walked in."</div>
+      <div class="t-author">— Alicia D. · Baby Shower</div>
     </div>
-    <div class="photo-placeholder" style="aspect-ratio: 4/5;">
-      <i class="ti ti-photo photo-placeholder-icon"></i>
-      <span class="photo-placeholder-text">Photo coming soon</span>
+    <div class="testimonial scroll-fade sd-1">
+      <div class="t-stars">★★★★★</div>
+      <div class="t-text">"From our first message to the last detail on event day, the whole process was seamless. I didn't have to worry about a single thing."</div>
+      <div class="t-author">— Simone K. · Bridal Shower</div>
     </div>
-    <div class="photo-placeholder" style="aspect-ratio: 4/5;">
-      <i class="ti ti-photo photo-placeholder-icon"></i>
-      <span class="photo-placeholder-text">Photo coming soon</span>
+    <div class="testimonial scroll-fade sd-2">
+      <div class="t-stars">★★★★★</div>
+      <div class="t-text">"I gave her a vibe board and three words. What she delivered was beyond anything I could have planned on my own. Absolutely worth every penny."</div>
+      <div class="t-author">— Taylor R. · Birthday Celebration</div>
     </div>
   </div>
 </div>
 
-<!-- TESTIMONIAL -->
-<div class="quote-block">
-  <span class="quote-mark">"</span>
-  <div class="quote-text">She listened to every single thing I said and brought it to life better than I could have imagined. I cried when I walked in.</div>
-  <div class="quote-attr">— happy client · Orlando, FL</div>
-</div>
-
 <!-- VALUES -->
 <div class="section section-white">
-  <div class="eye">What drives us</div>
-  <div class="title">Our philosophy</div>
-  <div style="margin-bottom: 24px;"></div>
+  <div class="sec-header">
+    <div class="eye scroll-fade">What drives us</div>
+    <div class="title scroll-fade sd-1">Our philosophy</div>
+  </div>
   <div class="values">
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-sparkles" aria-hidden="true"></i></div>
+    <div class="val scroll-fade">
+      <div class="val-icon"><i class="ti ti-sparkles"></i></div>
       <div class="val-name">Intentional design</div>
       <div class="val-desc">Every detail is chosen with purpose — nothing is an afterthought.</div>
     </div>
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-heart" aria-hidden="true"></i></div>
+    <div class="val scroll-fade sd-1">
+      <div class="val-icon"><i class="ti ti-heart"></i></div>
       <div class="val-name">Personal touch</div>
       <div class="val-desc">Your event should feel like you — we listen before we design.</div>
     </div>
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-check" aria-hidden="true"></i></div>
+    <div class="val scroll-fade sd-2">
+      <div class="val-icon"><i class="ti ti-check"></i></div>
       <div class="val-name">Fully handled</div>
       <div class="val-desc">Setup, breakdown, coordination — you enjoy, we work.</div>
     </div>
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-star" aria-hidden="true"></i></div>
+    <div class="val scroll-fade sd-3">
+      <div class="val-icon"><i class="ti ti-star"></i></div>
       <div class="val-name">Elevated aesthetic</div>
       <div class="val-desc">Beautiful, warm, and editorial — never generic or forgettable.</div>
     </div>
@@ -137,24 +185,58 @@
 
 <!-- CTA -->
 <div class="cta-strip">
-  <div class="cta-strip-eye">Ready?</div>
-  <div class="cta-strip-title">Let's create your moment</div>
-  <a href="/contact" class="btn-terra">Start your inquiry</a>
+  <div class="eye scroll-fade">Ready to work together?</div>
+  <div class="cta-strip-title scroll-fade sd-1">Let's create your moment</div>
+  <div class="cta-strip-sub scroll-fade sd-2">Every event starts with a conversation. Tell us your vision and we'll take it from there — fully handled, beautifully executed.</div>
+  <a href="/contact" class="btn-terra scroll-fade sd-3">Start your inquiry</a>
 </div>
 
 <!-- FOOTER -->
-<div class="footer">
-  <div class="footer-logo">moment studio</div>
-  <div class="footer-tag">Event Decor · Orlando, FL</div>
-  <div class="footer-links">
-    <a href="/" class="footer-link">Home</a>
-    <a href="/about" class="footer-link">About</a>
-    <a href="/packages" class="footer-link">Packages</a>
-    <a href="/contact" class="footer-link">Contact</a>
-    <a href="/contact" class="footer-link">Book now</a>
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">moment studio</div>
+      <div class="footer-tagline">Event Decor · Orlando, FL</div>
+      <div class="footer-desc">Curated event décor that feels warm, intentional, and completely you. Serving Orlando and Central Florida.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <a href="/" class="footer-link">Home</a>
+      <a href="/about" class="footer-link">About</a>
+      <a href="/packages" class="footer-link">Packages</a>
+      <a href="/contact" class="footer-link">Contact</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Services</div>
+      <a href="/packages" class="footer-link">Full event planning</a>
+      <a href="/packages" class="footer-link">Celebrations</a>
+      <a href="/packages" class="footer-link">Couples moments</a>
+      <a href="/packages" class="footer-link">Corporate events</a>
+      <a href="/packages" class="footer-link">Styled picnics</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Get in touch</div>
+      <a href="mailto:hello@momentstudio.com" class="footer-link">hello@momentstudio.com</a>
+      <a href="https://www.instagram.com/" class="footer-link" target="_blank" rel="noopener">@momentstudio</a>
+      <div class="footer-link" style="cursor:default;">Orlando, Florida</div>
+      <a href="/contact" class="btn-terra" style="margin-top:16px; display:inline-block; font-size:10px; padding:10px 20px;">Book now</a>
+    </div>
   </div>
-  <div class="footer-copy">© 2026 Moment Studio · All rights reserved</div>
-</div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Moment Studio · All rights reserved</div>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/" class="footer-social" target="_blank" rel="noopener">Instagram</a>
+      <a href="#" class="footer-social">TikTok</a>
+      <a href="#" class="footer-social">Facebook</a>
+    </div>
+  </div>
+</footer>
 
+<div class="floating-cta" id="floatingCta">
+  <a href="/contact" class="floating-cta-btn"><i class="ti ti-calendar-event"></i> Book now</a>
+</div>
+<button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="ti ti-arrow-up"></i></button>
+
+<script src="/js/main.js"></script>
 </body>
 </html>

@@ -7,10 +7,17 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="/css/style.css" />
   <title>Moment Studio — Event Decor, Orlando FL</title>
-  <meta name="description" content="Curated event décor that feels warm, intentional, and completely you. Based in Orlando, FL." />
+  <meta name="description" content="Curated event décor that feels warm, intentional, and completely you. Based in Orlando, FL. Book your moment today." />
 </head>
 <body>
 
+<!-- ANNOUNCEMENT BAR -->
+<div class="ann-bar" id="announcementBar">
+  <span>Now booking <strong>Fall & Holiday 2025</strong> — limited dates remaining · Reserve yours today</span>
+  <button class="ann-close" onclick="dismissAnnouncement()" aria-label="Dismiss">×</button>
+</div>
+
+<!-- NAV -->
 <nav class="nav">
   <a href="/" class="nav-logo">moment <span>studio</span></a>
   <div class="nav-links">
@@ -20,33 +27,60 @@
     <a href="/contact" class="nav-link">Contact</a>
   </div>
   <a href="/contact" class="nav-cta">Book now</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="/">Home</a>
+  <a href="/about">About</a>
+  <a href="/packages">Packages</a>
+  <a href="/contact">Contact</a>
+  <a href="/contact" class="mnav-cta">Book now</a>
+</div>
 
 <!-- HERO -->
 <div class="hero">
   <div>
-    <div class="hero-title">Create moments<br>worth remembering</div>
-    <div class="hero-sub">Curated event décor that feels warm, intentional, and completely you — from the first idea to the last detail.</div>
-    <div class="hero-btns">
-      <a href="/contact" class="btn-terra">Book an event</a>
+    <div class="hero-eyebrow scroll-fade">Orlando Event Décor Studio</div>
+    <h1 class="hero-title scroll-fade sd-1">Create moments<br><em>worth remembering</em></h1>
+    <p class="hero-sub scroll-fade sd-2">Curated event décor that feels warm, intentional, and completely you — from the first idea to the last stunning detail.</p>
+    <div class="hero-btns scroll-fade sd-3">
+      <a href="/contact" class="btn-terra">Get a free quote</a>
       <a href="/packages" class="btn-outline">View packages</a>
     </div>
+    <div class="hero-trust scroll-fade sd-4">
+      <span class="hero-trust-item"><i class="ti ti-star-filled"></i> 5-star rated</span>
+      <span class="hero-trust-item"><i class="ti ti-check"></i> 150+ events styled</span>
+      <span class="hero-trust-item"><i class="ti ti-map-pin"></i> Orlando, FL</span>
+    </div>
   </div>
-  <div class="hero-right">
-    <div class="hero-stat">
-      <div class="hero-stat-num">100%</div>
-      <div class="hero-stat-label">styled by us</div>
-    </div>
-    <div class="hero-divider"></div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">6+</div>
-      <div class="hero-stat-label">package options</div>
-    </div>
-    <div class="hero-divider"></div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">Orlando</div>
-      <div class="hero-stat-label">based & available</div>
-    </div>
+  <div class="hero-gallery scroll-fade sd-2">
+    <div class="hero-gal-main ph"><i class="ti ti-photo"></i><span>Your photo</span></div>
+    <div class="hero-gal-thumb ph"><i class="ti ti-photo"></i><span>Your photo</span></div>
+    <div class="hero-gal-thumb ph"><i class="ti ti-photo"></i><span>Your photo</span></div>
+  </div>
+</div>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat-item scroll-fade">
+    <div class="stat-num" data-count="150" data-suffix="+">150+</div>
+    <div class="stat-label">Events styled</div>
+  </div>
+  <div class="stat-item scroll-fade sd-1">
+    <div class="stat-num" data-count="120" data-suffix="+">120+</div>
+    <div class="stat-label">Happy clients</div>
+  </div>
+  <div class="stat-item scroll-fade sd-2">
+    <div class="stat-num">★★★★★</div>
+    <div class="stat-label">5-star rating</div>
+  </div>
+  <div class="stat-item scroll-fade sd-3">
+    <div class="stat-num">24h</div>
+    <div class="stat-label">Quote turnaround</div>
   </div>
 </div>
 
@@ -70,13 +104,55 @@
   </div>
 </div>
 
-<!-- PACKAGES -->
+<!-- PORTFOLIO -->
 <div class="section section-cream">
-  <div class="eye">Our packages</div>
-  <div class="title">Every kind of moment, handled</div>
-  <div class="sub">Choose the package that fits your vision — select any to request a personalized quote.</div>
+  <div class="sec-header">
+    <div class="eye scroll-fade">Our work</div>
+    <div class="title scroll-fade sd-1">Moments we've created</div>
+    <div class="sub scroll-fade sd-2">A glimpse into the events and setups we've had the joy of bringing to life across Orlando and beyond.</div>
+  </div>
+  <div class="portfolio-grid">
+    <div class="portfolio-item scroll-fade">
+      <i class="ti ti-photo ph-icon"></i><span class="ph-text">Photo</span>
+      <div class="portfolio-overlay"><span class="portfolio-tag">Styled birthday celebration</span></div>
+    </div>
+    <div class="portfolio-item scroll-fade sd-1">
+      <i class="ti ti-photo ph-icon"></i><span class="ph-text">Photo</span>
+      <div class="portfolio-overlay"><span class="portfolio-tag">Couples proposal setup</span></div>
+    </div>
+    <div class="portfolio-item scroll-fade sd-2">
+      <i class="ti ti-photo ph-icon"></i><span class="ph-text">Photo</span>
+      <div class="portfolio-overlay"><span class="portfolio-tag">Luxury picnic for two</span></div>
+    </div>
+    <div class="portfolio-item scroll-fade sd-1">
+      <i class="ti ti-photo ph-icon"></i><span class="ph-text">Photo</span>
+      <div class="portfolio-overlay"><span class="portfolio-tag">Baby shower décor</span></div>
+    </div>
+    <div class="portfolio-item scroll-fade sd-2">
+      <i class="ti ti-photo ph-icon"></i><span class="ph-text">Photo</span>
+      <div class="portfolio-overlay"><span class="portfolio-tag">Corporate brand activation</span></div>
+    </div>
+    <div class="portfolio-item scroll-fade sd-3">
+      <i class="ti ti-photo ph-icon"></i><span class="ph-text">Photo</span>
+      <div class="portfolio-overlay"><span class="portfolio-tag">Bridal shower styling</span></div>
+    </div>
+  </div>
+  <div style="text-align:center; margin-top:32px;" class="scroll-fade">
+    <a href="https://www.instagram.com/" target="_blank" rel="noopener" class="btn-outline-terra">
+      <i class="ti ti-brand-instagram" style="vertical-align:middle; margin-right:6px;"></i>See more on Instagram
+    </a>
+  </div>
+</div>
 
-  <div class="pkg-tabs">
+<!-- PACKAGES -->
+<div class="section section-terra">
+  <div class="sec-header">
+    <div class="eye scroll-fade">Our packages</div>
+    <div class="title scroll-fade sd-1">Every kind of moment, handled</div>
+    <div class="sub scroll-fade sd-2">Eight packages across four categories. Select any package to request your personalized quote — replies within 24 hours.</div>
+  </div>
+
+  <div class="pkg-tabs scroll-fade">
     <div class="pkg-tab active" onclick="switchTab('planning', this)">Planning</div>
     <div class="pkg-tab" onclick="switchTab('celebrations', this)">Celebrations</div>
     <div class="pkg-tab" onclick="switchTab('couples', this)">Couples</div>
@@ -98,7 +174,7 @@
           <li>Dedicated point of contact</li>
         </ul>
         <div class="pkg-note">Best for clients starting from scratch who want a fully handled experience from idea to execution.</div>
-        <button class="pkg-btn" onclick="openInquiry('The Full Moment')">Request a quote</button>
+        <button class="pkg-btn" onclick="openInquiry('The Full Moment')">Request a quote →</button>
       </div>
       <div class="pkg">
         <div class="pkg-name">The Finishing Touch</div>
@@ -111,12 +187,11 @@
           <li>Design consultation included</li>
         </ul>
         <div class="pkg-note">For clients who've started planning and need someone to bring the vision together beautifully.</div>
-        <button class="pkg-btn" onclick="openInquiry('The Finishing Touch')">Request a quote</button>
+        <button class="pkg-btn" onclick="openInquiry('The Finishing Touch')">Request a quote →</button>
       </div>
     </div>
-
     <div id="tab-celebrations" class="pkg-panel">
-      <div class="pkg">
+      <div class="pkg featured">
         <div class="pkg-name">The Celebration</div>
         <div class="pkg-price-tag">Quote upon inquiry</div>
         <ul class="pkg-includes">
@@ -127,7 +202,7 @@
           <li>Full setup & breakdown</li>
         </ul>
         <div class="pkg-note">For personal celebrations of any size — intimate or large.</div>
-        <button class="pkg-btn" onclick="openInquiry('The Celebration')">Request a quote</button>
+        <button class="pkg-btn" onclick="openInquiry('The Celebration')">Request a quote →</button>
       </div>
       <div class="pkg">
         <div class="pkg-name">The Picnic Experience</div>
@@ -140,12 +215,12 @@
           <li>Available for groups of 2–20</li>
         </ul>
         <div class="pkg-note">Birthdays, girls' trips, bachelorettes, or just because.</div>
-        <button class="pkg-btn" onclick="openInquiry('The Picnic Experience')">Request a quote</button>
+        <button class="pkg-btn" onclick="openInquiry('The Picnic Experience')">Request a quote →</button>
       </div>
     </div>
-
     <div id="tab-couples" class="pkg-panel">
       <div class="pkg featured">
+        <div class="pkg-badge">Most popular</div>
         <div class="pkg-name">The Romantic Moment</div>
         <div class="pkg-price-tag">Quote upon inquiry</div>
         <ul class="pkg-includes">
@@ -156,7 +231,7 @@
           <li>Customizable to your love story</li>
         </ul>
         <div class="pkg-note">Every romantic gesture deserves a setting that matches the feeling.</div>
-        <button class="pkg-btn" onclick="openInquiry('The Romantic Moment')">Request a quote</button>
+        <button class="pkg-btn" onclick="openInquiry('The Romantic Moment')">Request a quote →</button>
       </div>
       <div class="pkg">
         <div class="pkg-name">The Intimate Picnic</div>
@@ -169,12 +244,11 @@
           <li>Outdoor or indoor locations</li>
         </ul>
         <div class="pkg-note">A beautiful, effortless date moment — we set it all up for you.</div>
-        <button class="pkg-btn" onclick="openInquiry('The Intimate Picnic')">Request a quote</button>
+        <button class="pkg-btn" onclick="openInquiry('The Intimate Picnic')">Request a quote →</button>
       </div>
     </div>
-
     <div id="tab-corporate" class="pkg-panel">
-      <div class="pkg">
+      <div class="pkg featured">
         <div class="pkg-name">The Branded Experience</div>
         <div class="pkg-price-tag">Quote upon inquiry</div>
         <ul class="pkg-includes">
@@ -185,7 +259,7 @@
           <li>Indoor & outdoor venues</li>
         </ul>
         <div class="pkg-note">Professional, polished, and on-brand — for companies that want their event to make an impression.</div>
-        <button class="pkg-btn" onclick="openInquiry('The Branded Experience')">Request a quote</button>
+        <button class="pkg-btn" onclick="openInquiry('The Branded Experience')">Request a quote →</button>
       </div>
       <div class="pkg">
         <div class="pkg-name">Team & Office Moments</div>
@@ -197,89 +271,173 @@
           <li>Setup & breakdown included</li>
         </ul>
         <div class="pkg-note">Because your team deserves more than a store-bought banner.</div>
-        <button class="pkg-btn" onclick="openInquiry('Team & Office Moments')">Request a quote</button>
+        <button class="pkg-btn" onclick="openInquiry('Team & Office Moments')">Request a quote →</button>
       </div>
     </div>
+  </div>
+  <div style="text-align:center; margin-top:32px;" class="scroll-fade">
+    <a href="/packages" class="btn-outline">See all packages & add-ons</a>
   </div>
 </div>
 
 <!-- HOW IT WORKS -->
-<div class="section section-terra">
-  <div class="eye">How it works</div>
-  <div class="title">Simple from start to finish</div>
+<div class="section section-white">
+  <div class="sec-header">
+    <div class="eye scroll-fade">The process</div>
+    <div class="title scroll-fade sd-1">Simple from start to finish</div>
+    <div class="sub scroll-fade sd-2">Four easy steps from your first message to a fully styled event. We handle the complexity — you enjoy the moment.</div>
+  </div>
   <div class="process">
-    <div class="step">
+    <div class="step scroll-fade">
       <div class="step-num">01</div>
       <div class="step-name">Inquire</div>
-      <div class="step-desc">Select a package and fill out your inquiry form.</div>
+      <div class="step-desc">Select a package and fill out your inquiry form. We'll confirm within 24 hours.</div>
     </div>
-    <div class="step">
+    <div class="step scroll-fade sd-1">
       <div class="step-num">02</div>
       <div class="step-name">Consult</div>
-      <div class="step-desc">We connect to align on your vision and budget.</div>
+      <div class="step-desc">We connect to align on your vision, budget, and every detail that matters.</div>
     </div>
-    <div class="step">
+    <div class="step scroll-fade sd-2">
       <div class="step-num">03</div>
       <div class="step-name">Design</div>
-      <div class="step-desc">We build your full décor plan and mood board.</div>
+      <div class="step-desc">We build your full décor plan, mood board, and source every element.</div>
     </div>
-    <div class="step">
+    <div class="step scroll-fade sd-3">
       <div class="step-num">04</div>
       <div class="step-name">Experience</div>
-      <div class="step-desc">Show up. We handle everything else.</div>
+      <div class="step-desc">Show up. We handle setup, breakdown, and everything in between.</div>
     </div>
   </div>
 </div>
 
-<!-- TESTIMONIAL -->
-<div class="quote-block">
-  <span class="quote-mark">"</span>
-  <div class="quote-text">Moment Studio transformed our backyard into something out of a magazine. Every detail was perfect.</div>
-  <div class="quote-attr">— happy client · Orlando, FL</div>
+<!-- TESTIMONIALS -->
+<div class="section section-cream">
+  <div class="sec-header">
+    <div class="eye scroll-fade">Client love</div>
+    <div class="title scroll-fade sd-1">What our clients say</div>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial scroll-fade">
+      <div class="t-stars">★★★★★</div>
+      <div class="t-text">"Moment Studio transformed our backyard into something out of a magazine. Every single detail was perfect — I couldn't believe this was actually my event."</div>
+      <div class="t-author">— Maya R. · Birthday Celebration</div>
+    </div>
+    <div class="testimonial scroll-fade sd-1">
+      <div class="t-stars">★★★★★</div>
+      <div class="t-text">"She understood my vision better than I did. The proposal setup was breathtaking — my partner was in tears before I even got down on one knee."</div>
+      <div class="t-author">— Jordan T. · Proposal Setup</div>
+    </div>
+    <div class="testimonial scroll-fade sd-2">
+      <div class="t-stars">★★★★★</div>
+      <div class="t-text">"From our first conversation to the last detail on event day, the whole process was seamless. Our corporate launch looked like a million dollars."</div>
+      <div class="t-author">— Priya M. · Corporate Event</div>
+    </div>
+  </div>
+</div>
+
+<!-- LEAD BANNER -->
+<div class="lead-banner">
+  <div>
+    <div class="eye scroll-fade">Ready to book?</div>
+    <div class="lead-banner-title scroll-fade sd-1">Get your custom quote<br>within 24 hours</div>
+    <div class="lead-banner-sub scroll-fade sd-2">Tell us about your event and we'll put together a personalized quote — no pressure, no commitment. Just a conversation about your moment.</div>
+    <a href="/contact" class="btn-terra scroll-fade sd-3">Start your inquiry</a>
+  </div>
+  <div class="lead-badge scroll-fade sd-2">
+    <div class="lead-badge-num">24h</div>
+    <div class="lead-badge-text">Response<br>guaranteed</div>
+  </div>
 </div>
 
 <!-- VALUES -->
 <div class="section section-white">
-  <div class="eye">Why Moment Studio</div>
-  <div class="title">What we stand for</div>
-  <div style="margin-bottom: 24px;"></div>
+  <div class="sec-header">
+    <div class="eye scroll-fade">Why Moment Studio</div>
+    <div class="title scroll-fade sd-1">What we stand for</div>
+  </div>
   <div class="values">
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-sparkles" aria-hidden="true"></i></div>
+    <div class="val scroll-fade">
+      <div class="val-icon"><i class="ti ti-sparkles"></i></div>
       <div class="val-name">Intentional design</div>
       <div class="val-desc">Every detail is chosen with purpose — nothing is an afterthought.</div>
     </div>
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-heart" aria-hidden="true"></i></div>
+    <div class="val scroll-fade sd-1">
+      <div class="val-icon"><i class="ti ti-heart"></i></div>
       <div class="val-name">Personal touch</div>
-      <div class="val-desc">Your event should feel like you — we listen before we design.</div>
+      <div class="val-desc">Your event should feel like you — we listen carefully before we design.</div>
     </div>
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-check" aria-hidden="true"></i></div>
+    <div class="val scroll-fade sd-2">
+      <div class="val-icon"><i class="ti ti-check"></i></div>
       <div class="val-name">Fully handled</div>
       <div class="val-desc">Setup, breakdown, coordination — you enjoy, we work.</div>
     </div>
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-star" aria-hidden="true"></i></div>
+    <div class="val scroll-fade sd-3">
+      <div class="val-icon"><i class="ti ti-star"></i></div>
       <div class="val-name">Elevated aesthetic</div>
       <div class="val-desc">Beautiful, warm, and editorial — never generic or forgettable.</div>
     </div>
   </div>
 </div>
 
-<!-- FOOTER -->
-<div class="footer">
-  <div class="footer-logo">moment studio</div>
-  <div class="footer-tag">Event Decor · Orlando, FL</div>
-  <div class="footer-links">
-    <a href="/" class="footer-link">Home</a>
-    <a href="/about" class="footer-link">About</a>
-    <a href="/packages" class="footer-link">Packages</a>
-    <a href="/contact" class="footer-link">Contact</a>
-    <a href="/contact" class="footer-link">Book now</a>
-  </div>
-  <div class="footer-copy">© 2026 Moment Studio · All rights reserved</div>
+<!-- FINAL CTA -->
+<div class="cta-strip">
+  <div class="eye scroll-fade">Let's make it happen</div>
+  <div class="cta-strip-title scroll-fade sd-1">Your moment is waiting</div>
+  <div class="cta-strip-sub scroll-fade sd-2">Spots fill fast — especially for weekends and peak seasons. Reach out today and let's start planning something beautiful.</div>
+  <a href="/contact" class="btn-terra scroll-fade sd-3">Book your event</a>
 </div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">moment studio</div>
+      <div class="footer-tagline">Event Decor · Orlando, FL</div>
+      <div class="footer-desc">Curated event décor that feels warm, intentional, and completely you. Serving Orlando and Central Florida.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <a href="/" class="footer-link">Home</a>
+      <a href="/about" class="footer-link">About</a>
+      <a href="/packages" class="footer-link">Packages</a>
+      <a href="/contact" class="footer-link">Contact</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Services</div>
+      <a href="/packages" class="footer-link">Full event planning</a>
+      <a href="/packages" class="footer-link">Celebrations</a>
+      <a href="/packages" class="footer-link">Couples moments</a>
+      <a href="/packages" class="footer-link">Corporate events</a>
+      <a href="/packages" class="footer-link">Styled picnics</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Get in touch</div>
+      <a href="mailto:hello@momentstudio.com" class="footer-link">hello@momentstudio.com</a>
+      <a href="https://www.instagram.com/" class="footer-link" target="_blank" rel="noopener">@momentstudio</a>
+      <div class="footer-link" style="cursor:default;">Orlando, Florida</div>
+      <a href="/contact" class="btn-terra" style="margin-top:16px; display:inline-block; font-size:10px; padding:10px 20px;">Book now</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Moment Studio · All rights reserved</div>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/" class="footer-social" target="_blank" rel="noopener">Instagram</a>
+      <a href="#" class="footer-social">TikTok</a>
+      <a href="#" class="footer-social">Facebook</a>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING CTA -->
+<div class="floating-cta" id="floatingCta">
+  <a href="/contact" class="floating-cta-btn">
+    <i class="ti ti-calendar-event"></i> Book now
+  </a>
+</div>
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <i class="ti ti-arrow-up"></i>
+</button>
 
 <!-- INQUIRY MODAL -->
 <div class="modal-overlay" id="inquiryModal" onclick="overlayClose(event)">
@@ -287,50 +445,40 @@
     <button class="modal-close" onclick="closeInquiry()">×</button>
     <div class="modal-eye">Request a quote</div>
     <div class="modal-title">Let's plan your moment</div>
-    <div class="modal-pkg-selected" id="modalPkgLabel">Package: —</div>
+    <div class="modal-pkg" id="modalPkgLabel">Package: —</div>
+    <form id="modalForm" onsubmit="submitModal(event)">
     <div class="form-group">
       <label class="form-label">Full name</label>
-      <input class="form-input" type="text" placeholder="First & last name" />
+      <input class="form-input" type="text" placeholder="First & last name" required />
     </div>
     <div class="form-group">
       <label class="form-label">Email address</label>
-      <input class="form-input" type="email" placeholder="your@email.com" />
+      <input class="form-input" type="email" placeholder="your@email.com" required />
     </div>
-    <div class="form-group">
-      <label class="form-label">Event date</label>
-      <input class="form-input" type="text" placeholder="MM / DD / YYYY" />
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Event date</label>
+        <input class="form-input" type="text" placeholder="MM / DD / YYYY" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Guest count</label>
+        <input class="form-input" type="text" placeholder="Approx." />
+      </div>
     </div>
     <div class="form-group">
       <label class="form-label">Event location</label>
-      <input class="form-input" type="text" placeholder="City or venue" />
+      <input class="form-input" type="text" placeholder="City or venue name" />
     </div>
     <div class="form-group">
-      <label class="form-label">Tell us your vision</label>
+      <label class="form-label">Your vision</label>
       <textarea class="form-input form-textarea" placeholder="Colors, theme, vibe, guest count — anything helps!"></textarea>
     </div>
-    <button class="form-btn">Submit inquiry</button>
+    <button type="submit" class="form-btn">Submit inquiry</button>
+    </form>
+    <div class="form-success" id="modalSuccess">✓ &nbsp;Inquiry received — we'll reply within 24 hours. Check your inbox soon!</div>
   </div>
 </div>
 
-<script>
-function switchTab(tab, el) {
-  document.querySelectorAll('.pkg-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.pkg-panel').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('tab-' + tab).classList.add('active');
-}
-function openInquiry(pkgName) {
-  document.getElementById('modalPkgLabel').textContent = 'Package: ' + pkgName;
-  document.getElementById('inquiryModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function closeInquiry() {
-  document.getElementById('inquiryModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-function overlayClose(e) {
-  if (e.target === document.getElementById('inquiryModal')) closeInquiry();
-}
-</script>
+<script src="/js/main.js"></script>
 </body>
 </html>

@@ -7,10 +7,17 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="/css/style.css" />
   <title>Contact — Moment Studio</title>
-  <meta name="description" content="Ready to book? Submit an inquiry to Moment Studio and let's start planning your event." />
+  <meta name="description" content="Ready to book? Submit an inquiry to Moment Studio and we'll respond within 24 hours to start planning your event." />
 </head>
 <body>
 
+<!-- ANNOUNCEMENT BAR -->
+<div class="ann-bar" id="announcementBar">
+  <span>Now booking <strong>Fall & Holiday 2025</strong> — limited dates remaining · Reach out before they're gone</span>
+  <button class="ann-close" onclick="dismissAnnouncement()" aria-label="Dismiss">×</button>
+</div>
+
+<!-- NAV -->
 <nav class="nav">
   <a href="/" class="nav-logo">moment <span>studio</span></a>
   <div class="nav-links">
@@ -20,63 +27,90 @@
     <a href="/contact" class="nav-link active">Contact</a>
   </div>
   <a href="/contact" class="nav-cta">Book now</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="/">Home</a>
+  <a href="/about">About</a>
+  <a href="/packages">Packages</a>
+  <a href="/contact">Contact</a>
+  <a href="/contact" class="mnav-cta">Book now</a>
+</div>
 
 <!-- PAGE BANNER -->
 <div class="page-banner">
-  <div class="page-banner-eye">Get in touch</div>
-  <div class="page-banner-title">Let's plan<br>your moment</div>
-  <div class="page-banner-sub">Fill out the form below and we'll be in touch within 48 hours to discuss your vision, timeline, and next steps.</div>
+  <div class="page-banner-eye scroll-fade">Get in touch</div>
+  <h1 class="page-banner-title scroll-fade sd-1">Let's plan<br>your moment</h1>
+  <p class="page-banner-sub scroll-fade sd-2">Fill out the form and we'll be in touch within 24 hours to discuss your vision, timeline, and next steps. No pressure — just a conversation.</p>
 </div>
 
 <!-- CONTACT LAYOUT -->
-<div class="section section-cream" style="padding-top: 44px; padding-bottom: 56px;">
-  <div class="contact-layout">
+<div class="section section-cream" style="padding-top:52px; padding-bottom:72px;">
+  <div class="contact-layout scroll-fade">
 
     <!-- LEFT: INFO -->
     <div class="contact-info">
-      <div class="contact-info-label">Reach us</div>
+      <div class="contact-info-label">Reach us directly</div>
       <div class="contact-info-heading">We'd love to<br>hear from you</div>
-      <div class="contact-info-body">
-        Whether you have a full vision or just a feeling — reach out. We'll handle the rest.
-      </div>
+      <div class="contact-info-body">Whether you have a full vision ready or just a feeling — reach out. We'll help you figure out the rest.</div>
 
       <div class="contact-detail">
         <div class="contact-detail-type">Email</div>
         <div class="contact-detail-value">hello@momentstudio.com</div>
-        <div class="contact-detail-note">We respond within 48 hours</div>
+        <div class="contact-detail-note">We respond within 24 hours</div>
       </div>
-
       <div class="contact-detail">
         <div class="contact-detail-type">Instagram</div>
         <div class="contact-detail-value">@momentstudio</div>
         <div class="contact-detail-note">DMs welcome for quick questions</div>
       </div>
-
       <div class="contact-detail">
         <div class="contact-detail-type">Location</div>
         <div class="contact-detail-value">Orlando, Florida</div>
-        <div class="contact-detail-note">Serving Central FL & available for travel</div>
+        <div class="contact-detail-note">Serving Central FL · Travel available</div>
       </div>
 
       <div class="social-row">
-        <a href="#" class="social-btn">
-          <i class="ti ti-brand-instagram"></i>
-          Instagram
+        <a href="https://www.instagram.com/" class="social-btn" target="_blank" rel="noopener">
+          <i class="ti ti-brand-instagram"></i> Instagram
         </a>
         <a href="#" class="social-btn">
-          <i class="ti ti-brand-tiktok"></i>
-          TikTok
+          <i class="ti ti-brand-tiktok"></i> TikTok
         </a>
+      </div>
+
+      <!-- Trust signals -->
+      <div style="margin-top:40px; padding-top:32px; border-top:0.5px solid var(--border);">
+        <div style="font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--terra); margin-bottom:16px;">Why clients choose us</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--brown);">
+            <i class="ti ti-check" style="color:var(--terra); font-size:14px; flex-shrink:0;"></i>
+            150+ events styled in Orlando
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--brown);">
+            <i class="ti ti-check" style="color:var(--terra); font-size:14px; flex-shrink:0;"></i>
+            5-star rated by every client
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--brown);">
+            <i class="ti ti-check" style="color:var(--terra); font-size:14px; flex-shrink:0;"></i>
+            24-hour quote guarantee
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--brown);">
+            <i class="ti ti-check" style="color:var(--terra); font-size:14px; flex-shrink:0;"></i>
+            Full setup & breakdown included
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- RIGHT: FORM -->
     <div class="contact-form-wrap">
       <div class="contact-form-title">Submit an inquiry</div>
-      <div class="contact-form-sub">All fields marked with * are required. The more detail you share, the better we can serve you.</div>
+      <div class="contact-form-sub">The more detail you share, the better we can serve you. We'll follow up within 24 hours.</div>
 
-      <form onsubmit="handleSubmit(event)">
+      <form onsubmit="handleSubmit(event)" id="contactForm" novalidate>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">First name *</label>
@@ -87,7 +121,6 @@
             <input class="form-input" type="text" placeholder="Last name" required />
           </div>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Email address *</label>
@@ -98,7 +131,6 @@
             <input class="form-input" type="tel" placeholder="(Optional)" />
           </div>
         </div>
-
         <div class="form-group">
           <label class="form-label">Package interest *</label>
           <select class="form-input" required>
@@ -114,7 +146,6 @@
             <option>Not sure yet — let's talk</option>
           </select>
         </div>
-
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">Event date *</label>
@@ -125,22 +156,19 @@
             <input class="form-input" type="text" placeholder="Approx. number" />
           </div>
         </div>
-
         <div class="form-group">
           <label class="form-label">Event location / venue *</label>
           <input class="form-input" type="text" placeholder="City, venue name, or address" required />
         </div>
-
         <div class="form-group">
           <label class="form-label">Tell us your vision *</label>
-          <textarea class="form-input form-textarea" style="min-height: 110px;" placeholder="Colors, theme, vibe, inspo images, mood — anything helps! The more you share, the better." required></textarea>
+          <textarea class="form-input form-textarea" style="min-height:110px;" placeholder="Colors, theme, vibe, inspo — the more you share, the better. Include anything that inspires you." required></textarea>
         </div>
-
-        <button type="submit" class="form-btn">Submit inquiry</button>
+        <button type="submit" class="form-btn">Submit inquiry — we'll reply within 24h</button>
       </form>
 
-      <div id="formSuccess" style="display:none; margin-top:20px; padding:16px; background:#f5e8dc; border:0.5px solid #e8c8a8; font-size:13px; color:#3a2a1a; line-height:1.7; font-style:italic;">
-        Thank you — your inquiry has been received. We'll be in touch within 48 hours to start planning your moment.
+      <div class="form-success" id="formSuccess">
+        ✓ &nbsp;Thank you — your inquiry has been received. We'll be in touch within 24 hours to start planning your moment. Check your inbox soon!
       </div>
     </div>
 
@@ -150,30 +178,85 @@
 <!-- TESTIMONIAL -->
 <div class="quote-block">
   <span class="quote-mark">"</span>
-  <div class="quote-text">From the first message to the last detail, working with Moment Studio was seamless. They just get it.</div>
+  <div class="quote-text">From the very first message to the last detail on event day, working with Moment Studio was completely seamless. They just get it.</div>
   <div class="quote-attr">— happy client · Orlando, FL</div>
 </div>
 
-<!-- FOOTER -->
-<div class="footer">
-  <div class="footer-logo">moment studio</div>
-  <div class="footer-tag">Event Decor · Orlando, FL</div>
-  <div class="footer-links">
-    <a href="/" class="footer-link">Home</a>
-    <a href="/about" class="footer-link">About</a>
-    <a href="/packages" class="footer-link">Packages</a>
-    <a href="/contact" class="footer-link">Contact</a>
-    <a href="/contact" class="footer-link">Book now</a>
+<!-- PROCESS STRIP -->
+<div class="section section-terra">
+  <div class="sec-header">
+    <div class="eye scroll-fade">What happens next</div>
+    <div class="title scroll-fade sd-1">After you submit</div>
   </div>
-  <div class="footer-copy">© 2026 Moment Studio · All rights reserved</div>
+  <div class="process">
+    <div class="step scroll-fade">
+      <div class="step-num">01</div>
+      <div class="step-name">We receive it</div>
+      <div class="step-desc">Your inquiry lands in our inbox immediately — we review every single one.</div>
+    </div>
+    <div class="step scroll-fade sd-1">
+      <div class="step-num">02</div>
+      <div class="step-name">We reply in 24h</div>
+      <div class="step-desc">We'll reach out with a confirmation and any initial questions within 24 hours.</div>
+    </div>
+    <div class="step scroll-fade sd-2">
+      <div class="step-num">03</div>
+      <div class="step-name">We consult</div>
+      <div class="step-desc">A short call or message thread to align on your vision, budget, and timeline.</div>
+    </div>
+    <div class="step scroll-fade sd-3">
+      <div class="step-num">04</div>
+      <div class="step-name">You get a quote</div>
+      <div class="step-desc">A custom quote tailored to your event — clear, fair, and no surprises.</div>
+    </div>
+  </div>
 </div>
 
-<script>
-function handleSubmit(e) {
-  e.preventDefault();
-  e.target.style.display = 'none';
-  document.getElementById('formSuccess').style.display = 'block';
-}
-</script>
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">moment studio</div>
+      <div class="footer-tagline">Event Decor · Orlando, FL</div>
+      <div class="footer-desc">Curated event décor that feels warm, intentional, and completely you. Serving Orlando and Central Florida.</div>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <a href="/" class="footer-link">Home</a>
+      <a href="/about" class="footer-link">About</a>
+      <a href="/packages" class="footer-link">Packages</a>
+      <a href="/contact" class="footer-link">Contact</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Services</div>
+      <a href="/packages" class="footer-link">Full event planning</a>
+      <a href="/packages" class="footer-link">Celebrations</a>
+      <a href="/packages" class="footer-link">Couples moments</a>
+      <a href="/packages" class="footer-link">Corporate events</a>
+      <a href="/packages" class="footer-link">Styled picnics</a>
+    </div>
+    <div>
+      <div class="footer-col-title">Get in touch</div>
+      <a href="mailto:hello@momentstudio.com" class="footer-link">hello@momentstudio.com</a>
+      <a href="https://www.instagram.com/" class="footer-link" target="_blank" rel="noopener">@momentstudio</a>
+      <div class="footer-link" style="cursor:default;">Orlando, Florida</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Moment Studio · All rights reserved</div>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/" class="footer-social" target="_blank" rel="noopener">Instagram</a>
+      <a href="#" class="footer-social">TikTok</a>
+      <a href="#" class="footer-social">Facebook</a>
+    </div>
+  </div>
+</footer>
+
+<div class="floating-cta" id="floatingCta">
+  <a href="#contactForm" class="floating-cta-btn"><i class="ti ti-send"></i> Send inquiry</a>
+</div>
+<button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="ti ti-arrow-up"></i></button>
+
+<script src="/js/main.js"></script>
 </body>
 </html>
