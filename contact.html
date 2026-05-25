@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <title>Contact — Moment Studio</title>
+  <meta name="description" content="Ready to book? Submit an inquiry to Moment Studio and let's start planning your event." />
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">moment <span>studio</span></a>
+  <div class="nav-links">
+    <a href="/" class="nav-link">Home</a>
+    <a href="/about" class="nav-link">About</a>
+    <a href="/packages" class="nav-link">Packages</a>
+    <a href="/contact" class="nav-link active">Contact</a>
+  </div>
+  <a href="/contact" class="nav-cta">Book now</a>
+</nav>
+
+<!-- PAGE BANNER -->
+<div class="page-banner">
+  <div class="page-banner-eye">Get in touch</div>
+  <div class="page-banner-title">Let's plan<br>your moment</div>
+  <div class="page-banner-sub">Fill out the form below and we'll be in touch within 48 hours to discuss your vision, timeline, and next steps.</div>
+</div>
+
+<!-- CONTACT LAYOUT -->
+<div class="section section-cream" style="padding-top: 44px; padding-bottom: 56px;">
+  <div class="contact-layout">
+
+    <!-- LEFT: INFO -->
+    <div class="contact-info">
+      <div class="contact-info-label">Reach us</div>
+      <div class="contact-info-heading">We'd love to<br>hear from you</div>
+      <div class="contact-info-body">
+        Whether you have a full vision or just a feeling — reach out. We'll handle the rest.
+      </div>
+
+      <div class="contact-detail">
+        <div class="contact-detail-type">Email</div>
+        <div class="contact-detail-value">hello@momentstudio.com</div>
+        <div class="contact-detail-note">We respond within 48 hours</div>
+      </div>
+
+      <div class="contact-detail">
+        <div class="contact-detail-type">Instagram</div>
+        <div class="contact-detail-value">@momentstudio</div>
+        <div class="contact-detail-note">DMs welcome for quick questions</div>
+      </div>
+
+      <div class="contact-detail">
+        <div class="contact-detail-type">Location</div>
+        <div class="contact-detail-value">Orlando, Florida</div>
+        <div class="contact-detail-note">Serving Central FL & available for travel</div>
+      </div>
+
+      <div class="social-row">
+        <a href="#" class="social-btn">
+          <i class="ti ti-brand-instagram"></i>
+          Instagram
+        </a>
+        <a href="#" class="social-btn">
+          <i class="ti ti-brand-tiktok"></i>
+          TikTok
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT: FORM -->
+    <div class="contact-form-wrap">
+      <div class="contact-form-title">Submit an inquiry</div>
+      <div class="contact-form-sub">All fields marked with * are required. The more detail you share, the better we can serve you.</div>
+
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First name *</label>
+            <input class="form-input" type="text" placeholder="First name" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last name *</label>
+            <input class="form-input" type="text" placeholder="Last name" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email address *</label>
+            <input class="form-input" type="email" placeholder="your@email.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone number</label>
+            <input class="form-input" type="tel" placeholder="(Optional)" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Package interest *</label>
+          <select class="form-input" required>
+            <option value="">Select a package...</option>
+            <option>The Full Moment</option>
+            <option>The Finishing Touch</option>
+            <option>The Celebration</option>
+            <option>The Picnic Experience</option>
+            <option>The Romantic Moment</option>
+            <option>The Intimate Picnic</option>
+            <option>The Branded Experience</option>
+            <option>Team &amp; Office Moments</option>
+            <option>Not sure yet — let's talk</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Event date *</label>
+            <input class="form-input" type="text" placeholder="MM / DD / YYYY" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Guest count</label>
+            <input class="form-input" type="text" placeholder="Approx. number" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Event location / venue *</label>
+          <input class="form-input" type="text" placeholder="City, venue name, or address" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tell us your vision *</label>
+          <textarea class="form-input form-textarea" style="min-height: 110px;" placeholder="Colors, theme, vibe, inspo images, mood — anything helps! The more you share, the better." required></textarea>
+        </div>
+
+        <button type="submit" class="form-btn">Submit inquiry</button>
+      </form>
+
+      <div id="formSuccess" style="display:none; margin-top:20px; padding:16px; background:#f5e8dc; border:0.5px solid #e8c8a8; font-size:13px; color:#3a2a1a; line-height:1.7; font-style:italic;">
+        Thank you — your inquiry has been received. We'll be in touch within 48 hours to start planning your moment.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TESTIMONIAL -->
+<div class="quote-block">
+  <span class="quote-mark">"</span>
+  <div class="quote-text">From the first message to the last detail, working with Moment Studio was seamless. They just get it.</div>
+  <div class="quote-attr">— happy client · Orlando, FL</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-logo">moment studio</div>
+  <div class="footer-tag">Event Decor · Orlando, FL</div>
+  <div class="footer-links">
+    <a href="/" class="footer-link">Home</a>
+    <a href="/about" class="footer-link">About</a>
+    <a href="/packages" class="footer-link">Packages</a>
+    <a href="/contact" class="footer-link">Contact</a>
+    <a href="/contact" class="footer-link">Book now</a>
+  </div>
+  <div class="footer-copy">© 2026 Moment Studio · All rights reserved</div>
+</div>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  e.target.style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+}
+</script>
+</body>
+</html>

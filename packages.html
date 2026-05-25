@@ -6,85 +6,42 @@
   <script defer src="/_vercel/insights/script.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="/css/style.css" />
-  <title>Moment Studio — Event Decor, Orlando FL</title>
-  <meta name="description" content="Curated event décor that feels warm, intentional, and completely you. Based in Orlando, FL." />
+  <title>Packages — Moment Studio</title>
+  <meta name="description" content="Explore all Moment Studio event décor packages — planning, celebrations, couples, and corporate." />
 </head>
 <body>
 
 <nav class="nav">
   <a href="/" class="nav-logo">moment <span>studio</span></a>
   <div class="nav-links">
-    <a href="/" class="nav-link active">Home</a>
+    <a href="/" class="nav-link">Home</a>
     <a href="/about" class="nav-link">About</a>
-    <a href="/packages" class="nav-link">Packages</a>
+    <a href="/packages" class="nav-link active">Packages</a>
     <a href="/contact" class="nav-link">Contact</a>
   </div>
   <a href="/contact" class="nav-cta">Book now</a>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div>
-    <div class="hero-title">Create moments<br>worth remembering</div>
-    <div class="hero-sub">Curated event décor that feels warm, intentional, and completely you — from the first idea to the last detail.</div>
-    <div class="hero-btns">
-      <a href="/contact" class="btn-terra">Book an event</a>
-      <a href="/packages" class="btn-outline">View packages</a>
-    </div>
-  </div>
-  <div class="hero-right">
-    <div class="hero-stat">
-      <div class="hero-stat-num">100%</div>
-      <div class="hero-stat-label">styled by us</div>
-    </div>
-    <div class="hero-divider"></div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">6+</div>
-      <div class="hero-stat-label">package options</div>
-    </div>
-    <div class="hero-divider"></div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">Orlando</div>
-      <div class="hero-stat-label">based & available</div>
-    </div>
-  </div>
+<!-- PAGE BANNER -->
+<div class="page-banner">
+  <div class="page-banner-eye">Our packages</div>
+  <div class="page-banner-title">Every kind of moment,<br>handled beautifully</div>
+  <div class="page-banner-sub">Eight carefully designed packages across four categories — from full event planning to intimate couples setups. All pricing is custom; request a quote to get started.</div>
 </div>
 
-<!-- MARQUEE -->
-<div class="marquee-strip">
-  <div class="marquee-inner">
-    <span class="marquee-item">Full event planning</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Floral design</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Styled picnics</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Couples moments</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Corporate events</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Social celebrations</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Backdrop builds</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Full event planning</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Floral design</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Styled picnics</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Couples moments</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Corporate events</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Social celebrations</span><span class="marquee-dot"></span>
-    <span class="marquee-item">Backdrop builds</span><span class="marquee-dot"></span>
-  </div>
-</div>
-
-<!-- PACKAGES -->
+<!-- ALL PACKAGES -->
 <div class="section section-cream">
-  <div class="eye">Our packages</div>
-  <div class="title">Every kind of moment, handled</div>
-  <div class="sub">Choose the package that fits your vision — select any to request a personalized quote.</div>
 
-  <div class="pkg-tabs">
-    <div class="pkg-tab active" onclick="switchTab('planning', this)">Planning</div>
-    <div class="pkg-tab" onclick="switchTab('celebrations', this)">Celebrations</div>
-    <div class="pkg-tab" onclick="switchTab('couples', this)">Couples</div>
-    <div class="pkg-tab" onclick="switchTab('corporate', this)">Corporate</div>
-  </div>
-
-  <div class="pkg-panels">
-    <div id="tab-planning" class="pkg-panel active">
+  <!-- PLANNING -->
+  <div class="pkg-category">
+    <div class="pkg-category-header">
+      <span class="pkg-category-num">01</span>
+      <div>
+        <div class="pkg-category-name">Planning & Coordination</div>
+        <div class="pkg-category-note">For events that need full or partial planning support</div>
+      </div>
+    </div>
+    <div class="pkg-grid">
       <div class="pkg featured">
         <div class="pkg-badge">Full service</div>
         <div class="pkg-name">The Full Moment</div>
@@ -95,38 +52,51 @@
           <li>Complete decor design & styling</li>
           <li>Day-of setup & breakdown</li>
           <li>Mood board & planning documents</li>
-          <li>Dedicated point of contact</li>
+          <li>Dedicated point of contact throughout</li>
+          <li>Design consultations included</li>
         </ul>
-        <div class="pkg-note">Best for clients starting from scratch who want a fully handled experience from idea to execution.</div>
+        <div class="pkg-note">Best for clients starting from scratch who want a fully handled experience from idea to execution. You show up — we take care of the rest.</div>
         <button class="pkg-btn" onclick="openInquiry('The Full Moment')">Request a quote</button>
       </div>
       <div class="pkg">
         <div class="pkg-name">The Finishing Touch</div>
         <div class="pkg-price-tag">Quote upon inquiry</div>
         <ul class="pkg-includes">
-          <li>Venue & vendor already selected</li>
-          <li>Decor concept based on your choices</li>
-          <li>Styling, sourcing & setup</li>
+          <li>Venue & vendor already selected by you</li>
+          <li>Decor concept built around your choices</li>
+          <li>Full styling, sourcing & setup</li>
           <li>Day-of coordination & breakdown</li>
           <li>Design consultation included</li>
+          <li>Mood board provided</li>
         </ul>
-        <div class="pkg-note">For clients who've started planning and need someone to bring the vision together beautifully.</div>
+        <div class="pkg-note">For clients who've done the legwork and need a skilled eye to bring the vision together beautifully and flawlessly.</div>
         <button class="pkg-btn" onclick="openInquiry('The Finishing Touch')">Request a quote</button>
       </div>
     </div>
+  </div>
 
-    <div id="tab-celebrations" class="pkg-panel">
+  <!-- CELEBRATIONS -->
+  <div class="pkg-category">
+    <div class="pkg-category-header">
+      <span class="pkg-category-num">02</span>
+      <div>
+        <div class="pkg-category-name">Celebrations</div>
+        <div class="pkg-category-note">Birthdays, showers, milestones & group picnics</div>
+      </div>
+    </div>
+    <div class="pkg-grid">
       <div class="pkg">
         <div class="pkg-name">The Celebration</div>
         <div class="pkg-price-tag">Quote upon inquiry</div>
         <ul class="pkg-includes">
           <li>Birthdays, baby showers, bridal showers</li>
-          <li>Graduations & milestones</li>
-          <li>Themed décor & styling</li>
+          <li>Graduations & life milestones</li>
+          <li>Custom themed décor & styling</li>
           <li>Backdrop or focal point build</li>
+          <li>Balloon arrangements available</li>
           <li>Full setup & breakdown</li>
         </ul>
-        <div class="pkg-note">For personal celebrations of any size — intimate or large.</div>
+        <div class="pkg-note">For personal celebrations of any size — intimate gatherings or large-scale parties. We handle every detail so the guest of honor can actually enjoy the day.</div>
         <button class="pkg-btn" onclick="openInquiry('The Celebration')">Request a quote</button>
       </div>
       <div class="pkg">
@@ -134,28 +104,41 @@
         <div class="pkg-price-tag">Quote upon inquiry</div>
         <ul class="pkg-includes">
           <li>Styled luxury picnic setup</li>
-          <li>Blankets, pillows & table decor</li>
+          <li>Blankets, pillows & low table decor</li>
           <li>Floral & greenery touches</li>
+          <li>Custom signage available</li>
           <li>Grazing board add-on available</li>
           <li>Available for groups of 2–20</li>
         </ul>
-        <div class="pkg-note">Birthdays, girls' trips, bachelorettes, or just because.</div>
+        <div class="pkg-note">Birthdays, girls' trips, bachelorettes, or just because. A fully styled, elevated picnic experience — you arrive, it's already beautiful.</div>
         <button class="pkg-btn" onclick="openInquiry('The Picnic Experience')">Request a quote</button>
       </div>
     </div>
+  </div>
 
-    <div id="tab-couples" class="pkg-panel">
+  <!-- COUPLES -->
+  <div class="pkg-category">
+    <div class="pkg-category-header">
+      <span class="pkg-category-num">03</span>
+      <div>
+        <div class="pkg-category-name">Couples</div>
+        <div class="pkg-category-note">Proposals, anniversaries, date nights & intimate setups</div>
+      </div>
+    </div>
+    <div class="pkg-grid">
       <div class="pkg featured">
+        <div class="pkg-badge">Most popular</div>
         <div class="pkg-name">The Romantic Moment</div>
         <div class="pkg-price-tag">Quote upon inquiry</div>
         <ul class="pkg-includes">
           <li>Proposals, anniversaries & date nights</li>
           <li>Styled setup with florals & candles</li>
-          <li>Backdrop or arch available as add-on</li>
+          <li>Backdrop or floral arch as add-on</li>
           <li>Couples picnic setup included</li>
           <li>Customizable to your love story</li>
+          <li>Photographer referrals available</li>
         </ul>
-        <div class="pkg-note">Every romantic gesture deserves a setting that matches the feeling.</div>
+        <div class="pkg-note">Every romantic gesture deserves a setting that matches the feeling. We create the backdrop — you make the memory.</div>
         <button class="pkg-btn" onclick="openInquiry('The Romantic Moment')">Request a quote</button>
       </div>
       <div class="pkg">
@@ -167,13 +150,24 @@
           <li>Florals & candles included</li>
           <li>Champagne setup add-on available</li>
           <li>Outdoor or indoor locations</li>
+          <li>Setup & breakdown handled</li>
         </ul>
-        <div class="pkg-note">A beautiful, effortless date moment — we set it all up for you.</div>
+        <div class="pkg-note">A beautiful, effortless date moment — all you have to do is show up and be together.</div>
         <button class="pkg-btn" onclick="openInquiry('The Intimate Picnic')">Request a quote</button>
       </div>
     </div>
+  </div>
 
-    <div id="tab-corporate" class="pkg-panel">
+  <!-- CORPORATE -->
+  <div class="pkg-category">
+    <div class="pkg-category-header">
+      <span class="pkg-category-num">04</span>
+      <div>
+        <div class="pkg-category-name">Corporate</div>
+        <div class="pkg-category-note">Branded events, launches, team celebrations & office moments</div>
+      </div>
+    </div>
+    <div class="pkg-grid">
       <div class="pkg">
         <div class="pkg-name">The Branded Experience</div>
         <div class="pkg-price-tag">Quote upon inquiry</div>
@@ -181,10 +175,11 @@
           <li>Corporate events, launches & activations</li>
           <li>Brand-aligned decor & styling</li>
           <li>Backdrop & signage design</li>
+          <li>Product or campaign theming available</li>
           <li>Full setup & breakdown</li>
           <li>Indoor & outdoor venues</li>
         </ul>
-        <div class="pkg-note">Professional, polished, and on-brand — for companies that want their event to make an impression.</div>
+        <div class="pkg-note">Professional, polished, and on-brand — for companies that want their event to make a lasting impression on clients and guests.</div>
         <button class="pkg-btn" onclick="openInquiry('The Branded Experience')">Request a quote</button>
       </div>
       <div class="pkg">
@@ -194,18 +189,53 @@
           <li>Office celebrations & team events</li>
           <li>Holiday parties & appreciation events</li>
           <li>Styled tablescapes & focal pieces</li>
+          <li>Custom signage available</li>
           <li>Setup & breakdown included</li>
         </ul>
-        <div class="pkg-note">Because your team deserves more than a store-bought banner.</div>
+        <div class="pkg-note">Because your team deserves more than a store-bought banner. Let your people know they're valued with an event that actually shows it.</div>
         <button class="pkg-btn" onclick="openInquiry('Team & Office Moments')">Request a quote</button>
       </div>
     </div>
   </div>
+
+  <!-- ADD-ONS -->
+  <div class="pkg-addon-wrap">
+    <div class="pkg-addon-eye">Extras</div>
+    <div class="pkg-addon-title">Available add-ons</div>
+    <div class="pkg-addon-sub">Enhance any package with one or more of the following add-ons — just mention it in your inquiry.</div>
+    <div class="addon-grid">
+      <div class="addon-item">
+        <div class="addon-name">Floral arch or backdrop</div>
+        <div class="addon-desc">Custom-built florals or greenery arch for photos and focal points.</div>
+      </div>
+      <div class="addon-item">
+        <div class="addon-name">Balloon arrangements</div>
+        <div class="addon-desc">Organic bouquets, balloon garlands, and columns.</div>
+      </div>
+      <div class="addon-item">
+        <div class="addon-name">Grazing board</div>
+        <div class="addon-desc">Styled charcuterie or grazing board for your guests.</div>
+      </div>
+      <div class="addon-item">
+        <div class="addon-name">Champagne setup</div>
+        <div class="addon-desc">Styled champagne or sparkling presentation for two.</div>
+      </div>
+      <div class="addon-item">
+        <div class="addon-name">Custom signage</div>
+        <div class="addon-desc">Welcome boards, menus, seating charts, and name signs.</div>
+      </div>
+      <div class="addon-item">
+        <div class="addon-name">Photographer referral</div>
+        <div class="addon-desc">We'll connect you with a trusted photographer to capture it all.</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- HOW IT WORKS -->
 <div class="section section-terra">
-  <div class="eye">How it works</div>
+  <div class="eye">The process</div>
   <div class="title">Simple from start to finish</div>
   <div class="process">
     <div class="step">
@@ -231,40 +261,43 @@
   </div>
 </div>
 
-<!-- TESTIMONIAL -->
-<div class="quote-block">
-  <span class="quote-mark">"</span>
-  <div class="quote-text">Moment Studio transformed our backyard into something out of a magazine. Every detail was perfect.</div>
-  <div class="quote-attr">— happy client · Orlando, FL</div>
-</div>
-
-<!-- VALUES -->
+<!-- FAQ -->
 <div class="section section-white">
-  <div class="eye">Why Moment Studio</div>
-  <div class="title">What we stand for</div>
-  <div style="margin-bottom: 24px;"></div>
-  <div class="values">
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-sparkles" aria-hidden="true"></i></div>
-      <div class="val-name">Intentional design</div>
-      <div class="val-desc">Every detail is chosen with purpose — nothing is an afterthought.</div>
+  <div class="eye">Common questions</div>
+  <div class="title">Before you inquire</div>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <div class="faq-q">How far in advance should I book?</div>
+      <div class="faq-a">We recommend booking at least 4–6 weeks before your event, especially for weekends. Popular dates fill quickly — the earlier you reach out, the better we can serve you.</div>
     </div>
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-heart" aria-hidden="true"></i></div>
-      <div class="val-name">Personal touch</div>
-      <div class="val-desc">Your event should feel like you — we listen before we design.</div>
+    <div class="faq-item">
+      <div class="faq-q">How does pricing work?</div>
+      <div class="faq-a">All packages are custom-quoted based on your event details, size, and vision. There's no one-size-fits-all price list — we want to give you an accurate number, not a guess.</div>
     </div>
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-check" aria-hidden="true"></i></div>
-      <div class="val-name">Fully handled</div>
-      <div class="val-desc">Setup, breakdown, coordination — you enjoy, we work.</div>
+    <div class="faq-item">
+      <div class="faq-q">Do you travel outside of Orlando?</div>
+      <div class="faq-a">Yes. We serve the greater Central Florida area and are available for travel beyond. Travel fees may apply — just mention your location in your inquiry and we'll let you know.</div>
     </div>
-    <div class="val">
-      <div class="val-icon"><i class="ti ti-star" aria-hidden="true"></i></div>
-      <div class="val-name">Elevated aesthetic</div>
-      <div class="val-desc">Beautiful, warm, and editorial — never generic or forgettable.</div>
+    <div class="faq-item">
+      <div class="faq-q">What's included in setup and breakdown?</div>
+      <div class="faq-a">We handle all delivery, placement, and installation before your event — and we return to fully break everything down after. You don't lift a finger.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can I mix elements from different packages?</div>
+      <div class="faq-a">Absolutely. During your consultation we'll discuss your vision in full and build a custom scope from there. No package is set in stone — it's all tailored to you.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What if I don't know exactly what I want?</div>
+      <div class="faq-a">That's what we're here for. Share your inspiration, your colors, your feeling — and we'll translate it into a cohesive décor plan. You don't need to have all the answers yet.</div>
     </div>
   </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-strip">
+  <div class="cta-strip-eye">Let's get started</div>
+  <div class="cta-strip-title">Ready to plan your moment?</div>
+  <a href="/contact" class="btn-terra">Submit an inquiry</a>
 </div>
 
 <!-- FOOTER -->
@@ -313,12 +346,6 @@
 </div>
 
 <script>
-function switchTab(tab, el) {
-  document.querySelectorAll('.pkg-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.pkg-panel').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('tab-' + tab).classList.add('active');
-}
 function openInquiry(pkgName) {
   document.getElementById('modalPkgLabel').textContent = 'Package: ' + pkgName;
   document.getElementById('inquiryModal').classList.add('open');
