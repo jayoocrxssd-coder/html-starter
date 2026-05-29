@@ -10095,7 +10095,8 @@ function dismissCloudRestoreOverlay(fallbackToOnboarding = false) {
 
 function bootApp() {
   // ── PHASE 1: Profile resolves first ──────────────────────────
-  if(S.dark) document.getElementById('app').classList.add('dark');
+  document.getElementById('app').classList.toggle('dark', !!S.dark);
+  document.body.classList.toggle('dark', !!S.dark);
   applyTheme();
 
   // Apply profile identity to topbar/greeting immediately
@@ -10710,6 +10711,12 @@ function renderSeatCount() {
         setTimeout(() => { obOverlay.style.display = 'none'; obOverlay.classList.remove('fading'); }, 400);
       }
 
+      // Re-apply theme from cloud data (S was fully overwritten by loadFromCloud)
+      document.getElementById('app').classList.toggle('dark', !!S.dark);
+      document.body.classList.toggle('dark', !!S.dark);
+      applyTheme();
+      updateAINameUI();
+
       // Full re-render: sidebar nav, badges, and every panel on the active page
       refreshBizNav();
       renderProfileBizGrid();
@@ -10721,6 +10728,9 @@ function renderSeatCount() {
       // local is authoritative; push it up so cloud catches up.
       dismissCloudRestoreOverlay(false);
       load();
+      document.getElementById('app').classList.toggle('dark', !!S.dark);
+      document.body.classList.toggle('dark', !!S.dark);
+      applyTheme();
       await saveToCloud(true);
       refreshBizNav();
       renderProfileBizGrid();
