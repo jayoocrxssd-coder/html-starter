@@ -1970,7 +1970,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
       <div class="mob-more-item" onclick="showPage('intel');closeMobMore();closeMobileSidebar()"><span class="mob-more-icon">◉</span><span>Intel</span></div>
       <div class="mob-more-item" onclick="showPage('timer');closeMobMore();closeMobileSidebar()"><span class="mob-more-icon">⏱</span><span>Timer</span></div>
       <div class="mob-more-item" onclick="showPage('bills');closeMobMore();closeMobileSidebar()"><span class="mob-more-icon">◫</span><span>Bills</span></div>
-      <div class="mob-more-item" onclick="showPage('dashboard');closeMobMore();closeMobileSidebar();setTimeout(()=&gt;{ const b=document.getElementById('briefingBtn'); if(b)b.click(); },300)"><span class="mob-more-icon">✦</span><span>AI Brief</span></div>
+      <div class="mob-more-item" onclick="showPage('axis');closeMobMore();closeMobileSidebar()"><span class="mob-more-icon">✦</span><span>AXIS</span></div>
             <div class="mob-more-item" onclick="showPage('invoices');closeMobMore();closeMobileSidebar()"><span class="mob-more-icon">△</span><span>Invoices</span></div>
 <div class="mob-more-item" onclick="showPage('profile');closeMobMore();closeMobileSidebar()"><span class="mob-more-icon">◐</span><span>Profile</span></div>
     </div>
@@ -1991,6 +1991,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   <!-- ── COMMAND ── -->
   <div class="sb-label">Command</div>
   <div class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard"><span class="nav-icon">◈</span>Dashboard<span class="nav-badge" id="badge-dashboard"></span></div>
+  <div class="nav-item" onclick="showPage('axis')" id="nav-axis"><span class="nav-icon">✦</span>AXIS</div>
   <div class="nav-item" onclick="showPage('strategy')" id="nav-strategy"><span class="nav-icon">◎</span>Mission Board<span class="nav-badge" id="badge-strategy"></span></div>
 
   <!-- ── OPERATIONS ── -->
@@ -2085,7 +2086,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
           <div class="ai-badge"><div class="ai-dot" id="aiDot"></div><span id="aiPanelName">AXIS</span></div>
           <div style="display:flex;gap:6px;align-items:center">
             <button class="btn btn-g btn-sm" id="briefingBtn" onclick="runBriefing()">Briefing ↗</button>
-            <button class="expand-btn" onclick="openAxisOverlay()" title="Expand AXIS">⤢</button>
+            <button class="expand-btn" onclick="showPage('axis')" title="Open AXIS Command">⤢</button>
           </div>
         </div>
         <div class="ai-chat-messages" id="aiChatMessages">
@@ -2147,6 +2148,38 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 </div>
 
 <!-- ══ STRATEGY BOARD ══ -->
+<div class="page" id="page-axis">
+  <div style="display:flex;flex-direction:column;height:100%;max-width:860px;margin:0 auto;padding:0 0 0 0">
+    <!-- AXIS page header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 26px 14px;flex-shrink:0;border-bottom:.5px solid var(--border2)">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:34px;height:34px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--accent-fg);font-weight:800">✦</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--text);letter-spacing:-.01em" id="axisPageName">AXIS</div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:.08em;text-transform:uppercase">AI Command Interface</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-p btn-sm" id="briefingBtnAxis" onclick="runBriefingAxis()">↯ Briefing</button>
+        <button class="btn btn-g btn-sm" onclick="resetAxisChat()">Clear</button>
+        <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:100px;border:.5px solid var(--border2);background:var(--bg2)">
+          <div class="ai-dot" id="aiDotAxis"></div>
+          <span style="font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">Online</span>
+        </div>
+      </div>
+    </div>
+    <!-- AXIS chat messages -->
+    <div class="axis-overlay-msgs" id="aiChatMessagesAxis" style="flex:1;padding:20px 26px">
+      <div class="ai-empty"><div class="ai-empty-icon">◈</div><div class="ai-empty-text" id="aiEmptyTextAxis">Hit Briefing for your daily<br>priority rundown, or ask AXIS<br>anything about your war room.</div></div>
+    </div>
+    <!-- AXIS input -->
+    <div style="display:flex;gap:10px;padding:14px 26px;border-top:.5px solid var(--border2);flex-shrink:0;background:var(--surface)">
+      <textarea id="aiChatInputAxis" placeholder="Ask AXIS anything..." rows="1" style="flex:1;background:var(--bg2);border:.5px solid var(--border2);border-radius:12px;padding:10px 14px;font-family:'Syne',sans-serif;font-size:13px;color:var(--text);resize:none;min-height:42px;max-height:120px;outline:none;transition:border-color .15s" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAxisChat()}" oninput="this.style.height='';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+      <button class="ai-chat-send" style="border-radius:12px;padding:10px 20px;font-size:14px;align-self:flex-end" onclick="sendAxisChat()" id="aiChatSendBtnAxis">↑</button>
+    </div>
+  </div>
+</div>
+
 <div class="page" id="page-strategy">
   <div class="ph">
     <div><div class="pt">Mission Board</div><div class="ps">Missions across all ventures · Click a card to view details</div></div>
@@ -3323,6 +3356,30 @@ Step 3"></textarea></div>
   </div>
 </div>
 
+<!-- CLIENT -->
+<div class="modal-overlay" id="clientModal">
+  <div class="modal-box" style="width:460px">
+    <div class="modal-title" id="clientModalTitle">Add Client</div>
+    <input type="hidden" id="clientId">
+    <input type="hidden" id="clientBizId">
+    <div class="form-row"><label>Client Name *</label><input type="text" id="clientName" placeholder="e.g. Acme Corp"></div>
+    <div class="form-row frow">
+      <div style="flex:1"><label>Status</label>
+        <select id="clientStatus">
+          <option value="Prospect">Prospect</option>
+          <option value="Active">Active</option>
+          <option value="Paused">Paused</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+      <div style="flex:1"><label>Deal Value ($)</label><input type="number" id="clientValue" placeholder="0" min="0"></div>
+    </div>
+    <div class="form-row"><label>Contact (Email / Phone)</label><input type="text" id="clientContact" placeholder="e.g. hello@acme.com"></div>
+    <div class="form-row"><label>Notes</label><textarea id="clientNotes" rows="3" placeholder="Key details, next steps, context…"></textarea></div>
+    <div class="modal-actions"><button class="btn btn-g" onclick="closeModal('clientModal')">Cancel</button><button class="btn btn-p" onclick="saveClient()">Save Client</button></div>
+  </div>
+</div>
+
 <!-- EVENT -->
 <div class="modal-overlay" id="eventModal">
   <div class="modal-box">
@@ -3702,6 +3759,7 @@ const DEFAULT = {
   events: [],
   bills: [],
   employees: [],
+  clients: [],
   backups: [],
   trackerPeriod: 'month',
   whiteboards: {},
@@ -3760,6 +3818,7 @@ function load() {
     if (typeof S.xp !== 'number' || S.xp < 0) S.xp = 0;
     if (!Array.isArray(S.achievements)) S.achievements = [];
     if (!Array.isArray(S.invoices)) S.invoices = [];
+    if (!Array.isArray(S.clients)) S.clients = [];
     if (!S.nextId) S.nextId = 1;
     recalculateNextId();
     if (typeof S.trackerPeriod !== 'string') S.trackerPeriod = 'month';
@@ -4379,6 +4438,72 @@ function syncMainFromOverlay(){
   }
 }
 
+// ── AXIS PAGE ──────────────────────────────────────────────
+function renderAxisPage(){
+  const name = getAIName();
+  const nameEl = document.getElementById('axisPageName');
+  const emptyEl = document.getElementById('aiEmptyTextAxis');
+  if(nameEl) nameEl.textContent = name;
+  if(emptyEl) emptyEl.innerHTML = `Hit Briefing for your daily<br>priority rundown, or ask ${name}<br>anything about your war room.`;
+  // Sync messages from main chat panel
+  const main = document.getElementById('aiChatMessages');
+  const axMsgs = document.getElementById('aiChatMessagesAxis');
+  if(main && axMsgs && main.innerHTML !== axMsgs.innerHTML){
+    axMsgs.innerHTML = main.innerHTML;
+    axMsgs.scrollTop = axMsgs.scrollHeight;
+  }
+  // Sync AI dot state
+  const dot = document.getElementById('aiDot');
+  const axDot = document.getElementById('aiDotAxis');
+  if(dot && axDot) axDot.className = dot.className;
+  // Focus input
+  setTimeout(()=>{ const inp=document.getElementById('aiChatInputAxis'); if(inp) inp.focus(); }, 80);
+}
+
+function resetAxisChat(){
+  resetAIChat();
+  const axMsgs = document.getElementById('aiChatMessagesAxis');
+  const main = document.getElementById('aiChatMessages');
+  if(axMsgs && main) axMsgs.innerHTML = main.innerHTML;
+}
+
+async function sendAxisChat(){
+  const input = document.getElementById('aiChatInputAxis');
+  if(!input || !input.value.trim()) return;
+  const text = input.value.trim();
+  input.value = '';
+  input.style.height = '';
+  // Show loading on axis dot
+  const axDot = document.getElementById('aiDotAxis');
+  const sendBtn = document.getElementById('aiChatSendBtnAxis');
+  if(axDot) axDot.classList.add('loading');
+  if(sendBtn) sendBtn.disabled = true;
+  // Delegate to sendChatOverlay — it writes to both overlay and main panels
+  const ovInput = document.getElementById('aiChatInputOverlay');
+  if(ovInput){ ovInput.value = text; }
+  await sendChatOverlay();
+  // Sync overlay → axis panel
+  const ov = document.getElementById('aiChatMessagesOverlay');
+  const axMsgs = document.getElementById('aiChatMessagesAxis');
+  if(ov && axMsgs){ axMsgs.innerHTML = ov.innerHTML; axMsgs.scrollTop = axMsgs.scrollHeight; }
+  if(axDot) axDot.classList.remove('loading');
+  if(sendBtn) sendBtn.disabled = false;
+  if(input) input.focus();
+}
+
+async function runBriefingAxis(){
+  const btn = document.getElementById('briefingBtnAxis');
+  if(btn){ btn.disabled=true; btn.textContent='Running…'; }
+  await runBriefingOverlay();
+  if(btn){ btn.disabled=false; btn.textContent='↯ Briefing'; }
+  // Sync result to axis panel
+  const ov = document.getElementById('aiChatMessagesOverlay');
+  const axMsgs = document.getElementById('aiChatMessagesAxis');
+  const main = document.getElementById('aiChatMessages');
+  if(ov && axMsgs){ axMsgs.innerHTML = ov.innerHTML; axMsgs.scrollTop = axMsgs.scrollHeight; }
+  if(ov && main){ main.innerHTML = ov.innerHTML; }
+}
+
 function addOverlayChatBubble(role, html){
   const msgs = document.getElementById('aiChatMessagesOverlay');
   if(!msgs) return;
@@ -4816,11 +4941,12 @@ function showPage(page, bizId) {
   const navEl = document.getElementById('nav-'+page); if(navEl) navEl.classList.add('active');
   // Mobile bottom nav sync
   document.querySelectorAll('.mob-nav-item').forEach(el=>el.classList.remove('active'));
-  const _morePages=['goals','intel','timer','bills','profile','update','invoices'];
+  const _morePages=['goals','intel','timer','bills','profile','update','invoices','axis'];
   const _mbnId=_morePages.includes(page)?'mobnav-more':'mobnav-'+page;
   const mbn=document.getElementById(_mbnId); if(mbn) mbn.classList.add('active');
   currentPage=page;
   if(page==='dashboard'){renderDashboard();}
+  if(page==='axis'){renderAxisPage();}
   if(page==='strategy'){renderKanban();}
   if(page==='tracker'){if(!isOwner()){renderPLLocked();return;}renderTracker();}
   if(page==='intel')renderNotes();
@@ -5071,17 +5197,32 @@ function renderKanban(){
   const filter=document.getElementById('strategyBizFilter')?.value||'all';
   let tasks=S.tasks;
   if(filter!=='all')tasks=tasks.filter(t=>String(t.bizId)===filter);
-  document.getElementById('kanbanBoard').innerHTML=KCOLS.map(col=>`
-    <div class="k-col" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="event.relatedTarget&&this.contains(event.relatedTarget)?null:this.classList.remove('drag-over')" ondrop="dropTask(event,'${col}',this)">
-      <div class="k-col-title">${col}<span style="background:var(--bg3);color:var(--text3);font-size:8px;padding:1px 6px;border-radius:100px;font-family:'DM Mono',monospace">${tasks.filter(t=>t.status===col).length}</span></div>
-      ${tasks.filter(t=>t.status===col).map(t=>{const biz=bizById(t.bizId);const isDone=t.status==='Done';return`<div class="task-card${isDone?' done-flash':''}" id="task-card-${t.id}" draggable="true" ondragstart="dragTaskStart(event,${t.id})" ondragend="dragTaskEnd(event)" onclick="openTaskDetail(${t.id})">
+  document.getElementById('kanbanBoard').innerHTML=KCOLS.map(col=>{
+    const colTasks=tasks.filter(t=>t.status===col);
+    const isDoneCol=col==='Done';
+    const dumpBtn=isDoneCol&&colTasks.length?`<button onclick="dumpCompletedMissions()" title="Bulk delete all completed missions" style="background:var(--red-bg);border:.5px solid var(--red);color:var(--red);font-family:'Syne',sans-serif;font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:100px;cursor:pointer;transition:all .15s;white-space:nowrap" onmouseenter="this.style.opacity='.75'" onmouseleave="this.style.opacity='1'">🗑 Dump</button>`:'';
+    return`<div class="k-col" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="event.relatedTarget&&this.contains(event.relatedTarget)?null:this.classList.remove('drag-over')" ondrop="dropTask(event,'${col}',this)">
+      <div class="k-col-title">${col}<span style="background:var(--bg3);color:var(--text3);font-size:8px;padding:1px 6px;border-radius:100px;font-family:'DM Mono',monospace">${colTasks.length}</span>${dumpBtn}</div>
+      ${colTasks.map(t=>{const biz=bizById(t.bizId);const isDone=t.status==='Done';return`<div class="task-card${isDone?' done-flash':''}" id="task-card-${t.id}" draggable="true" ondragstart="dragTaskStart(event,${t.id})" ondragend="dragTaskEnd(event)" onclick="openTaskDetail(${t.id})">
         <div class="task-title-text">${t.title}</div>
         <div style="display:flex;gap:4px;flex-wrap:wrap">${typeBadge(t.type||'Task')}<span class="badge ${t.priority==='High'?'b-red':t.priority==='Medium'?'b-amber':'b-green'}">${t.priority}</span>${biz?`<span class="badge b-muted">${biz.name}</span>`:''}</div>
         ${t.notes?`<div style="font-size:10px;color:var(--text3);margin-top:5px;line-height:1.5">${t.notes}</div>`:''}
         <div style="margin-top:7px;padding-top:6px;border-top:.5px solid var(--border);display:flex;justify-content:space-between"><button onclick="event.stopPropagation();openEditTask(${t.id})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:9px;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 0">Edit</button><button onclick="event.stopPropagation();deleteTask(${t.id})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:9px;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 0" onmouseenter="this.style.color='var(--red)'" onmouseleave="this.style.color='var(--text3)'">Delete</button></div>
       </div>`;}).join('')}
       <button class="add-col-btn" onclick="openAddTask('${col}')">+ Add Mission</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+}
+function dumpCompletedMissions(){
+  const filter=document.getElementById('strategyBizFilter')?.value||'all';
+  let doneTasks=S.tasks.filter(t=>t.status==='Done');
+  if(filter!=='all')doneTasks=doneTasks.filter(t=>String(t.bizId)===filter);
+  if(!doneTasks.length)return;
+  _dangerConfirm(`Permanently delete all ${doneTasks.length} completed mission${doneTasks.length>1?'s':''}? This cannot be undone.`,function(){
+    const doneIds=new Set(doneTasks.map(t=>t.id));
+    S.tasks=S.tasks.filter(t=>!doneIds.has(t.id));
+    save();renderKanban();updateBadges();renderDashboard();
+  });
 }
 let _dragTaskId=null;
 function dragTaskStart(e,id){_dragTaskId=id;setTimeout(()=>{const el=document.getElementById('task-card-'+id);if(el)el.classList.add('dragging');},0);e.dataTransfer.effectAllowed='move';}
@@ -5692,7 +5833,42 @@ function renderBizProfile(bizId){
     <\/div>`;
   })();
 
-  const tabContent={overview:overviewTab,missions:missionsTab,financials:financialsTab,intel:intelTab,invoices:invoicesTab,payroll:payrollTab,settings:settingsTab};
+  // ── CLIENTS TAB ────────────────────────────────────────────
+  const clientsTab=(()=>{
+    const bizClients=(S.clients||[]).filter(c=>c.bizId===bizId).slice().reverse();
+    const statusColors={Active:'var(--green)',Prospect:'var(--blue)',Inactive:'var(--text3)',Paused:'var(--amber)'};
+    const statusBg={Active:'var(--green-bg)',Prospect:'var(--blue-bg)',Inactive:'var(--bg3)',Paused:'var(--amber-bg)'};
+    const rows=bizClients.map(c=>`
+      <div class="card" style="padding:14px 16px;margin-bottom:10px;transition:border-color .15s" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border2)'">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap">
+              <div style="font-size:13px;font-weight:700;color:var(--text)">${esc(c.name)}</div>
+              <span style="font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:100px;background:${statusBg[c.status]||'var(--bg3)'};color:${statusColors[c.status]||'var(--text3)'}">${c.status}</span>
+              ${c.value?`<span style="font-size:9px;font-family:'DM Mono',monospace;color:var(--green);font-weight:700">$${parseFloat(c.value).toLocaleString()}</span>`:''}
+            </div>
+            ${c.contact?`<div style="font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:3px">${esc(c.contact)}</div>`:''}
+            ${c.notes?`<div style="font-size:11px;color:var(--text2);line-height:1.5">${esc(c.notes)}</div>`:''}
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0">
+            <button class="btn btn-g btn-sm" onclick="openEditClient(${c.id},${bizId})" style="font-size:9px">Edit</button>
+            <button class="btn btn-g btn-sm" onclick="deleteClient(${c.id},${bizId})" style="font-size:9px;color:var(--red)" onmouseenter="this.style.background='var(--red-bg)'" onmouseleave="this.style.background=''">✕</button>
+          </div>
+        </div>
+      </div>`).join('');
+    return`<div>
+      <div class="sec-hdr" style="margin-bottom:14px">
+        <div>
+          <div class="sec-title">Client Roster</div>
+          <div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px">${bizClients.length} client${bizClients.length!==1?'s':''} · $${bizClients.reduce((a,c)=>a+(parseFloat(c.value)||0),0).toLocaleString()} total value</div>
+        </div>
+        <button class="btn btn-p btn-sm" onclick="openAddClient(${bizId})">+ Add Client</button>
+      </div>
+      ${rows||`<div class="empty-state"><div class="empty-state-icon">◎</div><div class="empty-state-text">No clients yet.<br><span style="cursor:pointer;color:var(--accent);text-decoration:underline" onclick="openAddClient(${bizId})">Add your first client →</span></div></div>`}
+    </div>`;
+  })();
+
+  const tabContent={overview:overviewTab,missions:missionsTab,financials:financialsTab,intel:intelTab,invoices:invoicesTab,payroll:payrollTab,clients:clientsTab,settings:settingsTab};
 
   document.getElementById('bizProfileContent').innerHTML=`
     <div class="ph">
@@ -5710,7 +5886,7 @@ function renderBizProfile(bizId){
     </div>
     <div class="biz-profile-card">
       <div class="biz-tabs" title="Drag tabs to reorder">
-        ${(biz.tabOrder||DEFAULT_TAB_ORDER).map(t=>`<div class="biz-tab${currentBizTab===t?' active':''}" draggable="true" ondragstart="bizTabDragStart(event,'${t}')" ondragend="bizTabDragEnd(event)" ondragover="bizTabDragOver(event,'${t}')" ondrop="bizTabDrop(event,${bizId},'${t}')" onclick="switchBizTab(${bizId},'${t}')">${TAB_LABELS[t]||t}</div>`).join('')}
+        ${(biz.tabOrder||DEFAULT_TAB_ORDER).map(t=>{const clientCount=t==='clients'?(S.clients||[]).filter(c=>c.bizId===bizId).length:0;const badge=t==='clients'&&clientCount?`<span style="background:var(--bg3);color:var(--text3);font-size:8px;padding:1px 5px;border-radius:100px;font-family:'DM Mono',monospace;margin-left:4px">${clientCount}</span>`:'';return`<div class="biz-tab${currentBizTab===t?' active':''}" draggable="true" ondragstart="bizTabDragStart(event,'${t}')" ondragend="bizTabDragEnd(event)" ondragover="bizTabDragOver(event,'${t}')" ondrop="bizTabDrop(event,${bizId},'${t}')" onclick="switchBizTab(${bizId},'${t}')">${TAB_LABELS[t]||t}${badge}</div>`;}).join('')}
       </div>
       <div class="biz-tab-content" id="bizTabContent">${tabContent[currentBizTab]||tabContent.overview}</div>
     </div>`;
@@ -5765,8 +5941,61 @@ function deleteEmployee(id,bizId){
   });
 }
 
-const TAB_LABELS={overview:'Command Center',missions:'Missions',financials:'Financials',intel:'Intel',invoices:'Invoices',payroll:'💰 Payroll',settings:'⚙ Settings'};
-const DEFAULT_TAB_ORDER=['overview','missions','financials','intel','invoices','payroll','settings'];
+// ── CLIENT FUNCTIONS ─────────────────────────────────────────
+function openAddClient(bizId){
+  document.getElementById('clientModalTitle').textContent='Add Client';
+  document.getElementById('clientId').value='';
+  document.getElementById('clientBizId').value=bizId;
+  document.getElementById('clientName').value='';
+  document.getElementById('clientStatus').value='Prospect';
+  document.getElementById('clientValue').value='';
+  document.getElementById('clientContact').value='';
+  document.getElementById('clientNotes').value='';
+  openModal('clientModal');
+}
+function openEditClient(id,bizId){
+  const c=(S.clients||[]).find(x=>x.id===id);if(!c)return;
+  document.getElementById('clientModalTitle').textContent='Edit Client';
+  document.getElementById('clientId').value=c.id;
+  document.getElementById('clientBizId').value=bizId;
+  document.getElementById('clientName').value=c.name||'';
+  document.getElementById('clientStatus').value=c.status||'Prospect';
+  document.getElementById('clientValue').value=c.value||'';
+  document.getElementById('clientContact').value=c.contact||'';
+  document.getElementById('clientNotes').value=c.notes||'';
+  openModal('clientModal');
+}
+function saveClient(){
+  const name=document.getElementById('clientName').value.trim();if(!name)return;
+  const bizId=parseInt(document.getElementById('clientBizId').value);
+  const existingId=document.getElementById('clientId').value;
+  const client={
+    bizId,name,
+    status:document.getElementById('clientStatus').value,
+    value:parseFloat(document.getElementById('clientValue').value)||0,
+    contact:document.getElementById('clientContact').value.trim(),
+    notes:document.getElementById('clientNotes').value.trim(),
+    addedAt:new Date().toISOString().slice(0,10)
+  };
+  if(!S.clients)S.clients=[];
+  if(existingId){
+    const idx=S.clients.findIndex(c=>c.id===parseInt(existingId));
+    if(idx>=0)S.clients[idx]={...S.clients[idx],...client};
+  } else {
+    client.id=nextId();S.clients.push(client);
+  }
+  save();closeModal('clientModal');renderBizProfile(bizId);
+}
+function deleteClient(id,bizId){
+  _cConfirm('Remove this client?','Remove',function(ok){
+    if(!ok)return;
+    S.clients=(S.clients||[]).filter(c=>c.id!==id);
+    save();renderBizProfile(bizId);
+  });
+}
+
+const TAB_LABELS={overview:'Command Center',missions:'Missions',financials:'Financials',intel:'Intel',invoices:'Invoices',payroll:'💰 Payroll',clients:'Clients',settings:'⚙ Settings'};
+const DEFAULT_TAB_ORDER=['overview','missions','financials','intel','invoices','payroll','clients','settings'];
 let _dragBizTab=null;
 function bizTabDragStart(e,tab){_dragBizTab=tab;e.dataTransfer.effectAllowed='move';}
 function bizTabDragEnd(e){document.querySelectorAll('.biz-tab').forEach(t=>t.classList.remove('tab-drag-over'));}
