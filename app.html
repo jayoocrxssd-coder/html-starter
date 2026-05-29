@@ -3742,12 +3742,12 @@ function saveImmediate() {
   saveToCloud(true);
 }
 function load() {
-  // One-time migration: move data from old 'warRoomWR_v31' key to 'warRoomWR_v31'
+  // One-time migration: move data from old 'stratusWR_v31' key to 'warRoomWR_v31'
   try {
-    const legacy = localStorage.getItem('warRoomWR_v31');
+    const legacy = localStorage.getItem('stratusWR_v31');
     if (legacy && !localStorage.getItem('warRoomWR_v31')) {
       localStorage.setItem('warRoomWR_v31', legacy);
-      localStorage.removeItem('warRoomWR_v31');
+      localStorage.removeItem('stratusWR_v31');
     }
   } catch(e){}
   try {
@@ -8273,7 +8273,7 @@ function applyTheme(){
     const lum2 = (0.299*r2 + 0.587*g2 + 0.114*b2)/255;
     // Use theme's own text color for contrast instead of hardcoded black/white
     const themeColors = isDark ? t.dark : t.light;
-    root.style.setProperty('--accent-fg', lum2>0.5 ? themeColors.text : (isDark ? '#ffffff' : '#ffffff'));
+    root.style.setProperty('--accent-fg', lum2>0.5 ? themeColors.bg : '#ffffff');
   }
 
   // Sync --text1 alias with --text so it's always defined
