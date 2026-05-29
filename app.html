@@ -5930,7 +5930,7 @@ function saveEmployee(){
     notes:document.getElementById('empNotes').value.trim()};
   if(!S.employees)S.employees=[];
   if(existingId){const idx=S.employees.findIndex(e=>e.id===parseInt(existingId));if(idx>=0)S.employees[idx]={...S.employees[idx],...emp};}
-  else{emp.id=nextId();S.employees.push(emp);}
+  else{emp.id=S.nextId++;S.employees.push(emp);}
   save();closeModal('employeeModal');renderBizProfile(bizId);
 }
 function deleteEmployee(id,bizId){
@@ -5982,7 +5982,7 @@ function saveClient(){
     const idx=S.clients.findIndex(c=>c.id===parseInt(existingId));
     if(idx>=0)S.clients[idx]={...S.clients[idx],...client};
   } else {
-    client.id=nextId();S.clients.push(client);
+    client.id=S.nextId++;S.clients.push(client);
   }
   save();closeModal('clientModal');renderBizProfile(bizId);
 }
