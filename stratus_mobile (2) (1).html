@@ -1369,13 +1369,6 @@ input[type=text] {
   const phone = document.getElementById('phone');
 
   // ── AXIS ─────────────────────────────────────────────
-  (function initAxis() {
-    const saved = JSON.parse(localStorage.getItem('axis_cfg') || '{}');
-    if (saved.key) document.getElementById('axis-api-key').value = saved.key;
-    if (saved.model) axisSetModelById(saved.model);
-    if (saved.connected) axisSetStatus('online');
-  })();
-
   let axisKeyVisible = false;
   let axisCurrentModel = 'sonnet';
 
@@ -1393,6 +1386,7 @@ input[type=text] {
     document.querySelectorAll('.axis-model-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     axisCurrentModel = model;
+    // persist only model preference, never the key
     const cfg = JSON.parse(localStorage.getItem('axis_cfg') || '{}');
     cfg.model = model;
     localStorage.setItem('axis_cfg', JSON.stringify(cfg));
@@ -1400,7 +1394,11 @@ input[type=text] {
 
   function axisSetModelById(model) {
     const btn = document.getElementById('axis-m-' + model);
-    if (btn) { document.querySelectorAll('.axis-model-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); axisCurrentModel = model; }
+    if (btn) {
+      document.querySelectorAll('.axis-model-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      axisCurrentModel = model;
+    }
   }
 
   function axisSetStatus(state) {
@@ -1420,42 +1418,78 @@ input[type=text] {
     }
   }
 
-  function axisLog(msg) {
+  // safe log: timestamp is static markup, message text is always escaped
+  function axisLog(text, highlight) {
     const log = document.getElementById('axis-log');
     log.style.display = 'block';
     const now = new Date();
     const ts = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ':' + now.getSeconds().toString().padStart(2,'0');
-    log.innerHTML += '<span style="color:var(--muted2)">[' + ts + ']</span> ' + msg + '<br>';
+    const row = document.createElement('span');
+    const tsSpan = document.createElement('span');
+    tsSpan.style.color = 'var(--muted2)';
+    tsSpan.textContent = '[' + ts + '] ';
+    const msgSpan = document.createElement('span');
+    if (highlight) msgSpan.style.color = highlight;
+    msgSpan.textContent = text;
+    row.appendChild(tsSpan);
+    row.appendChild(msgSpan);
+    log.appendChild(row);
+    log.appendChild(document.createElement('br'));
     log.scrollTop = log.scrollHeight;
   }
 
   async function axisTestConnection() {
     const key = document.getElementById('axis-api-key').value.trim();
     if (!key) {
-      axisLog('<span style="color:#fbbf24">⚠ No API key entered.</span>');
       document.getElementById('axis-log').style.display = 'block';
+      axisLog('No API key entered.', '#fbbf24');
       return;
     }
+    // Basic format guard: Anthropic keys start with "sk-ant-" and are long
+    const looksValid = /^sk-ant-[A-Za-z0-9\-_]{20,}$/.test(key);
     const btn = document.getElementById('axis-connect-btn');
     btn.textContent = 'Connecting…';
     btn.style.opacity = '0.6';
     btn.disabled = true;
     axisSetStatus('connecting');
     document.getElementById('axis-log').innerHTML = '';
+
     axisLog('Validating key format…');
     await new Promise(r => setTimeout(r, 600));
-    axisLog('Pinging Axis endpoint…');
-    await new Promise(r => setTimeout(r, 900));
 
-    const valid = key.length >= 10;
-    if (valid) {
-      axisLog('<span style="color:#4ade80">✓ Connection established.</span>');
-      axisLog('Model: <span style="color:var(--white)">' + axisCurrentModel + '</span>');
+    if (!looksValid) {
+      axisLog('Key format invalid — expected sk-ant-… (≥27 chars).', '#ff453a');
+      axisSetStatus('offline');
+      btn.textContent = 'Connect';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+      return;
+    }
+
+    axisLog('Pinging Axis endpoint…');
+    let reachable = false;
+    try {
+      // lightweight preflight — HEAD avoids sending a body, no auth needed to check reachability
+      const res = await Promise.race([
+        fetch('https://api.anthropic.com', { method: 'HEAD', mode: 'no-cors' }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+      ]);
+      reachable = true;
+    } catch (_) {
+      reachable = false;
+    }
+
+    if (reachable) {
+      axisLog('Connection established.', '#4ade80');
+      axisLog('Model: ' + axisCurrentModel);
       axisSetStatus('online');
-      const cfg = { key, model: axisCurrentModel, connected: true };
+      // store only model preference; key is never written to storage
+      const cfg = JSON.parse(localStorage.getItem('axis_cfg') || '{}');
+      cfg.model = axisCurrentModel;
+      cfg.connected = true;
       localStorage.setItem('axis_cfg', JSON.stringify(cfg));
     } else {
-      axisLog('<span style="color:#ff453a">✕ Invalid API key. Please check and retry.</span>');
+      axisLog('Could not reach Axis endpoint. Check your network.', '#ff453a');
       axisSetStatus('offline');
     }
     btn.textContent = 'Connect';
@@ -1469,8 +1503,17 @@ input[type=text] {
     cfg.connected = false;
     localStorage.setItem('axis_cfg', JSON.stringify(cfg));
     document.getElementById('axis-log').innerHTML = '';
-    axisLog('<span style="color:var(--muted)">Disconnected from Axis.</span>');
+    axisLog('Disconnected from Axis.');
   }
+
+  // init after all helpers are declared — fixes hoisting issue with IIFE
+  (function initAxis() {
+    const saved = JSON.parse(localStorage.getItem('axis_cfg') || '{}');
+    // key is never stored, so nothing to restore — user must re-enter each session
+    if (saved.model) axisSetModelById(saved.model);
+    // only show online if it was previously confirmed reachable (soft restore)
+    if (saved.connected) axisSetStatus('online');
+  })();
 
   // ── NAV ──────────────────────────────────────────────
   function sw(tab) {
