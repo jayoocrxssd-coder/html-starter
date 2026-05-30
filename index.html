@@ -1,96 +1,1879 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <title>Vercel HTML Starter</title>
-    <meta
-      name="description"
-      content="High-performance HTML based website template."
-    />
-  </head>
-  <body>
-    <h1>Vercel HTML Starter</h1>
-    <p>
-      This template is a simple, but powerful single
-      <code>index.html</code> file deployed to
-      <a href="https://vercel.com">Vercel</a>. When your site is deployed, all
-      static assets (like HTML, JavaScript, CSS, images, and more) are deployed
-      globally to every
-      <a href="https://vercel.com/docs/concepts/edge-network/overview"
-        >Vercel Edge Network</a
-      >
-      region.
-    </p>
-    <h2>Simple, privacy-friendly analytics</h2>
-    <p>
-      Want to understand your visitor traffic? Vercel Analytics gives you
-      first-party, privacy-friendly traffic analytics for your HTML site. This
-      template is already configured using the following script:
-    </p>
-    <pre><code>&lt;script defer src="/_vercel/insights/script.js"&gt;&lt;/script&gt;</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/analytics">Vercel Analytics</a>.
-    </p>
-    <h2>Integrated with git</h2>
-    <p>
-      Deploying updates to your site is as simple as
-      <code>git push</code> thanks to Vercel's advanced
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-      Support for GitHub, GitLab, Bitbucket is zero-configuration, and with the
-      flexible Vercel CLI and API, you can integrate with any tool possible.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-    </p>
-    <h2>Fast <code>gzip</code> compression</h2>
-    <p>
-      To help ensure the smallest possible file sizes for your static assets,
-      the Vercel Edge Network compresses files by default using
-      <code>gzip</code>. You can also optionally use
-      <code>brotli</code> compressesion if you prefer.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/edge-network/compression"
-        >compression</a
-      >.
-    </p>
-    <h2>Advanced routing configuration</h2>
-    <p>
-      Vercel gives you a variety of ways to configure the routing of your
-      website. For example, adding redirects, rewrites, or headers to your page.
-      While you can use <code>vercel.json</code> to define these through JSON,
-      you can also express your routing configuration as code using
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-    <p>
-      Middleware runs before the
-      <a href="https://vercel.com/docs/concepts/edge-network/caching"
-        >Vercel Edge Network Cache</a
-      >, so you can configure routing exactly as your application needs. For
-      example, this template uses <code>middleware.js</code> defined in the root
-      of the repository to add additional security headers to the site:
-    </p>
-    <pre><code>referrer-policy: origin-when-cross-origin
-strict-transport-security: max-age=31536000; includeSubDomains; preload
-x-content-type-options: nosniff
-x-dns-prefetch-control: on
-x-frame-options: DENY</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T2E — Time 2 Eat | The Food Industry's Operating System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --base: #080808;
+    --onyx: #141416;
+    --onyx2: #1E1E22;
+    --lavender: #B8A9E8;
+    --lavender-light: #D4CBF5;
+    --lavender-deep: #8B78CC;
+    --white: #FFFFFF;
+    --soft-white: #F5F3FF;
+    --muted: rgba(255,255,255,0.45);
+    --border: rgba(184,169,232,0.15);
+    --border-hover: rgba(184,169,232,0.35);
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--base);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--lavender-deep); color: var(--white); }
+
+  /* ===== SCROLL REVEAL ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== TYPOGRAPHY UTILITIES ===== */
+  .display-xl {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(2.8rem, 5vw, 5rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+  .display-lg {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+  .section-label {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--lavender);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--lavender);
+    display: inline-block;
+  }
+  .body-lg { font-size: 1.1rem; font-weight: 300; color: rgba(255,255,255,0.72); line-height: 1.75; }
+
+  /* ===== LAYOUT UTILITIES ===== */
+  .container { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
+  .section { padding: 120px 0; position: relative; }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 14px 28px;
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--lavender);
+    color: var(--base);
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+  .btn-primary:hover {
+    background: var(--lavender-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(184,169,232,0.4);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--soft-white);
+    border: 1px solid var(--border-hover);
+  }
+  .btn-ghost:hover {
+    border-color: var(--lavender);
+    color: var(--lavender-light);
+    background: rgba(184,169,232,0.06);
+    transform: translateY(-2px);
+  }
+  .btn-sm { padding: 10px 20px; font-size: 0.82rem; }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(184,169,232,0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(184,169,232,0); }
+  }
+
+  /* ===== GRAIN TEXTURE ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
+
+  /* ===========================
+     1. NAVIGATION
+  =========================== */
+  #nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 0 40px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s ease, backdrop-filter 0.4s ease, border-bottom 0.4s ease;
+  }
+  #nav.scrolled {
+    background: rgba(8,8,8,0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 1.6rem;
+    background: linear-gradient(135deg, var(--lavender-light), var(--lavender-deep));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  .nav-links a:hover { color: var(--soft-white); }
+  .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+  /* ===========================
+     2. HERO
+  =========================== */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding: 100px 40px 80px;
+  }
+  .hero-bg { position: absolute; inset: 0; z-index: 0; }
+  .hero-glow-1 {
+    position: absolute;
+    top: -20%; left: 50%;
+    transform: translateX(-50%);
+    width: 900px; height: 900px;
+    background: radial-gradient(circle, rgba(139,120,204,0.18) 0%, rgba(139,120,204,0.04) 50%, transparent 70%);
+    animation: glow-pulse 8s ease-in-out infinite;
+  }
+  .hero-glow-2 {
+    position: absolute;
+    bottom: -10%; left: 20%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(184,169,232,0.08) 0%, transparent 60%);
+    animation: glow-pulse 10s ease-in-out infinite reverse;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(184,169,232,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(184,169,232,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+  @keyframes glow-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+    50% { transform: translateX(-50%) scale(1.08); opacity: 0.7; }
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 900px; }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 6px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border-hover);
+    background: rgba(184,169,232,0.06);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--lavender);
+    margin-bottom: 2rem;
+    letter-spacing: 0.04em;
+  }
+  .hero-eyebrow-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--lavender);
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .hero-headline { margin-bottom: 1.5rem; }
+  .hero-sub {
+    font-size: 1.15rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.65);
+    max-width: 620px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.8;
+  }
+  .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4rem; }
+  .hero-stats {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 860px; width: 100%;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: rgba(20,20,22,0.6);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+  }
+  .hero-stat {
+    padding: 28px 24px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 2.4rem;
+    background: linear-gradient(135deg, var(--lavender-light), var(--lavender-deep));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .hero-stat-label { font-size: 0.78rem; color: var(--muted); }
+
+  /* ===========================
+     3. THE PROBLEM
+  =========================== */
+  #problem { background: var(--onyx); }
+  .problem-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .problem-headline { margin-bottom: 1.2rem; }
+  .pain-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    padding: 24px;
+    background: var(--onyx2);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    cursor: default;
+    margin-bottom: 1rem;
+  }
+  .pain-card:hover {
+    transform: translateX(8px);
+    border-color: var(--border-hover);
+  }
+  .pain-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    background: rgba(184,169,232,0.1);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pain-icon svg { width: 20px; height: 20px; }
+  .pain-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; color: var(--soft-white); }
+  .pain-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* ===========================
+     4. PERSONAS
+  =========================== */
+  #personas { background: var(--base); }
+  .personas-header { text-align: center; margin-bottom: 60px; }
+  .personas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .persona-card {
+    padding: 40px 36px;
+    background: var(--onyx);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .persona-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--lavender-deep), var(--lavender-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .persona-card:hover { transform: translateY(-6px); border-color: var(--border-hover); background: var(--onyx2); }
+  .persona-card:hover::before { transform: scaleX(1); }
+  .persona-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 4rem;
+    color: rgba(184,169,232,0.12);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+  .persona-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--border-hover);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lavender);
+    margin-bottom: 1rem;
+  }
+  .persona-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .persona-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+  /* ===========================
+     5. DASHBOARD MOCKUP
+  =========================== */
+  #dashboard { background: var(--onyx); overflow: hidden; }
+  .dashboard-header { text-align: center; margin-bottom: 60px; }
+  .browser-frame {
+    background: var(--onyx2);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,169,232,0.08);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .browser-bar {
+    background: #0d0d0f;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .browser-dots { display: flex; gap: 6px; }
+  .browser-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-red { background: #FF5F57; }
+  .dot-yellow { background: #FFBD2E; }
+  .dot-green { background: #28CA41; }
+  .browser-url {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 5px 14px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: var(--font-body);
+    border: 1px solid var(--border);
+  }
+  .dashboard-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 520px;
+  }
+  .dash-sidebar {
+    background: #0f0f12;
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+  }
+  .dash-sidebar-brand {
+    padding: 0 20px 20px;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 1.3rem;
+    background: linear-gradient(135deg, var(--lavender-light), var(--lavender-deep));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .dash-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 2px solid transparent;
+  }
+  .dash-nav-item:hover { color: var(--soft-white); background: rgba(255,255,255,0.03); }
+  .dash-nav-item.active {
+    color: var(--lavender-light);
+    background: rgba(184,169,232,0.08);
+    border-left-color: var(--lavender);
+  }
+  .dash-nav-icon { width: 18px; height: 18px; opacity: 0.7; flex-shrink: 0; }
+  .dash-main { background: var(--onyx2); padding: 24px; overflow: hidden; }
+  .dash-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .dash-greeting { font-size: 1.1rem; font-weight: 600; }
+  .dash-date { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  .dash-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .dash-chip {
+    padding: 8px 16px;
+    background: rgba(184,169,232,0.08);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.78rem;
+  }
+  .dash-chip-val { font-weight: 700; color: var(--lavender-light); font-size: 1rem; display: block; }
+  .dash-chip-label { color: var(--muted); font-size: 0.72rem; }
+  .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .dash-card {
+    background: rgba(8,8,8,0.5);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .dash-card-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .dash-table { width: 100%; border-collapse: collapse; }
+  .dash-table th {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: left;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .dash-table td {
+    font-size: 0.8rem;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(184,169,232,0.05);
+    color: rgba(255,255,255,0.8);
+  }
+  .status-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+  .status-confirmed { background: rgba(184,169,232,0.15); color: var(--lavender-light); }
+  .status-pending { background: rgba(255,196,0,0.12); color: #FFC400; }
+  .status-prep { background: rgba(100,200,100,0.12); color: #7BC47F; }
+
+  .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 100px; }
+  .chart-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--lavender), var(--lavender-deep));
+    border-radius: 4px 4px 0 0;
+    height: 0;
+    transition: height 1.2s ease;
+    opacity: 0.85;
+    min-width: 0;
+  }
+  .chart-labels { display: flex; gap: 8px; margin-top: 6px; }
+  .chart-label { flex: 1; text-align: center; font-size: 0.65rem; color: var(--muted); }
+
+  .inventory-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(184,169,232,0.05);
+    font-size: 0.8rem;
+  }
+  .inventory-item:last-child { border-bottom: none; }
+  .inv-name { color: rgba(255,255,255,0.8); }
+  .inv-alert {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 0.68rem;
+    font-weight: 600;
+  }
+  .inv-red { background: rgba(255,80,80,0.12); color: #FF7070; }
+  .inv-amber { background: rgba(255,196,0,0.12); color: #FFC400; }
+
+  .feature-pills {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .feature-pill {
+    padding: 10px 22px;
+    border-radius: 100px;
+    border: 1px solid var(--border-hover);
+    background: rgba(184,169,232,0.05);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--lavender-light);
+    transition: all 0.2s ease;
+    cursor: default;
+  }
+  .feature-pill:hover {
+    background: rgba(184,169,232,0.12);
+    border-color: var(--lavender);
+    transform: translateY(-2px);
+  }
+
+  /* ===========================
+     6. FEATURES GRID
+  =========================== */
+  #features { background: var(--base); }
+  .features-header { text-align: center; margin-bottom: 60px; }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .feature-cell {
+    padding: 44px 40px;
+    border: 1px solid var(--border);
+    position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+  .feature-cell::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--lavender), var(--lavender-deep));
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+    transform-origin: top;
+  }
+  .feature-cell:hover { background: var(--onyx2); }
+  .feature-cell:hover::after { transform: scaleY(1); }
+  .feature-num {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--lavender-deep);
+    letter-spacing: 0.12em;
+    margin-bottom: 1.2rem;
+  }
+  .feature-icon-block {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: rgba(184,169,232,0.08);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.2rem;
+    transition: all 0.3s ease;
+  }
+  .feature-cell:hover .feature-icon-block {
+    background: rgba(184,169,232,0.15);
+    border-color: var(--lavender-deep);
+  }
+  .feature-icon-block svg { width: 22px; height: 22px; }
+  .feature-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .feature-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
+  /* ===========================
+     7. MARKETPLACE
+  =========================== */
+  #marketplace { background: var(--onyx); }
+  .marketplace-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .marketplace-differentiator {
+    margin: 1.8rem 0;
+    padding: 20px 24px;
+    background: rgba(184,169,232,0.06);
+    border-left: 3px solid var(--lavender);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.65;
+    font-style: italic;
+  }
+  .marketplace-props { display: flex; flex-wrap: wrap; gap: 10px; }
+  .marketplace-prop {
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border-hover);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--lavender-light);
+    background: rgba(184,169,232,0.05);
+  }
+  .profile-card-mockup {
+    background: var(--onyx2);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    padding: 32px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-card-mockup::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--lavender-deep), var(--lavender-light));
+  }
+  .profile-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--lavender-deep), var(--lavender));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: var(--base);
+    margin-bottom: 1rem;
+  }
+  .profile-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.3rem; }
+  .profile-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+  .profile-tag {
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(184,169,232,0.1);
+    border: 1px solid var(--border);
+    font-size: 0.72rem;
+    color: var(--lavender);
+  }
+  .profile-stars { display: flex; align-items: center; gap: 6px; margin-bottom: 0.6rem; }
+  .stars { color: #FFD700; font-size: 0.9rem; }
+  .review-count { font-size: 0.8rem; color: var(--muted); }
+  .profile-divider { height: 1px; background: var(--border); margin: 1.2rem 0; }
+  .profile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  .profile-stat { text-align: center; }
+  .profile-stat-val { font-weight: 700; font-size: 1.1rem; color: var(--lavender-light); }
+  .profile-stat-key { font-size: 0.72rem; color: var(--muted); }
+
+  /* ===========================
+     8. IMPACT
+  =========================== */
+  #impact { background: #000; text-align: center; }
+  .impact-quote {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.8rem, 4vw, 3.4rem);
+    line-height: 1.25;
+    color: var(--soft-white);
+    max-width: 760px;
+    margin: 0 auto 2rem;
+  }
+  .impact-quote::before {
+    content: '\201C';
+    font-size: 6rem;
+    line-height: 0;
+    vertical-align: -0.4em;
+    color: var(--lavender-deep);
+    margin-right: 0.1em;
+    opacity: 0.5;
+  }
+  .impact-body {
+    max-width: 580px;
+    margin: 0 auto 3rem;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+  .impact-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .impact-pill {
+    padding: 10px 20px;
+    border-radius: 100px;
+    border: 1px solid rgba(184,169,232,0.2);
+    background: rgba(184,169,232,0.04);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    transition: all 0.25s ease;
+  }
+  .impact-pill:hover {
+    border-color: var(--lavender);
+    color: var(--lavender-light);
+    background: rgba(184,169,232,0.08);
+  }
+
+  /* ===========================
+     9. ROADMAP
+  =========================== */
+  #roadmap { background: var(--onyx); }
+  .roadmap-header { text-align: center; margin-bottom: 60px; }
+  .roadmap-track {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .roadmap-line {
+    position: absolute;
+    top: 54px;
+    left: 16%; right: 16%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--lavender-deep), rgba(184,169,232,0.2));
+    z-index: 0;
+  }
+  .roadmap-card {
+    padding: 40px 36px;
+    background: var(--onyx2);
+    border: 1px solid var(--border);
+    position: relative; z-index: 1;
+    transition: border-color 0.3s ease;
+  }
+  .roadmap-card:first-child { border-radius: 16px 0 0 16px; }
+  .roadmap-card:last-child { border-radius: 0 16px 16px 0; }
+  .roadmap-card.active { border-color: var(--lavender-deep); background: rgba(139,120,204,0.06); }
+  .roadmap-card.muted { opacity: 0.6; }
+  .roadmap-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+  .badge-live { background: rgba(123,196,127,0.12); color: #7BC47F; border: 1px solid rgba(123,196,127,0.3); }
+  .badge-dev { background: rgba(255,196,0,0.1); color: #FFC400; border: 1px solid rgba(255,196,0,0.25); }
+  .badge-vision { background: rgba(184,169,232,0.1); color: var(--lavender); border: 1px solid var(--border-hover); }
+  .roadmap-phase-num {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 3.5rem;
+    color: rgba(184,169,232,0.12);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .active .roadmap-phase-num { color: rgba(184,169,232,0.25); }
+  .roadmap-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; }
+  .roadmap-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .roadmap-features li {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .roadmap-features li::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--lavender-deep);
+    flex-shrink: 0;
+  }
+  .active .roadmap-features li { color: rgba(255,255,255,0.7); }
+
+  /* ===========================
+     10. TESTIMONIALS
+  =========================== */
+  #testimonials { background: var(--base); }
+  .testimonials-header { text-align: center; margin-bottom: 60px; }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .testimonial-card {
+    padding: 36px;
+    background: var(--onyx);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    cursor: default;
+  }
+  .testimonial-card:hover {
+    border-color: rgba(184,169,232,0.3);
+    box-shadow: 0 0 0 1px rgba(184,169,232,0.08), 0 20px 50px rgba(0,0,0,0.4);
+    transform: translateY(-4px);
+  }
+  .testimonial-quote-icon {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    line-height: 0.8;
+    color: var(--lavender-deep);
+    opacity: 0.4;
+    margin-bottom: 1rem;
+  }
+  .testimonial-text {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+  }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .author-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--base);
+    flex-shrink: 0;
+  }
+  .av-1 { background: linear-gradient(135deg, #B8A9E8, #8B78CC); }
+  .av-2 { background: linear-gradient(135deg, #D4CBF5, #B8A9E8); }
+  .av-3 { background: linear-gradient(135deg, #9B8DD4, #6B5BA8); }
+  .author-name { font-weight: 600; font-size: 0.9rem; }
+  .author-biz { font-size: 0.78rem; color: var(--muted); }
+  .author-tag {
+    margin-left: auto;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(184,169,232,0.08);
+    border: 1px solid var(--border);
+    font-size: 0.68rem;
+    color: var(--lavender);
+    font-weight: 500;
+  }
+
+  /* ===========================
+     11. PRICING
+  =========================== */
+  #pricing { background: var(--onyx); }
+  .pricing-header { text-align: center; margin-bottom: 60px; }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .pricing-card {
+    padding: 40px 36px;
+    background: var(--onyx2);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .pricing-card.popular { border-color: var(--lavender-deep); background: rgba(139,120,204,0.06); }
+  .popular-badge {
+    position: absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 16px;
+    background: linear-gradient(90deg, var(--lavender-deep), var(--lavender));
+    border-radius: 100px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--base);
+    white-space: nowrap;
+  }
+  .pricing-plan { font-size: 0.8rem; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
+  .pricing-price {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--lavender-light);
+    margin-bottom: 1.5rem;
+  }
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
+  .pricing-features li {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 0.87rem;
+    color: rgba(255,255,255,0.7);
+  }
+  .pricing-features li::before { content: '✓'; color: var(--lavender); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .pricing-note {
+    text-align: center;
+    margin-top: 2.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .pricing-note span { color: var(--lavender-light); }
+
+  /* ===========================
+     12. RESOURCES
+  =========================== */
+  #resources { background: var(--base); }
+  .resources-header { text-align: center; margin-bottom: 60px; }
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .article-card {
+    background: var(--onyx);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .article-card:hover { transform: translateY(-4px); border-color: var(--border-hover); }
+  .article-thumb { height: 180px; position: relative; overflow: hidden; }
+  .thumb-1 { background: linear-gradient(135deg, rgba(139,120,204,0.3) 0%, rgba(8,8,8,0.8) 100%), radial-gradient(circle at 30% 50%, rgba(184,169,232,0.2), transparent 60%); }
+  .thumb-2 { background: linear-gradient(135deg, rgba(100,80,180,0.3) 0%, rgba(8,8,8,0.8) 100%), radial-gradient(circle at 70% 30%, rgba(212,203,245,0.2), transparent 60%); }
+  .thumb-3 { background: linear-gradient(135deg, rgba(80,60,160,0.3) 0%, rgba(8,8,8,0.8) 100%), radial-gradient(circle at 50% 70%, rgba(139,120,204,0.25), transparent 60%); }
+  .article-thumb-icon {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.25;
+  }
+  .article-body { padding: 24px; }
+  .article-cat {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(184,169,232,0.1);
+    border: 1px solid var(--border-hover);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--lavender);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .article-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; line-height: 1.45; }
+  .article-excerpt { font-size: 0.83rem; color: var(--muted); line-height: 1.65; margin-bottom: 1rem; }
+  .article-link {
+    font-size: 0.83rem;
+    font-weight: 600;
+    color: var(--lavender);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s ease;
+  }
+  .article-card:hover .article-link { gap: 8px; }
+
+  /* ===========================
+     13. DEMO / CONTACT
+  =========================== */
+  #demo { background: var(--onyx); }
+  .demo-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .demo-reasons { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+  .demo-reason { display: flex; align-items: flex-start; gap: 14px; }
+  .demo-reason-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(184,169,232,0.08);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .demo-reason-icon svg { width: 18px; height: 18px; }
+  .demo-reason-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
+  .demo-reason-desc { font-size: 0.85rem; color: var(--muted); }
+  .contact-form-wrap {
+    background: var(--onyx2);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    padding: 40px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 6px;
+    letter-spacing: 0.04em;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    appearance: none;
+  }
+  .form-group select { cursor: pointer; }
+  .form-group select option { background: var(--onyx2); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--lavender);
+    box-shadow: 0 0 0 3px rgba(184,169,232,0.12);
+  }
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
+  .form-error { font-size: 0.75rem; color: #FF7070; margin-top: 4px; display: none; }
+  .form-group.error input,
+  .form-group.error select { border-color: #FF7070; }
+  .form-group.error .form-error { display: block; }
+  .form-confirm {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    gap: 1rem;
+  }
+  .confirm-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: rgba(123,196,127,0.12);
+    border: 2px solid rgba(123,196,127,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  .confirm-title { font-size: 1.4rem; font-weight: 700; }
+  .confirm-msg { color: var(--muted); font-size: 0.9rem; }
+
+  /* ===========================
+     14. FOOTER
+  =========================== */
+  footer {
+    background: var(--onyx);
+    border-top: 3px solid transparent;
+    border-image: linear-gradient(90deg, transparent, var(--lavender-deep), var(--lavender-light), transparent) 1;
+  }
+  .footer-main {
+    padding: 80px 40px 60px;
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 80px;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--lavender-light), var(--lavender-deep));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.6rem;
+    display: block;
+  }
+  .footer-tagline { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .footer-app-note { font-size: 0.78rem; color: rgba(255,255,255,0.35); font-style: italic; }
+  .footer-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
+  .footer-col-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--soft-white);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .footer-col ul li a {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  .footer-col ul li a:hover { color: var(--lavender-light); }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
+  .footer-legal { display: flex; gap: 1.5rem; }
+  .footer-legal a { font-size: 0.8rem; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s ease; }
+  .footer-legal a:hover { color: var(--lavender); }
+
+  /* ===========================
+     RESPONSIVE
+  =========================== */
+  @media (max-width: 1024px) {
+    .container { padding: 0 32px; }
+    .section { padding: 90px 0; }
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .container { padding: 0 20px; }
+    .section { padding: 70px 0; }
+    #nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero-stats { grid-template-columns: repeat(2, 1fr); }
+    .hero-stat { border-bottom: 1px solid var(--border); }
+    .hero-stat:nth-child(odd) { border-right: 1px solid var(--border); }
+    .problem-inner, .marketplace-inner, .demo-inner { grid-template-columns: 1fr; gap: 40px; }
+    .personas-grid, .testimonials-grid, .pricing-grid, .articles-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .roadmap-track { grid-template-columns: 1fr; }
+    .roadmap-card:first-child, .roadmap-card:last-child { border-radius: 12px; }
+    .roadmap-line { display: none; }
+    .footer-main { grid-template-columns: 1fr; gap: 40px; }
+    .footer-links { grid-template-columns: repeat(2, 1fr); }
+    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    .dashboard-layout { grid-template-columns: 1fr; }
+    .dash-sidebar { display: none; }
+    .dash-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">T2E</a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#dashboard">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#demo">Sign In</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a href="#demo" class="btn btn-ghost btn-sm">Book a Demo</a>
+    <a href="#demo" class="btn btn-primary btn-sm">Get Started Free</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-grid"></div>
+  </div>
+  <div class="hero-content">
+    <div class="reveal">
+      <span class="hero-eyebrow">
+        <span class="hero-eyebrow-dot"></span>
+        Platform Now Live — Built for Independent Operators
+      </span>
+    </div>
+    <div class="reveal" style="transition-delay:0.1s">
+      <h1 class="display-xl hero-headline">The Platform the Food Industry<br>Has Been Waiting For.</h1>
+    </div>
+    <div class="reveal" style="transition-delay:0.18s">
+      <p class="hero-sub">You built your business on group chats and spreadsheets. T2E is the infrastructure you should have had from day one — jobs, invoices, inventory, clients, and community, all in one place.</p>
+    </div>
+    <div class="reveal hero-ctas" style="transition-delay:0.26s">
+      <a href="#demo" class="btn btn-primary">Get Started Free</a>
+      <a href="#demo" class="btn btn-ghost">Book a Demo</a>
+    </div>
+    <div class="reveal hero-stats" style="transition-delay:0.34s">
+      <div class="hero-stat">
+        <div class="hero-stat-num">2,400+</div>
+        <div class="hero-stat-label">Businesses on T2E</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">18K+</div>
+        <div class="hero-stat-label">Jobs Tracked</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">47K+</div>
+        <div class="hero-stat-label">Invoices Generated</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num">14 hrs</div>
+        <div class="hero-stat-label">Avg Saved Per Week</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== THE PROBLEM ===== -->
+<section id="problem" class="section">
+  <div class="container">
+    <div class="problem-inner">
+      <div class="reveal">
+        <div class="section-label">Why T2E Exists</div>
+        <h2 class="display-lg problem-headline">Running a food business shouldn't feel like duct tape and prayer.</h2>
+        <p class="body-lg" style="margin-top:1.2rem">Independent operators have been held back by tools built for everyone else. Fragmented apps, manual tracking, zero visibility. The industry moves fast — your software shouldn't be the thing slowing you down.</p>
+      </div>
+      <div class="reveal" style="transition-delay:0.12s">
+        <div class="pain-card">
+          <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div><div class="pain-title">No Central Hub</div><div class="pain-desc">Five different apps for five different things. No single source of truth for your entire operation.</div></div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 10h-4m0 0H8m4 0v4m0-4V6"/></svg></div>
+          <div><div class="pain-title">Invoicing Chaos</div><div class="pain-desc">Chasing payments, losing track of quotes, sending invoices from Gmail. There's a better way.</div></div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+          <div><div class="pain-title">Inventory Blindness</div><div class="pain-desc">Running out of ingredients mid-service. Over-ordering every week. Lost money you can't see until it's gone.</div></div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+          <div><div class="pain-title">Invisible Online</div><div class="pain-desc">No public profile. No way for customers to discover, book, or review your business. You're off the map.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PERSONAS ===== -->
+<section id="personas" class="section">
+  <div class="container">
+    <div class="personas-header reveal">
+      <div class="section-label" style="justify-content:center">Who It's For</div>
+      <h2 class="display-lg">Built around the way<br>real operators work.</h2>
+    </div>
+    <div class="personas-grid">
+      <div class="persona-card reveal" style="transition-delay:0.05s">
+        <div class="persona-num">01</div>
+        <div class="persona-tag">Restaurant Owners</div>
+        <h3 class="persona-title">The Brick-and-Mortar Operator</h3>
+        <p class="persona-desc">You've got a dining room to run, a team to schedule, and suppliers to manage. T2E gives you a single dashboard to track revenue, manage your menu, log invoices, and monitor inventory — without leaving the floor.</p>
+      </div>
+      <div class="persona-card reveal" style="transition-delay:0.12s">
+        <div class="persona-num">02</div>
+        <div class="persona-tag">Caterers</div>
+        <h3 class="persona-title">The Event-Driven Business</h3>
+        <p class="persona-desc">Events, corporate accounts, weddings — your business lives in logistics. T2E handles your job calendar, client profiles, event invoicing, and headcount planning so every booking runs clean.</p>
+      </div>
+      <div class="persona-card reveal" style="transition-delay:0.2s">
+        <div class="persona-num">03</div>
+        <div class="persona-tag">Food Truck Operators</div>
+        <h3 class="persona-title">The Mobile Kitchen Hustler</h3>
+        <p class="persona-desc">You move fast, serve big, and run lean. T2E tracks your locations, daily revenue, supply reorder alerts, and customer reviews — so your operation stays tight even when the route changes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DASHBOARD MOCKUP ===== -->
+<section id="dashboard" class="section">
+  <div class="container">
+    <div class="dashboard-header reveal">
+      <div class="section-label" style="justify-content:center">See It In Action</div>
+      <h2 class="display-lg">Your entire operation.<br>One screen.</h2>
+    </div>
+    <div class="browser-frame reveal" style="transition-delay:0.1s">
+      <div class="browser-bar">
+        <div class="browser-dots">
+          <div class="browser-dot dot-red"></div>
+          <div class="browser-dot dot-yellow"></div>
+          <div class="browser-dot dot-green"></div>
+        </div>
+        <div class="browser-url">app.t2eat.com/dashboard</div>
+      </div>
+      <div class="dashboard-layout">
+        <div class="dash-sidebar">
+          <div class="dash-sidebar-brand">T2E</div>
+          <div class="dash-nav-item active">
+            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Dashboard
+          </div>
+          <div class="dash-nav-item">
+            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Jobs
+          </div>
+          <div class="dash-nav-item">
+            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            Menu
+          </div>
+          <div class="dash-nav-item">
+            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Clients
+          </div>
+          <div class="dash-nav-item">
+            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+            Invoices
+          </div>
+          <div class="dash-nav-item">
+            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            Inventory
+          </div>
+        </div>
+        <div class="dash-main">
+          <div class="dash-topbar">
+            <div>
+              <div class="dash-greeting">Good morning, Marcus 👋</div>
+              <div class="dash-date">Friday, May 30, 2026</div>
+            </div>
+            <div class="dash-chips">
+              <div class="dash-chip"><span class="dash-chip-val">$12,480</span><span class="dash-chip-label">Revenue MTD</span></div>
+              <div class="dash-chip"><span class="dash-chip-val">7</span><span class="dash-chip-label">Active Jobs</span></div>
+              <div class="dash-chip"><span class="dash-chip-val">3</span><span class="dash-chip-label">Pending Invoices</span></div>
+            </div>
+          </div>
+          <div class="dash-grid">
+            <div class="dash-card">
+              <div class="dash-card-title">Upcoming Jobs</div>
+              <table class="dash-table">
+                <thead><tr><th>Event</th><th>Client</th><th>Date</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Wedding Reception</td><td>Chen Family</td><td>Jun 7</td><td><span class="status-pill status-confirmed">Confirmed</span></td></tr>
+                  <tr><td>Corp Luncheon</td><td>Apex Co.</td><td>Jun 9</td><td><span class="status-pill status-prep">In Prep</span></td></tr>
+                  <tr><td>Pop-Up Market</td><td>—</td><td>Jun 12</td><td><span class="status-pill status-pending">Pending</span></td></tr>
+                  <tr><td>Birthday Dinner</td><td>Rivera Family</td><td>Jun 15</td><td><span class="status-pill status-confirmed">Confirmed</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="dash-card">
+              <div class="dash-card-title">Revenue — Last 6 Months</div>
+              <div class="chart-bars" id="chartBars">
+                <div class="chart-bar" data-height="55"></div>
+                <div class="chart-bar" data-height="70"></div>
+                <div class="chart-bar" data-height="45"></div>
+                <div class="chart-bar" data-height="85"></div>
+                <div class="chart-bar" data-height="60"></div>
+                <div class="chart-bar" data-height="92"></div>
+              </div>
+              <div class="chart-labels">
+                <span class="chart-label">Dec</span><span class="chart-label">Jan</span>
+                <span class="chart-label">Feb</span><span class="chart-label">Mar</span>
+                <span class="chart-label">Apr</span><span class="chart-label">May</span>
+              </div>
+            </div>
+            <div class="dash-card" style="grid-column:1/-1">
+              <div class="dash-card-title">Inventory Alerts</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+                <div class="inventory-item"><span class="inv-name">Chicken Thighs (10 lbs)</span><span class="inv-alert inv-red">⚠ Critical</span></div>
+                <div class="inventory-item"><span class="inv-name">Jasmine Rice (25 lbs)</span><span class="inv-alert inv-amber">↓ Low</span></div>
+                <div class="inventory-item"><span class="inv-name">Olive Oil (1 gal)</span><span class="inv-alert inv-amber">↓ Low</span></div>
+                <div class="inventory-item"><span class="inv-name">Disposable Trays</span><span class="inv-alert inv-red">⚠ Critical</span></div>
+                <div class="inventory-item"><span class="inv-name">Napkins (500ct)</span><span class="inv-alert inv-amber">↓ Low</span></div>
+                <div class="inventory-item"><span class="inv-name">Seasoning Mix</span><span class="inv-alert inv-amber">↓ Low</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-pills reveal" style="transition-delay:0.15s">
+      <span class="feature-pill">Jobs & Events</span>
+      <span class="feature-pill">Menu Builder</span>
+      <span class="feature-pill">Clients</span>
+      <span class="feature-pill">Invoices</span>
+      <span class="feature-pill">Inventory</span>
+      <span class="feature-pill">Analytics</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section id="features" class="section">
+  <div class="container">
+    <div class="features-header reveal">
+      <div class="section-label" style="justify-content:center">Platform Features</div>
+      <h2 class="display-lg">One platform.<br>Every tool you need.</h2>
+    </div>
+    <div class="features-grid reveal" style="transition-delay:0.1s">
+      <div class="feature-cell">
+        <div class="feature-num">01</div>
+        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <h3 class="feature-title">Jobs & Events</h3>
+        <p class="feature-desc">Calendar-based job tracking for catering events, pop-ups, and daily service. Every booking in one place.</p>
+      </div>
+      <div class="feature-cell">
+        <div class="feature-num">02</div>
+        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h11"/><circle cx="19" cy="18" r="2"/><path d="m17 20 2-4 2 4"/></svg></div>
+        <h3 class="feature-title">Menu Builder</h3>
+        <p class="feature-desc">Build, organize, and price your menu digitally. Attach items to jobs and generate shopping lists automatically.</p>
+      </div>
+      <div class="feature-cell">
+        <div class="feature-num">03</div>
+        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3 class="feature-title">Client Management</h3>
+        <p class="feature-desc">Full CRM for your regulars. Contact history, booking preferences, total spend, and communication log.</p>
+      </div>
+      <div class="feature-cell">
+        <div class="feature-num">04</div>
+        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+        <h3 class="feature-title">Invoice Generator</h3>
+        <p class="feature-desc">Professional invoices in seconds. Track sent, viewed, and paid status. Send payment links directly to clients.</p>
+      </div>
+      <div class="feature-cell">
+        <div class="feature-num">05</div>
+        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27,6.96 12,12.01 20.73,6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+        <h3 class="feature-title">Inventory Tracker</h3>
+        <p class="feature-desc">Real-time stock levels with low-alert thresholds. Know what you need before you run out, not after.</p>
+      </div>
+      <div class="feature-cell">
+        <div class="feature-num">06</div>
+        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <h3 class="feature-title">Dashboard & Analytics</h3>
+        <p class="feature-desc">Revenue trends, job performance, top clients, and growth metrics — always visible at a glance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MARKETPLACE ===== -->
+<section id="marketplace" class="section">
+  <div class="container">
+    <div class="marketplace-inner">
+      <div class="reveal">
+        <div class="section-label">The T2E Marketplace</div>
+        <h2 class="display-lg">Get discovered.<br>Get booked.<br>Get paid.</h2>
+        <p class="body-lg" style="margin-top:1.2rem">Your T2E profile is your digital storefront. Customers searching for catering, private dining, or food truck bookings find you — and book directly through the platform.</p>
+        <div class="marketplace-differentiator">"We're not Yelp. Yelp shows you restaurants. T2E runs them — and puts them in front of customers ready to book."</div>
+        <div class="marketplace-props">
+          <span class="marketplace-prop">Public Profile</span>
+          <span class="marketplace-prop">Online Booking</span>
+          <span class="marketplace-prop">Community Reviews</span>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:0.14s">
+        <div class="profile-card-mockup">
+          <div class="profile-avatar">MJ</div>
+          <div class="profile-name">Marcus & Jade's Kitchen</div>
+          <div class="profile-tags">
+            <span class="profile-tag">Soul Food</span>
+            <span class="profile-tag">Catering</span>
+            <span class="profile-tag">Events</span>
+            <span class="profile-tag">Private Chef</span>
+          </div>
+          <div class="profile-stars">
+            <span class="stars">★★★★★</span>
+            <span style="font-weight:700;font-size:0.9rem;color:var(--soft-white)">4.9</span>
+            <span class="review-count">(127 reviews)</span>
+          </div>
+          <div class="profile-divider"></div>
+          <div class="profile-stats">
+            <div class="profile-stat"><div class="profile-stat-val">340+</div><div class="profile-stat-key">Events Catered</div></div>
+            <div class="profile-stat"><div class="profile-stat-val">12 yrs</div><div class="profile-stat-key">In Business</div></div>
+            <div class="profile-stat"><div class="profile-stat-val">50–500</div><div class="profile-stat-key">Guest Capacity</div></div>
+            <div class="profile-stat"><div class="profile-stat-val">98%</div><div class="profile-stat-key">Response Rate</div></div>
+          </div>
+          <a href="#demo" class="btn btn-primary" style="width:100%;justify-content:center">Book Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== IMPACT ===== -->
+<section id="impact" class="section">
+  <div class="container">
+    <p class="impact-quote reveal">When small food businesses win, neighborhoods win.</p>
+    <p class="impact-body reveal" style="transition-delay:0.12s">The home kitchen caterer who built her business from church events. The family restaurant that's been on the corner for 20 years. The weekend food truck operator grinding every Saturday morning. T2E was built for them — not as a charity, but because they deserve the same infrastructure that big chains take for granted.</p>
+    <div class="impact-pills reveal" style="transition-delay:0.2s">
+      <span class="impact-pill">More Local Jobs</span>
+      <span class="impact-pill">Food Culture Preserved</span>
+      <span class="impact-pill">Money Staying Local</span>
+      <span class="impact-pill">Minority-Owned Businesses Amplified</span>
+      <span class="impact-pill">Food Surplus Redistributed</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ROADMAP ===== -->
+<section id="roadmap" class="section">
+  <div class="container">
+    <div class="roadmap-header reveal">
+      <div class="section-label" style="justify-content:center">Where We're Going</div>
+      <h2 class="display-lg">Three phases.<br>One ecosystem.</h2>
+    </div>
+    <div class="roadmap-track reveal" style="transition-delay:0.1s">
+      <div class="roadmap-line"></div>
+      <div class="roadmap-card active">
+        <span class="roadmap-badge badge-live"><svg width="8" height="8" viewBox="0 0 8 8" fill="#7BC47F"><circle cx="4" cy="4" r="4"/></svg> Live Now</span>
+        <div class="roadmap-phase-num">01</div>
+        <h3 class="roadmap-title">Business Tool</h3>
+        <ul class="roadmap-features">
+          <li>Jobs & Events Management</li><li>Invoice Generator</li>
+          <li>Inventory Tracker</li><li>Client CRM</li>
+          <li>Menu Builder</li><li>Analytics Dashboard</li>
+        </ul>
+      </div>
+      <div class="roadmap-card muted">
+        <span class="roadmap-badge badge-dev">In Development</span>
+        <div class="roadmap-phase-num">02</div>
+        <h3 class="roadmap-title">Community Marketplace</h3>
+        <ul class="roadmap-features">
+          <li>Public Business Profiles</li><li>Customer Discovery Feed</li>
+          <li>Direct Booking System</li><li>Verified Reviews</li>
+          <li>Operator Community Forum</li>
+        </ul>
+      </div>
+      <div class="roadmap-card muted">
+        <span class="roadmap-badge badge-vision">The Vision</span>
+        <div class="roadmap-phase-num">03</div>
+        <h3 class="roadmap-title">Full Ecosystem</h3>
+        <ul class="roadmap-features">
+          <li>Supplier Network</li><li>B2B Procurement</li>
+          <li>T2E Pay (Embedded Finance)</li><li>Food Waste Exchange</li>
+          <li>Industry Hiring Board</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section id="testimonials" class="section">
+  <div class="container">
+    <div class="testimonials-header reveal">
+      <div class="section-label" style="justify-content:center">What Operators Are Saying</div>
+      <h2 class="display-lg">Built for real businesses.<br>Loved by real operators.</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal" style="transition-delay:0.05s">
+        <div class="testimonial-quote-icon">"</div>
+        <p class="testimonial-text">Before T2E, I was running my restaurant out of three notebooks and a shared Google doc my staff kept breaking. Now every invoice, every supplier order, and every shift note lives in one place. I saved at least 10 hours a week in the first month alone.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar av-1">DW</div>
+          <div><div class="author-name">Darnell Washington</div><div class="author-biz">Darnell's Southern Table, Atlanta GA</div></div>
+          <span class="author-tag">Restaurant Owner</span>
+        </div>
+      </div>
+      <div class="testimonial-card reveal" style="transition-delay:0.12s">
+        <div class="testimonial-quote-icon">"</div>
+        <p class="testimonial-text">I was losing money on every third catering job because my invoicing was a mess. Clients ghosting, payments late, deposits not tracked. T2E made me look professional — and more importantly, it made me actually get paid. Revenue is up 30% just from tightening the back-end.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar av-2">RL</div>
+          <div><div class="author-name">Rosa Linda Mejia</div><div class="author-biz">Sabor Por Amor Catering, Houston TX</div></div>
+          <span class="author-tag">Caterer</span>
+        </div>
+      </div>
+      <div class="testimonial-card reveal" style="transition-delay:0.2s">
+        <div class="testimonial-quote-icon">"</div>
+        <p class="testimonial-text">Running a food truck, I used to forget to reorder stuff mid-week and then scramble Friday morning before service. The inventory alerts alone changed everything. Plus once the marketplace drops, customers finding me directly? That's the game changer right there.</p>
+        <div class="testimonial-author">
+          <div class="author-avatar av-3">TK</div>
+          <div><div class="author-name">Terrence "TK" Kingston</div><div class="author-biz">Ting Ting's Jerk Truck, Miami FL</div></div>
+          <span class="author-tag">Food Truck Operator</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section id="pricing" class="section">
+  <div class="container">
+    <div class="pricing-header reveal">
+      <div class="section-label" style="justify-content:center">Simple Pricing</div>
+      <h2 class="display-lg">Plans built for<br>real businesses.</h2>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal" style="transition-delay:0.05s">
+        <div class="pricing-plan">Starter</div>
+        <div class="pricing-price">Coming Soon</div>
+        <ul class="pricing-features">
+          <li>Up to 10 active jobs/month</li><li>Invoice generator (unlimited)</li>
+          <li>Basic inventory tracking</li><li>Client profiles (up to 50)</li>
+          <li>T2E marketplace profile</li>
+        </ul>
+        <a href="#demo" class="btn btn-ghost" style="width:100%;justify-content:center">Get Notified</a>
+      </div>
+      <div class="pricing-card popular reveal" style="transition-delay:0.12s">
+        <div class="popular-badge">Most Popular</div>
+        <div class="pricing-plan">Pro</div>
+        <div class="pricing-price">Coming Soon</div>
+        <ul class="pricing-features">
+          <li>Unlimited jobs & events</li><li>Full CRM — unlimited clients</li>
+          <li>Menu builder + job attachments</li><li>Inventory alerts + reorder lists</li>
+          <li>Analytics dashboard</li><li>Priority marketplace placement</li>
+        </ul>
+        <a href="#demo" class="btn btn-primary" style="width:100%;justify-content:center">Get Notified</a>
+      </div>
+      <div class="pricing-card reveal" style="transition-delay:0.2s">
+        <div class="pricing-plan">Enterprise</div>
+        <div class="pricing-price">Coming Soon</div>
+        <ul class="pricing-features">
+          <li>Everything in Pro</li><li>Multi-location support</li>
+          <li>Team accounts + permissions</li><li>Dedicated account manager</li>
+          <li>Custom onboarding & setup</li>
+        </ul>
+        <a href="#demo" class="btn btn-ghost" style="width:100%;justify-content:center">Contact Us</a>
+      </div>
+    </div>
+    <p class="pricing-note reveal" style="transition-delay:0.25s">Pricing finalizing soon — <span>early users lock in founder rates.</span> Join the waitlist today.</p>
+  </div>
+</section>
+
+<!-- ===== RESOURCES ===== -->
+<section id="resources" class="section">
+  <div class="container">
+    <div class="resources-header reveal">
+      <div class="section-label" style="justify-content:center">T2E Resources</div>
+      <h2 class="display-lg">Built to help you grow,<br>not just operate.</h2>
+    </div>
+    <div class="articles-grid">
+      <div class="article-card reveal" style="transition-delay:0.05s">
+        <div class="article-thumb thumb-1">
+          <div class="article-thumb-icon"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(184,169,232,0.6)" stroke-width="1.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+        </div>
+        <div class="article-body">
+          <span class="article-cat">Operations</span>
+          <h3 class="article-title">How to Stop Losing Money to Food Waste</h3>
+          <p class="article-excerpt">The average independent restaurant wastes 4–10% of its food budget. Here's a practical system to track, reduce, and reallocate that cost.</p>
+          <span class="article-link">Read More →</span>
+        </div>
+      </div>
+      <div class="article-card reveal" style="transition-delay:0.12s">
+        <div class="article-thumb thumb-2">
+          <div class="article-thumb-icon"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(212,203,245,0.6)" stroke-width="1.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
+        </div>
+        <div class="article-body">
+          <span class="article-cat">Finance</span>
+          <h3 class="article-title">How to Write a Catering Invoice That Gets Paid</h3>
+          <p class="article-excerpt">What to include, what to never leave out, and how to structure payment terms so clients don't ghost you on final balance.</p>
+          <span class="article-link">Read More →</span>
+        </div>
+      </div>
+      <div class="article-card reveal" style="transition-delay:0.2s">
+        <div class="article-thumb thumb-3">
+          <div class="article-thumb-icon"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(139,120,204,0.6)" stroke-width="1.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+        </div>
+        <div class="article-body">
+          <span class="article-cat">Growth</span>
+          <h3 class="article-title">Getting Your Food Business Found Online</h3>
+          <p class="article-excerpt">Most food operators are invisible to 90% of potential customers. Here's what your digital presence should look like and how T2E closes the gap.</p>
+          <span class="article-link">Read More →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DEMO / CONTACT ===== -->
+<section id="demo" class="section">
+  <div class="container">
+    <div class="demo-inner">
+      <div class="reveal">
+        <div class="section-label">Let's Talk</div>
+        <h2 class="display-lg">See T2E built around<br>your business.</h2>
+        <ul class="demo-reasons">
+          <li class="demo-reason">
+            <div class="demo-reason-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" width="18" height="18"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></div>
+            <div><div class="demo-reason-title">Get a personalized walkthrough</div><div class="demo-reason-desc">We'll show you exactly how T2E fits your operation — not a generic sales demo.</div></div>
+          </li>
+          <li class="demo-reason">
+            <div class="demo-reason-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+            <div><div class="demo-reason-title">Lock in founder pricing</div><div class="demo-reason-desc">Early adopters get access to rates that won't be available once we open to the public.</div></div>
+          </li>
+          <li class="demo-reason">
+            <div class="demo-reason-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div><div class="demo-reason-title">Join a community of operators</div><div class="demo-reason-desc">Connect with independent food business owners who are building something real.</div></div>
+          </li>
+        </ul>
+      </div>
+      <div class="reveal" style="transition-delay:0.12s">
+        <div class="contact-form-wrap">
+          <form id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="fname" placeholder="Marcus Johnson" autocomplete="name">
+                <div class="form-error">Please enter your name.</div>
+              </div>
+              <div class="form-group">
+                <label>Business Name</label>
+                <input type="text" id="fbiz" placeholder="Your Business" autocomplete="organization">
+                <div class="form-error">Please enter your business name.</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Business Type</label>
+              <select id="ftype">
+                <option value="">Select your business type…</option>
+                <option>Restaurant</option><option>Caterer</option>
+                <option>Food Truck</option><option>Private Chef</option>
+                <option>Home Kitchen / Cottage</option><option>Other Food Business</option>
+              </select>
+              <div class="form-error">Please select a business type.</div>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="femail" placeholder="you@yourbusiness.com" autocomplete="email">
+              <div class="form-error">Please enter a valid email address.</div>
+            </div>
+            <div class="form-group">
+              <label>Tell us about your operation</label>
+              <textarea id="fmsg" placeholder="How many staff, what's your biggest operational challenge, what are you hoping T2E solves…"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:16px 28px;font-size:0.95rem">Book My Demo</button>
+          </form>
+          <div class="form-confirm" id="formConfirm">
+            <div class="confirm-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7BC47F" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg></div>
+            <div class="confirm-title">You're on the list.</div>
+            <p class="confirm-msg">We'll be in touch within 24 hours to set up your personalized demo.<br>Check your inbox — something good is coming.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-main">
+    <div>
+      <span class="footer-logo">T2E</span>
+      <div class="footer-tagline">It's Always Time 2 Eat.</div>
+      <div class="footer-app-note">iOS & Android app — coming soon.</div>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <div class="footer-col-title">Product</div>
+        <ul>
+          <li><a href="#features">Features</a></li><li><a href="#dashboard">How It Works</a></li>
+          <li><a href="#pricing">Pricing</a></li><li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="#marketplace">Marketplace</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Company</div>
+        <ul>
+          <li><a href="#impact">Our Mission</a></li><li><a href="#demo">Contact</a></li>
+          <li><a href="#personas">Who We Serve</a></li><li><a href="#demo">Careers</a></li>
+          <li><a href="#demo">Press</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Resources</div>
+        <ul>
+          <li><a href="#resources">Blog</a></li><li><a href="#resources">Operator Guides</a></li>
+          <li><a href="#resources">Invoice Templates</a></li><li><a href="#resources">Help Center</a></li>
+          <li><a href="#resources">API Docs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Connect</div>
+        <ul>
+          <li><a href="#demo">Instagram</a></li><li><a href="#demo">TikTok</a></li>
+          <li><a href="#demo">LinkedIn</a></li><li><a href="#demo">Twitter / X</a></li>
+          <li><a href="#demo">Community Forum</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <div class="footer-copy">© 2026 T2E — CRES Ventures. All rights reserved.</div>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // NAV scroll blur
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 80);
+  }, { passive: true });
+
+  // Scroll reveal
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Chart bar animation
+  let chartAnimated = false;
+  const chartObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !chartAnimated) {
+        chartAnimated = true;
+        document.querySelectorAll('.chart-bar').forEach((bar, i) => {
+          setTimeout(() => { bar.style.height = bar.dataset.height + 'px'; }, i * 100);
+        });
+      }
+    });
+  }, { threshold: 0.3 });
+  chartObserver.observe(document.getElementById('dashboard'));
+
+  // Form validation & submit
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function validate(id, condition) {
+    const group = document.getElementById(id).closest('.form-group');
+    group.classList.toggle('error', !condition);
+    return condition;
+  }
+  document.getElementById('femail').addEventListener('blur', function() {
+    validate('femail', emailRegex.test(this.value));
+  });
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const v1 = validate('fname', document.getElementById('fname').value.trim().length > 0);
+    const v2 = validate('fbiz', document.getElementById('fbiz').value.trim().length > 0);
+    const v3 = validate('ftype', document.getElementById('ftype').value !== '');
+    const v4 = validate('femail', emailRegex.test(document.getElementById('femail').value.trim()));
+    if (v1 && v2 && v3 && v4) {
+      this.style.display = 'none';
+      document.getElementById('formConfirm').style.display = 'flex';
+    }
+  });
+</script>
+</body>
 </html>
