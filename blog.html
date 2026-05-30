@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script defer src="/_vercel/insights/script.js"></script>
+  <title>The T2E Journal — Insights for Food Operators</title>
+  <meta name="description" content="Operator playbooks, finance guides, industry trends, and community stories from the T2E food platform." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================================
+       CSS VARIABLES & RESET
+    ========================================================= */
+    :root {
+      --purple: #8B5CF6;
+      --purple-dark: #7C3AED;
+      --purple-light: #A78BFA;
+      --purple-xlight: #EDE9FE;
+      --navy: #0F172A;
+      --navy-mid: #1E293B;
+      --navy-light: #334155;
+      --gray-900: #111827;
+      --gray-800: #1F2937;
+      --gray-700: #374151;
+      --gray-600: #4B5563;
+      --gray-500: #6B7280;
+      --gray-400: #9CA3AF;
+      --gray-300: #D1D5DB;
+      --gray-200: #E5E7EB;
+      --gray-100: #F3F4F6;
+      --gray-50: #F9FAFB;
+      --white: #FFFFFF;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-purple: 0 8px 32px rgba(139,92,246,0.25);
+      --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+      --max-width: 1200px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-body);
+      color: var(--gray-800);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+    .section { padding: 96px 0; }
+    .text-center { text-align: center; }
+
+    .section-label {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-xlight);
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      transition: all var(--transition);
+      cursor: pointer;
+      border: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--purple);
+      color: var(--white);
+      border-color: var(--purple);
+      box-shadow: var(--shadow-purple);
+    }
+    .btn-primary:hover {
+      background: var(--purple-dark);
+      border-color: var(--purple-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(139,92,246,0.35);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--navy);
+      border-color: var(--gray-300);
+    }
+    .btn-ghost:hover {
+      border-color: var(--purple);
+      color: var(--purple);
+      transform: translateY(-2px);
+    }
+    .btn-sm { padding: 10px 20px; font-size: 14px; }
+
+    /* NAV */
+    #nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: all var(--transition);
+    }
+    #nav.scrolled {
+      padding: 14px 40px;
+      border-bottom-color: var(--gray-100);
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--purple);
+      letter-spacing: -0.02em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .nav-links a {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--gray-700);
+      transition: color var(--transition);
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--purple); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      width: 24px;
+      height: 2px;
+      background: var(--gray-700);
+      border-radius: 2px;
+    }
+
+    /* BLOG HERO */
+    .blog-hero {
+      padding: 160px 0 96px;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #2D1B69 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .blog-hero::before {
+      content: '';
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .blog-hero-content { position: relative; z-index: 1; max-width: 700px; }
+    .blog-hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(139,92,246,0.2);
+      border: 1px solid rgba(139,92,246,0.4);
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--purple-light);
+      margin-bottom: 28px;
+    }
+    .blog-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .blog-hero p {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+      max-width: 560px;
+      margin-bottom: 40px;
+    }
+    .blog-hero-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 48px;
+    }
+    .blog-hero-stat .number {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+    .blog-hero-stat .label { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    /* CATEGORY FILTER */
+    .category-filter {
+      background: var(--white);
+      padding: 32px 0;
+      border-bottom: 1px solid var(--gray-100);
+      position: sticky;
+      top: 72px;
+      z-index: 100;
+    }
+    .filter-pills {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      padding: 8px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 2px solid var(--gray-200);
+      color: var(--gray-600);
+      background: var(--white);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .pill:hover, .pill.active {
+      background: var(--purple);
+      border-color: var(--purple);
+      color: var(--white);
+    }
+
+    /* FEATURED POST */
+    .featured-section { padding: 64px 0 48px; }
+    .featured-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+    }
+    .featured-label::before,
+    .featured-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gray-200);
+    }
+    .featured-post {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid var(--gray-100);
+      box-shadow: var(--shadow-lg);
+      transition: all var(--transition);
+      text-decoration: none;
+      color: inherit;
+    }
+    .featured-post:hover {
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      transform: translateY(-4px);
+    }
+    .featured-post-image {
+      background: linear-gradient(135deg, #F3E8FF 0%, #DDD6FE 40%, #C4B5FD 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 96px;
+      min-height: 400px;
+      position: relative;
+    }
+    .featured-badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--purple);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+    }
+    .featured-post-body {
+      padding: 48px 44px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .featured-post-body .blog-category {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-xlight);
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+    .featured-post-body h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .featured-post-body .excerpt {
+      font-size: 1rem;
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .featured-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--gray-100);
+    }
+    .featured-meta .author-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--white);
+      background: var(--purple);
+      flex-shrink: 0;
+    }
+    .featured-meta .author-name { font-weight: 700; font-size: 0.9rem; color: var(--navy); }
+    .featured-meta .meta-details { font-size: 13px; color: var(--gray-400); margin-top: 2px; }
+    .featured-read-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      font-weight: 700;
+      color: var(--purple);
+      font-size: 15px;
+      transition: gap var(--transition);
+    }
+    .featured-post:hover .featured-read-btn { gap: 12px; }
+
+    /* ARTICLES GRID */
+    .articles-section { padding: 16px 0 80px; }
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 48px;
+    }
+    .article-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--gray-100);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .article-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-5px);
+      border-color: var(--purple-light);
+    }
+    .article-image {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .article-image .cat-pill {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.95);
+      color: var(--gray-700);
+    }
+    .article-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .article-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      line-height: 1.3;
+      flex: 1;
+    }
+    .article-body p {
+      font-size: 0.88rem;
+      color: var(--gray-600);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--gray-400);
+      padding-top: 16px;
+      border-top: 1px solid var(--gray-100);
+      margin-top: auto;
+    }
+    .article-meta .author-chip { display: flex; align-items: center; gap: 6px; }
+    .article-meta .author-av {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .article-read-time {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* LOAD MORE */
+    .load-more {
+      text-align: center;
+    }
+
+    /* TRENDING TOPICS */
+    .trending-section {
+      background: var(--gray-50);
+      padding: 56px 0;
+      border-top: 1px solid var(--gray-100);
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .trending-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .trending-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .topic-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .topic-tag {
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topic-tag:hover {
+      background: var(--purple-xlight);
+      border-color: var(--purple-light);
+      color: var(--purple);
+    }
+    .topic-tag .count { font-size: 12px; color: var(--gray-400); font-weight: 400; }
+
+    /* NEWSLETTER */
+    .newsletter-section { padding: 80px 0; }
+    .newsletter-box {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      border-radius: var(--radius-xl);
+      padding: 64px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .newsletter-box::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);
+    }
+    .newsletter-box h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .newsletter-box p {
+      color: rgba(255,255,255,0.65);
+      font-size: 1rem;
+      margin-bottom: 36px;
+      position: relative;
+      z-index: 1;
+    }
+    .newsletter-form {
+      display: flex;
+      gap: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .newsletter-form input {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+    }
+    .newsletter-form input::placeholder { color: rgba(255,255,255,0.4); }
+    .newsletter-form input:focus { border-color: var(--purple-light); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--gray-900);
+      color: rgba(255,255,255,0.75);
+      padding: 80px 0 0;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+    .footer-brand .logo {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--purple-light);
+      margin-bottom: 16px;
+    }
+    .footer-brand p { font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.55); max-width: 280px; }
+    .footer-social { display: flex; gap: 12px; margin-top: 24px; }
+    .social-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: background var(--transition);
+      cursor: pointer;
+    }
+    .social-btn:hover { background: var(--purple); }
+    .footer-col h4 { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); margin-bottom: 20px; }
+    .footer-links { display: flex; flex-direction: column; gap: 12px; }
+    .footer-links a { font-size: 14px; color: rgba(255,255,255,0.55); transition: color var(--transition); }
+    .footer-links a:hover { color: var(--purple-light); }
+    .footer-bar {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+    .footer-bar-gradient {
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple-dark), var(--purple), var(--purple-light));
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .articles-grid { grid-template-columns: repeat(2, 1fr); }
+      .featured-post { grid-template-columns: 1fr; }
+      .featured-post-image { min-height: 240px; font-size: 64px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      #nav { padding: 16px 20px; }
+      #nav.scrolled { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        padding: 20px;
+        border-bottom: 1px solid var(--gray-100);
+        box-shadow: var(--shadow-md);
+        gap: 16px;
+      }
+      .nav-actions .btn-ghost { display: none; }
+      .nav-toggle { display: flex; }
+      .blog-hero { padding: 130px 0 64px; }
+      .blog-hero-stats { flex-direction: column; gap: 20px; }
+      .articles-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bar { flex-direction: column; gap: 8px; text-align: center; }
+      .newsletter-box { padding: 40px 24px; }
+      .newsletter-form { flex-direction: column; }
+      .category-filter { top: 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">T2E</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="discover.html">Discover</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="for-businesses.html">For Businesses</a></li>
+      <li><a href="index.html#pricing">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="index.html#demo" class="btn btn-ghost btn-sm">Book a Demo</a>
+      <a href="index.html#demo" class="btn btn-primary btn-sm">Get Started Free</a>
+    </div>
+  </nav>
+
+  <!-- BLOG HERO -->
+  <section class="blog-hero">
+    <div class="container">
+      <div class="blog-hero-content">
+        <div class="blog-hero-eyebrow">📖 The T2E Journal</div>
+        <h1>Insights from the<br>Food Industry Floor</h1>
+        <p>Operator playbooks, finance guides, growth strategies, and community stories — written by people who actually run food businesses.</p>
+        <div class="blog-hero-stats">
+          <div class="blog-hero-stat">
+            <div class="number">120+</div>
+            <div class="label">Articles published</div>
+          </div>
+          <div class="blog-hero-stat">
+            <div class="number">18K</div>
+            <div class="label">Monthly readers</div>
+          </div>
+          <div class="blog-hero-stat">
+            <div class="number">40+</div>
+            <div class="label">Operator contributors</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY FILTER -->
+  <div class="category-filter">
+    <div class="container">
+      <div class="filter-pills">
+        <button class="pill active">All</button>
+        <button class="pill">⚙️ Operations</button>
+        <button class="pill">💰 Finance</button>
+        <button class="pill">📈 Growth</button>
+        <button class="pill">🏭 Industry</button>
+        <button class="pill">🤝 Community</button>
+        <button class="pill">🌙 Late Night</button>
+        <button class="pill">🚚 Food Trucks</button>
+        <button class="pill">🎪 Catering</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED POST -->
+  <section class="featured-section">
+    <div class="container">
+      <div class="featured-label">Editor's Pick</div>
+      <a href="#" class="featured-post reveal">
+        <div class="featured-post-image">
+          <div class="featured-badge">⭐ Featured</div>
+          ♻️
+        </div>
+        <div class="featured-post-body">
+          <span class="blog-category">Operations</span>
+          <h2>How to Stop Losing Money to Food Waste — The Operator's Playbook</h2>
+          <p class="excerpt">The average food service business throws away 4–10% of its food before it ever reaches a guest. That's not just a sustainability problem — it's a silent profit killer that most operators don't even track. This is the step-by-step system we've seen eliminate waste by up to 40% without changing your menu or your team.</p>
+          <div class="featured-meta">
+            <div class="author-avatar">MK</div>
+            <div>
+              <div class="author-name">Marcus Kim</div>
+              <div class="meta-details">May 14, 2025 · 6 min read · Chef-Owner, Banchan & Co.</div>
+            </div>
+          </div>
+          <div class="featured-read-btn">Read the Full Playbook →</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ARTICLES GRID -->
+  <section class="articles-section">
+    <div class="container">
+      <div class="articles-grid">
+
+        <!-- Article 1 -->
+        <a href="#" class="article-card reveal">
+          <div class="article-image" style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0);">
+            📋
+            <span class="cat-pill">Finance</span>
+          </div>
+          <div class="article-body">
+            <h3>The Invoice Checklist Every Caterer Needs Before Hitting Send</h3>
+            <p>Missing one of these 8 line items is costing you money and damaging client relationships. Here's exactly what to fix — and an invoice template to steal.</p>
+            <div class="article-meta">
+              <div class="author-chip">
+                <div class="author-av" style="background:#10B981;">JR</div>
+                Jasmine Rivera
+              </div>
+              <div class="article-read-time">⏱ 4 min</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Article 2 -->
+        <a href="#" class="article-card reveal">
+          <div class="article-image" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">
+            🚚
+            <span class="cat-pill">Growth</span>
+          </div>
+          <div class="article-body">
+            <h3>From 3 Events a Month to 3 a Week: One Food Truck's Growth Story</h3>
+            <p>Andre scaled Bayou Rollers from a weekend side hustle to a full-time operation in 8 months. Here's the exact playbook — including what didn't work.</p>
+            <div class="article-meta">
+              <div class="author-chip">
+                <div class="author-av" style="background:#F59E0B;">AL</div>
+                Andre Laurent
+              </div>
+              <div class="article-read-time">⏱ 7 min</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Article 3 -->
+        <a href="#" class="article-card reveal">
+          <div class="article-image" style="background:linear-gradient(135deg,#FEE2E2,#FECACA);">
+            📉
+            <span class="cat-pill">Finance</span>
+          </div>
+          <div class="article-body">
+            <h3>Why Your COGS Is Lying to You — and How to Actually Calculate Food Cost</h3>
+            <p>Most operators are running on guesswork. A real food cost percentage means tracking waste, portioning, and supplier changes weekly — here's the system.</p>
+            <div class="article-meta">
+              <div class="author-chip">
+                <div class="author-av" style="background:#EF4444;">TC</div>
+                Tanya Chen
+              </div>
+              <div class="article-read-time">⏱ 8 min</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Article 4 -->
+        <a href="#" class="article-card reveal">
+          <div class="article-image" style="background:linear-gradient(135deg,#E0F2FE,#BAE6FD);">
+            🤝
+            <span class="cat-pill">Community</span>
+          </div>
+          <div class="article-body">
+            <h3>How the T2E Community Helped Me Land My First $10K Corporate Contract</h3>
+            <p>A conversation in the T2E operator forum turned into a referral that turned into a recurring client. Here's how community-driven growth actually works.</p>
+            <div class="article-meta">
+              <div class="author-chip">
+                <div class="author-av" style="background:#0EA5E9;">DW</div>
+                Diana Williams
+              </div>
+              <div class="article-read-time">⏱ 5 min</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Article 5 -->
+        <a href="#" class="article-card reveal">
+          <div class="article-image" style="background:linear-gradient(135deg,#F0FDF4,#DCFCE7);">
+            🌙
+            <span class="cat-pill">Late Night</span>
+          </div>
+          <div class="article-body">
+            <h3>The Untapped Market: Why Late Night Food is the Most Profitable Segment Nobody's Targeting</h3>
+            <p>Between 10pm and 2am, most food businesses are dark. The operators who figured out how to serve that window are printing money — here's how they do it.</p>
+            <div class="article-meta">
+              <div class="author-chip">
+                <div class="author-av" style="background:#22C55E;">KP</div>
+                Kevin Park
+              </div>
+              <div class="article-read-time">⏱ 6 min</div>
+            </div>
+          </div>
+        </a>
+
+        <!-- Article 6 -->
+        <a href="#" class="article-card reveal">
+          <div class="article-image" style="background:linear-gradient(135deg,#EDE9FE,#DDD6FE);">
+            📊
+            <span class="cat-pill">Industry</span>
+          </div>
+          <div class="article-body">
+            <h3>The State of Food Tech in 2025: What Operators Need to Know Right Now</h3>
+            <p>AI menu pricing, direct-to-consumer delivery margins, and the death of ghost kitchens — a data-backed look at where the industry is heading and how to position yourself.</p>
+            <div class="article-meta">
+              <div class="author-chip">
+                <div class="author-av" style="background:#8B5CF6;">T2E</div>
+                T2E Research
+              </div>
+              <div class="article-read-time">⏱ 10 min</div>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+      <div class="load-more reveal">
+        <button class="btn btn-ghost" style="min-width:200px;">Load More Articles</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRENDING TOPICS -->
+  <div class="trending-section">
+    <div class="container">
+      <div class="trending-header">
+        <h3>🔥 Trending Topics</h3>
+        <a href="#" style="font-size:14px;font-weight:600;color:var(--purple);">View all topics →</a>
+      </div>
+      <div class="topic-tags">
+        <div class="topic-tag">#FoodWaste <span class="count">48 articles</span></div>
+        <div class="topic-tag">#CateringTips <span class="count">34 articles</span></div>
+        <div class="topic-tag">#InvoiceHelp <span class="count">27 articles</span></div>
+        <div class="topic-tag">#FoodTruckLife <span class="count">41 articles</span></div>
+        <div class="topic-tag">#InventoryControl <span class="count">22 articles</span></div>
+        <div class="topic-tag">#LateNightEats <span class="count">19 articles</span></div>
+        <div class="topic-tag">#CorporateCatering <span class="count">16 articles</span></div>
+        <div class="topic-tag">#ProfitMargins <span class="count">38 articles</span></div>
+        <div class="topic-tag">#StaffManagement <span class="count">25 articles</span></div>
+        <div class="topic-tag">#FoodPhotography <span class="count">14 articles</span></div>
+        <div class="topic-tag">#MenuEngineering <span class="count">20 articles</span></div>
+        <div class="topic-tag">#OperatorStories <span class="count">55 articles</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-box reveal">
+        <h2>The Weekly Plate 🍽️</h2>
+        <p>One operator insight, one finance tip, and one growth hack — every Tuesday morning. Join 18,000+ food professionals.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="your@email.com" />
+          <button class="btn btn-primary">Subscribe</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-bar-gradient"></div>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">T2E</div>
+          <p>The operating platform for the food industry. Built by operators, for operators.</p>
+          <div class="footer-social">
+            <div class="social-btn">𝕏</div>
+            <div class="social-btn">in</div>
+            <div class="social-btn">📷</div>
+            <div class="social-btn">▶</div>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <div class="footer-links">
+            <a href="discover.html">Discover</a>
+            <a href="index.html#dashboard">Dashboard</a>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="for-businesses.html">For Businesses</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <div class="footer-links">
+            <a href="blog.html">The T2E Journal</a>
+            <a href="#">Help Center</a>
+            <a href="#">API Docs</a>
+            <a href="#">Community</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <div class="footer-links">
+            <a href="#">About T2E</a>
+            <a href="#">Careers</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <span>© 2025 T2E — Time 2 Eat. All rights reserved.</span>
+        <span>Made for the people who feed us 🍽️</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll effect
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Mobile nav toggle
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Category filter
+    const pills = document.querySelectorAll('.pill');
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        pills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+      });
+    });
+
+    // Scroll reveal
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, (i % 4) * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
