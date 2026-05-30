@@ -1203,6 +1203,14 @@
           <a href="#demo" class="btn btn-primary btn-lg">Get Started Free →</a>
           <a href="#dashboard" class="btn btn-ghost btn-lg">See How It Works</a>
         </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;">
+          <span style="display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--gray-200);border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--gray-700);box-shadow:var(--shadow-sm);">🔥 Trending</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--gray-200);border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--gray-700);box-shadow:var(--shadow-sm);">🍽️ Catering</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--gray-200);border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--gray-700);box-shadow:var(--shadow-sm);">🚚 Food Trucks</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--gray-200);border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--gray-700);box-shadow:var(--shadow-sm);">🍖 Soul Food</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--gray-200);border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--gray-700);box-shadow:var(--shadow-sm);">🥦 Plant-Based</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--gray-200);border-radius:100px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--gray-700);box-shadow:var(--shadow-sm);">🌙 Late Night</span>
+        </div>
         <div class="hero-social-proof">
           <div class="hero-avatars">
             <span style="background:#8B5CF6;">MK</span>
@@ -1508,7 +1516,7 @@
       <div class="text-center reveal">
         <span class="section-label">Pricing</span>
         <h2 class="section-title">Transparent pricing.<br>No surprises.</h2>
-        <p class="section-subtitle">Start free, upgrade as you grow. Cancel any time. Every plan includes onboarding support and access to the T2E community.</p>
+        <p class="section-subtitle">Early users lock in <span style="color:var(--purple);font-weight:700;">founder pricing — apply now before launch.</span></p>
       </div>
       <div class="pricing-grid">
         <div class="pricing-card reveal">
@@ -1516,9 +1524,7 @@
           <div class="pricing-name">Launch</div>
           <div class="pricing-desc">For solo operators just getting started on the platform.</div>
           <div class="pricing-price">
-            <span class="currency">$</span>
-            <span class="amount">0</span>
-            <span class="period">/month</span>
+            <span class="amount" style="font-size:1.75rem;">Free to start</span>
           </div>
           <hr class="pricing-divider" />
           <ul class="pricing-features">
@@ -1538,9 +1544,7 @@
           <div class="pricing-name">Operator</div>
           <div class="pricing-desc">For growing food businesses ready to scale operations.</div>
           <div class="pricing-price">
-            <span class="currency">$</span>
-            <span class="amount">79</span>
-            <span class="period">/month</span>
+            <span class="amount" style="font-size:1.75rem;">Early Access</span>
           </div>
           <hr class="pricing-divider" />
           <ul class="pricing-features">
@@ -1559,9 +1563,7 @@
           <div class="pricing-name">Scale</div>
           <div class="pricing-desc">For multi-location operations and white-label partners.</div>
           <div class="pricing-price">
-            <span class="currency">$</span>
-            <span class="amount">249</span>
-            <span class="period">/month</span>
+            <span class="amount" style="font-size:1.75rem;">Custom</span>
           </div>
           <hr class="pricing-divider" />
           <ul class="pricing-features">
@@ -1580,7 +1582,7 @@
   </section>
 
   <!-- IMPACT SECTION -->
-  <section class="impact-section">
+  <section class="impact-section" id="impact">
     <div class="container" style="position:relative;z-index:1;">
       <div class="reveal">
         <span class="section-label" style="background:rgba(255,255,255,0.15);color:var(--white);">Our Mission</span>
@@ -1698,7 +1700,7 @@
         </div>
         <div class="demo-form reveal">
           <h3 style="font-family:var(--font-display);font-size:1.4rem;color:var(--navy);margin-bottom:24px;">Get started today</h3>
-          <form onsubmit="return false;">
+          <form id="demoForm" onsubmit="handleDemoSubmit(event);">
             <div class="form-row">
               <div class="form-group">
                 <label>First Name</label>
@@ -1732,6 +1734,11 @@
             <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;font-size:16px;padding:16px;">Book My Demo →</button>
             <p style="font-size:12px;color:var(--gray-400);text-align:center;margin-top:12px;">No spam. No commitment. Just a real conversation.</p>
           </form>
+          <div id="form-confirm" style="display:none;text-align:center;padding:32px 16px;">
+            <div style="font-size:48px;margin-bottom:16px;">🎉</div>
+            <h3 style="font-family:var(--font-display);font-size:1.4rem;color:var(--navy);margin-bottom:12px;">You're on the list!</h3>
+            <p style="color:var(--gray-600);line-height:1.7;">We'll reach out to you at the email you provided within 24 hours. In the meantime, follow us on <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" style="color:var(--purple);font-weight:600;">Instagram</a> for updates.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -1746,10 +1753,10 @@
           <div class="logo">T2E</div>
           <p>The operating platform for the food industry. Built by operators, for operators. Helping food businesses run smarter and grow faster.</p>
           <div class="footer-social">
-            <div class="social-btn">𝕏</div>
-            <div class="social-btn">in</div>
-            <div class="social-btn">📷</div>
-            <div class="social-btn">▶</div>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-btn">𝕏</a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-btn">in</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-btn">📷</a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" class="social-btn">▶</a>
           </div>
         </div>
         <div class="footer-col">
@@ -1765,18 +1772,18 @@
           <h4>Resources</h4>
           <div class="footer-links">
             <a href="blog.html">The T2E Journal</a>
-            <a href="#">Help Center</a>
-            <a href="#">API Docs</a>
-            <a href="#">Community</a>
+            <a href="index.html#demo">Help Center</a>
+            <a href="for-businesses.html">API Docs</a>
+            <a href="discover.html">Community</a>
           </div>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
           <div class="footer-links">
-            <a href="#">About T2E</a>
-            <a href="#">Careers</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <a href="index.html#impact">About T2E</a>
+            <a href="index.html#demo">Careers</a>
+            <a href="index.html#demo">Privacy Policy</a>
+            <a href="index.html#demo">Terms of Service</a>
           </div>
         </div>
       </div>
@@ -1790,6 +1797,13 @@
   </footer>
 
   <script>
+    // Demo form confirmation
+    function handleDemoSubmit(e) {
+      e.preventDefault();
+      document.getElementById('demoForm').style.display = 'none';
+      document.getElementById('form-confirm').style.display = 'block';
+    }
+
     // Nav scroll effect
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
@@ -1799,9 +1813,9 @@
     // Mobile nav toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
-    navToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('open');
-    });
+    if (navToggle) { navToggle.addEventListener('click', () => {
+      if (navLinks) navLinks.classList.toggle('open');
+    }); }
 
     // Scroll reveal
     const revealEls = document.querySelectorAll('.reveal');
