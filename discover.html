@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script defer src="/_vercel/insights/script.js"></script>
-  <title>T2E Discover — Find the Best Food Businesses in Your City</title>
+  <title>T2E Discover — Find the Best Food Businesses Near You</title>
   <meta name="description" content="Discover local caterers, food trucks, restaurants, and private chefs. Book directly, read real reviews, and find what's trending near you." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -127,6 +127,25 @@
       color: var(--purple);
       transform: translateY(-2px);
     }
+    .btn-white {
+      background: var(--white);
+      color: var(--navy);
+      border-color: var(--white);
+    }
+    .btn-white:hover {
+      background: var(--gray-100);
+      transform: translateY(-2px);
+    }
+    .btn-outline-white {
+      background: transparent;
+      color: var(--white);
+      border-color: rgba(255,255,255,0.6);
+    }
+    .btn-outline-white:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--white);
+      transform: translateY(-2px);
+    }
     .btn-sm { padding: 10px 20px; font-size: 14px; }
     .btn-lg { padding: 18px 36px; font-size: 16px; border-radius: var(--radius-lg); }
 
@@ -169,7 +188,7 @@
     .nav-toggle { display: none; flex-direction: column; gap: 5px; padding: 4px; }
     .nav-toggle span { width: 24px; height: 2px; background: var(--gray-700); border-radius: 2px; }
 
-    /* DISCOVER HERO */
+    /* HERO */
     .discover-hero {
       padding: 160px 0 100px;
       background: linear-gradient(135deg, #FAFAFA 0%, var(--purple-xlight) 50%, #F0F4FF 100%);
@@ -190,23 +209,9 @@
       pointer-events: none;
     }
     .discover-hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
-    .discover-hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--white);
-      border: 1px solid var(--purple-light);
-      border-radius: 100px;
-      padding: 8px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--purple);
-      margin-bottom: 28px;
-      box-shadow: var(--shadow-sm);
-    }
     .discover-hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+      font-size: clamp(2.5rem, 5.5vw, 4rem);
       font-weight: 800;
       color: var(--navy);
       line-height: 1.1;
@@ -219,93 +224,94 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .discover-hero p {
+    .discover-hero p.hero-sub {
       font-size: 1.15rem;
       color: var(--gray-600);
       line-height: 1.7;
-      max-width: 560px;
+      max-width: 600px;
       margin: 0 auto 40px;
     }
 
     /* SEARCH BAR */
     .search-bar-wrap {
       background: var(--white);
-      border-radius: var(--radius-xl);
+      border-radius: 100px;
       box-shadow: var(--shadow-lg);
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      max-width: 700px;
-      margin: 0 auto 48px;
-      border: 1px solid var(--gray-100);
-    }
-    .search-input-group {
-      flex: 1;
+      padding: 8px 8px 8px 20px;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 16px;
-      border-right: 1px solid var(--gray-200);
+      max-width: 680px;
+      margin: 0 auto 20px;
+      border: 1px solid var(--gray-100);
     }
-    .search-input-group:last-of-type { border-right: none; }
-    .search-icon { font-size: 18px; flex-shrink: 0; }
+    .search-pin-icon {
+      flex-shrink: 0;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+    }
     .search-input {
+      flex: 1;
       border: none;
       outline: none;
       font-family: var(--font-body);
       font-size: 15px;
       color: var(--gray-800);
       background: transparent;
-      width: 100%;
+      min-width: 0;
     }
     .search-input::placeholder { color: var(--gray-400); }
-    .search-bar-wrap .search-btn {
+    .search-btn {
       background: var(--purple);
       color: var(--white);
       border: none;
-      border-radius: var(--radius-lg);
-      padding: 14px 28px;
+      border-radius: 100px;
+      padding: 14px 32px;
       font-family: var(--font-body);
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       transition: all var(--transition);
       white-space: nowrap;
+      flex-shrink: 0;
     }
-    .search-bar-wrap .search-btn:hover {
+    .search-btn:hover {
       background: var(--purple-dark);
       transform: scale(1.02);
     }
-    .hero-quick-links {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
+    .hero-popular {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-bottom: 32px;
     }
-    .quick-link {
+    .hero-popular span { font-weight: 600; color: var(--gray-700); }
+    .hero-popular a {
+      color: var(--purple);
+      font-weight: 600;
+      transition: color var(--transition);
+    }
+    .hero-popular a:hover { color: var(--purple-dark); }
+
+    /* STAT STRIP */
+    .hero-stat-strip {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 8px 16px;
+      gap: 24px;
       background: var(--white);
       border: 1px solid var(--gray-200);
       border-radius: 100px;
+      padding: 12px 28px;
+      box-shadow: var(--shadow-sm);
       font-size: 13px;
-      font-weight: 500;
-      color: var(--gray-700);
-      cursor: pointer;
-      transition: all var(--transition);
+      color: var(--gray-600);
     }
-    .quick-link:hover {
-      background: var(--purple-xlight);
-      border-color: var(--purple-light);
-      color: var(--purple);
-    }
+    .hero-stat-strip strong { color: var(--navy); font-weight: 700; }
+    .hero-stat-divider { width: 1px; height: 16px; background: var(--gray-200); }
 
-    /* CATEGORY CHIPS */
+    /* CATEGORY STRIP */
     .category-strip {
-      padding: 32px 0;
+      padding: 24px 0;
       background: var(--white);
       border-bottom: 1px solid var(--gray-100);
       position: sticky;
@@ -323,7 +329,7 @@
     .cat-chip {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       padding: 10px 20px;
       background: var(--gray-50);
       border: 2px solid var(--gray-200);
@@ -336,13 +342,16 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
+    .cat-chip svg { flex-shrink: 0; }
     .cat-chip:hover, .cat-chip.active {
       background: var(--purple);
       border-color: var(--purple);
       color: var(--white);
     }
+    .cat-chip:hover svg, .cat-chip.active svg { stroke: white; fill: none; }
+    .cat-chip.active svg.fill-icon { fill: white; }
 
-    /* BUSINESS CARDS GRID */
+    /* FEATURED BUSINESSES */
     .businesses-section { padding: 64px 0 96px; }
     .businesses-header {
       display: flex;
@@ -352,24 +361,11 @@
     }
     .businesses-header h2 {
       font-family: var(--font-display);
-      font-size: 1.5rem;
+      font-size: 1.75rem;
       font-weight: 700;
       color: var(--navy);
     }
-    .businesses-header .results-count { font-size: 14px; color: var(--gray-500); }
-    .sort-select {
-      padding: 8px 16px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--radius-md);
-      font-family: var(--font-body);
-      font-size: 14px;
-      color: var(--gray-700);
-      outline: none;
-      cursor: pointer;
-      background: var(--white);
-      transition: border-color var(--transition);
-    }
-    .sort-select:focus { border-color: var(--purple); }
+    .businesses-header .results-count { font-size: 14px; color: var(--gray-500); margin-top: 4px; }
 
     .businesses-grid {
       display: grid;
@@ -378,44 +374,43 @@
     }
     .biz-card {
       background: var(--white);
-      border-radius: var(--radius-xl);
+      border-radius: 20px;
       overflow: hidden;
       border: 1px solid var(--gray-100);
-      box-shadow: var(--shadow-sm);
+      box-shadow: var(--shadow-md);
       transition: all var(--transition);
+      position: relative;
     }
     .biz-card:hover {
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 8px 24px rgba(0,0,0,0.08);
       transform: translateY(-6px);
       border-color: var(--purple-light);
     }
     .biz-banner {
-      height: 140px;
+      height: 120px;
       position: relative;
-      display: flex;
-      align-items: flex-end;
-      padding: 16px;
     }
     .biz-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: var(--radius-md);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
       border: 3px solid var(--white);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 800;
       color: var(--white);
       box-shadow: var(--shadow-sm);
       position: absolute;
-      bottom: -28px;
+      bottom: -30px;
       left: 20px;
+      z-index: 2;
     }
     .biz-verified {
       position: absolute;
-      top: 14px;
-      right: 14px;
+      top: 12px;
+      right: 12px;
       background: rgba(255,255,255,0.95);
       border-radius: 100px;
       padding: 4px 10px;
@@ -425,11 +420,12 @@
       display: flex;
       align-items: center;
       gap: 4px;
+      backdrop-filter: blur(4px);
     }
-    .biz-body { padding: 40px 20px 24px; }
+    .biz-body { padding: 44px 20px 24px; }
     .biz-name {
       font-family: var(--font-display);
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--navy);
       margin-bottom: 8px;
@@ -449,20 +445,26 @@
       gap: 6px;
       margin-bottom: 14px;
     }
-    .stars { color: #FBBF24; font-size: 13px; }
+    .stars { color: #FBBF24; font-size: 13px; letter-spacing: 1px; }
     .rating-num { font-size: 13px; font-weight: 700; color: var(--gray-800); }
     .review-count { font-size: 12px; color: var(--gray-400); }
     .biz-stats {
       display: flex;
-      gap: 16px;
+      gap: 0;
       padding: 12px 0;
       border-top: 1px solid var(--gray-100);
       border-bottom: 1px solid var(--gray-100);
       margin-bottom: 16px;
     }
-    .biz-stat { text-align: center; }
-    .biz-stat .val { font-size: 14px; font-weight: 700; color: var(--navy); }
-    .biz-stat .lbl { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+    .biz-stat {
+      flex: 1;
+      text-align: center;
+      padding: 0 8px;
+      border-right: 1px solid var(--gray-100);
+    }
+    .biz-stat:last-child { border-right: none; }
+    .biz-stat .val { font-size: 13px; font-weight: 700; color: var(--navy); }
+    .biz-stat .lbl { font-size: 10px; color: var(--gray-400); margin-top: 2px; }
     .book-btn {
       width: 100%;
       justify-content: center;
@@ -479,80 +481,162 @@
       gap: 6px;
       border: none;
       cursor: pointer;
+      font-family: var(--font-body);
     }
     .book-btn:hover {
       background: var(--purple-dark);
       transform: translateY(-1px);
     }
 
-    /* WHY T2E VS YELP */
-    .vs-section { background: var(--gray-50); }
-    .vs-grid {
+    /* TOAST */
+    #toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      z-index: 9999;
+      background: var(--navy);
+      color: var(--white);
+      padding: 14px 22px;
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      max-width: 320px;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* WHY T2E BEATS YELP */
+    .comparison-section {
+      background: var(--gray-50);
+      padding: 96px 0;
+    }
+    .comparison-wrap {
+      position: relative;
+    }
+    .comparison-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 28px;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      position: relative;
     }
-    .vs-card {
-      padding: 36px;
-      background: var(--white);
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--gray-100);
-      box-shadow: var(--shadow-sm);
-      transition: all var(--transition);
-    }
-    .vs-card:hover {
-      border-color: var(--purple-light);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-4px);
-    }
-    .vs-icon {
+    .vs-badge {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       width: 56px;
       height: 56px;
-      border-radius: var(--radius-md);
-      background: var(--purple-xlight);
+      border-radius: 50%;
+      background: var(--navy);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
-      margin-bottom: 20px;
+      z-index: 2;
+      box-shadow: var(--shadow-md);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
     }
-    .vs-card h3 {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
+    .comp-col-header {
+      font-size: 14px;
       font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
     }
-    .vs-card p { font-size: 0.95rem; color: var(--gray-600); line-height: 1.7; }
-    .vs-comparison {
-      display: flex;
-      gap: 16px;
-      margin-top: 16px;
-    }
-    .vs-col { flex: 1; }
-    .vs-col h5 { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
-    .vs-col.t2e h5 { color: var(--purple); }
-    .vs-col.yelp h5 { color: var(--gray-400); }
-    .vs-item {
+    .comp-col-header.old-way { color: #EF4444; }
+    .comp-col-header.t2e-way { color: var(--success); }
+    .comp-item {
       display: flex;
       align-items: flex-start;
-      gap: 6px;
-      font-size: 13px;
-      margin-bottom: 8px;
+      gap: 12px;
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.5;
     }
-    .vs-col.t2e .vs-item { color: var(--gray-700); }
-    .vs-col.t2e .vs-item::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; }
-    .vs-col.yelp .vs-item { color: var(--gray-400); }
-    .vs-col.yelp .vs-item::before { content: '✗'; color: var(--gray-300); font-weight: 700; flex-shrink: 0; }
+    .comp-item.bad {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: #991B1B;
+    }
+    .comp-item.bad .comp-icon { color: #EF4444; font-weight: 700; font-size: 15px; flex-shrink: 0; }
+    .comp-item.good {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      color: #14532D;
+    }
+    .comp-item.good .comp-icon { color: var(--success); font-weight: 700; font-size: 15px; flex-shrink: 0; }
 
-    /* LIST YOUR BUSINESS */
-    .list-section {
+    /* CITY GRID */
+    .cities-section { padding: 96px 0; }
+    .city-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .city-card {
+      border-radius: var(--radius-xl);
+      min-height: 140px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .city-card:hover {
+      filter: brightness(1.15);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    .city-name {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .city-state {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 10px;
+    }
+    .city-count {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 100px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--white);
+      backdrop-filter: blur(4px);
+      align-self: flex-start;
+    }
+
+    /* OPERATORS CTA */
+    .operators-cta {
       background: linear-gradient(135deg, var(--navy) 0%, #1a0a3e 60%, var(--navy-mid) 100%);
-      padding: 96px 0;
+      padding: 80px 0;
+      text-align: center;
       position: relative;
       overflow: hidden;
     }
-    .list-section::before {
+    .operators-cta::before {
       content: '';
       position: absolute;
       top: -100px;
@@ -561,73 +645,154 @@
       height: 600px;
       border-radius: 50%;
       background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 65%);
+      pointer-events: none;
     }
-    .list-inner {
+    .operators-cta-inner {
       position: relative;
       z-index: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
+      max-width: 700px;
+      margin: 0 auto;
     }
-    .list-content h2 {
+    .operators-cta h2 {
       font-family: var(--font-display);
       font-size: clamp(1.75rem, 3.5vw, 2.75rem);
       font-weight: 800;
       color: var(--white);
       line-height: 1.15;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
-    .list-content p { color: rgba(255,255,255,0.7); font-size: 1.1rem; line-height: 1.7; margin-bottom: 32px; }
-    .list-benefits { display: flex; flex-direction: column; gap: 14px; }
-    .list-benefit {
+    .operators-cta p {
+      color: rgba(255,255,255,0.7);
+      font-size: 1.1rem;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .operators-cta-btns {
       display: flex;
-      align-items: flex-start;
-      gap: 12px;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
     }
-    .list-benefit .check {
-      width: 24px;
-      height: 24px;
+
+    /* PROFILE TEASER */
+    .profile-teaser-section { padding: 96px 0; background: var(--gray-50); }
+    .profile-card-full {
+      max-width: 860px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-100);
+    }
+    .profile-banner {
+      height: 200px;
+      background: linear-gradient(135deg, #4C1D95 0%, #7C3AED 50%, #A78BFA 100%);
+      position: relative;
+    }
+    .profile-avatar-wrap {
+      position: absolute;
+      bottom: -40px;
+      left: 40px;
+    }
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      background: rgba(139,92,246,0.3);
+      border: 4px solid var(--white);
+      background: linear-gradient(135deg, #5B21B6, #7C3AED);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
-      color: var(--purple-light);
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-    .list-benefit p { font-size: 0.95rem; color: rgba(255,255,255,0.7); margin: 0; }
-    .list-cta-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: var(--radius-xl);
-      padding: 40px;
-      backdrop-filter: blur(8px);
-      text-align: center;
-    }
-    .list-cta-card .cta-icon { font-size: 56px; margin-bottom: 20px; }
-    .list-cta-card h3 {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      font-weight: 700;
+      font-size: 28px;
+      font-weight: 800;
       color: var(--white);
-      margin-bottom: 12px;
+      box-shadow: var(--shadow-md);
     }
-    .list-cta-card p { color: rgba(255,255,255,0.6); font-size: 0.95rem; margin-bottom: 28px; line-height: 1.6; }
-    .list-free-badge {
-      display: inline-block;
-      background: rgba(16,185,129,0.2);
-      border: 1px solid rgba(16,185,129,0.4);
+    .profile-verified-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(255,255,255,0.95);
       border-radius: 100px;
-      padding: 6px 16px;
+      padding: 6px 14px;
       font-size: 12px;
       font-weight: 700;
-      color: #6EE7B7;
+      color: var(--success);
+    }
+    .profile-body { padding: 56px 40px 40px; }
+    .profile-name {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .profile-handle { font-size: 14px; color: var(--gray-500); margin-bottom: 4px; }
+    .profile-location { font-size: 13px; color: var(--gray-500); margin-bottom: 16px; display: flex; align-items: center; gap: 4px; }
+    .profile-stars-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       margin-bottom: 20px;
     }
+    .profile-stars { color: #FBBF24; font-size: 16px; }
+    .profile-rating-num { font-size: 16px; font-weight: 700; color: var(--gray-800); }
+    .profile-rating-count { font-size: 13px; color: var(--gray-400); }
+    .profile-stats-row {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--gray-100);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .profile-stat {
+      flex: 1;
+      padding: 14px 10px;
+      text-align: center;
+      border-right: 1px solid var(--gray-100);
+    }
+    .profile-stat:last-child { border-right: none; }
+    .profile-stat .val { font-size: 18px; font-weight: 800; color: var(--navy); }
+    .profile-stat .lbl { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+    .profile-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .profile-tag {
+      padding: 6px 14px;
+      background: var(--purple-xlight);
+      color: var(--purple-dark);
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .profile-activity { margin-bottom: 28px; }
+    .profile-activity h4 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-500); margin-bottom: 12px; }
+    .activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: 14px;
+      color: var(--gray-700);
+    }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--purple);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* FOOTER */
     .footer {
@@ -675,19 +840,10 @@
       background: linear-gradient(90deg, var(--purple-dark), var(--purple), var(--purple-light));
     }
 
-    /* SCROLL REVEAL */
-    .reveal {
-      opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
     /* RESPONSIVE */
     @media (max-width: 1024px) {
       .businesses-grid { grid-template-columns: repeat(2, 1fr); }
-      .vs-grid { grid-template-columns: 1fr; }
-      .list-inner { grid-template-columns: 1fr; gap: 48px; }
+      .city-grid { grid-template-columns: repeat(2, 1fr); }
       .footer-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 768px) {
@@ -709,14 +865,24 @@
       .nav-actions .btn-ghost { display: none; }
       .nav-toggle { display: flex; }
       .discover-hero { padding: 130px 0 64px; }
-      .search-bar-wrap { flex-direction: column; border-radius: var(--radius-lg); }
-      .search-input-group { border-right: none; border-bottom: 1px solid var(--gray-200); width: 100%; }
-      .search-input-group:last-of-type { border-bottom: none; }
+      .search-bar-wrap { border-radius: var(--radius-lg); }
       .businesses-grid { grid-template-columns: 1fr; }
-      .businesses-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+      .businesses-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .comparison-grid { grid-template-columns: 1fr; gap: 32px; }
+      .vs-badge { display: none; }
+      .city-grid { grid-template-columns: repeat(2, 1fr); }
       .footer-grid { grid-template-columns: 1fr; }
       .footer-bar { text-align: center; }
       .category-strip { top: 60px; }
+      .profile-body { padding: 56px 24px 24px; }
+      .profile-stats-row { flex-wrap: wrap; }
+      .profile-stat { min-width: 50%; }
+      .hero-stat-strip { flex-direction: column; gap: 8px; border-radius: var(--radius-lg); }
+      .hero-stat-divider { display: none; }
+      #toast { right: 16px; left: 16px; bottom: 20px; max-width: none; }
+    }
+    @media (max-width: 480px) {
+      .city-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -744,29 +910,36 @@
   <section class="discover-hero">
     <div class="container">
       <div class="discover-hero-content">
-        <div class="discover-hero-eyebrow">🗺️ T2E Discover — Now in 12 Cities</div>
-        <h1>Discover the Best Food<br>Businesses <span class="highlight">in Your City</span></h1>
-        <p>Find local caterers, food trucks, restaurants, and private chefs. Book directly, read operator-verified reviews, and experience food the way it was meant to be.</p>
+        <h1>Find the Best Food<br>Businesses <span class="highlight">Near You</span></h1>
+        <p class="hero-sub">From wedding caterers to late-night food trucks — discover, book, and support local operators on T2E.</p>
 
         <!-- SEARCH BAR -->
         <div class="search-bar-wrap">
-          <div class="search-input-group">
-            <span class="search-icon">📍</span>
-            <input class="search-input" type="text" placeholder="City or neighborhood" />
-          </div>
-          <div class="search-input-group">
-            <span class="search-icon">🍽️</span>
-            <input class="search-input" type="text" placeholder="Cuisine, occasion, or business type" />
-          </div>
+          <span class="search-pin-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+          </span>
+          <input class="search-input" type="text" placeholder="City, cuisine, or business name…" />
           <button class="search-btn">Search</button>
         </div>
 
-        <div class="hero-quick-links">
-          <div class="quick-link">🔥 Trending today</div>
-          <div class="quick-link">🎪 Caterers near me</div>
-          <div class="quick-link">🚚 Food trucks</div>
-          <div class="quick-link">🌙 Late night</div>
-          <div class="quick-link">👨‍🍳 Private chefs</div>
+        <p class="hero-popular">
+          <span>Popular:</span>
+          <a href="#">Soul Food</a> ·
+          <a href="#">Catering</a> ·
+          <a href="#">Food Trucks</a> ·
+          <a href="#">Late Night</a> ·
+          <a href="#">Private Chef</a>
+        </p>
+
+        <div class="hero-stat-strip">
+          <span><strong>2,400+</strong> businesses</span>
+          <div class="hero-stat-divider"></div>
+          <span><strong>47</strong> cities</span>
+          <div class="hero-stat-divider"></div>
+          <span><strong>18K+</strong> bookings</span>
         </div>
       </div>
     </div>
@@ -776,250 +949,302 @@
   <div class="category-strip">
     <div class="container">
       <div class="category-chips">
-        <div class="cat-chip active">🔥 Trending</div>
-        <div class="cat-chip">🍕 Restaurants</div>
-        <div class="cat-chip">🎪 Caterers</div>
-        <div class="cat-chip">🚚 Food Trucks</div>
-        <div class="cat-chip">👨‍🍳 Private Chefs</div>
-        <div class="cat-chip">🌙 Late Night</div>
-        <div class="cat-chip">🎂 Desserts</div>
-        <div class="cat-chip">🍱 Meal Prep</div>
-        <div class="cat-chip">🥘 International</div>
+
+        <!-- All -->
+        <div class="cat-chip active">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          All
+        </div>
+
+        <!-- Trending -->
+        <div class="cat-chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2c0 6-6 8-6 14a6 6 0 0 0 12 0c0-6-6-8-6-14z"/>
+            <path d="M12 12c0 3-2 4-2 6a2 2 0 0 0 4 0c0-2-2-3-2-6z" fill="currentColor" stroke="none" opacity="0.4"/>
+          </svg>
+          Trending
+        </div>
+
+        <!-- Caterers -->
+        <div class="cat-chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+          Caterers
+        </div>
+
+        <!-- Food Trucks -->
+        <div class="cat-chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          Food Trucks
+        </div>
+
+        <!-- Restaurants -->
+        <div class="cat-chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          Restaurants
+        </div>
+
+        <!-- Private Chefs -->
+        <div class="cat-chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/>
+            <line x1="6" y1="17" x2="18" y2="17"/>
+          </svg>
+          Private Chefs
+        </div>
+
+        <!-- Late Night -->
+        <div class="cat-chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          Late Night
+        </div>
+
+        <!-- Plant-Based -->
+        <div class="cat-chip">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 8C8 10 5.9 16.17 3.82 22h2.45c.96-2.64 2.49-5.3 5.73-7C15 13 18.46 10.55 21 2c-1.59.35-3.07.79-4 6z"/>
+          </svg>
+          Plant-Based
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- BUSINESSES GRID -->
+  <!-- FEATURED BUSINESSES -->
   <section class="businesses-section">
     <div class="container">
-      <div class="businesses-header">
+      <div class="businesses-header reveal">
         <div>
           <h2>Featured Businesses</h2>
-          <span class="results-count">Showing 6 of 480+ verified businesses</span>
+          <div class="results-count">Showing 6 of 2,400+ verified businesses</div>
         </div>
-        <select class="sort-select">
-          <option>Sort: Top Rated</option>
-          <option>Sort: Most Reviewed</option>
-          <option>Sort: Newest</option>
-          <option>Sort: Trending</option>
-        </select>
       </div>
 
       <div class="businesses-grid">
 
-        <!-- Card 1 -->
+        <!-- Card 1: Marcus & Jade's Kitchen -->
         <div class="biz-card reveal">
-          <div class="biz-banner" style="background:linear-gradient(135deg,#C4B5FD,#8B5CF6,#7C3AED);">
-            <div class="biz-avatar" style="background:#5B21B6;">BC</div>
-            <div class="biz-verified">✓ Verified</div>
+          <div class="biz-banner" style="background: linear-gradient(135deg, #2D1B69 0%, #5B21B6 50%, #7C3AED 100%);">
+            <div class="biz-avatar" style="background: linear-gradient(135deg, #4C1D95, #7C3AED);">MJ</div>
+            <div class="biz-verified">&#10003; Verified</div>
           </div>
           <div class="biz-body">
-            <div class="biz-name">Banchan & Co.</div>
+            <div class="biz-name">Marcus &amp; Jade's Kitchen</div>
             <div class="biz-tags">
-              <span class="biz-tag">Korean Fusion</span>
+              <span class="biz-tag">Soul Food</span>
               <span class="biz-tag">Catering</span>
-              <span class="biz-tag">Corporate</span>
+              <span class="biz-tag">Private Chef</span>
             </div>
             <div class="biz-rating">
-              <span class="stars">★★★★★</span>
+              <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
               <span class="rating-num">4.9</span>
-              <span class="review-count">(187 reviews)</span>
+              <span class="review-count">(127 reviews)</span>
             </div>
             <div class="biz-stats">
               <div class="biz-stat">
-                <div class="val">$45–$85</div>
-                <div class="lbl">per person</div>
+                <div class="val">340</div>
+                <div class="lbl">Events Done</div>
               </div>
               <div class="biz-stat">
-                <div class="val">20–500</div>
-                <div class="lbl">guests</div>
+                <div class="val">50–500</div>
+                <div class="lbl">Capacity</div>
               </div>
               <div class="biz-stat">
-                <div class="val">Atlanta</div>
-                <div class="lbl">location</div>
+                <div class="val">98%</div>
+                <div class="lbl">Response Rate</div>
               </div>
             </div>
-            <button class="book-btn">📅 Book Now</button>
+            <button class="book-btn" onclick="showToast()">Book Now</button>
           </div>
         </div>
 
-        <!-- Card 2 -->
+        <!-- Card 2: Ting Ting's Jerk Truck -->
         <div class="biz-card reveal">
-          <div class="biz-banner" style="background:linear-gradient(135deg,#FDE68A,#F59E0B,#D97706);">
-            <div class="biz-avatar" style="background:#92400E;">BR</div>
-            <div class="biz-verified">✓ Verified</div>
+          <div class="biz-banner" style="background: linear-gradient(135deg, #064E3B 0%, #059669 50%, #34D399 100%);">
+            <div class="biz-avatar" style="background: linear-gradient(135deg, #065F46, #047857);">TT</div>
+            <div class="biz-verified">&#10003; Verified</div>
           </div>
           <div class="biz-body">
-            <div class="biz-name">Bayou Rollers</div>
+            <div class="biz-name">Ting Ting's Jerk Truck</div>
             <div class="biz-tags">
-              <span class="biz-tag">Cajun</span>
+              <span class="biz-tag">Caribbean</span>
               <span class="biz-tag">Food Truck</span>
+              <span class="biz-tag">Late Night</span>
+            </div>
+            <div class="biz-rating">
+              <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <span class="rating-num">4.8</span>
+              <span class="review-count">(89 reviews)</span>
+            </div>
+            <div class="biz-stats">
+              <div class="biz-stat">
+                <div class="val">180</div>
+                <div class="lbl">Events Done</div>
+              </div>
+              <div class="biz-stat">
+                <div class="val">Up to 200</div>
+                <div class="lbl">Guests</div>
+              </div>
+              <div class="biz-stat">
+                <div class="val">94%</div>
+                <div class="lbl">Response Rate</div>
+              </div>
+            </div>
+            <button class="book-btn" onclick="showToast()">Book Now</button>
+          </div>
+        </div>
+
+        <!-- Card 3: La Palma Catering -->
+        <div class="biz-card reveal">
+          <div class="biz-banner" style="background: linear-gradient(135deg, #7F1D1D 0%, #DC2626 50%, #F87171 100%);">
+            <div class="biz-avatar" style="background: linear-gradient(135deg, #991B1B, #DC2626);">LP</div>
+            <div class="biz-verified">&#10003; Verified</div>
+          </div>
+          <div class="biz-body">
+            <div class="biz-name">La Palma Catering</div>
+            <div class="biz-tags">
+              <span class="biz-tag">Latin Fusion</span>
+              <span class="biz-tag">Catering</span>
               <span class="biz-tag">Events</span>
             </div>
             <div class="biz-rating">
-              <span class="stars">★★★★★</span>
-              <span class="rating-num">4.8</span>
-              <span class="review-count">(312 reviews)</span>
+              <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <span class="rating-num">4.7</span>
+              <span class="review-count">(64 reviews)</span>
             </div>
             <div class="biz-stats">
               <div class="biz-stat">
-                <div class="val">$12–$22</div>
-                <div class="lbl">per plate</div>
+                <div class="val">95</div>
+                <div class="lbl">Events Done</div>
               </div>
               <div class="biz-stat">
-                <div class="val">50–800</div>
-                <div class="lbl">guests</div>
+                <div class="val">20–300</div>
+                <div class="lbl">Capacity</div>
               </div>
               <div class="biz-stat">
-                <div class="val">New Orleans</div>
-                <div class="lbl">location</div>
+                <div class="val">96%</div>
+                <div class="lbl">Response Rate</div>
               </div>
             </div>
-            <button class="book-btn">📅 Book Now</button>
+            <button class="book-btn" onclick="showToast()">Book Now</button>
           </div>
         </div>
 
-        <!-- Card 3 -->
+        <!-- Card 4: The Herb Garden -->
         <div class="biz-card reveal">
-          <div class="biz-banner" style="background:linear-gradient(135deg,#A7F3D0,#10B981,#059669);">
-            <div class="biz-avatar" style="background:#065F46;">TC</div>
-            <div class="biz-verified">✓ Verified</div>
+          <div class="biz-banner" style="background: linear-gradient(135deg, #1E3A5F 0%, #1D4ED8 50%, #60A5FA 100%);">
+            <div class="biz-avatar" style="background: linear-gradient(135deg, #1E3A8A, #1D4ED8);">HG</div>
+            <div class="biz-verified">&#10003; Verified</div>
           </div>
           <div class="biz-body">
-            <div class="biz-name">The Catering Collective</div>
+            <div class="biz-name">The Herb Garden</div>
             <div class="biz-tags">
-              <span class="biz-tag">Multi-Cuisine</span>
-              <span class="biz-tag">Weddings</span>
-              <span class="biz-tag">Luxury</span>
+              <span class="biz-tag">Plant-Based</span>
+              <span class="biz-tag">Restaurant</span>
+              <span class="biz-tag">Catering</span>
             </div>
             <div class="biz-rating">
-              <span class="stars">★★★★★</span>
-              <span class="rating-num">5.0</span>
-              <span class="review-count">(94 reviews)</span>
+              <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <span class="rating-num">4.9</span>
+              <span class="review-count">(203 reviews)</span>
             </div>
             <div class="biz-stats">
               <div class="biz-stat">
-                <div class="val">$65–$140</div>
-                <div class="lbl">per person</div>
+                <div class="val">12 yrs</div>
+                <div class="lbl">In Business</div>
               </div>
               <div class="biz-stat">
-                <div class="val">25–1,000</div>
-                <div class="lbl">guests</div>
+                <div class="val">Dine-In</div>
+                <div class="lbl">+ Catering</div>
               </div>
               <div class="biz-stat">
-                <div class="val">Houston</div>
-                <div class="lbl">location</div>
+                <div class="val">99%</div>
+                <div class="lbl">Response Rate</div>
               </div>
             </div>
-            <button class="book-btn">📅 Book Now</button>
+            <button class="book-btn" onclick="showToast()">Book Now</button>
           </div>
         </div>
 
-        <!-- Card 4 -->
+        <!-- Card 5: Ember & Oak -->
         <div class="biz-card reveal">
-          <div class="biz-banner" style="background:linear-gradient(135deg,#FEE2E2,#EF4444,#DC2626);">
-            <div class="biz-avatar" style="background:#991B1B;">HK</div>
-            <div class="biz-verified">✓ Verified</div>
+          <div class="biz-banner" style="background: linear-gradient(135deg, #451A03 0%, #D97706 50%, #FCD34D 100%);">
+            <div class="biz-avatar" style="background: linear-gradient(135deg, #78350F, #B45309);">EO</div>
+            <div class="biz-verified">&#10003; Verified</div>
           </div>
           <div class="biz-body">
-            <div class="biz-name">Hana Kitchen</div>
+            <div class="biz-name">Ember &amp; Oak</div>
+            <div class="biz-tags">
+              <span class="biz-tag">American BBQ</span>
+              <span class="biz-tag">Catering</span>
+              <span class="biz-tag">Food Truck</span>
+            </div>
+            <div class="biz-rating">
+              <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+              <span class="rating-num">4.6</span>
+              <span class="review-count">(41 reviews)</span>
+            </div>
+            <div class="biz-stats">
+              <div class="biz-stat">
+                <div class="val">60</div>
+                <div class="lbl">Events Done</div>
+              </div>
+              <div class="biz-stat">
+                <div class="val">30–400</div>
+                <div class="lbl">Capacity</div>
+              </div>
+              <div class="biz-stat">
+                <div class="val">91%</div>
+                <div class="lbl">Response Rate</div>
+              </div>
+            </div>
+            <button class="book-btn" onclick="showToast()">Book Now</button>
+          </div>
+        </div>
+
+        <!-- Card 6: Sakura Private Dining -->
+        <div class="biz-card reveal">
+          <div class="biz-banner" style="background: linear-gradient(135deg, #064E3B 0%, #065F46 40%, #10B981 100%);">
+            <div class="biz-avatar" style="background: linear-gradient(135deg, #022C22, #065F46);">SK</div>
+            <div class="biz-verified">&#10003; Verified</div>
+          </div>
+          <div class="biz-body">
+            <div class="biz-name">Sakura Private Dining</div>
             <div class="biz-tags">
               <span class="biz-tag">Japanese</span>
               <span class="biz-tag">Private Chef</span>
-              <span class="biz-tag">Omakase</span>
+              <span class="biz-tag">Events</span>
             </div>
             <div class="biz-rating">
-              <span class="stars">★★★★★</span>
-              <span class="rating-num">4.9</span>
-              <span class="review-count">(56 reviews)</span>
+              <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+              <span class="rating-num">5.0</span>
+              <span class="review-count">(28 reviews)</span>
             </div>
             <div class="biz-stats">
               <div class="biz-stat">
-                <div class="val">$120–$250</div>
-                <div class="lbl">per person</div>
+                <div class="val">8 yrs</div>
+                <div class="lbl">In Business</div>
               </div>
               <div class="biz-stat">
-                <div class="val">4–16</div>
-                <div class="lbl">guests</div>
+                <div class="val">Up to 12</div>
+                <div class="lbl">Guests</div>
               </div>
               <div class="biz-stat">
-                <div class="val">Chicago</div>
-                <div class="lbl">location</div>
+                <div class="val">100%</div>
+                <div class="lbl">Response Rate</div>
               </div>
             </div>
-            <button class="book-btn">📅 Book Now</button>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="biz-card reveal">
-          <div class="biz-banner" style="background:linear-gradient(135deg,#E0E7FF,#6366F1,#4F46E5);">
-            <div class="biz-avatar" style="background:#3730A3;">MG</div>
-            <div class="biz-verified">✓ Verified</div>
-          </div>
-          <div class="biz-body">
-            <div class="biz-name">Midnight Grub Co.</div>
-            <div class="biz-tags">
-              <span class="biz-tag">Late Night</span>
-              <span class="biz-tag">Comfort Food</span>
-              <span class="biz-tag">Delivery</span>
-            </div>
-            <div class="biz-rating">
-              <span class="stars">★★★★☆</span>
-              <span class="rating-num">4.6</span>
-              <span class="review-count">(228 reviews)</span>
-            </div>
-            <div class="biz-stats">
-              <div class="biz-stat">
-                <div class="val">$8–$18</div>
-                <div class="lbl">per item</div>
-              </div>
-              <div class="biz-stat">
-                <div class="val">10pm–4am</div>
-                <div class="lbl">hours</div>
-              </div>
-              <div class="biz-stat">
-                <div class="val">Miami</div>
-                <div class="lbl">location</div>
-              </div>
-            </div>
-            <button class="book-btn">📅 Book Now</button>
-          </div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="biz-card reveal">
-          <div class="biz-banner" style="background:linear-gradient(135deg,#FEF3C7,#FBBF24,#F59E0B);">
-            <div class="biz-avatar" style="background:#78350F;">SP</div>
-            <div class="biz-verified">✓ Verified</div>
-          </div>
-          <div class="biz-body">
-            <div class="biz-name">Solstice Provisions</div>
-            <div class="biz-tags">
-              <span class="biz-tag">Farm-to-Table</span>
-              <span class="biz-tag">Meal Prep</span>
-              <span class="biz-tag">Subscriptions</span>
-            </div>
-            <div class="biz-rating">
-              <span class="stars">★★★★★</span>
-              <span class="rating-num">4.8</span>
-              <span class="review-count">(143 reviews)</span>
-            </div>
-            <div class="biz-stats">
-              <div class="biz-stat">
-                <div class="val">$14–$28</div>
-                <div class="lbl">per meal</div>
-              </div>
-              <div class="biz-stat">
-                <div class="val">Weekly</div>
-                <div class="lbl">delivery</div>
-              </div>
-              <div class="biz-stat">
-                <div class="val">Denver</div>
-                <div class="lbl">location</div>
-              </div>
-            </div>
-            <button class="book-btn">📅 Book Now</button>
+            <button class="book-btn" onclick="showToast()">Book Now</button>
           </div>
         </div>
 
@@ -1027,129 +1252,202 @@
     </div>
   </section>
 
-  <!-- WHY T2E VS YELP -->
-  <section class="section vs-section">
+  <!-- WHY T2E BEATS YELP -->
+  <section class="comparison-section">
     <div class="container">
-      <div class="text-center reveal">
+      <div class="text-center reveal" style="margin-bottom: 56px;">
         <span class="section-label">Why T2E</span>
-        <h2 class="section-title">Discover is built different.<br>Here's why it matters.</h2>
-        <p class="section-subtitle">Yelp treats businesses like listings. T2E treats them like partners. That difference changes everything for you as a consumer.</p>
+        <h2 class="section-title">We're not just "better Yelp."<br>We're a different category.</h2>
+        <p class="section-subtitle" style="margin-bottom: 0;">Yelp shows you a listing. T2E connects you with a real operator, a real calendar, and a real booking.</p>
       </div>
-      <div class="vs-grid">
-        <div class="vs-card reveal">
-          <div class="vs-icon">🛠️</div>
-          <h3>Real Operator Tools, Not Just Reviews</h3>
-          <p>Every business on T2E Discover is also running their operations through our platform — that means their availability, menus, and pricing are always up to date. No more calling to find out if they're still open.</p>
-          <div class="vs-comparison">
-            <div class="vs-col t2e">
-              <h5>T2E</h5>
-              <div class="vs-item">Live availability</div>
-              <div class="vs-item">Real-time pricing</div>
-              <div class="vs-item">Up-to-date menus</div>
+
+      <div class="comparison-wrap reveal">
+        <div class="comparison-grid">
+
+          <!-- Old Way -->
+          <div>
+            <div class="comp-col-header old-way">&#10007; Old Way (Yelp &amp; Google)</div>
+            <div class="comp-item bad">
+              <span class="comp-icon">&#10007;</span>
+              <span>Just reviews, no real booking — you still have to call or email</span>
             </div>
-            <div class="vs-col yelp">
-              <h5>Yelp</h5>
-              <div class="vs-item">Static listings</div>
-              <div class="vs-item">Outdated info</div>
-              <div class="vs-item">Stale menus</div>
+            <div class="comp-item bad">
+              <span class="comp-icon">&#10007;</span>
+              <span>No operator tools — just star ratings with no context</span>
+            </div>
+            <div class="comp-item bad">
+              <span class="comp-icon">&#10007;</span>
+              <span>Corporate-owned, ad-driven results — chains rank above local gems</span>
+            </div>
+            <div class="comp-item bad">
+              <span class="comp-icon">&#10007;</span>
+              <span>No real relationship between operator and platform — just a listing fee</span>
             </div>
           </div>
+
+          <!-- T2E Way -->
+          <div>
+            <div class="comp-col-header t2e-way">&#10003; The T2E Way</div>
+            <div class="comp-item good">
+              <span class="comp-icon">&#10003;</span>
+              <span>Direct booking with real calendar availability — confirmed instantly</span>
+            </div>
+            <div class="comp-item good">
+              <span class="comp-icon">&#10003;</span>
+              <span>Operators run their whole business here — menus, bookings, payments</span>
+            </div>
+            <div class="comp-item good">
+              <span class="comp-icon">&#10003;</span>
+              <span>Community-first, independent-operator focused — no pay-to-rank</span>
+            </div>
+            <div class="comp-item good">
+              <span class="comp-icon">&#10003;</span>
+              <span>Reviews tied to verified, completed bookings — real accountability</span>
+            </div>
+          </div>
+
         </div>
-        <div class="vs-card reveal">
-          <div class="vs-icon">📅</div>
-          <h3>Direct Booking, Not Just Listings</h3>
-          <p>When you find a caterer or food truck on T2E, you can book them directly — no middlemen, no back-and-forth emails. The booking system is integrated into the business's actual calendar.</p>
-          <div class="vs-comparison">
-            <div class="vs-col t2e">
-              <h5>T2E</h5>
-              <div class="vs-item">Book instantly</div>
-              <div class="vs-item">Direct payments</div>
-              <div class="vs-item">Confirmed availability</div>
-            </div>
-            <div class="vs-col yelp">
-              <h5>Yelp</h5>
-              <div class="vs-item">Call to inquire</div>
-              <div class="vs-item">Off-platform</div>
-              <div class="vs-item">No booking tools</div>
-            </div>
-          </div>
+        <div class="vs-badge">VS</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPLORE YOUR CITY -->
+  <section class="cities-section">
+    <div class="container">
+      <div class="text-center reveal" style="margin-bottom: 48px;">
+        <span class="section-label">Explore Your City</span>
+        <h2 class="section-title">T2E is growing across the country.</h2>
+        <p class="section-subtitle" style="margin-bottom: 0;">Browse verified food businesses in your city — caterers, trucks, restaurants, and private chefs ready to book.</p>
+      </div>
+
+      <div class="city-grid">
+
+        <div class="city-card reveal" style="background: linear-gradient(135deg, #1a0533 0%, #5B21B6 70%, #7C3AED 100%);">
+          <div class="city-name">Atlanta</div>
+          <div class="city-state">Georgia</div>
+          <div class="city-count">142 businesses</div>
         </div>
-        <div class="vs-card reveal">
-          <div class="vs-icon">✅</div>
-          <h3>Operator-Verified Profiles</h3>
-          <p>Every business on T2E is verified. We confirm licensing, insurance, and identity before a business can accept bookings. You're always transacting with a legitimate, real food operator.</p>
-          <div class="vs-comparison">
-            <div class="vs-col t2e">
-              <h5>T2E</h5>
-              <div class="vs-item">Identity verified</div>
-              <div class="vs-item">Insurance confirmed</div>
-              <div class="vs-item">Operator badging</div>
-            </div>
-            <div class="vs-col yelp">
-              <h5>Yelp</h5>
-              <div class="vs-item">Self-reported only</div>
-              <div class="vs-item">No verification</div>
-              <div class="vs-item">Anonymous listings</div>
-            </div>
-          </div>
+
+        <div class="city-card reveal" style="background: linear-gradient(135deg, #0c2340 0%, #1D4ED8 70%, #3B82F6 100%);">
+          <div class="city-name">Houston</div>
+          <div class="city-state">Texas</div>
+          <div class="city-count">198 businesses</div>
         </div>
-        <div class="vs-card reveal">
-          <div class="vs-icon">🤝</div>
-          <h3>Community-First, Not Corporate</h3>
-          <p>T2E is built for independent food operators — not chains, not corporations. We actively surface small businesses, emerging chefs, and community favorites that Yelp's algorithm buries.</p>
-          <div class="vs-comparison">
-            <div class="vs-col t2e">
-              <h5>T2E</h5>
-              <div class="vs-item">Indie operators first</div>
-              <div class="vs-item">Community reviews</div>
-              <div class="vs-item">No pay-to-rank</div>
-            </div>
-            <div class="vs-col yelp">
-              <h5>Yelp</h5>
-              <div class="vs-item">Chains get priority</div>
-              <div class="vs-item">Ads push rankings</div>
-              <div class="vs-item">Pay-to-play model</div>
-            </div>
-          </div>
+
+        <div class="city-card reveal" style="background: linear-gradient(135deg, #0d3321 0%, #059669 70%, #34D399 100%);">
+          <div class="city-name">Miami</div>
+          <div class="city-state">Florida</div>
+          <div class="city-count">167 businesses</div>
+        </div>
+
+        <div class="city-card reveal" style="background: linear-gradient(135deg, #431407 0%, #C2410C 70%, #FB923C 100%);">
+          <div class="city-name">Orlando</div>
+          <div class="city-state">Florida</div>
+          <div class="city-count">89 businesses</div>
+        </div>
+
+        <div class="city-card reveal" style="background: linear-gradient(135deg, #0a1628 0%, #1E40AF 60%, #6366F1 100%);">
+          <div class="city-name">Chicago</div>
+          <div class="city-state">Illinois</div>
+          <div class="city-count">211 businesses</div>
+        </div>
+
+        <div class="city-card reveal" style="background: linear-gradient(135deg, #1c0d2e 0%, #9333EA 60%, #C084FC 100%);">
+          <div class="city-name">Los Angeles</div>
+          <div class="city-state">California</div>
+          <div class="city-count">334 businesses</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR OPERATORS CTA -->
+  <section class="operators-cta">
+    <div class="operators-cta-inner">
+      <div class="reveal">
+        <span class="section-label" style="background: rgba(139,92,246,0.2); color: var(--purple-light);">For Operators</span>
+        <h2>Run a food business?<br>You belong on T2E.</h2>
+        <p>Get discovered by thousands of customers. Manage your entire operation. Grow your revenue.</p>
+        <div class="operators-cta-btns">
+          <a href="index.html#demo" class="btn btn-white btn-lg">List Your Business Free &#8594;</a>
+          <a href="for-businesses.html" class="btn btn-outline-white btn-lg">See How It Works</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- LIST YOUR BUSINESS -->
-  <section class="list-section">
+  <!-- PROFILE PAGE TEASER -->
+  <section class="profile-teaser-section">
     <div class="container">
-      <div class="list-inner">
-        <div class="list-content reveal">
-          <span class="section-label" style="background:rgba(139,92,246,0.2);color:var(--purple-light);">For Business Owners</span>
-          <h2>Your next best client is<br>already on T2E</h2>
-          <p>Over 18,000 food lovers and event planners use T2E Discover to find businesses just like yours. Your verified profile is how they find you — and book you directly.</p>
-          <div class="list-benefits">
-            <div class="list-benefit">
-              <div class="check">✓</div>
-              <p>A premium profile that showcases your menu, photos, and reviews</p>
+      <div class="text-center reveal" style="margin-bottom: 48px;">
+        <span class="section-label">Profile Preview</span>
+        <h2 class="section-title">What your T2E profile looks like to customers.</h2>
+        <p class="section-subtitle" style="margin-bottom: 0;">Every operator gets a beautiful, full-featured profile page — ready to take bookings from day one.</p>
+      </div>
+
+      <div class="profile-card-full reveal">
+        <div class="profile-banner">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar">CV</div>
+          </div>
+          <div class="profile-verified-badge">&#10003; Verified Operator</div>
+        </div>
+        <div class="profile-body">
+          <div class="profile-name">CRES Ventures Kitchen</div>
+          <div class="profile-handle">@cresventures</div>
+          <div class="profile-location">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            Winter Park, FL
+          </div>
+          <div class="profile-stars-row">
+            <span class="profile-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+            <span class="profile-rating-num">4.9</span>
+            <span class="profile-rating-count">(214 reviews)</span>
+          </div>
+          <div class="profile-stats-row">
+            <div class="profile-stat">
+              <div class="val">214</div>
+              <div class="lbl">Reviews</div>
             </div>
-            <div class="list-benefit">
-              <div class="check">✓</div>
-              <p>Direct booking with integrated payments — no phone tag</p>
+            <div class="profile-stat">
+              <div class="val">847</div>
+              <div class="lbl">Saved</div>
             </div>
-            <div class="list-benefit">
-              <div class="check">✓</div>
-              <p>Show up in local search for your city and cuisine type</p>
+            <div class="profile-stat">
+              <div class="val">1.2K</div>
+              <div class="lbl">Followers</div>
             </div>
-            <div class="list-benefit">
-              <div class="check">✓</div>
-              <p>Connected to your T2E dashboard — availability is always accurate</p>
+            <div class="profile-stat">
+              <div class="val">380+</div>
+              <div class="lbl">Events</div>
             </div>
           </div>
-        </div>
-        <div class="list-cta-card reveal">
-          <div class="cta-icon">🏪</div>
-          <div class="list-free-badge">Free on the Launch plan</div>
-          <h3>List Your Business on T2E</h3>
-          <p>Create your verified operator profile in under 10 minutes. Start getting discovered by customers in your city today — no setup fees.</p>
-          <a href="index.html#demo" class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-bottom:12px;">Create Your Profile →</a>
-          <a href="index.html#pricing" style="font-size:13px;color:rgba(255,255,255,0.5);">See all plans and pricing</a>
+          <div class="profile-tags">
+            <span class="profile-tag">Soul Food</span>
+            <span class="profile-tag">Catering</span>
+            <span class="profile-tag">Food Truck</span>
+          </div>
+          <div class="profile-activity">
+            <h4>Recent Activity</h4>
+            <div class="activity-item">
+              <div class="activity-dot"></div>
+              <span>Booked for a corporate lunch in Orlando — 120 guests · 2 days ago</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot"></div>
+              <span>New 5-star review: "Best catering experience we've ever had." — 4 days ago</span>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot"></div>
+              <span>Updated summer menu with 3 new seasonal offerings — 1 week ago</span>
+            </div>
+          </div>
+          <button class="book-btn" onclick="showToast()" style="max-width: 320px;">Book Now</button>
         </div>
       </div>
     </div>
@@ -1164,10 +1462,10 @@
           <div class="logo">T2E</div>
           <p>The operating platform for the food industry. Built by operators, for operators.</p>
           <div class="footer-social">
-            <div class="social-btn">𝕏</div>
+            <div class="social-btn">&#120143;</div>
             <div class="social-btn">in</div>
-            <div class="social-btn">📷</div>
-            <div class="social-btn">▶</div>
+            <div class="social-btn">&#128247;</div>
+            <div class="social-btn">&#9654;</div>
           </div>
         </div>
         <div class="footer-col">
@@ -1201,25 +1499,30 @@
     </div>
     <div class="footer-bar">
       <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <span>© 2025 T2E — Time 2 Eat. All rights reserved.</span>
-        <span>Made for the people who feed us 🍽️</span>
+        <span>&#169; 2025 T2E &mdash; Time 2 Eat. All rights reserved.</span>
+        <span>Made for the people who feed us</span>
       </div>
     </div>
   </footer>
 
+  <!-- TOAST -->
+  <div id="toast">Booking opens soon &mdash; join the waitlist!</div>
+
   <script>
+    // Nav scroll effect
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 40);
     });
 
+    // Nav mobile toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     navToggle.addEventListener('click', () => {
       navLinks.classList.toggle('open');
     });
 
-    // Category chip filter
+    // Category chip filter — one active at a time
     const chips = document.querySelectorAll('.cat-chip');
     chips.forEach(chip => {
       chip.addEventListener('click', () => {
@@ -1239,6 +1542,17 @@
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     revealEls.forEach(el => observer.observe(el));
+
+    // Toast notification
+    let toastTimer = null;
+    function showToast() {
+      const toast = document.getElementById('toast');
+      if (toastTimer) clearTimeout(toastTimer);
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
   </script>
 </body>
 </html>
