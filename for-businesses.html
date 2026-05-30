@@ -175,117 +175,107 @@
     .nav-toggle { display: none; flex-direction: column; gap: 5px; padding: 4px; }
     .nav-toggle span { width: 24px; height: 2px; background: var(--gray-700); border-radius: 2px; }
 
-    /* B2B HERO */
+    /* HERO */
     .biz-hero {
-      padding: 160px 0 100px;
+      padding: 160px 0 120px;
       background: linear-gradient(135deg, var(--navy) 0%, #1a0a3e 50%, var(--navy-mid) 100%);
       position: relative;
       overflow: hidden;
+      text-align: center;
     }
     .biz-hero::before {
       content: '';
       position: absolute;
-      top: -150px;
-      right: -150px;
-      width: 700px;
-      height: 700px;
+      top: -150px; right: -150px;
+      width: 700px; height: 700px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(139,92,246,0.28) 0%, transparent 65%);
       pointer-events: none;
     }
     .biz-hero::after {
       content: '';
       position: absolute;
-      bottom: -100px;
-      left: -100px;
-      width: 400px;
-      height: 400px;
+      bottom: -100px; left: -100px;
+      width: 500px; height: 500px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(167,139,250,0.15) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(167,139,250,0.18) 0%, transparent 70%);
       pointer-events: none;
     }
     .biz-hero-inner {
       position: relative;
       z-index: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
+      max-width: 800px;
+      margin: 0 auto;
     }
-    .biz-hero-content .eyebrow {
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       background: rgba(139,92,246,0.2);
       border: 1px solid rgba(139,92,246,0.4);
       border-radius: 100px;
-      padding: 8px 18px;
+      padding: 8px 20px;
       font-size: 13px;
       font-weight: 600;
       color: var(--purple-light);
-      margin-bottom: 28px;
+      margin-bottom: 32px;
     }
-    .biz-hero-content h1 {
+    .biz-hero h1 {
       font-family: var(--font-display);
-      font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+      font-size: clamp(2.25rem, 5vw, 3.75rem);
       font-weight: 800;
       color: var(--white);
       line-height: 1.1;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       letter-spacing: -0.02em;
     }
-    .biz-hero-content h1 .accent { color: var(--purple-light); }
-    .biz-hero-content p {
-      font-size: 1.1rem;
+    .biz-hero .hero-sub {
+      font-size: 1.15rem;
       color: rgba(255,255,255,0.7);
-      line-height: 1.7;
-      margin-bottom: 36px;
-      max-width: 500px;
+      line-height: 1.75;
+      margin-bottom: 40px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .biz-hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
-    .biz-hero-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: var(--radius-xl);
-      padding: 32px;
-      backdrop-filter: blur(8px);
-    }
-    .biz-hero-card h3 {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      color: var(--white);
-      margin-bottom: 20px;
-      font-weight: 700;
-    }
-    .biz-metric {
+    .biz-hero-actions {
       display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 56px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .stat-chip {
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: var(--radius-lg);
+      padding: 20px 36px;
+      min-width: 140px;
+      backdrop-filter: blur(6px);
     }
-    .biz-metric:last-of-type { border-bottom: none; }
-    .biz-metric .label { font-size: 13px; color: rgba(255,255,255,0.55); }
-    .biz-metric .value {
+    .stat-chip .stat-value {
       font-family: var(--font-display);
-      font-size: 1.2rem;
-      font-weight: 700;
+      font-size: 2rem;
+      font-weight: 800;
       color: var(--purple-light);
+      line-height: 1;
+      margin-bottom: 6px;
     }
-    .biz-partner-logos {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-    .biz-partner-logos p { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); margin-bottom: 12px; }
-    .partner-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-    .partner-chip {
-      padding: 6px 14px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 100px;
+    .stat-chip .stat-label {
       font-size: 12px;
       font-weight: 600;
-      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
     }
 
     /* WHAT YOU GET */
@@ -298,7 +288,7 @@
     .get-card {
       background: var(--white);
       border-radius: var(--radius-xl);
-      padding: 40px 32px;
+      padding: 44px 36px;
       border: 2px solid var(--gray-100);
       box-shadow: var(--shadow-sm);
       transition: all var(--transition);
@@ -308,7 +298,7 @@
       box-shadow: var(--shadow-purple);
       transform: translateY(-6px);
     }
-    .get-icon {
+    .get-icon-wrap {
       width: 64px;
       height: 64px;
       border-radius: var(--radius-lg);
@@ -316,7 +306,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      color: var(--purple);
       margin-bottom: 24px;
     }
     .get-card h3 {
@@ -326,38 +316,40 @@
       color: var(--navy);
       margin-bottom: 14px;
     }
-    .get-card p { font-size: 0.95rem; color: var(--gray-600); line-height: 1.7; margin-bottom: 20px; }
-    .get-card ul { display: flex; flex-direction: column; gap: 10px; }
-    .get-card ul li {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      font-size: 0.9rem;
-      color: var(--gray-700);
-    }
-    .get-card ul li::before { content: '→'; color: var(--purple); font-weight: 700; flex-shrink: 0; }
+    .get-card p { font-size: 0.95rem; color: var(--gray-600); line-height: 1.7; }
 
-    /* FEATURES ICONS GRID */
+    /* FEATURES ICON GRID */
+    .features-section { background: var(--white); }
     .features-icons-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 20px;
     }
     .fi-card {
-      background: var(--white);
+      background: var(--gray-50);
       border-radius: var(--radius-lg);
-      padding: 28px 20px;
+      padding: 32px 24px;
       border: 1px solid var(--gray-100);
-      box-shadow: var(--shadow-sm);
       text-align: center;
       transition: all var(--transition);
     }
     .fi-card:hover {
       border-color: var(--purple-light);
+      background: var(--white);
       box-shadow: var(--shadow-md);
       transform: translateY(-4px);
     }
-    .fi-icon { font-size: 36px; margin-bottom: 14px; }
+    .fi-svg-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: var(--purple-xlight);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--purple);
+      margin: 0 auto 16px;
+    }
     .fi-card h4 {
       font-family: var(--font-display);
       font-size: 1rem;
@@ -365,23 +357,22 @@
       color: var(--navy);
       margin-bottom: 8px;
     }
-    .fi-card p { font-size: 0.85rem; color: var(--gray-500); line-height: 1.55; }
+    .fi-card p { font-size: 0.85rem; color: var(--gray-500); line-height: 1.6; }
 
     /* WHO THIS IS FOR */
     .who-section { background: var(--gray-50); }
     .who-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 28px;
+      gap: 24px;
     }
     .who-card {
-      display: grid;
-      grid-template-columns: 80px 1fr;
+      display: flex;
       gap: 24px;
-      align-items: start;
-      padding: 32px;
+      align-items: flex-start;
+      padding: 36px;
       background: var(--white);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-xl);
       border: 1px solid var(--gray-100);
       box-shadow: var(--shadow-sm);
       transition: all var(--transition);
@@ -391,54 +382,66 @@
       box-shadow: var(--shadow-md);
       transform: translateY(-3px);
     }
-    .who-icon {
-      width: 64px;
-      height: 64px;
+    .who-icon-wrap {
+      width: 60px;
+      height: 60px;
       border-radius: var(--radius-md);
+      background: var(--purple-xlight);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      color: var(--purple);
       flex-shrink: 0;
     }
-    .who-card h3 {
+    .who-card-body h3 {
       font-family: var(--font-display);
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: var(--navy);
       margin-bottom: 10px;
     }
-    .who-card p { font-size: 0.9rem; color: var(--gray-600); line-height: 1.65; }
+    .who-card-body p { font-size: 0.9rem; color: var(--gray-600); line-height: 1.7; margin-bottom: 14px; }
+    .tag-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-xlight);
+      padding: 4px 12px;
+      border-radius: 100px;
+    }
 
     /* HOW IT WORKS */
     .how-section { overflow: hidden; }
-    .steps-grid {
+    .steps-flow {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr auto 1fr auto 1fr;
       gap: 0;
-      position: relative;
+      align-items: start;
+      padding-top: 16px;
     }
-    .steps-grid::before {
-      content: '';
-      position: absolute;
-      top: 56px;
-      left: calc(16.67% + 40px);
-      right: calc(16.67% + 40px);
+    .step-connector {
+      display: flex;
+      align-items: flex-start;
+      padding-top: 36px;
+    }
+    .step-connector-line {
+      width: 60px;
       height: 2px;
-      background: linear-gradient(90deg, var(--purple-xlight), var(--purple), var(--purple-xlight));
-      z-index: 0;
+      border-top: 2px dashed var(--purple-light);
+      margin-top: 0;
     }
     .step-card {
-      padding: 0 32px;
       text-align: center;
-      position: relative;
-      z-index: 1;
+      padding: 0 24px;
     }
     .step-number {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      background: var(--purple);
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple-light));
       color: var(--white);
       font-family: var(--font-display);
       font-size: 1.75rem;
@@ -449,63 +452,103 @@
       margin: 0 auto 28px;
       box-shadow: var(--shadow-purple);
       border: 4px solid var(--white);
+      outline: 3px solid var(--purple-light);
     }
     .step-card h3 {
       font-family: var(--font-display);
       font-size: 1.3rem;
       font-weight: 700;
       color: var(--navy);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
-    .step-card p { font-size: 0.95rem; color: var(--gray-600); line-height: 1.7; }
+    .step-card p { font-size: 0.92rem; color: var(--gray-600); line-height: 1.7; }
+
+    /* COMPARISON TABLE */
+    .compare-section { background: var(--gray-50); }
+    .compare-table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--gray-200);
+    }
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      font-size: 0.95rem;
+    }
+    .compare-table thead th {
+      padding: 20px 28px;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: left;
+      border-bottom: 2px solid var(--gray-100);
+    }
+    .compare-table thead th:first-child { color: var(--gray-500); font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .compare-table thead th:nth-child(2) {
+      background: linear-gradient(135deg, #F5F0FF, #EDE9FE);
+      color: var(--purple-dark);
+    }
+    .compare-table thead th:nth-child(3) { color: var(--gray-700); }
+    .compare-table tbody tr { transition: background var(--transition); }
+    .compare-table tbody tr:nth-child(even) { background: var(--gray-50); }
+    .compare-table tbody tr:hover { background: var(--purple-xlight); }
+    .compare-table td {
+      padding: 18px 28px;
+      border-bottom: 1px solid var(--gray-100);
+      color: var(--gray-700);
+      vertical-align: middle;
+    }
+    .compare-table tbody tr:last-child td { border-bottom: none; }
+    .compare-table td:first-child { font-weight: 600; color: var(--navy); }
+    .compare-table td:nth-child(2) { background: rgba(237,233,254,0.35); }
+    .check-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .check-yes {
+      background: #DCFCE7;
+      color: #15803D;
+    }
+    .check-no {
+      background: #FEE2E2;
+      color: #B91C1C;
+    }
 
     /* PARTNER FORM */
     .partner-section {
       background: linear-gradient(135deg, var(--gray-50) 0%, var(--purple-xlight) 100%);
     }
-    .partner-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 80px;
-      align-items: center;
+    .partner-layout {
+      max-width: 720px;
+      margin: 0 auto;
     }
-    .partner-info h2 {
-      font-family: var(--font-display);
-      font-size: clamp(1.75rem, 3vw, 2.5rem);
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 16px;
-    }
-    .partner-info p { color: var(--gray-600); line-height: 1.7; margin-bottom: 28px; }
-    .partner-perks { display: flex; flex-direction: column; gap: 16px; }
-    .perk { display: flex; align-items: flex-start; gap: 14px; }
-    .perk-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-sm);
-      background: var(--purple-xlight);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-    .perk-text h4 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-    .perk-text p { font-size: 0.88rem; color: var(--gray-600); margin: 0; }
-    .partner-form {
+    .partner-form-box {
       background: var(--white);
-      padding: 44px;
+      padding: 52px;
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-lg);
       border: 1px solid var(--gray-100);
     }
-    .partner-form h3 {
+    .partner-form-box h2 {
       font-family: var(--font-display);
-      font-size: 1.4rem;
+      font-size: clamp(1.75rem, 3vw, 2.4rem);
+      font-weight: 700;
       color: var(--navy);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
-    .partner-form .form-subtitle { font-size: 0.9rem; color: var(--gray-500); margin-bottom: 28px; }
+    .partner-form-box .form-subtitle {
+      font-size: 0.95rem;
+      color: var(--gray-500);
+      margin-bottom: 36px;
+      line-height: 1.65;
+    }
     .form-group { margin-bottom: 20px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .form-group label {
@@ -519,48 +562,56 @@
     .form-group select,
     .form-group textarea {
       width: 100%;
-      padding: 12px 16px;
+      padding: 13px 16px;
       border: 1.5px solid var(--gray-200);
       border-radius: var(--radius-md);
       font-family: var(--font-body);
       font-size: 14px;
       color: var(--gray-800);
       background: var(--white);
-      transition: border-color var(--transition);
+      transition: border-color var(--transition), box-shadow var(--transition);
       outline: none;
     }
     .form-group input:focus,
     .form-group select:focus,
     .form-group textarea:focus {
       border-color: var(--purple);
-      box-shadow: 0 0 0 3px rgba(139,92,246,0.1);
+      box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
     }
-    .form-group textarea { resize: vertical; min-height: 100px; }
-
-    /* CTA BANNER */
-    .cta-banner {
-      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
-      padding: 80px 0;
+    .form-group input.error,
+    .form-group select.error,
+    .form-group textarea.error {
+      border-color: #EF4444;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+    }
+    .form-group .error-msg {
+      font-size: 12px;
+      color: #EF4444;
+      margin-top: 5px;
+      display: none;
+    }
+    .form-group.has-error .error-msg { display: block; }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+    .form-confirm {
+      display: none;
       text-align: center;
-      position: relative;
-      overflow: hidden;
+      padding: 40px 20px;
     }
-    .cta-banner::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    .form-confirm .confirm-icon {
+      width: 64px; height: 64px;
+      background: #DCFCE7;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      color: #15803D;
     }
-    .cta-banner-content { position: relative; z-index: 1; }
-    .cta-banner h2 {
+    .form-confirm h3 {
       font-family: var(--font-display);
-      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
-      font-weight: 800;
-      color: var(--white);
-      margin-bottom: 16px;
+      font-size: 1.5rem;
+      color: var(--navy);
+      margin-bottom: 10px;
     }
-    .cta-banner p { color: rgba(255,255,255,0.75); font-size: 1.1rem; margin-bottom: 36px; max-width: 520px; margin-left: auto; margin-right: auto; }
-    .cta-banner-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .form-confirm p { color: var(--gray-600); font-size: 0.95rem; line-height: 1.65; }
 
     /* FOOTER */
     .footer {
@@ -618,12 +669,11 @@
 
     /* RESPONSIVE */
     @media (max-width: 1024px) {
-      .biz-hero-inner { grid-template-columns: 1fr; gap: 48px; }
       .get-grid { grid-template-columns: 1fr; max-width: 540px; margin: 0 auto; }
       .features-icons-grid { grid-template-columns: repeat(2, 1fr); }
       .who-grid { grid-template-columns: 1fr; }
-      .steps-grid::before { display: none; }
-      .partner-grid { grid-template-columns: 1fr; }
+      .steps-flow { grid-template-columns: 1fr; gap: 40px; }
+      .step-connector { display: none; }
       .footer-grid { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 768px) {
@@ -644,13 +694,15 @@
       }
       .nav-actions .btn-ghost { display: none; }
       .nav-toggle { display: flex; }
-      .biz-hero { padding: 130px 0 64px; }
+      .biz-hero { padding: 130px 0 72px; }
+      .hero-stats { gap: 10px; }
+      .stat-chip { min-width: 110px; padding: 16px 20px; }
       .features-icons-grid { grid-template-columns: repeat(2, 1fr); }
-      .steps-grid { grid-template-columns: 1fr; gap: 40px; }
-      .partner-form { padding: 28px 24px; }
+      .partner-form-box { padding: 28px 24px; }
       .form-row { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr; }
       .footer-bar { text-align: center; }
+      .compare-table thead th, .compare-table td { padding: 14px 16px; font-size: 0.85rem; }
     }
   </style>
 </head>
@@ -669,7 +721,7 @@
       <li><a href="index.html#pricing">Pricing</a></li>
     </ul>
     <div class="nav-actions">
-      <a href="#partner-form" class="btn btn-ghost btn-sm">Book a Demo</a>
+      <a href="index.html#dashboard" class="btn btn-ghost btn-sm">See a Live Demo</a>
       <a href="#partner-form" class="btn btn-primary btn-sm">Apply to Partner</a>
     </div>
   </nav>
@@ -677,41 +729,26 @@
   <!-- HERO -->
   <section class="biz-hero">
     <div class="container">
-      <div class="biz-hero-inner">
-        <div class="biz-hero-content reveal">
-          <div class="eyebrow">🤝 T2E Partnership Program</div>
-          <h1>The Operating System for the Food Industry,<br><span class="accent">White Labeled for Your Brand</span></h1>
-          <p>License the full T2E platform under your brand and sell it to food businesses in your network. You bring the relationships — we provide the technology, infrastructure, and support.</p>
-          <div class="biz-hero-actions">
-            <a href="#partner-form" class="btn btn-primary btn-lg">Apply to Partner →</a>
-            <a href="#how-it-works" class="btn btn-outline-white btn-lg">See How It Works</a>
-          </div>
+      <div class="biz-hero-inner reveal">
+        <div class="hero-badge">Powered by T2E &times; aionvsn</div>
+        <h1>Launch Your Own Branded<br>Food Operations Platform</h1>
+        <p class="hero-sub">White-label the full T2E dashboard suite under your brand. Give your operators, franchisees, or clients a professional-grade tool &mdash; without building it yourself.</p>
+        <div class="biz-hero-actions">
+          <a href="#partner-form" class="btn btn-primary btn-lg">Apply to Partner &rarr;</a>
+          <a href="index.html#dashboard" class="btn btn-outline-white btn-lg">See a Live Demo</a>
         </div>
-        <div class="biz-hero-card reveal">
-          <h3>Partner Revenue Snapshot</h3>
-          <div class="biz-metric">
-            <span class="label">Avg revenue per client/month</span>
-            <span class="value">$79–$249</span>
+        <div class="hero-stats">
+          <div class="stat-chip">
+            <span class="stat-value">72hr</span>
+            <span class="stat-label">Setup Time</span>
           </div>
-          <div class="biz-metric">
-            <span class="label">Your revenue share</span>
-            <span class="value">30–40%</span>
+          <div class="stat-chip">
+            <span class="stat-value">$0</span>
+            <span class="stat-label">Upfront Build Cost</span>
           </div>
-          <div class="biz-metric">
-            <span class="label">Break-even client count</span>
-            <span class="value">6 clients</span>
-          </div>
-          <div class="biz-metric">
-            <span class="label">Avg partner MRR (6 mo.)</span>
-            <span class="value">$4,800</span>
-          </div>
-          <div class="biz-partner-logos">
-            <p>Built with</p>
-            <div class="partner-chips">
-              <span class="partner-chip">Stripe Connect</span>
-              <span class="partner-chip">Custom Domain</span>
-              <span class="partner-chip">Your Branding</span>
-            </div>
+          <div class="stat-chip">
+            <span class="stat-value">Rev Share</span>
+            <span class="stat-label">Partnership Model</span>
           </div>
         </div>
       </div>
@@ -728,91 +765,126 @@
       </div>
       <div class="get-grid">
         <div class="get-card reveal">
-          <div class="get-icon">🎨</div>
-          <h3>White-Label Dashboard</h3>
-          <p>The full T2E operator dashboard, rebranded with your logo, colors, and domain. Your clients never see the T2E name — they see your product.</p>
-          <ul>
-            <li>Custom logo and brand colors</li>
-            <li>Your domain (e.g. app.yourcompany.com)</li>
-            <li>Branded email notifications</li>
-            <li>Custom onboarding flow</li>
-          </ul>
+          <div class="get-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <h3>Your Brand, Your Platform</h3>
+          <p>Custom logo, colors, and domain (app.yourbrand.com). Your clients never see T2E branding unless you want them to. Every pixel carries your identity.</p>
         </div>
         <div class="get-card reveal">
-          <div class="get-icon">🛠️</div>
+          <div class="get-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 17h4"/>
+            </svg>
+          </div>
           <h3>Full Operator Suite</h3>
-          <p>Your clients get access to every feature in the T2E platform — invoicing, inventory, scheduling, analytics, payments, and discovery — all under your brand.</p>
-          <ul>
-            <li>Smart invoicing + payment collection</li>
-            <li>Real-time inventory management</li>
-            <li>Revenue analytics dashboard</li>
-            <li>Booking and calendar system</li>
-          </ul>
+          <p>Every T2E feature included: Jobs, Invoicing, Inventory, CRM, Menu Builder, Analytics, Staff Scheduling. Your clients get a complete professional platform from day one.</p>
         </div>
         <div class="get-card reveal">
-          <div class="get-icon">💰</div>
-          <h3>Revenue Share Model</h3>
-          <p>Earn a recurring percentage of every subscription your clients pay — every month, for as long as they stay on the platform. No one-time fees.</p>
-          <ul>
-            <li>30–40% revenue share on all subscriptions</li>
-            <li>Monthly Stripe payouts</li>
-            <li>Real-time revenue dashboard</li>
-            <li>Volume bonuses for growth</li>
-          </ul>
+          <div class="get-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <h3>Revenue Partnership</h3>
+          <p>Earn recurring revenue on every subscription your customers pay. Stripe Connect handles payouts automatically so you get paid every month without lifting a finger.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FEATURES ICONS GRID -->
-  <section class="section">
+  <!-- FEATURES ICON GRID -->
+  <section class="section features-section">
     <div class="container">
       <div class="text-center reveal">
         <span class="section-label">Platform Capabilities</span>
-        <h2 class="section-title">Everything your clients need<br>to run their food business</h2>
-        <p class="section-subtitle">Every feature is fully white-labeled and ready to deploy. Your clients experience a premium product — with your name on it.</p>
+        <h2 class="section-title">8 production-ready features,<br>all under your brand</h2>
+        <p class="section-subtitle">Everything is fully white-labeled and ready to deploy the moment you go live.</p>
       </div>
       <div class="features-icons-grid">
+
         <div class="fi-card reveal">
-          <div class="fi-icon">🎨</div>
-          <h4>Custom Branding</h4>
-          <p>Your logo, your colors, your domain. Complete brand ownership with zero T2E attribution.</p>
+          <div class="fi-svg-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </div>
+          <h4>Custom Domain</h4>
+          <p>Run on your own subdomain with SSL included. Looks and feels 100% like your product.</p>
         </div>
+
         <div class="fi-card reveal">
-          <div class="fi-icon">🌐</div>
-          <h4>Your Domain</h4>
-          <p>Deploy on app.yourcompany.com with SSL included. Looks and feels 100% like your product.</p>
+          <div class="fi-svg-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a4 4 0 0 1 4 4v1H8V6a4 4 0 0 1 4-4z"/><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M12 13v3"/><circle cx="12" cy="12" r="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <h4>Brand Kit</h4>
+          <p>Upload your logo, set your colors and font. Complete brand ownership with zero T2E attribution.</p>
         </div>
+
         <div class="fi-card reveal">
-          <div class="fi-icon">💳</div>
-          <h4>Stripe Connect Payouts</h4>
-          <p>Clients pay subscriptions directly to you via Stripe. Revenue share is auto-calculated and transferred monthly.</p>
+          <div class="fi-svg-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+            </svg>
+          </div>
+          <h4>Stripe Connect</h4>
+          <p>Automated revenue share payouts. Clients pay subscriptions directly; your cut transfers monthly.</p>
         </div>
+
         <div class="fi-card reveal">
-          <div class="fi-icon">👥</div>
-          <h4>Client Management</h4>
-          <p>A partner-only dashboard to view all your clients, their usage, health scores, and revenue.</p>
+          <div class="fi-svg-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h4>Multi-Tenant</h4>
+          <p>Manage all your clients from one admin view. Usage stats, health scores, and revenue in one place.</p>
         </div>
+
         <div class="fi-card reveal">
-          <div class="fi-icon">📊</div>
-          <h4>Advanced Analytics</h4>
-          <p>Your clients get full revenue, inventory, and booking analytics. You get partner-level reporting across your book of business.</p>
-        </div>
-        <div class="fi-card reveal">
-          <div class="fi-icon">📦</div>
-          <h4>Inventory System</h4>
-          <p>Real-time stock tracking, low-inventory alerts, and supplier management — built for food service at scale.</p>
-        </div>
-        <div class="fi-card reveal">
-          <div class="fi-icon">🧾</div>
+          <div class="fi-svg-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
           <h4>Invoicing Engine</h4>
-          <p>Professional invoices, auto-reminders, partial payment support, and instant card/ACH collection.</p>
+          <p>Professional invoices auto-built from job data, with reminders and instant card/ACH collection.</p>
         </div>
+
         <div class="fi-card reveal">
-          <div class="fi-icon">🔌</div>
-          <h4>API Access</h4>
-          <p>Full REST API access on the Scale tier. Integrate T2E data with your existing tools or build custom extensions.</p>
+          <div class="fi-svg-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <h4>Inventory System</h4>
+          <p>Real-time stock with low-stock alerts. Built for food service operations at scale.</p>
         </div>
+
+        <div class="fi-card reveal">
+          <div class="fi-svg-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </div>
+          <h4>Analytics Dashboard</h4>
+          <p>Revenue trends, job performance, and client insights — full visibility for you and your clients.</p>
+        </div>
+
+        <div class="fi-card reveal">
+          <div class="fi-svg-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </div>
+          <h4>API Access</h4>
+          <p>Extend the platform with your own integrations. Full REST API on the Scale tier.</p>
+        </div>
+
       </div>
     </div>
   </section>
@@ -823,37 +895,62 @@
       <div class="text-center reveal">
         <span class="section-label">Who This Is For</span>
         <h2 class="section-title">Built for organizations that serve<br>the food industry</h2>
-        <p class="section-subtitle">If your business touches food operators — restaurants, caterers, food trucks, or hospitality — T2E is your white-label advantage.</p>
+        <p class="section-subtitle">If your business touches food operators, T2E is your white-label advantage.</p>
       </div>
       <div class="who-grid">
+
         <div class="who-card reveal">
-          <div class="who-icon" style="background:#F0F9FF;">🏢</div>
-          <div>
-            <h3>Restaurant Groups & Franchises</h3>
-            <p>Multi-location operators who need a standardized platform across all locations. White-label T2E to give every unit the same powerful tools — and get group-level reporting to see the whole picture.</p>
+          <div class="who-icon-wrap">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <div class="who-card-body">
+            <h3>Restaurant Groups</h3>
+            <p>Multi-location operators who want a branded internal ops tool. Give every unit the same powerful platform and get group-level reporting across your entire portfolio.</p>
+            <span class="tag-pill">Multi-Location Ops</span>
           </div>
         </div>
+
         <div class="who-card reveal">
-          <div class="who-icon" style="background:#FFF7ED;">🎪</div>
-          <div>
-            <h3>Catering Associations & Networks</h3>
-            <p>Industry associations and catering networks that want to provide real software value to their members. Offer T2E as a member benefit and generate new recurring revenue for your organization.</p>
+          <div class="who-icon-wrap">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="who-card-body">
+            <h3>Catering Networks</h3>
+            <p>Associations or agencies managing multiple catering businesses. Offer T2E as a branded member benefit and generate new recurring revenue for your organization.</p>
+            <span class="tag-pill">Member Benefits</span>
           </div>
         </div>
+
         <div class="who-card reveal">
-          <div class="who-icon" style="background:#F0FFFE;">💻</div>
-          <div>
+          <div class="who-icon-wrap">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </div>
+          <div class="who-card-body">
             <h3>Food Tech Startups</h3>
-            <p>Early-stage startups that want to sell into the food industry without building backend infrastructure from scratch. Launch your product in weeks, not years, using T2E as your core engine.</p>
+            <p>Building a product in the food space without a dev team? Launch your branded platform in weeks, not years. Use T2E's proven infrastructure as your core engine.</p>
+            <span class="tag-pill">Zero Dev Team Needed</span>
           </div>
         </div>
+
         <div class="who-card reveal">
-          <div class="who-icon" style="background:#FDF4FF;">🏨</div>
-          <div>
-            <h3>Hospitality & Hotel Groups</h3>
-            <p>Hotels and hospitality brands with F&B operations looking for a branded platform to unify catering, banquets, and in-room dining management under a single, modern dashboard.</p>
+          <div class="who-icon-wrap">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>
+            </svg>
+          </div>
+          <div class="who-card-body">
+            <h3>Hospitality Brands</h3>
+            <p>Hotels, event venues, and corporate cafeterias wanting white-labeled food ops. Unify catering, banquets, and F&B management under a single modern dashboard with your name on it.</p>
+            <span class="tag-pill">F&amp;B Operations</span>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -863,137 +960,164 @@
     <div class="container">
       <div class="text-center reveal">
         <span class="section-label">How It Works</span>
-        <h2 class="section-title">From application to<br>first client in 14 days</h2>
+        <h2 class="section-title">From application to<br>live platform in 72 hours</h2>
         <p class="section-subtitle">We've made it fast. Our onboarding team handles the technical setup so you can focus on sales.</p>
       </div>
-      <div class="steps-grid">
+      <div class="steps-flow">
         <div class="step-card reveal">
           <div class="step-number">1</div>
           <h3>Apply</h3>
-          <p>Submit your partnership application. Our team reviews within 48 hours and schedules a discovery call to understand your business and client base.</p>
+          <p>Fill out the partner form. We review within 48 hours and schedule a discovery call to understand your business and goals.</p>
+        </div>
+        <div class="step-connector">
+          <div class="step-connector-line"></div>
         </div>
         <div class="step-card reveal">
           <div class="step-number">2</div>
           <h3>Customize</h3>
-          <p>We configure the platform with your brand. Upload your logo, set your colors, choose your domain, and connect your Stripe account. Our team handles all the setup.</p>
+          <p>Upload your brand kit, set your domain, configure your feature set. Our team handles all the technical setup — no engineering needed.</p>
+        </div>
+        <div class="step-connector">
+          <div class="step-connector-line"></div>
         </div>
         <div class="step-card reveal">
           <div class="step-number">3</div>
           <h3>Launch</h3>
-          <p>Go live with your branded platform. Start selling to your client network. You get a full partner dashboard to track clients, usage, and your revenue share in real time.</p>
+          <p>Go live in 72 hours. Your clients onboard directly to your platform. Track clients, usage, and revenue share in real time.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PARTNER INQUIRY FORM -->
+  <!-- COMPARISON TABLE -->
+  <section class="section compare-section">
+    <div class="container">
+      <div class="text-center reveal">
+        <span class="section-label">Why Partner With T2E</span>
+        <h2 class="section-title">T2E Partner vs.<br>Build It Yourself</h2>
+        <p class="section-subtitle">The math is clear. Building a food ops platform from scratch costs years and hundreds of thousands of dollars.</p>
+      </div>
+      <div class="compare-table-wrap reveal">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>T2E Partner</th>
+              <th>Build It Yourself</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Time to launch</td>
+              <td><span class="check-chip check-yes">&#10003; 72 hours</span></td>
+              <td><span class="check-chip check-no">&#10007; 12&ndash;18 months</span></td>
+            </tr>
+            <tr>
+              <td>Upfront cost</td>
+              <td><span class="check-chip check-yes">&#10003; $0</span></td>
+              <td><span class="check-chip check-no">&#10007; $150K&ndash;$500K+</span></td>
+            </tr>
+            <tr>
+              <td>Ongoing maintenance</td>
+              <td><span class="check-chip check-yes">&#10003; Handled by T2E</span></td>
+              <td><span class="check-chip check-no">&#10007; Your engineering team</span></td>
+            </tr>
+            <tr>
+              <td>Feature updates</td>
+              <td><span class="check-chip check-yes">&#10003; Automatic</span></td>
+              <td><span class="check-chip check-no">&#10007; Manual sprints</span></td>
+            </tr>
+            <tr>
+              <td>Payment infrastructure</td>
+              <td><span class="check-chip check-yes">&#10003; Built-in (Stripe)</span></td>
+              <td><span class="check-chip check-no">&#10007; 3&ndash;6 months to build</span></td>
+            </tr>
+            <tr>
+              <td>Support</td>
+              <td><span class="check-chip check-yes">&#10003; Dedicated partner success</span></td>
+              <td><span class="check-chip check-no">&#10007; You figure it out</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNER FORM -->
   <section class="section partner-section" id="partner-form">
     <div class="container">
-      <div class="partner-grid">
-        <div class="partner-info reveal">
-          <span class="section-label">Partnership Inquiry</span>
-          <h2>Let's build something great together</h2>
-          <p>Apply to become a T2E white-label partner. We'll review your application and schedule a call within 48 hours to discuss fit, terms, and timeline.</p>
-          <div class="partner-perks">
-            <div class="perk">
-              <div class="perk-icon">🚀</div>
-              <div class="perk-text">
-                <h4>Launch in 14 days</h4>
-                <p>Full setup and onboarding handled by our team — no engineering required.</p>
+      <div class="text-center reveal" style="margin-bottom: 48px;">
+        <span class="section-label">Apply to Partner</span>
+      </div>
+      <div class="partner-layout reveal">
+        <div class="partner-form-box">
+          <h2>Ready to Launch Your Platform?</h2>
+          <p class="form-subtitle">Tell us about your business and we'll reach out within 48 hours to set up a discovery call.</p>
+
+          <div id="partnerFormWrap">
+            <form id="partnerForm" onsubmit="handlePartnerSubmit(event);" novalidate>
+              <div class="form-row">
+                <div class="form-group" id="fg-name">
+                  <label for="f-name">Full Name *</label>
+                  <input type="text" id="f-name" placeholder="Your full name" />
+                  <span class="error-msg">Please enter your name.</span>
+                </div>
+                <div class="form-group" id="fg-company">
+                  <label for="f-company">Company Name *</label>
+                  <input type="text" id="f-company" placeholder="Your company or organization" />
+                  <span class="error-msg">Please enter your company name.</span>
+                </div>
               </div>
-            </div>
-            <div class="perk">
-              <div class="perk-icon">💰</div>
-              <div class="perk-text">
-                <h4>30–40% revenue share</h4>
-                <p>Earn a meaningful recurring cut of every subscription — paid monthly via Stripe.</p>
+              <div class="form-group" id="fg-email">
+                <label for="f-email">Email *</label>
+                <input type="email" id="f-email" placeholder="you@company.com" />
+                <span class="error-msg">Please enter a valid email address.</span>
               </div>
-            </div>
-            <div class="perk">
-              <div class="perk-icon">🎯</div>
-              <div class="perk-text">
-                <h4>Dedicated partner success manager</h4>
-                <p>Your point of contact for strategy, support, and scaling your client base.</p>
+              <div class="form-group" id="fg-type">
+                <label for="f-type">Business Type *</label>
+                <select id="f-type">
+                  <option value="">Select your type</option>
+                  <option>Restaurant Group</option>
+                  <option>Catering Network</option>
+                  <option>Food Tech Startup</option>
+                  <option>Hospitality Brand</option>
+                  <option>Other</option>
+                </select>
+                <span class="error-msg">Please select a business type.</span>
               </div>
-            </div>
-            <div class="perk">
-              <div class="perk-icon">📣</div>
-              <div class="perk-text">
-                <h4>Co-marketing opportunities</h4>
-                <p>Get featured in T2E marketing channels, webinars, and industry events.</p>
+              <div class="form-group" id="fg-size">
+                <label for="f-size">Estimated # of Operators/Clients *</label>
+                <select id="f-size">
+                  <option value="">Select a range</option>
+                  <option>1&ndash;10</option>
+                  <option>11&ndash;50</option>
+                  <option>51&ndash;200</option>
+                  <option>200+</option>
+                </select>
+                <span class="error-msg">Please select an estimate.</span>
               </div>
-            </div>
+              <div class="form-group" id="fg-message">
+                <label for="f-message">Message / Tell us about your vision</label>
+                <textarea id="f-message" placeholder="What does your network look like? What are you trying to build? How can T2E help?"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;font-size:16px;padding:16px 28px;">Submit Application &rarr;</button>
+              <p style="font-size:12px;color:var(--gray-400);text-align:center;margin-top:12px;">We respond to all applications within 48 hours.</p>
+            </form>
           </div>
-        </div>
-        <div class="partner-form reveal">
-          <h3>Apply to Partner with T2E</h3>
-          <p class="form-subtitle">We review all applications within 48 hours.</p>
-          <form onsubmit="return false;">
-            <div class="form-row">
-              <div class="form-group">
-                <label>First Name</label>
-                <input type="text" placeholder="First name" />
-              </div>
-              <div class="form-group">
-                <label>Last Name</label>
-                <input type="text" placeholder="Last name" />
-              </div>
+
+          <div class="form-confirm" id="partnerConfirm">
+            <div class="confirm-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
             </div>
-            <div class="form-group">
-              <label>Company Name</label>
-              <input type="text" placeholder="Your company or organization" />
-            </div>
-            <div class="form-group">
-              <label>Business Email</label>
-              <input type="email" placeholder="you@company.com" />
-            </div>
-            <div class="form-group">
-              <label>Business Type</label>
-              <select>
-                <option value="">Select your type</option>
-                <option>Restaurant Group / Franchise</option>
-                <option>Catering Association / Network</option>
-                <option>Food Tech Startup</option>
-                <option>Hospitality / Hotel Group</option>
-                <option>Consulting / Agency</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>How many food businesses could you bring to the platform?</label>
-              <select>
-                <option value="">Estimate your network</option>
-                <option>1–10 businesses</option>
-                <option>10–50 businesses</option>
-                <option>50–200 businesses</option>
-                <option>200+ businesses</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Tell us about your business and goals</label>
-              <textarea placeholder="What does your network look like? What are you trying to build? How can T2E help?"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;font-size:16px;padding:16px;">Submit Partnership Application →</button>
-            <p style="font-size:12px;color:var(--gray-400);text-align:center;margin-top:12px;">We respond to all applications within 48 hours.</p>
-          </form>
+            <h3>Application Received!</h3>
+            <p>Thank you for applying to the T2E Partner Program. Our team will review your application and reach out within 48 hours to schedule your discovery call.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
-
-  <!-- CTA BANNER -->
-  <div class="cta-banner">
-    <div class="container">
-      <div class="cta-banner-content reveal">
-        <h2>Not ready to partner yet?<br>Try T2E as an operator first.</h2>
-        <p>Use the platform yourself, see the value firsthand, and sell it with confidence to your clients.</p>
-        <div class="cta-banner-actions">
-          <a href="index.html#demo" class="btn btn-primary btn-lg">Start Free Trial</a>
-          <a href="discover.html" class="btn btn-outline-white btn-lg">Explore the Platform</a>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -1004,10 +1128,10 @@
           <div class="logo">T2E</div>
           <p>The operating platform for the food industry. Built by operators, for operators.</p>
           <div class="footer-social">
-            <div class="social-btn">𝕏</div>
+            <div class="social-btn">&#120143;</div>
             <div class="social-btn">in</div>
-            <div class="social-btn">📷</div>
-            <div class="social-btn">▶</div>
+            <div class="social-btn">&#128247;</div>
+            <div class="social-btn">&#9654;</div>
           </div>
         </div>
         <div class="footer-col">
@@ -1041,24 +1165,27 @@
     </div>
     <div class="footer-bar">
       <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-        <span>© 2025 T2E — Time 2 Eat. All rights reserved.</span>
-        <span>Made for the people who feed us 🍽️</span>
+        <span>&copy; 2025 T2E &mdash; Time 2 Eat. All rights reserved.</span>
+        <span>Made for the people who feed us &#127829;</span>
       </div>
     </div>
   </footer>
 
   <script>
+    // Nav scroll
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 40);
     });
 
+    // Mobile nav toggle
     const navToggle = document.getElementById('navToggle');
     const navLinks = document.getElementById('navLinks');
     navToggle.addEventListener('click', () => {
       navLinks.classList.toggle('open');
     });
 
+    // Scroll reveal
     const revealEls = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
@@ -1069,6 +1196,42 @@
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
     revealEls.forEach(el => observer.observe(el));
+
+    // Partner form validation + success state
+    function handlePartnerSubmit(e) {
+      e.preventDefault();
+      let valid = true;
+
+      function validateField(inputId, groupId, checkFn) {
+        const input = document.getElementById(inputId);
+        const group = document.getElementById(groupId);
+        const ok = checkFn(input.value);
+        group.classList.toggle('has-error', !ok);
+        input.classList.toggle('error', !ok);
+        if (!ok) valid = false;
+      }
+
+      validateField('f-name', 'fg-name', v => v.trim().length > 0);
+      validateField('f-company', 'fg-company', v => v.trim().length > 0);
+      validateField('f-email', 'fg-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()));
+      validateField('f-type', 'fg-type', v => v !== '');
+      validateField('f-size', 'fg-size', v => v !== '');
+
+      if (valid) {
+        document.getElementById('partnerFormWrap').style.display = 'none';
+        const confirm = document.getElementById('partnerConfirm');
+        confirm.style.display = 'block';
+        confirm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // Remove error state on input
+    document.querySelectorAll('#partnerForm input, #partnerForm select, #partnerForm textarea').forEach(el => {
+      el.addEventListener('input', () => {
+        el.classList.remove('error');
+        el.closest('.form-group').classList.remove('has-error');
+      });
+    });
   </script>
 </body>
 </html>
