@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script defer src="/_vercel/insights/script.js"></script>
+  <title>How to Stop Losing Money to Food Waste — The T2E Journal</title>
+  <meta name="description" content="The average food service business throws away 4–10% of its food before it ever reaches a guest. Here's the step-by-step system that eliminates waste by up to 40%." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================================
+       CSS VARIABLES & RESET
+    ========================================================= */
+    :root {
+      --purple: #8B5CF6;
+      --purple-dark: #7C3AED;
+      --purple-mid: #9D72F8;
+      --purple-light: #A78BFA;
+      --purple-xlight: #EDE9FE;
+      --navy: #0F172A;
+      --navy-mid: #1E293B;
+      --navy-light: #334155;
+      --gray-900: #111827;
+      --gray-800: #1F2937;
+      --gray-700: #374151;
+      --gray-600: #4B5563;
+      --gray-500: #6B7280;
+      --gray-400: #9CA3AF;
+      --gray-300: #D1D5DB;
+      --gray-200: #E5E7EB;
+      --gray-100: #F3F4F6;
+      --gray-50: #F9FAFB;
+      --white: #FFFFFF;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --border: var(--gray-200);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.08);
+      --shadow-purple: 0 8px 32px rgba(139,92,246,0.25);
+      --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+      --max-width: 1200px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-body);
+      color: var(--gray-800);
+      background: var(--white);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+    .section { padding: 96px 0; }
+    .text-center { text-align: center; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      transition: all var(--transition);
+      cursor: pointer;
+      border: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--purple);
+      color: var(--white);
+      border-color: var(--purple);
+      box-shadow: var(--shadow-purple);
+    }
+    .btn-primary:hover {
+      background: var(--purple-dark);
+      border-color: var(--purple-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(139,92,246,0.35);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--navy);
+      border-color: var(--gray-300);
+    }
+    .btn-ghost:hover {
+      border-color: var(--purple);
+      color: var(--purple);
+      transform: translateY(-2px);
+    }
+    .btn-sm { padding: 10px 20px; font-size: 14px; }
+
+    /* =========================================================
+       PROGRESS BAR
+    ========================================================= */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple-dark), var(--purple), var(--purple-light));
+      z-index: 2000;
+      transition: width 0.1s linear;
+    }
+
+    /* =========================================================
+       NAV (exact copy from blog.html)
+    ========================================================= */
+    #nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: all var(--transition);
+    }
+    #nav.scrolled {
+      padding: 14px 40px;
+      border-bottom-color: var(--gray-100);
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--purple);
+      letter-spacing: -0.02em;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .nav-links a {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--gray-700);
+      transition: color var(--transition);
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--purple); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 4px;
+    }
+    .nav-toggle span {
+      width: 24px;
+      height: 2px;
+      background: var(--gray-700);
+      border-radius: 2px;
+    }
+
+    /* =========================================================
+       ARTICLE HERO
+    ========================================================= */
+    .article-hero {
+      padding: 140px 0 0;
+      background: var(--white);
+    }
+    .article-hero-inner {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 24px 48px;
+    }
+    .article-hero-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .cat-pill-hero {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-xlight);
+      padding: 6px 16px;
+      border-radius: 100px;
+    }
+    .read-time-badge {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .pub-date {
+      font-size: 13px;
+      color: var(--gray-400);
+    }
+    .article-hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4.5vw, 3.1rem);
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .article-deck {
+      font-size: 1.2rem;
+      color: var(--gray-600);
+      line-height: 1.65;
+      margin-bottom: 32px;
+      font-weight: 400;
+    }
+    .author-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 0;
+      border-top: 1px solid var(--gray-100);
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .author-avatar-lg {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .author-info { flex: 1; }
+    .author-info .name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--navy);
+    }
+    .author-info .role {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+    .follow-btn {
+      padding: 8px 18px;
+      border-radius: 100px;
+      border: 1.5px solid var(--purple);
+      color: var(--purple);
+      font-size: 13px;
+      font-weight: 600;
+      background: transparent;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+    .follow-btn:hover, .follow-btn.following {
+      background: var(--purple);
+      color: var(--white);
+    }
+
+    /* HERO IMAGE */
+    .hero-image-area {
+      background: linear-gradient(135deg, var(--navy) 0%, #2D1B69 50%, var(--navy-mid) 100%);
+      width: 100%;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-image-area::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,92,246,0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-image-area::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: -60px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(167,139,250,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-emoji {
+      font-size: 96px;
+      position: relative;
+      z-index: 1;
+      filter: drop-shadow(0 8px 32px rgba(0,0,0,0.3));
+    }
+    .hero-image-caption {
+      position: absolute;
+      bottom: 16px;
+      right: 24px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.05em;
+      z-index: 1;
+    }
+
+    /* =========================================================
+       ARTICLE BODY — TWO-COLUMN LAYOUT
+    ========================================================= */
+    .article-layout {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 64px 24px 96px;
+      display: grid;
+      grid-template-columns: 65% 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* MAIN CONTENT */
+    .article-content {
+      max-width: 680px;
+    }
+    .article-content p {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--gray-700);
+      margin-bottom: 1.5rem;
+    }
+    .article-content h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    .article-content ul, .article-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 0;
+    }
+    .article-content li {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: var(--gray-700);
+      padding: 4px 0 4px 28px;
+      position: relative;
+      list-style: none;
+    }
+    .article-content li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--purple);
+      font-weight: 700;
+    }
+    .article-content ol li {
+      counter-increment: list-counter;
+    }
+    .article-content ol li::before {
+      content: counter(list-counter) '.';
+      position: absolute;
+      left: 0;
+      color: var(--purple);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .article-content ol {
+      counter-reset: list-counter;
+    }
+    .stat-callout {
+      background: var(--purple-xlight);
+      border-left: 4px solid var(--purple);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 20px 24px;
+      margin: 2rem 0;
+    }
+    .stat-callout .stat-number {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--purple-dark);
+      line-height: 1;
+    }
+    .stat-callout .stat-label {
+      font-size: 0.9rem;
+      color: var(--gray-600);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+    .operator-profile {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-100);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin: 1.2rem 0;
+    }
+    .operator-profile .op-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .operator-profile .op-tactic {
+      font-size: 0.95rem;
+      color: var(--gray-700);
+      line-height: 1.6;
+    }
+    .takeaway-box {
+      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin: 2.5rem 0;
+      color: var(--white);
+    }
+    .takeaway-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      color: var(--purple-light);
+    }
+    .takeaway-box li {
+      color: rgba(255,255,255,0.85);
+      padding: 6px 0 6px 28px;
+    }
+    .takeaway-box li::before {
+      color: var(--purple-light);
+    }
+
+    /* REACTION BAR */
+    .reaction-bar {
+      margin-top: 48px;
+      padding: 24px 0;
+      border-top: 1px solid var(--gray-200);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .reaction-bar-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 14px;
+    }
+    .reactions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .reaction-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 18px;
+      border-radius: 100px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-body);
+    }
+    .reaction-btn:hover {
+      border-color: var(--purple-mid);
+      color: var(--purple-dark);
+      background: var(--purple-xlight);
+    }
+    .reaction-btn.active {
+      background: var(--purple-xlight);
+      border-color: var(--purple-mid);
+      color: var(--purple-dark);
+    }
+    .reaction-btn .count {
+      font-size: 13px;
+      font-weight: 700;
+      min-width: 16px;
+      text-align: center;
+    }
+
+    /* SHARE ROW */
+    .share-row {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .share-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-600);
+    }
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--gray-200);
+      background: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-body);
+    }
+    .share-btn:hover {
+      background: var(--gray-50);
+      border-color: var(--gray-300);
+      transform: translateY(-1px);
+    }
+    .share-btn.copied {
+      background: #D1FAE5;
+      border-color: #10B981;
+      color: #065F46;
+    }
+
+    /* =========================================================
+       SIDEBAR
+    ========================================================= */
+    .article-sidebar {
+      position: sticky;
+      top: 96px;
+    }
+    .sidebar-card {
+      background: var(--white);
+      border: 1px solid var(--gray-100);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .sidebar-card h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+
+    /* Author card in sidebar */
+    .sidebar-author-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .sidebar-author-av {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    .sidebar-author-info .name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--navy);
+    }
+    .sidebar-author-info .role {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: 2px;
+    }
+    .sidebar-author-bio {
+      font-size: 0.875rem;
+      color: var(--gray-600);
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+    .sidebar-follow-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--purple);
+      color: var(--purple);
+      font-size: 13px;
+      font-weight: 600;
+      background: transparent;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-body);
+    }
+    .sidebar-follow-btn:hover {
+      background: var(--purple);
+      color: var(--white);
+    }
+
+    /* More from sidebar */
+    .sidebar-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sidebar-link {
+      font-size: 0.875rem;
+      color: var(--gray-700);
+      line-height: 1.45;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--gray-100);
+      transition: color var(--transition);
+      cursor: pointer;
+    }
+    .sidebar-link:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .sidebar-link:hover { color: var(--purple); }
+    .sidebar-link a { color: inherit; }
+    .sidebar-link a:hover { color: var(--purple); }
+
+    /* Tags */
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag-chip {
+      padding: 6px 12px;
+      border-radius: 100px;
+      background: var(--gray-100);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .tag-chip:hover {
+      background: var(--purple-xlight);
+      color: var(--purple-dark);
+    }
+
+    /* Sidebar newsletter */
+    .sidebar-newsletter input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--gray-200);
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--gray-800);
+      margin-bottom: 10px;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .sidebar-newsletter input:focus { border-color: var(--purple-light); }
+    .sidebar-newsletter input::placeholder { color: var(--gray-400); }
+    .sidebar-newsletter button {
+      width: 100%;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      background: var(--purple);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font-body);
+    }
+    .sidebar-newsletter button:hover { background: var(--purple-dark); }
+
+    /* =========================================================
+       RELATED ARTICLES
+    ========================================================= */
+    .related-section {
+      background: var(--gray-50);
+      border-top: 1px solid var(--gray-100);
+      padding: 72px 0;
+    }
+    .related-section .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .related-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+    }
+    .article-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--gray-100);
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+    .article-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-5px);
+      border-color: var(--purple-light);
+    }
+    .article-image {
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .article-image .cat-pill {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.95);
+      color: var(--gray-700);
+    }
+    .article-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .article-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      line-height: 1.3;
+      flex: 1;
+    }
+    .article-body p {
+      font-size: 0.88rem;
+      color: var(--gray-600);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--gray-400);
+      padding-top: 16px;
+      border-top: 1px solid var(--gray-100);
+      margin-top: auto;
+    }
+    .article-meta .author-chip { display: flex; align-items: center; gap: 6px; }
+    .article-meta .author-av {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .article-read-time {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* =========================================================
+       JOIN CTA
+    ========================================================= */
+    .join-cta {
+      background: linear-gradient(135deg, var(--navy) 0%, #2D1B69 60%, var(--navy-mid) 100%);
+      padding: 80px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .join-cta::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);
+    }
+    .join-cta h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .join-cta p {
+      color: rgba(255,255,255,0.65);
+      font-size: 1rem;
+      margin-bottom: 36px;
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .join-cta .newsletter-form {
+      display: flex;
+      gap: 12px;
+      max-width: 460px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .join-cta .newsletter-form input {
+      flex: 1;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+    }
+    .join-cta .newsletter-form input::placeholder { color: rgba(255,255,255,0.4); }
+    .join-cta .newsletter-form input:focus { border-color: var(--purple-light); }
+
+    /* =========================================================
+       FOOTER (exact copy from blog.html)
+    ========================================================= */
+    .footer {
+      background: var(--gray-900);
+      color: rgba(255,255,255,0.75);
+      padding: 80px 0 0;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+    .footer-brand .logo {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--purple-light);
+      margin-bottom: 16px;
+    }
+    .footer-brand p { font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.55); max-width: 280px; }
+    .footer-social { display: flex; gap: 12px; margin-top: 24px; }
+    .social-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: background var(--transition);
+      cursor: pointer;
+    }
+    .social-btn:hover { background: var(--purple); }
+    .footer-col h4 { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); margin-bottom: 20px; }
+    .footer-links { display: flex; flex-direction: column; gap: 12px; }
+    .footer-links a { font-size: 14px; color: rgba(255,255,255,0.55); transition: color var(--transition); }
+    .footer-links a:hover { color: var(--purple-light); }
+    .footer-bar {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+    }
+    .footer-bar-gradient {
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple-dark), var(--purple), var(--purple-light));
+    }
+
+    /* =========================================================
+       SCROLL REVEAL
+    ========================================================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+    @media (max-width: 1024px) {
+      .article-layout {
+        grid-template-columns: 1fr;
+      }
+      .article-sidebar {
+        position: static;
+      }
+      .article-content {
+        max-width: 100%;
+      }
+      .related-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      #nav { padding: 16px 20px; }
+      #nav.scrolled { padding: 12px 20px; }
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        padding: 20px;
+        border-bottom: 1px solid var(--gray-100);
+        box-shadow: var(--shadow-md);
+        gap: 16px;
+      }
+      .nav-actions .btn-ghost { display: none; }
+      .nav-toggle { display: flex; }
+      .article-hero { padding: 110px 0 0; }
+      .article-hero h1 { font-size: 2rem; }
+      .hero-image-area { height: 260px; }
+      .hero-emoji { font-size: 64px; }
+      .article-layout { padding: 40px 20px 64px; gap: 2rem; }
+      .related-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-bar { flex-direction: column; gap: 8px; text-align: center; }
+      .join-cta .newsletter-form { flex-direction: column; }
+      .reactions { gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PROGRESS BAR -->
+  <div id="progress-bar"></div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="index.html" class="nav-logo">T2E</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="discover.html">Discover</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="for-businesses.html">For Businesses</a></li>
+      <li><a href="index.html#pricing">Pricing</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="index.html#demo" class="btn btn-ghost btn-sm">Book a Demo</a>
+      <a href="index.html#demo" class="btn btn-primary btn-sm">Get Started Free</a>
+    </div>
+  </nav>
+
+  <!-- ARTICLE HERO -->
+  <section class="article-hero">
+    <div class="article-hero-inner">
+      <div class="article-hero-top">
+        <span class="cat-pill-hero">Operations</span>
+        <span class="read-time-badge">⏱ 8 min read</span>
+        <span class="pub-date">May 14, 2025</span>
+      </div>
+      <h1>How to Stop Losing Money to Food Waste — The Operator's Playbook</h1>
+      <p class="article-deck">The average food service business throws away 4–10% of its food before it ever reaches a guest. That's not just a sustainability problem — it's a silent profit killer that most operators don't even track. Here is the step-by-step system that eliminates waste by up to 40% without changing your menu or your team.</p>
+      <div class="author-row">
+        <div class="author-avatar-lg">MT</div>
+        <div class="author-info">
+          <div class="name">Marcus T.</div>
+          <div class="role">T2E Operations Editor</div>
+        </div>
+        <button class="follow-btn" id="heroFollowBtn">+ Follow</button>
+      </div>
+    </div>
+
+    <!-- HERO IMAGE -->
+    <div class="hero-image-area">
+      <span class="hero-emoji">🥗</span>
+      <span class="hero-image-caption">Illustration: T2E Journal</span>
+    </div>
+  </section>
+
+  <!-- ARTICLE BODY: TWO COLUMN -->
+  <div class="article-layout">
+
+    <!-- MAIN CONTENT -->
+    <article class="article-content" id="article-body">
+
+      <p>You already know food costs are your biggest controllable expense. What you probably don't know is exactly how much you're throwing in the trash every single week — not because you're careless, but because nobody ever gave you a system to track it. That ends today.</p>
+
+      <p>Food waste is the most quietly devastating line item in a food operator's budget. It doesn't show up as a single ugly number on your P&amp;L. It bleeds out across dozens of small decisions: the prep cook who over-portions, the delivery that sat too long before refrigeration, the special you ordered too much of on a slow Tuesday. Each one is a few dollars. Together, they can be thousands per month.</p>
+
+      <h2>The Real Cost of Food Waste</h2>
+
+      <p>The numbers are stark. According to industry data, the average full-service restaurant wastes between <strong>4 and 10 percent</strong> of food purchased before it ever reaches a paying customer. For a catering operation bringing in $600,000 a year in revenue with a 30% food cost, that's $18,000 to $18,000 to $72,000 in pure loss annually — not revenue you failed to earn, but money you already spent that went directly into the bin.</p>
+
+      <div class="stat-callout">
+        <div class="stat-number">$72K</div>
+        <div class="stat-label">Potential annual waste loss for a mid-sized operation running at a 10% waste rate on a $240K food spend. Most operators have no idea their number is this high.</div>
+      </div>
+
+      <p>The National Restaurant Association estimates the U.S. food service industry wastes over $25 billion worth of food each year. A ReFED report found that for every dollar invested in food waste reduction strategies, operators see an average return of $8. This is not a sustainability initiative — it is one of the highest-ROI operational changes you can make.</p>
+
+      <p>And yet most operators are flying blind. They eyeball inventory. They rely on memory for par levels. They find out about waste when the walk-in starts to smell.</p>
+
+      <h2>The 5 Operators Doing It Right</h2>
+
+      <p>Across T2E's operator community, we've watched five distinct business types crack the food waste problem — each using tactics tailored to their model.</p>
+
+      <div class="operator-profile">
+        <div class="op-name">1. The Fast-Casual with a Tight Menu</div>
+        <div class="op-tactic">Sundown Kitchen in Atlanta cut waste by 34% by limiting their menu to 12 items and building a strict batch cooking schedule tied to historical hourly sales data. Nothing is prepped until the day's forecast says it should be.</div>
+      </div>
+
+      <div class="operator-profile">
+        <div class="op-name">2. The Catering Operation Running Weekly Events</div>
+        <div class="op-tactic">Harvest Table Catering in Denver moved to a client headcount confirmation window of 72 hours before events, then orders exactly 8% above confirmed count — no more, no less. They composted or donated what remained and received a tax deduction for charitable donations of excess food.</div>
+      </div>
+
+      <div class="operator-profile">
+        <div class="op-name">3. The Food Truck with Rotating Specials</div>
+        <div class="op-tactic">Nori on the Go in Portland uses a "yesterday's best becomes today's special" rule. Proteins that were prepped but not sold become the basis for the next day's fusion special — the same ingredients, repositioned at a 15% higher price point because they're framed as a feature, not a leftover.</div>
+      </div>
+
+      <div class="operator-profile">
+        <div class="op-name">4. The Ghost Kitchen Running Multiple Brands</div>
+        <div class="op-tactic">A ghost kitchen operator in Houston running four virtual brands built a shared-ingredient matrix — every item across all four menus is made from a pool of the same 40 core ingredients. Cross-utilization means nothing sits unused for more than 48 hours.</div>
+      </div>
+
+      <div class="operator-profile">
+        <div class="op-name">5. The High-Volume Commissary Kitchen</div>
+        <div class="op-tactic">A commissary supplying 12 food trucks in Chicago implemented daily waste logs at every station. Each prep cook fills out a 90-second form at shift end. The data surfaced a single recipe — a chicken marinade — that was being prepped in triple the needed quantity. One fix, $2,200 saved per month.</div>
+      </div>
+
+      <h2>Your Inventory Is Lying to You</h2>
+
+      <p>Here's the problem with how most operators manage inventory: it's manual, it's inconsistent, and it's always backward-looking. You count what you have. You compare it to what you ordered. You shrug at the difference. This is called variance — and in most kitchens, it's treated as an inevitability rather than a signal.</p>
+
+      <p>Manual tracking fails for three reasons. First, it's done too infrequently — weekly or monthly counts mean you're discovering waste long after you could have acted on it. Second, it's imprecise — a "case of chicken thighs" logged as received is not the same as counting exact usable pounds. Third, it doesn't close the loop — there's no system connecting what was prepped, what was sold, and what was discarded.</p>
+
+      <p>The result is that your inventory data feels like it's telling you something, but it's actually obscuring the truth. You know you had 40 pounds of salmon on Monday. You know you sold 18 salmon dishes by Thursday. But you don't know if the other 22 pounds were used in a staff meal, trimmed to waste, dropped on the floor, or sitting in the back of a cooler that's running two degrees too warm.</p>
+
+      <div class="stat-callout">
+        <div class="stat-number">68%</div>
+        <div class="stat-label">of food operators in a 2024 survey admitted they don't track food waste separately from general inventory variance. What you don't measure, you can't reduce.</div>
+      </div>
+
+      <h2>How T2E Tracks Waste Automatically</h2>
+
+      <p>T2E's inventory module was built specifically for this problem. When you log a received order in T2E, the platform cross-references it against your menu recipes — it knows exactly how much of each ingredient is theoretically consumed per dish sold. At end of day, it computes your theoretical usage versus your actual usage. The gap is your waste, broken down by ingredient category.</p>
+
+      <p>The difference between this and a spreadsheet is that T2E does it automatically, in real time, without requiring your prep team to fill out a single extra form. Sales data from your POS flows in. Received orders are logged in seconds via barcode or quick-entry. The system does the math and surfaces the three items you're wasting most, every week, without you having to ask.</p>
+
+      <p>Operators using T2E's waste tracking report an average reduction of 28% in food waste within the first 60 days — not because they changed their menu or their team, but because visibility alone changes behavior. When your head chef can see that mushrooms are your highest-variance item week over week, they start solving the problem without being told to.</p>
+
+      <h2>The 3 Changes You Can Make This Week</h2>
+
+      <div class="takeaway-box">
+        <h3>Your 3-Step Waste Reduction Action Plan</h3>
+        <ul>
+          <li style="list-style:none;padding:6px 0 6px 28px;position:relative;color:rgba(255,255,255,0.85);"><span style="position:absolute;left:0;color:#A78BFA;font-weight:700;">1.</span> <strong>Start a waste log today.</strong> It doesn't need to be digital. A notebook at each station works. Have prep staff record anything discarded — ingredient, quantity, reason — at end of shift. Do this for two weeks before drawing any conclusions.</li>
+          <li style="list-style:none;padding:6px 0 6px 28px;position:relative;color:rgba(255,255,255,0.85);"><span style="position:absolute;left:0;color:#A78BFA;font-weight:700;">2.</span> <strong>Audit your top 10 ingredients by spend.</strong> Pull your invoices from the last 30 days. Rank ingredients by total dollars spent. Now ask: where does each of these go when it doesn't sell? If you can't answer that question, that ingredient is a waste risk.</li>
+          <li style="list-style:none;padding:6px 0 6px 28px;position:relative;color:rgba(255,255,255,0.85);"><span style="position:absolute;left:0;color:#A78BFA;font-weight:700;">3.</span> <strong>Set a par level review cadence.</strong> Par levels are the maximum amount of each ingredient you want on hand at any given time. Most operators set par levels once and never revisit them. Review yours monthly at minimum — seasonality, menu changes, and sales patterns all shift them constantly.</li>
+        </ul>
+      </div>
+
+      <p>None of these changes require new equipment, new software, or a management consultant. They require 30 minutes this week and a commitment to making decisions based on data rather than gut feel.</p>
+
+      <p>The operators winning the margin game in 2025 aren't the ones with the most creative menus or the most aggressive pricing. They're the ones who know exactly where every dollar of food cost goes — and they've built systems to make sure more of it ends up on a plate in front of a paying customer.</p>
+
+      <p>Your walk-in is not a black hole. Start treating it like the asset it is.</p>
+
+      <!-- REACTION BAR -->
+      <div class="reaction-bar">
+        <div class="reaction-bar-label">How did this land?</div>
+        <div class="reactions">
+          <button class="reaction-btn" data-reaction="hot">🔥 <span class="label-text">Hot Take</span> <span class="count">47</span></button>
+          <button class="reaction-btn" data-reaction="helpful">💡 <span class="label-text">Helpful</span> <span class="count">134</span></button>
+          <button class="reaction-btn" data-reaction="interesting">🤔 <span class="label-text">Interesting</span> <span class="count">29</span></button>
+          <button class="reaction-btn" data-reaction="love">❤️ <span class="label-text">Love This</span> <span class="count">88</span></button>
+        </div>
+      </div>
+
+      <!-- SHARE ROW -->
+      <div class="share-row">
+        <span class="share-label">Share this article:</span>
+        <button class="share-btn" id="shareTwitter">𝕏 Twitter</button>
+        <button class="share-btn" id="shareLinkedIn">in LinkedIn</button>
+        <button class="share-btn" id="copyLink">🔗 Copy Link</button>
+      </div>
+
+    </article>
+
+    <!-- SIDEBAR -->
+    <aside class="article-sidebar">
+
+      <!-- Author Card -->
+      <div class="sidebar-card">
+        <div class="sidebar-author-top">
+          <div class="sidebar-author-av">MT</div>
+          <div class="sidebar-author-info">
+            <div class="name">Marcus T.</div>
+            <div class="role">T2E Operations Editor</div>
+          </div>
+        </div>
+        <p class="sidebar-author-bio">Marcus covers food industry operations, inventory systems, and the tools that help independent operators compete with chains. Former head of operations at a multi-unit fast casual group.</p>
+        <button class="sidebar-follow-btn" id="sidebarFollowBtn">+ Follow Marcus</button>
+      </div>
+
+      <!-- More from Marcus -->
+      <div class="sidebar-card">
+        <h4>More from Marcus</h4>
+        <div class="sidebar-links">
+          <div class="sidebar-link"><a href="blog.html">Why Your COGS Is Lying to You — and How to Actually Calculate Food Cost</a></div>
+          <div class="sidebar-link"><a href="blog.html">The 6-Week Inventory Overhaul: A Step-by-Step Operator Guide</a></div>
+          <div class="sidebar-link"><a href="blog.html">How to Build a Prep Schedule That Reduces Both Waste and Labor Costs</a></div>
+        </div>
+      </div>
+
+      <!-- Trending Now -->
+      <div class="sidebar-card">
+        <h4>Trending Now</h4>
+        <div class="sidebar-links">
+          <div class="sidebar-link"><a href="blog.html">The State of Food Tech in 2025: What Operators Need to Know</a></div>
+          <div class="sidebar-link"><a href="blog.html">From 3 Events a Month to 3 a Week: One Food Truck's Growth Story</a></div>
+          <div class="sidebar-link"><a href="blog.html">The Untapped Market: Why Late Night Food Is the Most Profitable Segment Nobody's Targeting</a></div>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="sidebar-card">
+        <h4>Tags</h4>
+        <div class="tag-cloud">
+          <span class="tag-chip">#FoodWaste</span>
+          <span class="tag-chip">#InventoryTips</span>
+          <span class="tag-chip">#RestaurantOps</span>
+          <span class="tag-chip">#CateringBusiness</span>
+          <span class="tag-chip">#FoodBiz</span>
+        </div>
+      </div>
+
+      <!-- Newsletter Mini -->
+      <div class="sidebar-card">
+        <h4>Get the Weekly Plate</h4>
+        <p style="font-size:0.85rem;color:var(--gray-500);line-height:1.5;margin-bottom:14px;">One operator insight, one finance tip — every Tuesday.</p>
+        <div class="sidebar-newsletter">
+          <input type="email" placeholder="your@email.com" />
+          <button>Subscribe Free</button>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- RELATED ARTICLES -->
+  <section class="related-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Related Articles</h2>
+      </div>
+      <div class="related-grid">
+
+        <a href="article.html" class="article-card reveal">
+          <div class="article-image" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">
+            🌮
+            <span class="cat-pill">Finance</span>
+          </div>
+          <div class="article-body">
+            <h3>Taco Tuesday Economics: How One Promotion Can Anchor Your Whole Week's Revenue</h3>
+            <p>The math behind a smart weekly promotion — and why the operators who do it right aren't discounting, they're building loyalty.</p>
+            <div class="article-meta">
+              <div class="author-chip">
+                <div class="author-av" style="background:#F59E0B;">AL</div>
+                Andre Laurent
+              </div>
+              <div class="article-read-time">⏱ 5 min</div>
+            </div>
+          </div>
+        </a>
+
+        <a href="article.html" class="article-card reveal">
+          <div class="article-image" style="background:linear-gradient(135deg,#E0F2FE,#BAE6FD);">
+            📍
+            <span class="cat-pill">Growth</span>
+          </div>
+          <div class="article-body">
+            <h3>Getting Your Food Business Found Online: The Local SEO Playbook for Operators</h3>
+            <p>Most food businesses are invisible on Google. Here's exactly how to fix that in an afternoon — no agency required.</p>
+            <div class="article-meta">
+              <div class="author-chip">
+                <div class="author-av" style="background:#0EA5E9;">DW</div>
+                Diana Williams
+              </div>
+              <div class="article-read-time">⏱ 6 min</div>
+            </div>
+          </div>
+        </a>
+
+        <a href="article.html" class="article-card reveal">
+          <div class="article-image" style="background:linear-gradient(135deg,#D1FAE5,#A7F3D0);">
+            📋
+            <span class="cat-pill">Finance</span>
+          </div>
+          <div class="article-body">
+            <h3>How to Write a Catering Invoice That Gets Paid — and Gets You Hired Again</h3>
+            <p>The invoice is the last impression you leave on a client. Make it professional, detailed, and impossible to dispute.</p>
+            <div class="article-meta">
+              <div class="author-chip">
+                <div class="author-av" style="background:#10B981;">JR</div>
+                Jasmine Rivera
+              </div>
+              <div class="article-read-time">⏱ 4 min</div>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- JOIN THE CONVERSATION CTA -->
+  <section class="join-cta">
+    <div class="container">
+      <h2>Every week, operators like you are reading T2E.</h2>
+      <p>Join 18,000+ food professionals getting the Weekly Plate — one operator insight, one finance tip, and one growth hack every Tuesday morning.</p>
+      <div class="newsletter-form">
+        <input type="email" placeholder="your@email.com" />
+        <button class="btn btn-primary">Subscribe Free</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-bar-gradient"></div>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">T2E</div>
+          <p>The operating platform for the food industry. Built by operators, for operators.</p>
+          <div class="footer-social">
+            <div class="social-btn">𝕏</div>
+            <div class="social-btn">in</div>
+            <div class="social-btn">📷</div>
+            <div class="social-btn">▶</div>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <div class="footer-links">
+            <a href="discover.html">Discover</a>
+            <a href="index.html#dashboard">Dashboard</a>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="for-businesses.html">For Businesses</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <div class="footer-links">
+            <a href="blog.html">The T2E Journal</a>
+            <a href="#">Help Center</a>
+            <a href="#">API Docs</a>
+            <a href="#">Community</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <div class="footer-links">
+            <a href="#">About T2E</a>
+            <a href="#">Careers</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+        <span>© 2025 T2E — Time 2 Eat. All rights reserved.</span>
+        <span>Made for the people who feed us 🍽️</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── PROGRESS BAR ──────────────────────────────────────────
+    const progressBar = document.getElementById('progress-bar');
+    const articleBody = document.getElementById('article-body');
+    function updateProgress() {
+      const articleTop = articleBody.getBoundingClientRect().top + window.scrollY;
+      const articleBottom = articleTop + articleBody.offsetHeight;
+      const scrolled = window.scrollY + window.innerHeight;
+      const total = articleBottom - articleTop;
+      const progress = Math.min(Math.max((window.scrollY - articleTop + window.innerHeight * 0.2) / total, 0), 1);
+      progressBar.style.width = (progress * 100) + '%';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    // ── NAV SCROLL EFFECT ─────────────────────────────────────
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // ── MOBILE NAV TOGGLE ─────────────────────────────────────
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // ── FOLLOW BUTTONS ────────────────────────────────────────
+    function setupFollowBtn(btn, activeLabel, inactiveLabel) {
+      btn.addEventListener('click', () => {
+        const isFollowing = btn.classList.toggle('following');
+        btn.textContent = isFollowing ? activeLabel : inactiveLabel;
+      });
+    }
+    setupFollowBtn(document.getElementById('heroFollowBtn'), '✓ Following', '+ Follow');
+    setupFollowBtn(document.getElementById('sidebarFollowBtn'), '✓ Following Marcus', '+ Follow Marcus');
+
+    // ── REACTION BUTTONS ──────────────────────────────────────
+    document.querySelectorAll('.reaction-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const countEl = btn.querySelector('.count');
+        const currentCount = parseInt(countEl.textContent, 10);
+        const wasActive = btn.classList.contains('active');
+        btn.classList.toggle('active');
+        countEl.textContent = wasActive ? currentCount - 1 : currentCount + 1;
+      });
+    });
+
+    // ── SHARE BUTTONS ─────────────────────────────────────────
+    const pageUrl = encodeURIComponent(window.location.href);
+    const pageTitle = encodeURIComponent(document.title);
+
+    document.getElementById('shareTwitter').addEventListener('click', () => {
+      window.open(`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`, '_blank', 'width=600,height=400');
+    });
+
+    document.getElementById('shareLinkedIn').addEventListener('click', () => {
+      window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${pageUrl}&title=${pageTitle}`, '_blank', 'width=600,height=500');
+    });
+
+    document.getElementById('copyLink').addEventListener('click', async () => {
+      const copyBtn = document.getElementById('copyLink');
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        copyBtn.textContent = '✓ Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(() => {
+          copyBtn.textContent = '🔗 Copy Link';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      } catch {
+        copyBtn.textContent = 'Copy failed';
+        setTimeout(() => { copyBtn.textContent = '🔗 Copy Link'; }, 2000);
+      }
+    });
+
+    // ── SCROLL REVEAL ─────────────────────────────────────────
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, (i % 4) * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
