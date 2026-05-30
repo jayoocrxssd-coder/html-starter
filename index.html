@@ -6,1198 +6,636 @@
 <title>T2E — Time 2 Eat | The Food Industry's Operating System</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-  /* ===== RESET & BASE ===== */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --base: #080808;
-    --onyx: #141416;
-    --onyx2: #1E1E22;
-    --lavender: #B8A9E8;
-    --lavender-light: #D4CBF5;
-    --lavender-deep: #8B78CC;
-    --white: #FFFFFF;
-    --soft-white: #F5F3FF;
-    --muted: rgba(255,255,255,0.45);
-    --border: rgba(184,169,232,0.15);
-    --border-hover: rgba(184,169,232,0.35);
-    --font-display: 'Playfair Display', serif;
-    --font-body: 'DM Sans', sans-serif;
-  }
-  html { scroll-behavior: smooth; }
-  body {
-    background: var(--base);
-    color: var(--white);
-    font-family: var(--font-body);
-    font-weight: 400;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-  ::selection { background: var(--lavender-deep); color: var(--white); }
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --purple: #8B5CF6;
+  --purple-dark: #7C3AED;
+  --purple-deeper: #6D28D9;
+  --purple-light: #EDE9FE;
+  --purple-mid: #C4B5FD;
+  --purple-soft: #F5F3FF;
+  --white: #FFFFFF;
+  --gray-50: #FAFAFA;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-600: #6B7280;
+  --gray-700: #374151;
+  --gray-900: #0F0A1E;
+  --border: #F0EDFF;
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'DM Sans', 'Segoe UI', sans-serif;
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 24px rgba(0,0,0,0.09);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
+  --shadow-purple: 0 4px 20px rgba(139,92,246,0.25);
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--gray-50);
+  color: var(--gray-900);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+::selection { background: var(--purple); color: #fff; }
 
-  /* ===== SCROLL REVEAL ===== */
-  .reveal {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
+/* ===== SCROLL REVEAL ===== */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* ===== TYPOGRAPHY UTILITIES ===== */
-  .display-xl {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: clamp(2.8rem, 5vw, 5rem);
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-  }
-  .display-lg {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(2rem, 3.5vw, 3.2rem);
-    line-height: 1.15;
-    letter-spacing: -0.015em;
-  }
-  .section-label {
-    font-family: var(--font-body);
-    font-weight: 600;
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--lavender);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-  }
-  .section-label::before {
-    content: '';
-    width: 24px;
-    height: 1px;
-    background: var(--lavender);
-    display: inline-block;
-  }
-  .body-lg { font-size: 1.1rem; font-weight: 300; color: rgba(255,255,255,0.72); line-height: 1.75; }
+/* ===== LAYOUT ===== */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+.section { padding: 110px 0; position: relative; }
+.section-white { background: var(--white); }
+.section-gray { background: var(--gray-50); }
+.section-purple { background: linear-gradient(135deg, #4C1D95 0%, #5B21B6 40%, #7C3AED 100%); }
+.section-soft { background: var(--purple-soft); }
 
-  /* ===== LAYOUT UTILITIES ===== */
-  .container { max-width: 1320px; margin: 0 auto; padding: 0 40px; }
-  .section { padding: 120px 0; position: relative; }
+/* ===== TYPOGRAPHY ===== */
+.display-xl { font-family: var(--font-display); font-weight: 900; font-size: clamp(2.8rem, 5vw, 4.8rem); line-height: 1.08; letter-spacing: -0.02em; }
+.display-lg { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.15; letter-spacing: -0.015em; }
+.section-label {
+  font-weight: 800; font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--purple); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.6rem;
+}
+.section-label::before { content: ''; width: 20px; height: 2px; background: var(--purple); display: inline-block; border-radius: 2px; }
+.muted { color: var(--gray-600); }
 
-  /* ===== BUTTONS ===== */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 14px 28px;
-    border-radius: 100px;
-    font-family: var(--font-body);
-    font-weight: 500;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    text-decoration: none;
-    border: none;
-    outline: none;
-    white-space: nowrap;
-  }
-  .btn-primary {
-    background: var(--lavender);
-    color: var(--base);
-    animation: pulse-glow 3s ease-in-out infinite;
-  }
-  .btn-primary:hover {
-    background: var(--lavender-light);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(184,169,232,0.4);
-  }
-  .btn-ghost {
-    background: transparent;
-    color: var(--soft-white);
-    border: 1px solid var(--border-hover);
-  }
-  .btn-ghost:hover {
-    border-color: var(--lavender);
-    color: var(--lavender-light);
-    background: rgba(184,169,232,0.06);
-    transform: translateY(-2px);
-  }
-  .btn-sm { padding: 10px 20px; font-size: 0.82rem; }
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 13px 26px; border-radius: 100px;
+  font-family: var(--font-body); font-weight: 700; font-size: 0.9rem;
+  cursor: pointer; transition: all 0.22s ease;
+  text-decoration: none; border: none; outline: none; white-space: nowrap;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  color: #fff; box-shadow: var(--shadow-purple);
+  animation: pulse-btn 3s ease-in-out infinite;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(139,92,246,0.45); }
+.btn-ghost { background: transparent; color: var(--purple-dark); border: 1.5px solid var(--purple-mid); }
+.btn-ghost:hover { background: var(--purple-light); transform: translateY(-2px); }
+.btn-white { background: #fff; color: var(--purple-dark); font-weight: 800; }
+.btn-white:hover { background: var(--purple-soft); transform: translateY(-2px); }
+.btn-sm { padding: 9px 18px; font-size: 0.82rem; }
+@keyframes pulse-btn {
+  0%, 100% { box-shadow: 0 4px 20px rgba(139,92,246,0.3); }
+  50% { box-shadow: 0 4px 32px rgba(139,92,246,0.5); }
+}
 
-  @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(184,169,232,0.4); }
-    50% { box-shadow: 0 0 0 12px rgba(184,169,232,0); }
-  }
+/* ===== PILL ===== */
+.pill {
+  display: inline-block; padding: 3px 10px; border-radius: 99px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+}
+.pill-purple { background: var(--purple-light); color: var(--purple-dark); }
+.pill-green { background: #DCFCE7; color: #15803D; }
+.pill-amber { background: #FEF9C3; color: #A16207; }
+.pill-red { background: #FEE2E2; color: #B91C1C; }
 
-  /* ===== GRAIN TEXTURE ===== */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    background-size: 180px 180px;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.35;
-  }
+/* ===== CARD ===== */
+.card {
+  background: var(--white); border-radius: 18px;
+  border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+  transition: all 0.25s ease;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--purple-mid); }
 
-  /* ===========================
-     1. NAVIGATION
-  =========================== */
-  #nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    padding: 0 40px;
-    height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: background 0.4s ease, backdrop-filter 0.4s ease, border-bottom 0.4s ease;
-  }
-  #nav.scrolled {
-    background: rgba(8,8,8,0.82);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 1.6rem;
-    background: linear-gradient(135deg, var(--lavender-light), var(--lavender-deep));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-decoration: none;
-    letter-spacing: -0.02em;
-  }
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    list-style: none;
-  }
-  .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.88rem;
-    font-weight: 500;
-    transition: color 0.2s ease;
-  }
-  .nav-links a:hover { color: var(--soft-white); }
-  .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
+/* =============================================
+   1. NAVIGATION
+============================================= */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 40px; height: 68px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,0.9);
+  transition: box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+}
+#nav.scrolled {
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: var(--font-display); font-weight: 900; font-size: 1.55rem;
+  background: linear-gradient(135deg, var(--purple), var(--purple-deeper));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; text-decoration: none; letter-spacing: -0.02em;
+}
+.nav-links { display: flex; align-items: center; gap: 1.8rem; list-style: none; }
+.nav-links a { color: var(--gray-600); text-decoration: none; font-size: 0.88rem; font-weight: 600; transition: color 0.2s; }
+.nav-links a:hover { color: var(--purple); }
+.nav-actions { display: flex; align-items: center; gap: 0.75rem; }
 
-  /* ===========================
-     2. HERO
-  =========================== */
-  #hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    padding: 100px 40px 80px;
-  }
-  .hero-bg { position: absolute; inset: 0; z-index: 0; }
-  .hero-glow-1 {
-    position: absolute;
-    top: -20%; left: 50%;
-    transform: translateX(-50%);
-    width: 900px; height: 900px;
-    background: radial-gradient(circle, rgba(139,120,204,0.18) 0%, rgba(139,120,204,0.04) 50%, transparent 70%);
-    animation: glow-pulse 8s ease-in-out infinite;
-  }
-  .hero-glow-2 {
-    position: absolute;
-    bottom: -10%; left: 20%;
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(184,169,232,0.08) 0%, transparent 60%);
-    animation: glow-pulse 10s ease-in-out infinite reverse;
-  }
-  .hero-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(184,169,232,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(184,169,232,0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
-  }
-  @keyframes glow-pulse {
-    0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
-    50% { transform: translateX(-50%) scale(1.08); opacity: 0.7; }
-  }
-  .hero-content { position: relative; z-index: 1; max-width: 900px; }
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 6px 16px;
-    border-radius: 100px;
-    border: 1px solid var(--border-hover);
-    background: rgba(184,169,232,0.06);
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: var(--lavender);
-    margin-bottom: 2rem;
-    letter-spacing: 0.04em;
-  }
-  .hero-eyebrow-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--lavender);
-    animation: blink 2s ease-in-out infinite;
-  }
-  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-  .hero-headline { margin-bottom: 1.5rem; }
-  .hero-sub {
-    font-size: 1.15rem;
-    font-weight: 300;
-    color: rgba(255,255,255,0.65);
-    max-width: 620px;
-    margin: 0 auto 2.5rem;
-    line-height: 1.8;
-  }
-  .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4rem; }
-  .hero-stats {
-    position: relative; z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 860px; width: 100%;
-    margin: 0 auto;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    background: rgba(20,20,22,0.6);
-    backdrop-filter: blur(12px);
-    overflow: hidden;
-  }
-  .hero-stat {
-    padding: 28px 24px;
-    text-align: center;
-    border-right: 1px solid var(--border);
-  }
-  .hero-stat:last-child { border-right: none; }
-  .hero-stat-num {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 2.4rem;
-    background: linear-gradient(135deg, var(--lavender-light), var(--lavender-deep));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-    margin-bottom: 0.4rem;
-  }
-  .hero-stat-label { font-size: 0.78rem; color: var(--muted); }
+/* =============================================
+   2. HERO
+============================================= */
+#hero {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; overflow: hidden;
+  padding: 100px 40px 60px;
+  background: linear-gradient(180deg, var(--purple-soft) 0%, var(--white) 100%);
+  position: relative;
+}
+.hero-bg-orb {
+  position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none;
+}
+.orb-1 { width: 600px; height: 600px; top: -200px; left: -100px; background: rgba(139,92,246,0.12); }
+.orb-2 { width: 400px; height: 400px; bottom: -100px; right: -100px; background: rgba(196,181,253,0.18); }
+.orb-3 { width: 300px; height: 300px; top: 30%; left: 60%; background: rgba(167,139,250,0.1); }
 
-  /* ===========================
-     3. THE PROBLEM
-  =========================== */
-  #problem { background: var(--onyx); }
-  .problem-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: start;
-  }
-  .problem-headline { margin-bottom: 1.2rem; }
-  .pain-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 1.2rem;
-    padding: 24px;
-    background: var(--onyx2);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    transition: all 0.3s ease;
-    cursor: default;
-    margin-bottom: 1rem;
-  }
-  .pain-card:hover {
-    transform: translateX(8px);
-    border-color: var(--border-hover);
-  }
-  .pain-icon {
-    width: 44px; height: 44px;
-    border-radius: 10px;
-    background: rgba(184,169,232,0.1);
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .pain-icon svg { width: 20px; height: 20px; }
-  .pain-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; color: var(--soft-white); }
-  .pain-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 6px 16px; border-radius: 99px;
+  background: var(--purple-light); border: 1.5px solid var(--purple-mid);
+  font-size: 0.76rem; font-weight: 700; color: var(--purple-dark);
+  margin-bottom: 1.8rem; letter-spacing: 0.04em;
+}
+.hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); animation: blink 2s ease-in-out infinite; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
 
-  /* ===========================
-     4. PERSONAS
-  =========================== */
-  #personas { background: var(--base); }
-  .personas-header { text-align: center; margin-bottom: 60px; }
-  .personas-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .persona-card {
-    padding: 40px 36px;
-    background: var(--onyx);
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    transition: all 0.35s ease;
-    position: relative;
-    overflow: hidden;
-    cursor: default;
-  }
-  .persona-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--lavender-deep), var(--lavender-light));
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.35s ease;
-  }
-  .persona-card:hover { transform: translateY(-6px); border-color: var(--border-hover); background: var(--onyx2); }
-  .persona-card:hover::before { transform: scaleX(1); }
-  .persona-num {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 4rem;
-    color: rgba(184,169,232,0.12);
-    line-height: 1;
-    margin-bottom: 1rem;
-  }
-  .persona-tag {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 100px;
-    border: 1px solid var(--border-hover);
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--lavender);
-    margin-bottom: 1rem;
-  }
-  .persona-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.8rem; }
-  .persona-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+.hero-content { position: relative; z-index: 1; max-width: 860px; }
+.hero-headline { margin-bottom: 1.4rem; }
+.hero-sub {
+  font-size: 1.1rem; font-weight: 400; color: var(--gray-600);
+  max-width: 600px; margin: 0 auto 2.4rem; line-height: 1.8;
+}
+.hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3.5rem; }
 
-  /* ===========================
-     5. DASHBOARD MOCKUP
-  =========================== */
-  #dashboard { background: var(--onyx); overflow: hidden; }
-  .dashboard-header { text-align: center; margin-bottom: 60px; }
-  .browser-frame {
-    background: var(--onyx2);
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,169,232,0.08);
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .browser-bar {
-    background: #0d0d0f;
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .browser-dots { display: flex; gap: 6px; }
-  .browser-dot { width: 12px; height: 12px; border-radius: 50%; }
-  .dot-red { background: #FF5F57; }
-  .dot-yellow { background: #FFBD2E; }
-  .dot-green { background: #28CA41; }
-  .browser-url {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border-radius: 6px;
-    padding: 5px 14px;
-    font-size: 0.78rem;
-    color: var(--muted);
-    font-family: var(--font-body);
-    border: 1px solid var(--border);
-  }
-  .dashboard-layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    min-height: 520px;
-  }
-  .dash-sidebar {
-    background: #0f0f12;
-    border-right: 1px solid var(--border);
-    padding: 24px 0;
-  }
-  .dash-sidebar-brand {
-    padding: 0 20px 20px;
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 1.3rem;
-    background: linear-gradient(135deg, var(--lavender-light), var(--lavender-deep));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 12px;
-  }
-  .dash-nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--muted);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-left: 2px solid transparent;
-  }
-  .dash-nav-item:hover { color: var(--soft-white); background: rgba(255,255,255,0.03); }
-  .dash-nav-item.active {
-    color: var(--lavender-light);
-    background: rgba(184,169,232,0.08);
-    border-left-color: var(--lavender);
-  }
-  .dash-nav-icon { width: 18px; height: 18px; opacity: 0.7; flex-shrink: 0; }
-  .dash-main { background: var(--onyx2); padding: 24px; overflow: hidden; }
-  .dash-topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .dash-greeting { font-size: 1.1rem; font-weight: 600; }
-  .dash-date { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
-  .dash-chips { display: flex; gap: 10px; flex-wrap: wrap; }
-  .dash-chip {
-    padding: 8px 16px;
-    background: rgba(184,169,232,0.08);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.78rem;
-  }
-  .dash-chip-val { font-weight: 700; color: var(--lavender-light); font-size: 1rem; display: block; }
-  .dash-chip-label { color: var(--muted); font-size: 0.72rem; }
-  .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .dash-card {
-    background: rgba(8,8,8,0.5);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px;
-  }
-  .dash-card-title {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 14px;
-  }
-  .dash-table { width: 100%; border-collapse: collapse; }
-  .dash-table th {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--muted);
-    text-align: left;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .dash-table td {
-    font-size: 0.8rem;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(184,169,232,0.05);
-    color: rgba(255,255,255,0.8);
-  }
-  .status-pill {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-size: 0.68rem;
-    font-weight: 600;
-  }
-  .status-confirmed { background: rgba(184,169,232,0.15); color: var(--lavender-light); }
-  .status-pending { background: rgba(255,196,0,0.12); color: #FFC400; }
-  .status-prep { background: rgba(100,200,100,0.12); color: #7BC47F; }
+/* food emoji float row */
+.hero-food-row {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin-bottom: 3rem; position: relative; z-index: 1;
+}
+.food-emoji-chip {
+  background: var(--white); border-radius: 99px;
+  padding: 8px 16px; display: flex; align-items: center; gap: 7px;
+  font-size: 0.82rem; font-weight: 600; color: var(--gray-700);
+  box-shadow: var(--shadow-sm); border: 1.5px solid var(--border);
+  transition: all 0.2s ease; cursor: default;
+}
+.food-emoji-chip:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--purple-mid); }
+.food-emoji-chip span:first-child { font-size: 1.1rem; }
 
-  .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 100px; }
-  .chart-bar {
-    flex: 1;
-    background: linear-gradient(180deg, var(--lavender), var(--lavender-deep));
-    border-radius: 4px 4px 0 0;
-    height: 0;
-    transition: height 1.2s ease;
-    opacity: 0.85;
-    min-width: 0;
-  }
-  .chart-labels { display: flex; gap: 8px; margin-top: 6px; }
-  .chart-label { flex: 1; text-align: center; font-size: 0.65rem; color: var(--muted); }
+.hero-stats {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  max-width: 820px; width: 100%; margin: 0 auto;
+  background: var(--white); border-radius: 20px;
+  border: 1.5px solid var(--border); box-shadow: var(--shadow-md); overflow: hidden;
+}
+.hero-stat { padding: 26px 20px; text-align: center; border-right: 1px solid var(--border); }
+.hero-stat:last-child { border-right: none; }
+.hero-stat-num {
+  font-family: var(--font-display); font-weight: 900; font-size: 2.2rem;
+  background: linear-gradient(135deg, var(--purple), var(--purple-deeper));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; line-height: 1; margin-bottom: 0.35rem;
+}
+.hero-stat-label { font-size: 0.76rem; color: var(--gray-400); font-weight: 500; }
 
-  .inventory-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(184,169,232,0.05);
-    font-size: 0.8rem;
-  }
-  .inventory-item:last-child { border-bottom: none; }
-  .inv-name { color: rgba(255,255,255,0.8); }
-  .inv-alert {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    border-radius: 100px;
-    font-size: 0.68rem;
-    font-weight: 600;
-  }
-  .inv-red { background: rgba(255,80,80,0.12); color: #FF7070; }
-  .inv-amber { background: rgba(255,196,0,0.12); color: #FFC400; }
+/* =============================================
+   3. PROBLEM
+============================================= */
+#problem { background: var(--white); }
+.problem-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+.pain-cards { display: flex; flex-direction: column; gap: 12px; }
+.pain-card {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 20px; background: var(--gray-50);
+  border-radius: 14px; border: 1.5px solid var(--border);
+  transition: all 0.25s ease; cursor: default;
+}
+.pain-card:hover { background: var(--purple-soft); border-color: var(--purple-mid); transform: translateX(6px); }
+.pain-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: var(--purple-light); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+}
+.pain-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem; color: var(--gray-900); }
+.pain-desc { font-size: 0.84rem; color: var(--gray-600); line-height: 1.6; }
 
-  .feature-pills {
-    display: flex; flex-wrap: wrap; gap: 10px;
-    justify-content: center;
-    margin-top: 40px;
-  }
-  .feature-pill {
-    padding: 10px 22px;
-    border-radius: 100px;
-    border: 1px solid var(--border-hover);
-    background: rgba(184,169,232,0.05);
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--lavender-light);
-    transition: all 0.2s ease;
-    cursor: default;
-  }
-  .feature-pill:hover {
-    background: rgba(184,169,232,0.12);
-    border-color: var(--lavender);
-    transform: translateY(-2px);
-  }
+/* =============================================
+   4. PERSONAS
+============================================= */
+#personas { background: var(--gray-50); }
+.personas-header { text-align: center; margin-bottom: 52px; }
+.personas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.persona-card {
+  padding: 36px 30px; background: var(--white);
+  border-radius: 20px; border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm); transition: all 0.3s ease;
+  position: relative; overflow: hidden; cursor: default;
+}
+.persona-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--purple), var(--purple-mid));
+  transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+}
+.persona-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: var(--purple-mid); }
+.persona-card:hover::before { transform: scaleX(1); }
+.persona-emoji { font-size: 2.4rem; margin-bottom: 1rem; }
+.persona-num { font-family: var(--font-display); font-weight: 900; font-size: 3.5rem; color: var(--gray-100); line-height: 1; margin-bottom: 0.8rem; }
+.persona-tag { display: inline-block; padding: 4px 12px; border-radius: 99px; background: var(--purple-light); color: var(--purple-dark); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.8rem; }
+.persona-title { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.6rem; color: var(--gray-900); }
+.persona-desc { font-size: 0.87rem; color: var(--gray-600); line-height: 1.7; }
 
-  /* ===========================
-     6. FEATURES GRID
-  =========================== */
-  #features { background: var(--base); }
-  .features-header { text-align: center; margin-bottom: 60px; }
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .feature-cell {
-    padding: 44px 40px;
-    border: 1px solid var(--border);
-    position: relative;
-    transition: all 0.3s ease;
-    overflow: hidden;
-  }
-  .feature-cell::after {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: linear-gradient(180deg, var(--lavender), var(--lavender-deep));
-    transform: scaleY(0);
-    transition: transform 0.3s ease;
-    transform-origin: top;
-  }
-  .feature-cell:hover { background: var(--onyx2); }
-  .feature-cell:hover::after { transform: scaleY(1); }
-  .feature-num {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--lavender-deep);
-    letter-spacing: 0.12em;
-    margin-bottom: 1.2rem;
-  }
-  .feature-icon-block {
-    width: 48px; height: 48px;
-    border-radius: 12px;
-    background: rgba(184,169,232,0.08);
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 1.2rem;
-    transition: all 0.3s ease;
-  }
-  .feature-cell:hover .feature-icon-block {
-    background: rgba(184,169,232,0.15);
-    border-color: var(--lavender-deep);
-  }
-  .feature-icon-block svg { width: 22px; height: 22px; }
-  .feature-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.5rem; }
-  .feature-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+/* =============================================
+   5. DASHBOARD
+============================================= */
+#dashboard { background: var(--purple-soft); }
+.dashboard-header { text-align: center; margin-bottom: 52px; }
+.browser-frame {
+  background: var(--white); border-radius: 20px;
+  border: 1.5px solid var(--border); overflow: hidden;
+  box-shadow: var(--shadow-lg); max-width: 1060px; margin: 0 auto;
+}
+.browser-bar {
+  background: var(--gray-50); padding: 12px 20px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.browser-dots { display: flex; gap: 6px; }
+.browser-dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot-r { background: #FF5F57; } .dot-y { background: #FFBD2E; } .dot-g { background: #28CA41; }
+.browser-url {
+  flex: 1; background: var(--white); border-radius: 8px;
+  padding: 5px 14px; font-size: 0.76rem; color: var(--gray-400);
+  border: 1.5px solid var(--border);
+}
+.dash-layout { display: grid; grid-template-columns: 200px 1fr; min-height: 480px; }
+.dash-sidebar {
+  background: var(--gray-900); padding: 20px 0;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+.dash-sb-brand {
+  padding: 0 18px 18px; font-family: var(--font-display); font-weight: 900; font-size: 1.3rem;
+  background: linear-gradient(135deg, #C4B5FD, #8B5CF6);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 10px;
+}
+.dash-nav { display: flex; align-items: center; gap: 9px; padding: 10px 18px; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.45); cursor: pointer; border-left: 2px solid transparent; transition: all 0.2s; }
+.dash-nav svg { flex-shrink: 0; }
+.dash-nav:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04); }
+.dash-nav.active { color: #C4B5FD; background: rgba(139,92,246,0.15); border-left-color: var(--purple); }
+.dash-main { background: #FAFBFF; padding: 22px; }
+.dash-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+.dash-greeting { font-size: 1rem; font-weight: 700; color: var(--gray-900); }
+.dash-date { font-size: 0.74rem; color: var(--gray-400); margin-top: 1px; }
+.dash-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.dash-chip { padding: 7px 14px; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; box-shadow: var(--shadow-sm); }
+.dash-chip-val { font-weight: 800; font-size: 1rem; color: var(--purple-dark); display: block; }
+.dash-chip-label { color: var(--gray-400); font-size: 0.68rem; }
+.dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.dash-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: var(--shadow-sm); }
+.dash-card-title { font-size: 0.72rem; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+.dash-table { width: 100%; border-collapse: collapse; }
+.dash-table th { font-size: 0.68rem; font-weight: 700; color: var(--gray-400); text-align: left; padding: 5px 0; border-bottom: 1px solid var(--border); }
+.dash-table td { font-size: 0.78rem; padding: 7px 0; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); }
+.s-pill { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.66rem; font-weight: 700; }
+.s-conf { background: var(--purple-light); color: var(--purple-dark); }
+.s-pend { background: #FEF9C3; color: #A16207; }
+.s-prep { background: #DCFCE7; color: #15803D; }
+.chart-bars { display: flex; align-items: flex-end; gap: 7px; height: 90px; }
+.chart-bar { flex: 1; background: linear-gradient(180deg, var(--purple), var(--purple-deeper)); border-radius: 5px 5px 0 0; height: 0; transition: height 1.2s ease; opacity: 0.9; }
+.chart-labels { display: flex; gap: 7px; margin-top: 5px; }
+.chart-label { flex: 1; text-align: center; font-size: 0.62rem; color: var(--gray-400); }
+.inv-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--gray-100); font-size: 0.78rem; }
+.inv-row:last-child { border-bottom: none; }
+.inv-name { color: var(--gray-700); }
+.inv-badge { padding: 2px 8px; border-radius: 99px; font-size: 0.66rem; font-weight: 700; }
+.inv-crit { background: #FEE2E2; color: #B91C1C; }
+.inv-low { background: #FEF9C3; color: #A16207; }
+.feature-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 36px; }
+.feature-pill { padding: 9px 20px; border-radius: 99px; background: var(--white); border: 1.5px solid var(--purple-mid); font-size: 0.83rem; font-weight: 700; color: var(--purple-dark); box-shadow: var(--shadow-sm); transition: all 0.2s ease; cursor: default; }
+.feature-pill:hover { background: var(--purple-light); transform: translateY(-2px); box-shadow: var(--shadow-purple); }
 
-  /* ===========================
-     7. MARKETPLACE
-  =========================== */
-  #marketplace { background: var(--onyx); }
-  .marketplace-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-  }
-  .marketplace-differentiator {
-    margin: 1.8rem 0;
-    padding: 20px 24px;
-    background: rgba(184,169,232,0.06);
-    border-left: 3px solid var(--lavender);
-    border-radius: 0 8px 8px 0;
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.75);
-    line-height: 1.65;
-    font-style: italic;
-  }
-  .marketplace-props { display: flex; flex-wrap: wrap; gap: 10px; }
-  .marketplace-prop {
-    padding: 8px 16px;
-    border-radius: 100px;
-    border: 1px solid var(--border-hover);
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--lavender-light);
-    background: rgba(184,169,232,0.05);
-  }
-  .profile-card-mockup {
-    background: var(--onyx2);
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    padding: 32px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    position: relative;
-    overflow: hidden;
-  }
-  .profile-card-mockup::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--lavender-deep), var(--lavender-light));
-  }
-  .profile-avatar {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--lavender-deep), var(--lavender));
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 1.4rem;
-    color: var(--base);
-    margin-bottom: 1rem;
-  }
-  .profile-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.3rem; }
-  .profile-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
-  .profile-tag {
-    padding: 3px 10px;
-    border-radius: 100px;
-    background: rgba(184,169,232,0.1);
-    border: 1px solid var(--border);
-    font-size: 0.72rem;
-    color: var(--lavender);
-  }
-  .profile-stars { display: flex; align-items: center; gap: 6px; margin-bottom: 0.6rem; }
-  .stars { color: #FFD700; font-size: 0.9rem; }
-  .review-count { font-size: 0.8rem; color: var(--muted); }
-  .profile-divider { height: 1px; background: var(--border); margin: 1.2rem 0; }
-  .profile-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
-  .profile-stat { text-align: center; }
-  .profile-stat-val { font-weight: 700; font-size: 1.1rem; color: var(--lavender-light); }
-  .profile-stat-key { font-size: 0.72rem; color: var(--muted); }
+/* =============================================
+   6. FEATURES GRID
+============================================= */
+#features { background: var(--white); }
+.features-header { text-align: center; margin-bottom: 52px; }
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+.feature-cell { padding: 40px 36px; border: 1px solid var(--border); position: relative; transition: all 0.25s ease; overflow: hidden; cursor: default; }
+.feature-cell::after { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--purple), var(--purple-mid)); transform: scaleY(0); transform-origin: top; transition: transform 0.3s ease; }
+.feature-cell:hover { background: var(--purple-soft); }
+.feature-cell:hover::after { transform: scaleY(1); }
+.feature-num { font-size: 0.68rem; font-weight: 800; color: var(--purple); letter-spacing: 0.15em; margin-bottom: 1rem; }
+.feature-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+.feature-title { font-size: 1rem; font-weight: 800; margin-bottom: 0.45rem; color: var(--gray-900); }
+.feature-desc { font-size: 0.84rem; color: var(--gray-600); line-height: 1.65; }
 
-  /* ===========================
-     8. IMPACT
-  =========================== */
-  #impact { background: #000; text-align: center; }
-  .impact-quote {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(1.8rem, 4vw, 3.4rem);
-    line-height: 1.25;
-    color: var(--soft-white);
-    max-width: 760px;
-    margin: 0 auto 2rem;
-  }
-  .impact-quote::before {
-    content: '\201C';
-    font-size: 6rem;
-    line-height: 0;
-    vertical-align: -0.4em;
-    color: var(--lavender-deep);
-    margin-right: 0.1em;
-    opacity: 0.5;
-  }
-  .impact-body {
-    max-width: 580px;
-    margin: 0 auto 3rem;
-    color: var(--muted);
-    font-size: 1rem;
-    line-height: 1.8;
-  }
-  .impact-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-  .impact-pill {
-    padding: 10px 20px;
-    border-radius: 100px;
-    border: 1px solid rgba(184,169,232,0.2);
-    background: rgba(184,169,232,0.04);
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: rgba(255,255,255,0.7);
-    transition: all 0.25s ease;
-  }
-  .impact-pill:hover {
-    border-color: var(--lavender);
-    color: var(--lavender-light);
-    background: rgba(184,169,232,0.08);
-  }
+/* =============================================
+   7. MARKETPLACE
+============================================= */
+#marketplace { background: var(--gray-50); }
+.marketplace-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+.marketplace-quote {
+  margin: 1.6rem 0; padding: 18px 20px;
+  background: var(--purple-light); border-left: 3px solid var(--purple);
+  border-radius: 0 12px 12px 0; font-size: 0.9rem;
+  color: var(--purple-deeper); line-height: 1.6; font-style: italic; font-weight: 500;
+}
+.mp-props { display: flex; flex-wrap: wrap; gap: 8px; }
+.mp-prop { padding: 8px 16px; border-radius: 99px; background: var(--white); border: 1.5px solid var(--purple-mid); font-size: 0.82rem; font-weight: 700; color: var(--purple-dark); box-shadow: var(--shadow-sm); }
 
-  /* ===========================
-     9. ROADMAP
-  =========================== */
-  #roadmap { background: var(--onyx); }
-  .roadmap-header { text-align: center; margin-bottom: 60px; }
-  .roadmap-track {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .roadmap-line {
-    position: absolute;
-    top: 54px;
-    left: 16%; right: 16%;
-    height: 2px;
-    background: linear-gradient(90deg, var(--lavender-deep), rgba(184,169,232,0.2));
-    z-index: 0;
-  }
-  .roadmap-card {
-    padding: 40px 36px;
-    background: var(--onyx2);
-    border: 1px solid var(--border);
-    position: relative; z-index: 1;
-    transition: border-color 0.3s ease;
-  }
-  .roadmap-card:first-child { border-radius: 16px 0 0 16px; }
-  .roadmap-card:last-child { border-radius: 0 16px 16px 0; }
-  .roadmap-card.active { border-color: var(--lavender-deep); background: rgba(139,120,204,0.06); }
-  .roadmap-card.muted { opacity: 0.6; }
-  .roadmap-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    border-radius: 100px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-  }
-  .badge-live { background: rgba(123,196,127,0.12); color: #7BC47F; border: 1px solid rgba(123,196,127,0.3); }
-  .badge-dev { background: rgba(255,196,0,0.1); color: #FFC400; border: 1px solid rgba(255,196,0,0.25); }
-  .badge-vision { background: rgba(184,169,232,0.1); color: var(--lavender); border: 1px solid var(--border-hover); }
-  .roadmap-phase-num {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 3.5rem;
-    color: rgba(184,169,232,0.12);
-    line-height: 1;
-    margin-bottom: 0.5rem;
-  }
-  .active .roadmap-phase-num { color: rgba(184,169,232,0.25); }
-  .roadmap-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 1.2rem; }
-  .roadmap-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .roadmap-features li {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-  .roadmap-features li::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--lavender-deep);
-    flex-shrink: 0;
-  }
-  .active .roadmap-features li { color: rgba(255,255,255,0.7); }
+/* Profile card mockup */
+.profile-card {
+  background: var(--white); border-radius: 22px;
+  border: 1.5px solid var(--border); padding: 28px;
+  box-shadow: var(--shadow-lg); position: relative; overflow: hidden;
+}
+.profile-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--purple-deeper), var(--purple-mid)); }
+.profile-avatar-ring { padding: 3px; background: linear-gradient(135deg, var(--purple), var(--purple-mid)); border-radius: 50%; display: inline-block; margin-bottom: 12px; }
+.profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--purple), var(--purple-darker, #6D28D9)); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 1.4rem; color: #fff; border: 2.5px solid var(--white); }
+.profile-name { font-weight: 800; font-size: 1.1rem; margin-bottom: 0.25rem; }
+.profile-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.profile-tag { padding: 3px 10px; border-radius: 99px; background: var(--purple-light); border: 1px solid var(--purple-mid); font-size: 0.7rem; color: var(--purple-dark); font-weight: 600; }
+.profile-stars { display: flex; align-items: center; gap: 5px; margin-bottom: 6px; }
+.stars { color: #F59E0B; font-size: 0.9rem; }
+.review-count { font-size: 0.78rem; color: var(--gray-400); }
+.profile-divider { height: 1px; background: var(--border); margin: 14px 0; }
+.profile-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.profile-stat { text-align: center; padding: 10px; background: var(--gray-50); border-radius: 12px; border: 1px solid var(--border); }
+.profile-stat-val { font-weight: 800; font-size: 1.05rem; color: var(--purple-dark); }
+.profile-stat-key { font-size: 0.7rem; color: var(--gray-400); }
 
-  /* ===========================
-     10. TESTIMONIALS
-  =========================== */
-  #testimonials { background: var(--base); }
-  .testimonials-header { text-align: center; margin-bottom: 60px; }
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .testimonial-card {
-    padding: 36px;
-    background: var(--onyx);
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    transition: all 0.3s ease;
-    cursor: default;
-  }
-  .testimonial-card:hover {
-    border-color: rgba(184,169,232,0.3);
-    box-shadow: 0 0 0 1px rgba(184,169,232,0.08), 0 20px 50px rgba(0,0,0,0.4);
-    transform: translateY(-4px);
-  }
-  .testimonial-quote-icon {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    line-height: 0.8;
-    color: var(--lavender-deep);
-    opacity: 0.4;
-    margin-bottom: 1rem;
-  }
-  .testimonial-text {
-    font-size: 0.95rem;
-    line-height: 1.75;
-    color: rgba(255,255,255,0.75);
-    margin-bottom: 1.5rem;
-    font-style: italic;
-  }
-  .testimonial-author { display: flex; align-items: center; gap: 12px; }
-  .author-avatar {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--base);
-    flex-shrink: 0;
-  }
-  .av-1 { background: linear-gradient(135deg, #B8A9E8, #8B78CC); }
-  .av-2 { background: linear-gradient(135deg, #D4CBF5, #B8A9E8); }
-  .av-3 { background: linear-gradient(135deg, #9B8DD4, #6B5BA8); }
-  .author-name { font-weight: 600; font-size: 0.9rem; }
-  .author-biz { font-size: 0.78rem; color: var(--muted); }
-  .author-tag {
-    margin-left: auto;
-    padding: 3px 10px;
-    border-radius: 100px;
-    background: rgba(184,169,232,0.08);
-    border: 1px solid var(--border);
-    font-size: 0.68rem;
-    color: var(--lavender);
-    font-weight: 500;
-  }
+/* =============================================
+   8. IMPACT (purple section)
+============================================= */
+#impact { text-align: center; }
+.impact-quote { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 4vw, 3.2rem); line-height: 1.25; color: #fff; max-width: 720px; margin: 0 auto 1.8rem; }
+.impact-quote::before { content: '\201C'; font-size: 5rem; line-height: 0; vertical-align: -0.35em; margin-right: 0.1em; opacity: 0.4; }
+.impact-body { max-width: 560px; margin: 0 auto 2.8rem; color: rgba(255,255,255,0.75); font-size: 0.98rem; line-height: 1.8; }
+.impact-pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.impact-pill { padding: 9px 18px; border-radius: 99px; border: 1.5px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.08); font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.85); backdrop-filter: blur(8px); transition: all 0.2s ease; }
+.impact-pill:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.15); }
 
-  /* ===========================
-     11. PRICING
-  =========================== */
-  #pricing { background: var(--onyx); }
-  .pricing-header { text-align: center; margin-bottom: 60px; }
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    max-width: 1000px;
-    margin: 0 auto;
-  }
-  .pricing-card {
-    padding: 40px 36px;
-    background: var(--onyx2);
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    transition: all 0.3s ease;
-    position: relative;
-  }
-  .pricing-card.popular { border-color: var(--lavender-deep); background: rgba(139,120,204,0.06); }
-  .popular-badge {
-    position: absolute;
-    top: -12px; left: 50%;
-    transform: translateX(-50%);
-    padding: 4px 16px;
-    background: linear-gradient(90deg, var(--lavender-deep), var(--lavender));
-    border-radius: 100px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--base);
-    white-space: nowrap;
-  }
-  .pricing-plan { font-size: 0.8rem; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
-  .pricing-price {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 2rem;
-    color: var(--lavender-light);
-    margin-bottom: 1.5rem;
-  }
-  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 2rem; }
-  .pricing-features li {
-    display: flex; align-items: flex-start; gap: 8px;
-    font-size: 0.87rem;
-    color: rgba(255,255,255,0.7);
-  }
-  .pricing-features li::before { content: '✓'; color: var(--lavender); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-  .pricing-note {
-    text-align: center;
-    margin-top: 2.5rem;
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-  .pricing-note span { color: var(--lavender-light); }
+/* =============================================
+   9. ROADMAP
+============================================= */
+#roadmap { background: var(--white); }
+.roadmap-header { text-align: center; margin-bottom: 52px; }
+.roadmap-track { display: grid; grid-template-columns: repeat(3, 1fr); position: relative; gap: 0; }
+.roadmap-line { position: absolute; top: 52px; left: 16%; right: 16%; height: 2px; background: linear-gradient(90deg, var(--purple), var(--purple-light)); z-index: 0; }
+.roadmap-card { padding: 36px 32px; background: var(--gray-50); border: 1.5px solid var(--border); position: relative; z-index: 1; transition: all 0.25s ease; }
+.roadmap-card:first-child { border-radius: 18px 0 0 18px; }
+.roadmap-card:last-child { border-radius: 0 18px 18px 0; }
+.roadmap-card.active { background: var(--purple-soft); border-color: var(--purple-mid); }
+.roadmap-card.muted { opacity: 0.55; }
+.rm-badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 99px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1.2rem; }
+.badge-live { background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }
+.badge-dev { background: #FEF9C3; color: #A16207; border: 1px solid #FDE68A; }
+.badge-vision { background: var(--purple-light); color: var(--purple-dark); border: 1px solid var(--purple-mid); }
+.rm-num { font-family: var(--font-display); font-weight: 900; font-size: 3.2rem; color: var(--gray-200); line-height: 1; margin-bottom: 0.4rem; }
+.active .rm-num { color: var(--purple-mid); }
+.rm-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 1rem; color: var(--gray-900); }
+.rm-features { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.rm-features li { display: flex; align-items: center; gap: 8px; font-size: 0.84rem; color: var(--gray-600); }
+.rm-features li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--purple); flex-shrink: 0; }
+.active .rm-features li { color: var(--purple-deeper); }
 
-  /* ===========================
-     12. RESOURCES
-  =========================== */
-  #resources { background: var(--base); }
-  .resources-header { text-align: center; margin-bottom: 60px; }
-  .articles-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .article-card {
-    background: var(--onyx);
-    border-radius: 16px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  .article-card:hover { transform: translateY(-4px); border-color: var(--border-hover); }
-  .article-thumb { height: 180px; position: relative; overflow: hidden; }
-  .thumb-1 { background: linear-gradient(135deg, rgba(139,120,204,0.3) 0%, rgba(8,8,8,0.8) 100%), radial-gradient(circle at 30% 50%, rgba(184,169,232,0.2), transparent 60%); }
-  .thumb-2 { background: linear-gradient(135deg, rgba(100,80,180,0.3) 0%, rgba(8,8,8,0.8) 100%), radial-gradient(circle at 70% 30%, rgba(212,203,245,0.2), transparent 60%); }
-  .thumb-3 { background: linear-gradient(135deg, rgba(80,60,160,0.3) 0%, rgba(8,8,8,0.8) 100%), radial-gradient(circle at 50% 70%, rgba(139,120,204,0.25), transparent 60%); }
-  .article-thumb-icon {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.25;
-  }
-  .article-body { padding: 24px; }
-  .article-cat {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 100px;
-    background: rgba(184,169,232,0.1);
-    border: 1px solid var(--border-hover);
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--lavender);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 0.8rem;
-  }
-  .article-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; line-height: 1.45; }
-  .article-excerpt { font-size: 0.83rem; color: var(--muted); line-height: 1.65; margin-bottom: 1rem; }
-  .article-link {
-    font-size: 0.83rem;
-    font-weight: 600;
-    color: var(--lavender);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: gap 0.2s ease;
-  }
-  .article-card:hover .article-link { gap: 8px; }
+/* =============================================
+   10. TESTIMONIALS
+============================================= */
+#testimonials { background: var(--gray-50); }
+.testimonials-header { text-align: center; margin-bottom: 52px; }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.test-card { padding: 32px; background: var(--white); border-radius: 20px; border: 1.5px solid var(--border); box-shadow: var(--shadow-sm); transition: all 0.25s ease; cursor: default; }
+.test-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: var(--purple-mid); }
+.test-quote-icon { font-size: 2.8rem; font-family: var(--font-display); line-height: 0.8; color: var(--purple); opacity: 0.3; margin-bottom: 1rem; }
+.test-text { font-size: 0.92rem; line-height: 1.75; color: var(--gray-700); margin-bottom: 1.4rem; font-style: italic; }
+.test-author { display: flex; align-items: center; gap: 10px; }
+.author-av { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.88rem; color: #fff; flex-shrink: 0; }
+.av1 { background: linear-gradient(135deg, #8B5CF6, #6D28D9); }
+.av2 { background: linear-gradient(135deg, #C4B5FD, #8B5CF6); }
+.av3 { background: linear-gradient(135deg, #7C3AED, #5B21B6); }
+.author-name { font-weight: 700; font-size: 0.88rem; color: var(--gray-900); }
+.author-biz { font-size: 0.75rem; color: var(--gray-400); }
+.author-tag { margin-left: auto; padding: 3px 10px; border-radius: 99px; background: var(--purple-light); border: 1px solid var(--purple-mid); font-size: 0.66rem; color: var(--purple-dark); font-weight: 700; }
 
-  /* ===========================
-     13. DEMO / CONTACT
-  =========================== */
-  #demo { background: var(--onyx); }
-  .demo-inner {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 80px;
-    align-items: start;
-  }
-  .demo-reasons { list-style: none; display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
-  .demo-reason { display: flex; align-items: flex-start; gap: 14px; }
-  .demo-reason-icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    background: rgba(184,169,232,0.08);
-    border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .demo-reason-icon svg { width: 18px; height: 18px; }
-  .demo-reason-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; }
-  .demo-reason-desc { font-size: 0.85rem; color: var(--muted); }
-  .contact-form-wrap {
-    background: var(--onyx2);
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    padding: 40px;
-  }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-group { margin-bottom: 16px; }
-  .form-group label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: rgba(255,255,255,0.6);
-    margin-bottom: 6px;
-    letter-spacing: 0.04em;
-  }
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    color: var(--white);
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    appearance: none;
-  }
-  .form-group select { cursor: pointer; }
-  .form-group select option { background: var(--onyx2); }
-  .form-group textarea { resize: vertical; min-height: 100px; }
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    border-color: var(--lavender);
-    box-shadow: 0 0 0 3px rgba(184,169,232,0.12);
-  }
-  .form-group input::placeholder,
-  .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
-  .form-error { font-size: 0.75rem; color: #FF7070; margin-top: 4px; display: none; }
-  .form-group.error input,
-  .form-group.error select { border-color: #FF7070; }
-  .form-group.error .form-error { display: block; }
-  .form-confirm {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 20px;
-    gap: 1rem;
-  }
-  .confirm-icon {
-    width: 64px; height: 64px;
-    border-radius: 50%;
-    background: rgba(123,196,127,0.12);
-    border: 2px solid rgba(123,196,127,0.3);
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 0.5rem;
-  }
-  .confirm-title { font-size: 1.4rem; font-weight: 700; }
-  .confirm-msg { color: var(--muted); font-size: 0.9rem; }
+/* =============================================
+   11. PRICING
+============================================= */
+#pricing { background: var(--white); }
+.pricing-header { text-align: center; margin-bottom: 52px; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 960px; margin: 0 auto; }
+.price-card { padding: 36px 30px; background: var(--gray-50); border-radius: 20px; border: 1.5px solid var(--border); position: relative; transition: all 0.25s ease; }
+.price-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.price-card.popular { background: var(--purple-soft); border-color: var(--purple-mid); box-shadow: var(--shadow-purple); }
+.popular-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); padding: 4px 18px; background: linear-gradient(90deg, var(--purple), var(--purple-mid)); border-radius: 99px; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; white-space: nowrap; }
+.price-plan { font-size: 0.75rem; font-weight: 800; color: var(--gray-400); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.6rem; }
+.price-amount { font-family: var(--font-display); font-weight: 900; font-size: 1.9rem; color: var(--purple-dark); margin-bottom: 1.4rem; }
+.price-features { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 1.8rem; }
+.price-features li { display: flex; align-items: flex-start; gap: 8px; font-size: 0.85rem; color: var(--gray-600); }
+.price-features li::before { content: '✓'; color: var(--purple); font-weight: 800; flex-shrink: 0; }
+.pricing-note { text-align: center; margin-top: 2.2rem; font-size: 0.84rem; color: var(--gray-400); }
+.pricing-note span { color: var(--purple-dark); font-weight: 700; }
 
-  /* ===========================
-     14. FOOTER
-  =========================== */
-  footer {
-    background: var(--onyx);
-    border-top: 3px solid transparent;
-    border-image: linear-gradient(90deg, transparent, var(--lavender-deep), var(--lavender-light), transparent) 1;
-  }
-  .footer-main {
-    padding: 80px 40px 60px;
-    max-width: 1320px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 80px;
-  }
-  .footer-logo {
-    font-family: var(--font-display);
-    font-weight: 900;
-    font-size: 2rem;
-    background: linear-gradient(135deg, var(--lavender-light), var(--lavender-deep));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.6rem;
-    display: block;
-  }
-  .footer-tagline { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
-  .footer-app-note { font-size: 0.78rem; color: rgba(255,255,255,0.35); font-style: italic; }
-  .footer-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; }
-  .footer-col-title {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--soft-white);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 1.2rem;
-  }
-  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-  .footer-col ul li a {
-    font-size: 0.85rem;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-  .footer-col ul li a:hover { color: var(--lavender-light); }
-  .footer-bottom {
-    border-top: 1px solid var(--border);
-    padding: 24px 40px;
-    max-width: 1320px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
-  .footer-legal { display: flex; gap: 1.5rem; }
-  .footer-legal a { font-size: 0.8rem; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s ease; }
-  .footer-legal a:hover { color: var(--lavender); }
+/* =============================================
+   12. BLOG (app-style)
+============================================= */
+#blog { background: var(--gray-50); }
+.blog-header { text-align: center; margin-bottom: 52px; }
+.blog-featured-scroll { overflow-x: auto; padding-bottom: 8px; margin-bottom: 48px; }
+.blog-featured-row { display: flex; gap: 18px; padding: 0 0 4px; }
+.blog-feat-card {
+  flex-shrink: 0; width: 260px;
+  background: var(--white); border-radius: 20px;
+  overflow: hidden; box-shadow: var(--shadow-md);
+  border: 1.5px solid var(--border); cursor: pointer;
+  transition: all 0.25s ease;
+}
+.blog-feat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.blog-feat-img {
+  height: 160px; position: relative;
+  display: flex; align-items: center; justify-content: center; font-size: 3.5rem;
+}
+.blog-feat-av {
+  position: absolute; top: 10px; left: 10px;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 800; color: #fff; border: 2px solid #fff;
+}
+.blog-feat-body { padding: 14px 16px; }
+.blog-feat-title { font-size: 0.9rem; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; line-height: 1.35; }
+.blog-feat-meta { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--gray-400); }
+.blog-cats { display: flex; gap: 8px; margin-bottom: 36px; flex-wrap: wrap; }
+.blog-cat {
+  padding: 7px 16px; border-radius: 99px; font-size: 0.82rem; font-weight: 700;
+  cursor: pointer; transition: all 0.18s; border: 1.5px solid;
+  font-family: var(--font-body);
+}
+.blog-cat.active { background: var(--purple); color: #fff; border-color: var(--purple); box-shadow: var(--shadow-purple); }
+.blog-cat.inactive { background: var(--white); color: var(--gray-700); border-color: var(--border); }
+.blog-cat.inactive:hover { border-color: var(--purple-mid); color: var(--purple-dark); }
+.blog-popular-title { font-size: 1rem; font-weight: 800; color: var(--gray-900); margin-bottom: 16px; }
+.blog-popular-list { display: flex; flex-direction: column; gap: 14px; }
+.blog-pop-card {
+  background: var(--white); border-radius: 16px; overflow: hidden;
+  display: flex; align-items: stretch; box-shadow: var(--shadow-sm);
+  border: 1.5px solid var(--border); cursor: pointer; transition: all 0.25s ease;
+}
+.blog-pop-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--purple-mid); }
+.blog-pop-thumb { width: 90px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; }
+.blog-pop-body { flex: 1; padding: 14px 16px; display: flex; flex-direction: column; justify-content: space-between; }
+.blog-pop-title { font-size: 0.9rem; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; line-height: 1.35; }
+.blog-pop-meta { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: var(--gray-400); }
+.blog-pop-av { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #fff; }
+.blog-read-btn { font-size: 0.8rem; font-weight: 700; color: var(--purple); background: none; border: none; cursor: pointer; font-family: inherit; padding: 6px 0 0; text-align: left; }
 
-  /* ===========================
-     RESPONSIVE
-  =========================== */
-  @media (max-width: 1024px) {
-    .container { padding: 0 32px; }
-    .section { padding: 90px 0; }
-    .features-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 768px) {
-    .container { padding: 0 20px; }
-    .section { padding: 70px 0; }
-    #nav { padding: 0 20px; }
-    .nav-links { display: none; }
-    .hero-stats { grid-template-columns: repeat(2, 1fr); }
-    .hero-stat { border-bottom: 1px solid var(--border); }
-    .hero-stat:nth-child(odd) { border-right: 1px solid var(--border); }
-    .problem-inner, .marketplace-inner, .demo-inner { grid-template-columns: 1fr; gap: 40px; }
-    .personas-grid, .testimonials-grid, .pricing-grid, .articles-grid { grid-template-columns: 1fr; }
-    .features-grid { grid-template-columns: 1fr; }
-    .roadmap-track { grid-template-columns: 1fr; }
-    .roadmap-card:first-child, .roadmap-card:last-child { border-radius: 12px; }
-    .roadmap-line { display: none; }
-    .footer-main { grid-template-columns: 1fr; gap: 40px; }
-    .footer-links { grid-template-columns: repeat(2, 1fr); }
-    .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
-    .dashboard-layout { grid-template-columns: 1fr; }
-    .dash-sidebar { display: none; }
-    .dash-grid { grid-template-columns: 1fr; }
-    .form-row { grid-template-columns: 1fr; }
-  }
+/* =============================================
+   13. PROFILE SECTION
+============================================= */
+#profile-section { background: var(--white); }
+.profile-section-header { text-align: center; margin-bottom: 52px; }
+.profile-full-card {
+  max-width: 860px; margin: 0 auto;
+  background: var(--white); border-radius: 24px;
+  border: 1.5px solid var(--border); box-shadow: var(--shadow-lg); overflow: hidden;
+}
+.profile-hero-banner {
+  height: 140px;
+  background: linear-gradient(135deg, #4C1D95 0%, #6D28D9 40%, #8B5CF6 70%, #C4B5FD 100%);
+  position: relative; display: flex; align-items: flex-end; padding: 0 32px 0;
+}
+.profile-hero-av {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple), var(--purple-deeper));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.2rem; border: 4px solid var(--white);
+  box-shadow: var(--shadow-purple);
+  position: absolute; bottom: -40px; left: 32px;
+}
+.profile-body { padding: 54px 32px 32px; }
+.profile-top-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.profile-info-name { font-size: 1.4rem; font-weight: 900; color: var(--gray-900); margin-bottom: 3px; }
+.profile-info-handle { font-size: 0.85rem; color: var(--gray-400); margin-bottom: 10px; }
+.profile-stats-row { display: flex; gap: 28px; margin-bottom: 20px; }
+.profile-stat-item { text-align: center; }
+.profile-stat-num { font-size: 1.3rem; font-weight: 900; color: var(--gray-900); }
+.profile-stat-lbl { font-size: 0.72rem; color: var(--gray-400); }
+.profile-activity-title { font-size: 0.72rem; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.12em; margin: 24px 0 14px; }
+.profile-activity-list { display: flex; flex-direction: column; gap: 10px; }
+.profile-activity-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--gray-50); border-radius: 14px; border: 1.5px solid var(--border); }
+.activity-emoji { font-size: 1.6rem; }
+.activity-title { font-size: 0.88rem; font-weight: 700; color: var(--gray-900); margin-bottom: 2px; }
+.activity-time { font-size: 0.74rem; color: var(--gray-400); }
+.profile-menu-list { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+.profile-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: var(--gray-50); border-radius: 12px; border: 1.5px solid var(--border); cursor: pointer; transition: all 0.2s ease; }
+.profile-menu-item:hover { background: var(--purple-soft); border-color: var(--purple-mid); }
+.profile-menu-label { font-size: 0.9rem; font-weight: 600; color: var(--gray-900); }
+.profile-menu-item.danger .profile-menu-label { color: #EF4444; }
+.profile-menu-chevron { color: var(--gray-300); font-size: 1.1rem; }
+
+/* =============================================
+   14. DEMO / CONTACT
+============================================= */
+#demo { background: var(--purple-soft); }
+.demo-inner { display: grid; grid-template-columns: 1fr 1.15fr; gap: 72px; align-items: start; }
+.demo-reasons { list-style: none; display: flex; flex-direction: column; gap: 1.4rem; margin-top: 2rem; }
+.demo-reason { display: flex; align-items: flex-start; gap: 14px; }
+.demo-reason-icon { width: 42px; height: 42px; border-radius: 12px; background: var(--purple-light); border: 1.5px solid var(--purple-mid); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.demo-reason-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.2rem; color: var(--gray-900); }
+.demo-reason-desc { font-size: 0.83rem; color: var(--gray-600); }
+.form-wrap { background: var(--white); border-radius: 22px; border: 1.5px solid var(--border); padding: 36px; box-shadow: var(--shadow-md); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--gray-600); margin-bottom: 5px; letter-spacing: 0.03em; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; background: var(--gray-50); border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 11px 14px; font-family: var(--font-body);
+  font-size: 0.88rem; color: var(--gray-900); outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease; appearance: none;
+}
+.form-group select { cursor: pointer; }
+.form-group textarea { resize: vertical; min-height: 96px; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--purple); box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+  background: var(--white);
+}
+.form-group input::placeholder, .form-group textarea::placeholder { color: var(--gray-300); }
+.form-error { font-size: 0.72rem; color: #EF4444; margin-top: 3px; display: none; }
+.form-group.error input, .form-group.error select { border-color: #EF4444; }
+.form-group.error .form-error { display: block; }
+.form-confirm { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 56px 20px; gap: 10px; }
+.confirm-icon { width: 64px; height: 64px; border-radius: 50%; background: #DCFCE7; border: 2px solid #BBF7D0; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; }
+.confirm-title { font-size: 1.3rem; font-weight: 800; color: var(--gray-900); }
+.confirm-msg { font-size: 0.88rem; color: var(--gray-600); line-height: 1.65; }
+
+/* =============================================
+   FOOTER
+============================================= */
+footer { background: var(--gray-900); }
+.footer-bar { height: 4px; background: linear-gradient(90deg, var(--purple-deeper), var(--purple), var(--purple-mid), #C4B5FD); }
+.footer-main { padding: 72px 40px 56px; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 260px 1fr; gap: 72px; }
+.footer-logo { font-family: var(--font-display); font-weight: 900; font-size: 1.9rem; background: linear-gradient(135deg, #C4B5FD, #8B5CF6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem; display: block; }
+.footer-tagline { font-size: 0.84rem; color: rgba(255,255,255,0.4); margin-bottom: 1.2rem; }
+.footer-app-note { font-size: 0.75rem; color: rgba(255,255,255,0.25); font-style: italic; }
+.footer-links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px; }
+.footer-col-title { font-size: 0.74rem; font-weight: 800; color: rgba(255,255,255,0.7); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+.footer-col ul li a { font-size: 0.84rem; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; }
+.footer-col ul li a:hover { color: #C4B5FD; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding: 22px 40px; max-width: 1280px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.25); }
+.footer-legal { display: flex; gap: 1.5rem; }
+.footer-legal a { font-size: 0.78rem; color: rgba(255,255,255,0.25); text-decoration: none; transition: color 0.2s; }
+.footer-legal a:hover { color: #C4B5FD; }
+
+/* =============================================
+   RESPONSIVE
+============================================= */
+@media (max-width: 1024px) {
+  .container { padding: 0 28px; }
+  .section { padding: 80px 0; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .container { padding: 0 18px; }
+  .section { padding: 64px 0; }
+  #nav { padding: 0 18px; }
+  .nav-links { display: none; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .hero-stat:nth-child(odd) { border-right: 1px solid var(--border); }
+  .hero-stat { border-bottom: 1px solid var(--border); }
+  .problem-inner, .marketplace-inner, .demo-inner { grid-template-columns: 1fr; gap: 36px; }
+  .personas-grid, .testimonials-grid, .pricing-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .roadmap-track { grid-template-columns: 1fr; }
+  .roadmap-card:first-child, .roadmap-card:last-child { border-radius: 14px; }
+  .roadmap-line { display: none; }
+  .footer-main { grid-template-columns: 1fr; gap: 36px; }
+  .footer-links { grid-template-columns: repeat(2, 1fr); }
+  .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+  .dash-layout { grid-template-columns: 1fr; }
+  .dash-sidebar { display: none; }
+  .dash-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .profile-stats-row { gap: 18px; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-<!-- ===== NAVIGATION ===== -->
+<!-- ===== NAV ===== -->
 <nav id="nav">
   <a href="#hero" class="nav-logo">T2E</a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#dashboard">How It Works</a></li>
     <li><a href="#pricing">Pricing</a></li>
-    <li><a href="#resources">Resources</a></li>
-    <li><a href="#demo">Sign In</a></li>
+    <li><a href="#blog">Blog</a></li>
+    <li><a href="#profile-section">Profile</a></li>
   </ul>
   <div class="nav-actions">
     <a href="#demo" class="btn btn-ghost btn-sm">Book a Demo</a>
@@ -1207,101 +645,83 @@
 
 <!-- ===== HERO ===== -->
 <section id="hero">
-  <div class="hero-bg">
-    <div class="hero-glow-1"></div>
-    <div class="hero-glow-2"></div>
-    <div class="hero-grid"></div>
-  </div>
+  <div class="hero-bg-orb orb-1"></div>
+  <div class="hero-bg-orb orb-2"></div>
+  <div class="hero-bg-orb orb-3"></div>
   <div class="hero-content">
     <div class="reveal">
-      <span class="hero-eyebrow">
-        <span class="hero-eyebrow-dot"></span>
-        Platform Now Live — Built for Independent Operators
-      </span>
+      <span class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Platform Now Live — Built for Independent Operators</span>
     </div>
-    <div class="reveal" style="transition-delay:0.1s">
-      <h1 class="display-xl hero-headline">The Platform the Food Industry<br>Has Been Waiting For.</h1>
+    <div class="reveal" style="transition-delay:.1s">
+      <h1 class="display-xl hero-headline" style="color:var(--gray-900)">The Platform the<br><span style="background:linear-gradient(135deg,var(--purple),var(--purple-deeper));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Food Industry</span><br>Has Been Waiting For.</h1>
     </div>
-    <div class="reveal" style="transition-delay:0.18s">
+    <div class="reveal" style="transition-delay:.18s">
       <p class="hero-sub">You built your business on group chats and spreadsheets. T2E is the infrastructure you should have had from day one — jobs, invoices, inventory, clients, and community, all in one place.</p>
     </div>
-    <div class="reveal hero-ctas" style="transition-delay:0.26s">
+    <div class="reveal hero-ctas" style="transition-delay:.24s">
       <a href="#demo" class="btn btn-primary">Get Started Free</a>
       <a href="#demo" class="btn btn-ghost">Book a Demo</a>
     </div>
-    <div class="reveal hero-stats" style="transition-delay:0.34s">
-      <div class="hero-stat">
-        <div class="hero-stat-num">2,400+</div>
-        <div class="hero-stat-label">Businesses on T2E</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">18K+</div>
-        <div class="hero-stat-label">Jobs Tracked</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">47K+</div>
-        <div class="hero-stat-label">Invoices Generated</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">14 hrs</div>
-        <div class="hero-stat-label">Avg Saved Per Week</div>
-      </div>
+    <div class="reveal hero-food-row" style="transition-delay:.3s">
+      <div class="food-emoji-chip"><span>🔥</span><span>Trending</span></div>
+      <div class="food-emoji-chip"><span>🍣</span><span>Japanese</span></div>
+      <div class="food-emoji-chip"><span>🌮</span><span>Latin Fusion</span></div>
+      <div class="food-emoji-chip"><span>🍜</span><span>Ramen</span></div>
+      <div class="food-emoji-chip"><span>🥗</span><span>Plant-Based</span></div>
+      <div class="food-emoji-chip"><span>🍺</span><span>Gastropub</span></div>
+    </div>
+    <div class="reveal hero-stats" style="transition-delay:.36s">
+      <div class="hero-stat"><div class="hero-stat-num">2,400+</div><div class="hero-stat-label">Businesses on T2E</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">18K+</div><div class="hero-stat-label">Jobs Tracked</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">47K+</div><div class="hero-stat-label">Invoices Generated</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">14 hrs</div><div class="hero-stat-label">Avg Saved Per Week</div></div>
     </div>
   </div>
 </section>
 
-<!-- ===== THE PROBLEM ===== -->
-<section id="problem" class="section">
+<!-- ===== PROBLEM ===== -->
+<section id="problem" class="section section-white">
   <div class="container">
     <div class="problem-inner">
       <div class="reveal">
         <div class="section-label">Why T2E Exists</div>
-        <h2 class="display-lg problem-headline">Running a food business shouldn't feel like duct tape and prayer.</h2>
-        <p class="body-lg" style="margin-top:1.2rem">Independent operators have been held back by tools built for everyone else. Fragmented apps, manual tracking, zero visibility. The industry moves fast — your software shouldn't be the thing slowing you down.</p>
+        <h2 class="display-lg">Running a food business shouldn't feel like duct tape and prayer.</h2>
+        <p style="margin-top:1.2rem;font-size:1.05rem;color:var(--gray-600);line-height:1.8">Independent operators have been held back by tools built for everyone else. Fragmented apps, manual tracking, zero visibility. The industry moves fast — your software shouldn't be the thing slowing you down.</p>
       </div>
-      <div class="reveal" style="transition-delay:0.12s">
-        <div class="pain-card">
-          <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-          <div><div class="pain-title">No Central Hub</div><div class="pain-desc">Five different apps for five different things. No single source of truth for your entire operation.</div></div>
-        </div>
-        <div class="pain-card">
-          <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 10h-4m0 0H8m4 0v4m0-4V6"/></svg></div>
-          <div><div class="pain-title">Invoicing Chaos</div><div class="pain-desc">Chasing payments, losing track of quotes, sending invoices from Gmail. There's a better way.</div></div>
-        </div>
-        <div class="pain-card">
-          <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
-          <div><div class="pain-title">Inventory Blindness</div><div class="pain-desc">Running out of ingredients mid-service. Over-ordering every week. Lost money you can't see until it's gone.</div></div>
-        </div>
-        <div class="pain-card">
-          <div class="pain-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
-          <div><div class="pain-title">Invisible Online</div><div class="pain-desc">No public profile. No way for customers to discover, book, or review your business. You're off the map.</div></div>
-        </div>
+      <div class="pain-cards reveal" style="transition-delay:.12s">
+        <div class="pain-card"><div class="pain-icon">⏱️</div><div><div class="pain-title">No Central Hub</div><div class="pain-desc">Five different apps for five different things. No single source of truth for your entire operation.</div></div></div>
+        <div class="pain-card"><div class="pain-icon">💸</div><div><div class="pain-title">Invoicing Chaos</div><div class="pain-desc">Chasing payments, losing track of quotes, sending invoices from Gmail. There's a better way.</div></div></div>
+        <div class="pain-card"><div class="pain-icon">📦</div><div><div class="pain-title">Inventory Blindness</div><div class="pain-desc">Running out of ingredients mid-service. Over-ordering every week. Lost money you can't see until it's gone.</div></div></div>
+        <div class="pain-card"><div class="pain-icon">🔍</div><div><div class="pain-title">Invisible Online</div><div class="pain-desc">No public profile. No way for customers to discover, book, or review your business. You're off the map.</div></div></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ===== PERSONAS ===== -->
-<section id="personas" class="section">
+<section id="personas" class="section section-gray">
   <div class="container">
     <div class="personas-header reveal">
       <div class="section-label" style="justify-content:center">Who It's For</div>
       <h2 class="display-lg">Built around the way<br>real operators work.</h2>
     </div>
     <div class="personas-grid">
-      <div class="persona-card reveal" style="transition-delay:0.05s">
+      <div class="persona-card reveal" style="transition-delay:.06s">
+        <div class="persona-emoji">🍽️</div>
         <div class="persona-num">01</div>
         <div class="persona-tag">Restaurant Owners</div>
         <h3 class="persona-title">The Brick-and-Mortar Operator</h3>
         <p class="persona-desc">You've got a dining room to run, a team to schedule, and suppliers to manage. T2E gives you a single dashboard to track revenue, manage your menu, log invoices, and monitor inventory — without leaving the floor.</p>
       </div>
-      <div class="persona-card reveal" style="transition-delay:0.12s">
+      <div class="persona-card reveal" style="transition-delay:.14s">
+        <div class="persona-emoji">🎪</div>
         <div class="persona-num">02</div>
         <div class="persona-tag">Caterers</div>
         <h3 class="persona-title">The Event-Driven Business</h3>
         <p class="persona-desc">Events, corporate accounts, weddings — your business lives in logistics. T2E handles your job calendar, client profiles, event invoicing, and headcount planning so every booking runs clean.</p>
       </div>
-      <div class="persona-card reveal" style="transition-delay:0.2s">
+      <div class="persona-card reveal" style="transition-delay:.22s">
+        <div class="persona-emoji">🚚</div>
         <div class="persona-num">03</div>
         <div class="persona-tag">Food Truck Operators</div>
         <h3 class="persona-title">The Mobile Kitchen Hustler</h3>
@@ -1311,56 +731,43 @@
   </div>
 </section>
 
-<!-- ===== DASHBOARD MOCKUP ===== -->
-<section id="dashboard" class="section">
+<!-- ===== DASHBOARD ===== -->
+<section id="dashboard" class="section section-soft">
   <div class="container">
     <div class="dashboard-header reveal">
       <div class="section-label" style="justify-content:center">See It In Action</div>
       <h2 class="display-lg">Your entire operation.<br>One screen.</h2>
     </div>
-    <div class="browser-frame reveal" style="transition-delay:0.1s">
+    <div class="browser-frame reveal" style="transition-delay:.1s">
       <div class="browser-bar">
-        <div class="browser-dots">
-          <div class="browser-dot dot-red"></div>
-          <div class="browser-dot dot-yellow"></div>
-          <div class="browser-dot dot-green"></div>
-        </div>
+        <div class="browser-dots"><div class="browser-dot dot-r"></div><div class="browser-dot dot-y"></div><div class="browser-dot dot-g"></div></div>
         <div class="browser-url">app.t2eat.com/dashboard</div>
       </div>
-      <div class="dashboard-layout">
+      <div class="dash-layout">
         <div class="dash-sidebar">
-          <div class="dash-sidebar-brand">T2E</div>
-          <div class="dash-nav-item active">
-            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            Dashboard
+          <div class="dash-sb-brand">T2E</div>
+          <div class="dash-nav active">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard
           </div>
-          <div class="dash-nav-item">
-            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            Jobs
+          <div class="dash-nav">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Jobs
           </div>
-          <div class="dash-nav-item">
-            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-            Menu
+          <div class="dash-nav">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>Menu
           </div>
-          <div class="dash-nav-item">
-            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            Clients
+          <div class="dash-nav">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Clients
           </div>
-          <div class="dash-nav-item">
-            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-            Invoices
+          <div class="dash-nav">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>Invoices
           </div>
-          <div class="dash-nav-item">
-            <svg class="dash-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            Inventory
+          <div class="dash-nav">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Inventory
           </div>
         </div>
         <div class="dash-main">
           <div class="dash-topbar">
-            <div>
-              <div class="dash-greeting">Good morning, Marcus 👋</div>
-              <div class="dash-date">Friday, May 30, 2026</div>
-            </div>
+            <div><div class="dash-greeting">Good morning, Marcus 👋</div><div class="dash-date">Friday, May 30, 2026</div></div>
             <div class="dash-chips">
               <div class="dash-chip"><span class="dash-chip-val">$12,480</span><span class="dash-chip-label">Revenue MTD</span></div>
               <div class="dash-chip"><span class="dash-chip-val">7</span><span class="dash-chip-label">Active Jobs</span></div>
@@ -1373,141 +780,92 @@
               <table class="dash-table">
                 <thead><tr><th>Event</th><th>Client</th><th>Date</th><th>Status</th></tr></thead>
                 <tbody>
-                  <tr><td>Wedding Reception</td><td>Chen Family</td><td>Jun 7</td><td><span class="status-pill status-confirmed">Confirmed</span></td></tr>
-                  <tr><td>Corp Luncheon</td><td>Apex Co.</td><td>Jun 9</td><td><span class="status-pill status-prep">In Prep</span></td></tr>
-                  <tr><td>Pop-Up Market</td><td>—</td><td>Jun 12</td><td><span class="status-pill status-pending">Pending</span></td></tr>
-                  <tr><td>Birthday Dinner</td><td>Rivera Family</td><td>Jun 15</td><td><span class="status-pill status-confirmed">Confirmed</span></td></tr>
+                  <tr><td>Wedding Reception</td><td>Chen Family</td><td>Jun 7</td><td><span class="s-pill s-conf">Confirmed</span></td></tr>
+                  <tr><td>Corp Luncheon</td><td>Apex Co.</td><td>Jun 9</td><td><span class="s-pill s-prep">In Prep</span></td></tr>
+                  <tr><td>Pop-Up Market</td><td>—</td><td>Jun 12</td><td><span class="s-pill s-pend">Pending</span></td></tr>
+                  <tr><td>Birthday Dinner</td><td>Rivera Family</td><td>Jun 15</td><td><span class="s-pill s-conf">Confirmed</span></td></tr>
                 </tbody>
               </table>
             </div>
             <div class="dash-card">
               <div class="dash-card-title">Revenue — Last 6 Months</div>
               <div class="chart-bars" id="chartBars">
-                <div class="chart-bar" data-height="55"></div>
-                <div class="chart-bar" data-height="70"></div>
-                <div class="chart-bar" data-height="45"></div>
-                <div class="chart-bar" data-height="85"></div>
-                <div class="chart-bar" data-height="60"></div>
-                <div class="chart-bar" data-height="92"></div>
+                <div class="chart-bar" data-height="50"></div><div class="chart-bar" data-height="66"></div>
+                <div class="chart-bar" data-height="42"></div><div class="chart-bar" data-height="80"></div>
+                <div class="chart-bar" data-height="58"></div><div class="chart-bar" data-height="88"></div>
               </div>
               <div class="chart-labels">
-                <span class="chart-label">Dec</span><span class="chart-label">Jan</span>
-                <span class="chart-label">Feb</span><span class="chart-label">Mar</span>
-                <span class="chart-label">Apr</span><span class="chart-label">May</span>
+                <span class="chart-label">Dec</span><span class="chart-label">Jan</span><span class="chart-label">Feb</span>
+                <span class="chart-label">Mar</span><span class="chart-label">Apr</span><span class="chart-label">May</span>
               </div>
             </div>
             <div class="dash-card" style="grid-column:1/-1">
               <div class="dash-card-title">Inventory Alerts</div>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-                <div class="inventory-item"><span class="inv-name">Chicken Thighs (10 lbs)</span><span class="inv-alert inv-red">⚠ Critical</span></div>
-                <div class="inventory-item"><span class="inv-name">Jasmine Rice (25 lbs)</span><span class="inv-alert inv-amber">↓ Low</span></div>
-                <div class="inventory-item"><span class="inv-name">Olive Oil (1 gal)</span><span class="inv-alert inv-amber">↓ Low</span></div>
-                <div class="inventory-item"><span class="inv-name">Disposable Trays</span><span class="inv-alert inv-red">⚠ Critical</span></div>
-                <div class="inventory-item"><span class="inv-name">Napkins (500ct)</span><span class="inv-alert inv-amber">↓ Low</span></div>
-                <div class="inventory-item"><span class="inv-name">Seasoning Mix</span><span class="inv-alert inv-amber">↓ Low</span></div>
+                <div class="inv-row"><span class="inv-name">Chicken Thighs (10 lbs)</span><span class="inv-badge inv-crit">⚠ Critical</span></div>
+                <div class="inv-row"><span class="inv-name">Jasmine Rice (25 lbs)</span><span class="inv-badge inv-low">↓ Low</span></div>
+                <div class="inv-row"><span class="inv-name">Olive Oil (1 gal)</span><span class="inv-badge inv-low">↓ Low</span></div>
+                <div class="inv-row"><span class="inv-name">Disposable Trays</span><span class="inv-badge inv-crit">⚠ Critical</span></div>
+                <div class="inv-row"><span class="inv-name">Napkins (500ct)</span><span class="inv-badge inv-low">↓ Low</span></div>
+                <div class="inv-row"><span class="inv-name">Seasoning Mix</span><span class="inv-badge inv-low">↓ Low</span></div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="feature-pills reveal" style="transition-delay:0.15s">
-      <span class="feature-pill">Jobs & Events</span>
-      <span class="feature-pill">Menu Builder</span>
-      <span class="feature-pill">Clients</span>
-      <span class="feature-pill">Invoices</span>
-      <span class="feature-pill">Inventory</span>
-      <span class="feature-pill">Analytics</span>
+    <div class="feature-pills reveal" style="transition-delay:.14s">
+      <span class="feature-pill">🗓 Jobs & Events</span><span class="feature-pill">📋 Menu Builder</span>
+      <span class="feature-pill">👥 Clients</span><span class="feature-pill">🧾 Invoices</span>
+      <span class="feature-pill">📦 Inventory</span><span class="feature-pill">📊 Analytics</span>
     </div>
   </div>
 </section>
 
 <!-- ===== FEATURES ===== -->
-<section id="features" class="section">
+<section id="features" class="section section-white">
   <div class="container">
     <div class="features-header reveal">
       <div class="section-label" style="justify-content:center">Platform Features</div>
       <h2 class="display-lg">One platform.<br>Every tool you need.</h2>
     </div>
-    <div class="features-grid reveal" style="transition-delay:0.1s">
-      <div class="feature-cell">
-        <div class="feature-num">01</div>
-        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-        <h3 class="feature-title">Jobs & Events</h3>
-        <p class="feature-desc">Calendar-based job tracking for catering events, pop-ups, and daily service. Every booking in one place.</p>
-      </div>
-      <div class="feature-cell">
-        <div class="feature-num">02</div>
-        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h11"/><circle cx="19" cy="18" r="2"/><path d="m17 20 2-4 2 4"/></svg></div>
-        <h3 class="feature-title">Menu Builder</h3>
-        <p class="feature-desc">Build, organize, and price your menu digitally. Attach items to jobs and generate shopping lists automatically.</p>
-      </div>
-      <div class="feature-cell">
-        <div class="feature-num">03</div>
-        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <h3 class="feature-title">Client Management</h3>
-        <p class="feature-desc">Full CRM for your regulars. Contact history, booking preferences, total spend, and communication log.</p>
-      </div>
-      <div class="feature-cell">
-        <div class="feature-num">04</div>
-        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-        <h3 class="feature-title">Invoice Generator</h3>
-        <p class="feature-desc">Professional invoices in seconds. Track sent, viewed, and paid status. Send payment links directly to clients.</p>
-      </div>
-      <div class="feature-cell">
-        <div class="feature-num">05</div>
-        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27,6.96 12,12.01 20.73,6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
-        <h3 class="feature-title">Inventory Tracker</h3>
-        <p class="feature-desc">Real-time stock levels with low-alert thresholds. Know what you need before you run out, not after.</p>
-      </div>
-      <div class="feature-cell">
-        <div class="feature-num">06</div>
-        <div class="feature-icon-block"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-        <h3 class="feature-title">Dashboard & Analytics</h3>
-        <p class="feature-desc">Revenue trends, job performance, top clients, and growth metrics — always visible at a glance.</p>
-      </div>
+    <div class="features-grid reveal" style="transition-delay:.1s">
+      <div class="feature-cell"><div class="feature-num">01</div><div class="feature-icon">🗓️</div><h3 class="feature-title">Jobs & Events</h3><p class="feature-desc">Calendar-based job tracking for catering events, pop-ups, and daily service. Every booking in one place.</p></div>
+      <div class="feature-cell"><div class="feature-num">02</div><div class="feature-icon">📋</div><h3 class="feature-title">Menu Builder</h3><p class="feature-desc">Build, organize, and price your menu digitally. Attach items to jobs and generate shopping lists automatically.</p></div>
+      <div class="feature-cell"><div class="feature-num">03</div><div class="feature-icon">👥</div><h3 class="feature-title">Client Management</h3><p class="feature-desc">Full CRM for your regulars. Contact history, booking preferences, total spend, and communication log.</p></div>
+      <div class="feature-cell"><div class="feature-num">04</div><div class="feature-icon">🧾</div><h3 class="feature-title">Invoice Generator</h3><p class="feature-desc">Professional invoices in seconds. Track sent, viewed, and paid status. Send payment links directly to clients.</p></div>
+      <div class="feature-cell"><div class="feature-num">05</div><div class="feature-icon">📦</div><h3 class="feature-title">Inventory Tracker</h3><p class="feature-desc">Real-time stock levels with low-alert thresholds. Know what you need before you run out, not after.</p></div>
+      <div class="feature-cell"><div class="feature-num">06</div><div class="feature-icon">📊</div><h3 class="feature-title">Dashboard & Analytics</h3><p class="feature-desc">Revenue trends, job performance, top clients, and growth metrics — always visible at a glance.</p></div>
     </div>
   </div>
 </section>
 
 <!-- ===== MARKETPLACE ===== -->
-<section id="marketplace" class="section">
+<section id="marketplace" class="section section-gray">
   <div class="container">
     <div class="marketplace-inner">
       <div class="reveal">
         <div class="section-label">The T2E Marketplace</div>
         <h2 class="display-lg">Get discovered.<br>Get booked.<br>Get paid.</h2>
-        <p class="body-lg" style="margin-top:1.2rem">Your T2E profile is your digital storefront. Customers searching for catering, private dining, or food truck bookings find you — and book directly through the platform.</p>
-        <div class="marketplace-differentiator">"We're not Yelp. Yelp shows you restaurants. T2E runs them — and puts them in front of customers ready to book."</div>
-        <div class="marketplace-props">
-          <span class="marketplace-prop">Public Profile</span>
-          <span class="marketplace-prop">Online Booking</span>
-          <span class="marketplace-prop">Community Reviews</span>
-        </div>
+        <p style="margin-top:1.1rem;font-size:1.05rem;color:var(--gray-600);line-height:1.8">Your T2E profile is your digital storefront. Customers searching for catering, private dining, or food truck bookings find you — and book directly through the platform.</p>
+        <div class="marketplace-quote">"We're not Yelp. Yelp shows you restaurants. T2E runs them — and puts them in front of customers ready to book."</div>
+        <div class="mp-props"><span class="mp-prop">📍 Public Profile</span><span class="mp-prop">📅 Online Booking</span><span class="mp-prop">⭐ Community Reviews</span></div>
       </div>
-      <div class="reveal" style="transition-delay:0.14s">
-        <div class="profile-card-mockup">
-          <div class="profile-avatar">MJ</div>
+      <div class="reveal" style="transition-delay:.14s">
+        <div class="profile-card">
+          <div class="profile-avatar-ring"><div class="profile-avatar">MJ</div></div>
           <div class="profile-name">Marcus & Jade's Kitchen</div>
-          <div class="profile-tags">
-            <span class="profile-tag">Soul Food</span>
-            <span class="profile-tag">Catering</span>
-            <span class="profile-tag">Events</span>
-            <span class="profile-tag">Private Chef</span>
-          </div>
-          <div class="profile-stars">
-            <span class="stars">★★★★★</span>
-            <span style="font-weight:700;font-size:0.9rem;color:var(--soft-white)">4.9</span>
-            <span class="review-count">(127 reviews)</span>
-          </div>
+          <div style="font-size:0.82rem;color:var(--gray-400);margin-bottom:10px">Soul Food · Catering · Private Chef</div>
+          <div class="profile-tags"><span class="profile-tag">Soul Food</span><span class="profile-tag">Catering</span><span class="profile-tag">Events</span><span class="profile-tag">Private Chef</span></div>
+          <div class="profile-stars"><span class="stars">★★★★★</span><span style="font-weight:800;font-size:0.9rem;color:var(--gray-900)">4.9</span><span class="review-count">(127 reviews)</span></div>
           <div class="profile-divider"></div>
-          <div class="profile-stats">
-            <div class="profile-stat"><div class="profile-stat-val">340+</div><div class="profile-stat-key">Events Catered</div></div>
+          <div class="profile-stats-grid">
+            <div class="profile-stat"><div class="profile-stat-val">340+</div><div class="profile-stat-key">Events</div></div>
             <div class="profile-stat"><div class="profile-stat-val">12 yrs</div><div class="profile-stat-key">In Business</div></div>
-            <div class="profile-stat"><div class="profile-stat-val">50–500</div><div class="profile-stat-key">Guest Capacity</div></div>
+            <div class="profile-stat"><div class="profile-stat-val">50–500</div><div class="profile-stat-key">Capacity</div></div>
             <div class="profile-stat"><div class="profile-stat-val">98%</div><div class="profile-stat-key">Response Rate</div></div>
           </div>
-          <a href="#demo" class="btn btn-primary" style="width:100%;justify-content:center">Book Now</a>
+          <a href="#demo" class="btn btn-primary" style="width:100%;justify-content:center">📅 Book Now</a>
         </div>
       </div>
     </div>
@@ -1515,94 +873,82 @@
 </section>
 
 <!-- ===== IMPACT ===== -->
-<section id="impact" class="section">
+<section id="impact" class="section section-purple">
   <div class="container">
     <p class="impact-quote reveal">When small food businesses win, neighborhoods win.</p>
-    <p class="impact-body reveal" style="transition-delay:0.12s">The home kitchen caterer who built her business from church events. The family restaurant that's been on the corner for 20 years. The weekend food truck operator grinding every Saturday morning. T2E was built for them — not as a charity, but because they deserve the same infrastructure that big chains take for granted.</p>
-    <div class="impact-pills reveal" style="transition-delay:0.2s">
-      <span class="impact-pill">More Local Jobs</span>
-      <span class="impact-pill">Food Culture Preserved</span>
-      <span class="impact-pill">Money Staying Local</span>
-      <span class="impact-pill">Minority-Owned Businesses Amplified</span>
-      <span class="impact-pill">Food Surplus Redistributed</span>
+    <p class="impact-body reveal" style="transition-delay:.12s">The home kitchen caterer who built her business from church events. The family restaurant that's been on the corner for 20 years. The weekend food truck operator grinding every Saturday morning. T2E was built for them.</p>
+    <div class="impact-pills reveal" style="transition-delay:.2s">
+      <span class="impact-pill">🏘 More Local Jobs</span>
+      <span class="impact-pill">🍴 Food Culture Preserved</span>
+      <span class="impact-pill">💰 Money Staying Local</span>
+      <span class="impact-pill">✊ Minority-Owned Businesses Amplified</span>
+      <span class="impact-pill">♻️ Food Surplus Redistributed</span>
     </div>
   </div>
 </section>
 
 <!-- ===== ROADMAP ===== -->
-<section id="roadmap" class="section">
+<section id="roadmap" class="section section-white">
   <div class="container">
     <div class="roadmap-header reveal">
       <div class="section-label" style="justify-content:center">Where We're Going</div>
       <h2 class="display-lg">Three phases.<br>One ecosystem.</h2>
     </div>
-    <div class="roadmap-track reveal" style="transition-delay:0.1s">
+    <div class="roadmap-track reveal" style="transition-delay:.1s">
       <div class="roadmap-line"></div>
       <div class="roadmap-card active">
-        <span class="roadmap-badge badge-live"><svg width="8" height="8" viewBox="0 0 8 8" fill="#7BC47F"><circle cx="4" cy="4" r="4"/></svg> Live Now</span>
-        <div class="roadmap-phase-num">01</div>
-        <h3 class="roadmap-title">Business Tool</h3>
-        <ul class="roadmap-features">
-          <li>Jobs & Events Management</li><li>Invoice Generator</li>
-          <li>Inventory Tracker</li><li>Client CRM</li>
-          <li>Menu Builder</li><li>Analytics Dashboard</li>
-        </ul>
+        <span class="rm-badge badge-live">🟢 Live Now</span>
+        <div class="rm-num">01</div>
+        <h3 class="rm-title">Business Tool</h3>
+        <ul class="rm-features"><li>Jobs & Events Management</li><li>Invoice Generator</li><li>Inventory Tracker</li><li>Client CRM</li><li>Menu Builder</li><li>Analytics Dashboard</li></ul>
       </div>
       <div class="roadmap-card muted">
-        <span class="roadmap-badge badge-dev">In Development</span>
-        <div class="roadmap-phase-num">02</div>
-        <h3 class="roadmap-title">Community Marketplace</h3>
-        <ul class="roadmap-features">
-          <li>Public Business Profiles</li><li>Customer Discovery Feed</li>
-          <li>Direct Booking System</li><li>Verified Reviews</li>
-          <li>Operator Community Forum</li>
-        </ul>
+        <span class="rm-badge badge-dev">🔧 In Development</span>
+        <div class="rm-num">02</div>
+        <h3 class="rm-title">Community Marketplace</h3>
+        <ul class="rm-features"><li>Public Business Profiles</li><li>Customer Discovery Feed</li><li>Direct Booking System</li><li>Verified Reviews</li><li>Operator Community Forum</li></ul>
       </div>
       <div class="roadmap-card muted">
-        <span class="roadmap-badge badge-vision">The Vision</span>
-        <div class="roadmap-phase-num">03</div>
-        <h3 class="roadmap-title">Full Ecosystem</h3>
-        <ul class="roadmap-features">
-          <li>Supplier Network</li><li>B2B Procurement</li>
-          <li>T2E Pay (Embedded Finance)</li><li>Food Waste Exchange</li>
-          <li>Industry Hiring Board</li>
-        </ul>
+        <span class="rm-badge badge-vision">✨ The Vision</span>
+        <div class="rm-num">03</div>
+        <h3 class="rm-title">Full Ecosystem</h3>
+        <ul class="rm-features"><li>Supplier Network</li><li>B2B Procurement</li><li>T2E Pay (Embedded Finance)</li><li>Food Waste Exchange</li><li>Industry Hiring Board</li></ul>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ===== TESTIMONIALS ===== -->
-<section id="testimonials" class="section">
+<section id="testimonials" class="section section-gray">
   <div class="container">
     <div class="testimonials-header reveal">
       <div class="section-label" style="justify-content:center">What Operators Are Saying</div>
       <h2 class="display-lg">Built for real businesses.<br>Loved by real operators.</h2>
     </div>
     <div class="testimonials-grid">
-      <div class="testimonial-card reveal" style="transition-delay:0.05s">
-        <div class="testimonial-quote-icon">"</div>
-        <p class="testimonial-text">Before T2E, I was running my restaurant out of three notebooks and a shared Google doc my staff kept breaking. Now every invoice, every supplier order, and every shift note lives in one place. I saved at least 10 hours a week in the first month alone.</p>
-        <div class="testimonial-author">
-          <div class="author-avatar av-1">DW</div>
+      <div class="test-card reveal" style="transition-delay:.06s">
+        <div class="test-quote-icon">"</div>
+        <p class="test-text">Before T2E, I was running my restaurant out of three notebooks and a shared Google doc my staff kept breaking. Now every invoice, every supplier order, and every shift note lives in one place. I saved at least 10 hours a week in the first month alone.</p>
+        <div class="test-author">
+          <div class="author-av av1">DW</div>
           <div><div class="author-name">Darnell Washington</div><div class="author-biz">Darnell's Southern Table, Atlanta GA</div></div>
           <span class="author-tag">Restaurant Owner</span>
         </div>
       </div>
-      <div class="testimonial-card reveal" style="transition-delay:0.12s">
-        <div class="testimonial-quote-icon">"</div>
-        <p class="testimonial-text">I was losing money on every third catering job because my invoicing was a mess. Clients ghosting, payments late, deposits not tracked. T2E made me look professional — and more importantly, it made me actually get paid. Revenue is up 30% just from tightening the back-end.</p>
-        <div class="testimonial-author">
-          <div class="author-avatar av-2">RL</div>
+      <div class="test-card reveal" style="transition-delay:.14s">
+        <div class="test-quote-icon">"</div>
+        <p class="test-text">I was losing money on every third catering job because my invoicing was a mess. T2E made me look professional — and more importantly, it made me actually get paid. Revenue is up 30% just from tightening the back-end.</p>
+        <div class="test-author">
+          <div class="author-av av2">RL</div>
           <div><div class="author-name">Rosa Linda Mejia</div><div class="author-biz">Sabor Por Amor Catering, Houston TX</div></div>
           <span class="author-tag">Caterer</span>
         </div>
       </div>
-      <div class="testimonial-card reveal" style="transition-delay:0.2s">
-        <div class="testimonial-quote-icon">"</div>
-        <p class="testimonial-text">Running a food truck, I used to forget to reorder stuff mid-week and then scramble Friday morning before service. The inventory alerts alone changed everything. Plus once the marketplace drops, customers finding me directly? That's the game changer right there.</p>
-        <div class="testimonial-author">
-          <div class="author-avatar av-3">TK</div>
+      <div class="test-card reveal" style="transition-delay:.22s">
+        <div class="test-quote-icon">"</div>
+        <p class="test-text">The inventory alerts alone changed everything. I used to scramble Friday morning before service. Plus once the marketplace drops, customers finding me directly? That's the game changer right there.</p>
+        <div class="test-author">
+          <div class="author-av av3">TK</div>
           <div><div class="author-name">Terrence "TK" Kingston</div><div class="author-biz">Ting Ting's Jerk Truck, Miami FL</div></div>
           <span class="author-tag">Food Truck Operator</span>
         </div>
@@ -1612,88 +958,174 @@
 </section>
 
 <!-- ===== PRICING ===== -->
-<section id="pricing" class="section">
+<section id="pricing" class="section section-white">
   <div class="container">
     <div class="pricing-header reveal">
       <div class="section-label" style="justify-content:center">Simple Pricing</div>
       <h2 class="display-lg">Plans built for<br>real businesses.</h2>
     </div>
     <div class="pricing-grid">
-      <div class="pricing-card reveal" style="transition-delay:0.05s">
-        <div class="pricing-plan">Starter</div>
-        <div class="pricing-price">Coming Soon</div>
-        <ul class="pricing-features">
-          <li>Up to 10 active jobs/month</li><li>Invoice generator (unlimited)</li>
-          <li>Basic inventory tracking</li><li>Client profiles (up to 50)</li>
-          <li>T2E marketplace profile</li>
-        </ul>
+      <div class="price-card reveal" style="transition-delay:.06s">
+        <div class="price-plan">Starter</div>
+        <div class="price-amount">Coming Soon</div>
+        <ul class="price-features"><li>Up to 10 active jobs/month</li><li>Invoice generator (unlimited)</li><li>Basic inventory tracking</li><li>Client profiles (up to 50)</li><li>T2E marketplace profile</li></ul>
         <a href="#demo" class="btn btn-ghost" style="width:100%;justify-content:center">Get Notified</a>
       </div>
-      <div class="pricing-card popular reveal" style="transition-delay:0.12s">
+      <div class="price-card popular reveal" style="transition-delay:.14s">
         <div class="popular-badge">Most Popular</div>
-        <div class="pricing-plan">Pro</div>
-        <div class="pricing-price">Coming Soon</div>
-        <ul class="pricing-features">
-          <li>Unlimited jobs & events</li><li>Full CRM — unlimited clients</li>
-          <li>Menu builder + job attachments</li><li>Inventory alerts + reorder lists</li>
-          <li>Analytics dashboard</li><li>Priority marketplace placement</li>
-        </ul>
+        <div class="price-plan">Pro</div>
+        <div class="price-amount">Coming Soon</div>
+        <ul class="price-features"><li>Unlimited jobs & events</li><li>Full CRM — unlimited clients</li><li>Menu builder + job attachments</li><li>Inventory alerts + reorder lists</li><li>Analytics dashboard</li><li>Priority marketplace placement</li></ul>
         <a href="#demo" class="btn btn-primary" style="width:100%;justify-content:center">Get Notified</a>
       </div>
-      <div class="pricing-card reveal" style="transition-delay:0.2s">
-        <div class="pricing-plan">Enterprise</div>
-        <div class="pricing-price">Coming Soon</div>
-        <ul class="pricing-features">
-          <li>Everything in Pro</li><li>Multi-location support</li>
-          <li>Team accounts + permissions</li><li>Dedicated account manager</li>
-          <li>Custom onboarding & setup</li>
-        </ul>
+      <div class="price-card reveal" style="transition-delay:.22s">
+        <div class="price-plan">Enterprise</div>
+        <div class="price-amount">Coming Soon</div>
+        <ul class="price-features"><li>Everything in Pro</li><li>Multi-location support</li><li>Team accounts + permissions</li><li>Dedicated account manager</li><li>Custom onboarding & setup</li></ul>
         <a href="#demo" class="btn btn-ghost" style="width:100%;justify-content:center">Contact Us</a>
       </div>
     </div>
-    <p class="pricing-note reveal" style="transition-delay:0.25s">Pricing finalizing soon — <span>early users lock in founder rates.</span> Join the waitlist today.</p>
+    <p class="pricing-note reveal" style="transition-delay:.28s">Pricing finalizing soon — <span>early users lock in founder rates.</span></p>
   </div>
 </section>
 
-<!-- ===== RESOURCES ===== -->
-<section id="resources" class="section">
+<!-- ===== BLOG ===== -->
+<section id="blog" class="section section-gray">
   <div class="container">
-    <div class="resources-header reveal">
-      <div class="section-label" style="justify-content:center">T2E Resources</div>
+    <div class="blog-header reveal">
+      <div class="section-label" style="justify-content:center">T2E Blog</div>
       <h2 class="display-lg">Built to help you grow,<br>not just operate.</h2>
     </div>
-    <div class="articles-grid">
-      <div class="article-card reveal" style="transition-delay:0.05s">
-        <div class="article-thumb thumb-1">
-          <div class="article-thumb-icon"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(184,169,232,0.6)" stroke-width="1.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
-        </div>
-        <div class="article-body">
-          <span class="article-cat">Operations</span>
-          <h3 class="article-title">How to Stop Losing Money to Food Waste</h3>
-          <p class="article-excerpt">The average independent restaurant wastes 4–10% of its food budget. Here's a practical system to track, reduce, and reallocate that cost.</p>
-          <span class="article-link">Read More →</span>
+
+    <!-- Featured horizontal scroll -->
+    <div class="reveal" style="transition-delay:.08s">
+      <p style="font-size:0.72rem;font-weight:800;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:14px">Featured</p>
+      <div class="blog-featured-scroll">
+        <div class="blog-featured-row">
+          <!-- Card 1 -->
+          <div class="blog-feat-card">
+            <div class="blog-feat-img" style="background:linear-gradient(135deg,#2d1b69 0%,#4c1d95 40%,#7c3aed 100%)">
+              🥗
+              <div class="blog-feat-av" style="background:#8B5CF6">M</div>
+            </div>
+            <div class="blog-feat-body">
+              <div class="pill pill-purple" style="margin-bottom:8px;font-size:0.66rem">Operations</div>
+              <p class="blog-feat-title">How to Stop Losing Money to Food Waste</p>
+              <div class="blog-feat-meta"><span>Marcus T.</span><span>·</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>24</span><span>·</span><span>2h ago</span></div>
+            </div>
+          </div>
+          <!-- Card 2 -->
+          <div class="blog-feat-card">
+            <div class="blog-feat-img" style="background:linear-gradient(135deg,#7f1d1d 0%,#b91c1c 50%,#ef4444 100%)">
+              🧾
+              <div class="blog-feat-av" style="background:#EC4899">J</div>
+            </div>
+            <div class="blog-feat-body">
+              <div class="pill pill-amber" style="margin-bottom:8px;font-size:0.66rem">Finance</div>
+              <p class="blog-feat-title">How to Write a Catering Invoice That Gets Paid</p>
+              <div class="blog-feat-meta"><span>Jordan K.</span><span>·</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>17</span><span>·</span><span>5h ago</span></div>
+            </div>
+          </div>
+          <!-- Card 3 -->
+          <div class="blog-feat-card">
+            <div class="blog-feat-img" style="background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#10b981 100%)">
+              📍
+              <div class="blog-feat-av" style="background:#F59E0B">L</div>
+            </div>
+            <div class="blog-feat-body">
+              <div class="pill pill-green" style="margin-bottom:8px;font-size:0.66rem">Growth</div>
+              <p class="blog-feat-title">Getting Your Food Business Found Online</p>
+              <div class="blog-feat-meta"><span>Lily R.</span><span>·</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>31</span><span>·</span><span>3h ago</span></div>
+            </div>
+          </div>
+          <!-- Card 4 -->
+          <div class="blog-feat-card">
+            <div class="blog-feat-img" style="background:linear-gradient(135deg,#1e1b4b,#4338ca)">
+              🍝
+              <div class="blog-feat-av" style="background:#10B981">D</div>
+            </div>
+            <div class="blog-feat-body">
+              <div class="pill pill-purple" style="margin-bottom:8px;font-size:0.66rem">Tips</div>
+              <p class="blog-feat-title">How to Build a Food Crawl That Actually Slaps</p>
+              <div class="blog-feat-meta"><span>Devon K.</span><span>·</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>18</span><span>·</span><span>5h ago</span></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="article-card reveal" style="transition-delay:0.12s">
-        <div class="article-thumb thumb-2">
-          <div class="article-thumb-icon"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(212,203,245,0.6)" stroke-width="1.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
-        </div>
-        <div class="article-body">
-          <span class="article-cat">Finance</span>
-          <h3 class="article-title">How to Write a Catering Invoice That Gets Paid</h3>
-          <p class="article-excerpt">What to include, what to never leave out, and how to structure payment terms so clients don't ghost you on final balance.</p>
-          <span class="article-link">Read More →</span>
-        </div>
+    </div>
+
+    <!-- Category pills -->
+    <div class="blog-cats reveal" style="transition-delay:.14s" id="blogCats">
+      <button class="blog-cat active" onclick="setBlogCat(this)">For You</button>
+      <button class="blog-cat inactive" onclick="setBlogCat(this)">Operations</button>
+      <button class="blog-cat inactive" onclick="setBlogCat(this)">Finance</button>
+      <button class="blog-cat inactive" onclick="setBlogCat(this)">Growth</button>
+      <button class="blog-cat inactive" onclick="setBlogCat(this)">Late Night</button>
+      <button class="blog-cat inactive" onclick="setBlogCat(this)">Industry</button>
+    </div>
+
+    <!-- Popular today -->
+    <div class="reveal" style="transition-delay:.18s">
+      <p class="blog-popular-title">Popular Today</p>
+      <div class="blog-popular-list">
+        <div class="blog-pop-card"><div class="blog-pop-thumb" style="background:linear-gradient(135deg,#2d1b69,#7c3aed)">🥗</div><div class="blog-pop-body"><div><p class="blog-pop-title">How to Stop Losing Money to Food Waste — The Operator's Playbook</p><div class="blog-pop-meta"><div class="blog-pop-av" style="background:#8B5CF6">M</div><span>Marcus T.</span><span>·</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>24</span><span>·</span><span>2h ago</span></div></div><button class="blog-read-btn">Read Now →</button></div></div>
+        <div class="blog-pop-card"><div class="blog-pop-thumb" style="background:linear-gradient(135deg,#4a044e,#a21caf)">🌮</div><div class="blog-pop-body"><div><p class="blog-pop-title">Taco Tuesday Economics: Why Smart Promos Actually Work</p><div class="blog-pop-meta"><div class="blog-pop-av" style="background:#EC4899">M</div><span>Madeline G.</span><span>·</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>31</span><span>·</span><span>12h ago</span></div></div><button class="blog-read-btn">Read Now →</button></div></div>
+        <div class="blog-pop-card"><div class="blog-pop-thumb" style="background:linear-gradient(135deg,#022c22,#065f46)">🍜</div><div class="blog-pop-body"><div><p class="blog-pop-title">Hidden Gem Operator: Found the Best Ramen Spot in Winter Park</p><div class="blog-pop-meta"><div class="blog-pop-av" style="background:#10B981">D</div><span>Devon K.</span><span>·</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>18</span><span>·</span><span>5h ago</span></div></div><button class="blog-read-btn">Read Now →</button></div></div>
+        <div class="blog-pop-card"><div class="blog-pop-thumb" style="background:linear-gradient(135deg,#1c1917,#78350f)">🌯</div><div class="blog-pop-body"><div><p class="blog-pop-title">Late Night Food Operators Are Winning — Here's Their Secret</p><div class="blog-pop-meta"><div class="blog-pop-av" style="background:#6366F1">R</div><span>Rae S.</span><span>·</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>9</span><span>·</span><span>2h ago</span></div></div><button class="blog-read-btn">Read Now →</button></div></div>
       </div>
-      <div class="article-card reveal" style="transition-delay:0.2s">
-        <div class="article-thumb thumb-3">
-          <div class="article-thumb-icon"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(139,120,204,0.6)" stroke-width="1.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROFILE SECTION ===== -->
+<section id="profile-section" class="section section-white">
+  <div class="container">
+    <div class="profile-section-header reveal">
+      <div class="section-label" style="justify-content:center">Operator Profiles</div>
+      <h2 class="display-lg">Your business.<br>Your identity on T2E.</h2>
+      <p style="margin-top:1rem;font-size:1rem;color:var(--gray-600);max-width:520px;margin-left:auto;margin-right:auto;line-height:1.75">Every operator gets a rich public profile — your history, your reviews, your booking link. This is what customers see when they find you on the T2E marketplace.</p>
+    </div>
+    <div class="profile-full-card reveal" style="transition-delay:.1s">
+      <div class="profile-hero-banner">
+        <div class="profile-hero-av">🍴</div>
+      </div>
+      <div class="profile-body">
+        <div class="profile-top-row">
+          <div>
+            <div class="profile-info-name">CRES Ventures Kitchen</div>
+            <div class="profile-info-handle">@cresventures · Winter Park, FL 📍</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="color:#F59E0B;font-size:0.9rem">★★★★★</span>
+              <span style="font-weight:700;font-size:0.88rem;color:var(--gray-900)">4.9</span>
+              <span style="font-size:0.78rem;color:var(--gray-400)">(127 reviews)</span>
+            </div>
+          </div>
+          <a href="#demo" class="btn btn-primary btn-sm">📅 Book Now</a>
         </div>
-        <div class="article-body">
-          <span class="article-cat">Growth</span>
-          <h3 class="article-title">Getting Your Food Business Found Online</h3>
-          <p class="article-excerpt">Most food operators are invisible to 90% of potential customers. Here's what your digital presence should look like and how T2E closes the gap.</p>
-          <span class="article-link">Read More →</span>
+        <div class="profile-stats-row">
+          <div class="profile-stat-item"><div class="profile-stat-num">24</div><div class="profile-stat-lbl">Reviews</div></div>
+          <div class="profile-stat-item"><div class="profile-stat-num">61</div><div class="profile-stat-lbl">Saved</div></div>
+          <div class="profile-stat-item"><div class="profile-stat-num">103</div><div class="profile-stat-lbl">Followers</div></div>
+          <div class="profile-stat-item"><div class="profile-stat-num">340+</div><div class="profile-stat-lbl">Events Done</div></div>
+        </div>
+
+        <div class="profile-tags" style="margin-bottom:0">
+          <span class="profile-tag">🔥 Soul Food</span><span class="profile-tag">🎪 Catering</span>
+          <span class="profile-tag">🚚 Food Truck</span><span class="profile-tag">👨‍🍳 Private Chef</span>
+        </div>
+
+        <div class="profile-activity-title">Recent Activity</div>
+        <div class="profile-activity-list">
+          <div class="profile-activity-item"><div class="activity-emoji">🔥</div><div><div class="activity-title">Catered Ember & Oak Wedding Reception</div><div class="activity-time">2 days ago · ⭐ 5.0 review left</div></div></div>
+          <div class="profile-activity-item"><div class="activity-emoji">🍣</div><div><div class="activity-title">Visited Sushi Kōbō — Left a review</div><div class="activity-time">4 days ago · ⭐ 4.6</div></div></div>
+          <div class="profile-activity-item"><div class="activity-emoji">🌮</div><div><div class="activity-title">Pop-Up at La Palma Grand Opening</div><div class="activity-time">1 week ago · 200 guests served</div></div></div>
+        </div>
+
+        <div class="profile-menu-list">
+          <div class="profile-menu-item"><span class="profile-menu-label">✏️ Edit Profile</span><span class="profile-menu-chevron">›</span></div>
+          <div class="profile-menu-item"><span class="profile-menu-label">🔔 Notifications</span><span class="profile-menu-chevron">›</span></div>
+          <div class="profile-menu-item"><span class="profile-menu-label">⚙️ Preferences</span><span class="profile-menu-chevron">›</span></div>
+          <div class="profile-menu-item danger"><span class="profile-menu-label">Sign Out</span><span class="profile-menu-chevron">›</span></div>
         </div>
       </div>
     </div>
@@ -1701,66 +1133,37 @@
 </section>
 
 <!-- ===== DEMO / CONTACT ===== -->
-<section id="demo" class="section">
+<section id="demo" class="section section-soft">
   <div class="container">
     <div class="demo-inner">
       <div class="reveal">
         <div class="section-label">Let's Talk</div>
         <h2 class="display-lg">See T2E built around<br>your business.</h2>
         <ul class="demo-reasons">
-          <li class="demo-reason">
-            <div class="demo-reason-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" width="18" height="18"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg></div>
-            <div><div class="demo-reason-title">Get a personalized walkthrough</div><div class="demo-reason-desc">We'll show you exactly how T2E fits your operation — not a generic sales demo.</div></div>
-          </li>
-          <li class="demo-reason">
-            <div class="demo-reason-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-            <div><div class="demo-reason-title">Lock in founder pricing</div><div class="demo-reason-desc">Early adopters get access to rates that won't be available once we open to the public.</div></div>
-          </li>
-          <li class="demo-reason">
-            <div class="demo-reason-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--lavender)" stroke-width="1.8" width="18" height="18"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-            <div><div class="demo-reason-title">Join a community of operators</div><div class="demo-reason-desc">Connect with independent food business owners who are building something real.</div></div>
-          </li>
+          <li class="demo-reason"><div class="demo-reason-icon">✅</div><div><div class="demo-reason-title">Get a personalized walkthrough</div><div class="demo-reason-desc">We'll show you exactly how T2E fits your operation — not a generic sales demo.</div></div></li>
+          <li class="demo-reason"><div class="demo-reason-icon">⏱️</div><div><div class="demo-reason-title">Lock in founder pricing</div><div class="demo-reason-desc">Early adopters get access to rates that won't be available once we open to the public.</div></div></li>
+          <li class="demo-reason"><div class="demo-reason-icon">👥</div><div><div class="demo-reason-title">Join a community of operators</div><div class="demo-reason-desc">Connect with independent food business owners who are building something real.</div></div></li>
         </ul>
       </div>
-      <div class="reveal" style="transition-delay:0.12s">
-        <div class="contact-form-wrap">
+      <div class="reveal" style="transition-delay:.12s">
+        <div class="form-wrap">
           <form id="contactForm">
             <div class="form-row">
-              <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" id="fname" placeholder="Marcus Johnson" autocomplete="name">
-                <div class="form-error">Please enter your name.</div>
-              </div>
-              <div class="form-group">
-                <label>Business Name</label>
-                <input type="text" id="fbiz" placeholder="Your Business" autocomplete="organization">
-                <div class="form-error">Please enter your business name.</div>
-              </div>
+              <div class="form-group"><label>Full Name</label><input type="text" id="fname" placeholder="Marcus Johnson" autocomplete="name"><div class="form-error">Please enter your name.</div></div>
+              <div class="form-group"><label>Business Name</label><input type="text" id="fbiz" placeholder="Your Business" autocomplete="organization"><div class="form-error">Please enter your business name.</div></div>
             </div>
             <div class="form-group">
               <label>Business Type</label>
-              <select id="ftype">
-                <option value="">Select your business type…</option>
-                <option>Restaurant</option><option>Caterer</option>
-                <option>Food Truck</option><option>Private Chef</option>
-                <option>Home Kitchen / Cottage</option><option>Other Food Business</option>
-              </select>
+              <select id="ftype"><option value="">Select your business type…</option><option>Restaurant</option><option>Caterer</option><option>Food Truck</option><option>Private Chef</option><option>Home Kitchen / Cottage</option><option>Other Food Business</option></select>
               <div class="form-error">Please select a business type.</div>
             </div>
-            <div class="form-group">
-              <label>Email Address</label>
-              <input type="email" id="femail" placeholder="you@yourbusiness.com" autocomplete="email">
-              <div class="form-error">Please enter a valid email address.</div>
-            </div>
-            <div class="form-group">
-              <label>Tell us about your operation</label>
-              <textarea id="fmsg" placeholder="How many staff, what's your biggest operational challenge, what are you hoping T2E solves…"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:16px 28px;font-size:0.95rem">Book My Demo</button>
+            <div class="form-group"><label>Email Address</label><input type="email" id="femail" placeholder="you@yourbusiness.com" autocomplete="email"><div class="form-error">Please enter a valid email address.</div></div>
+            <div class="form-group"><label>Tell us about your operation</label><textarea id="fmsg" placeholder="Staff size, biggest challenge, what you're hoping T2E solves…"></textarea></div>
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:15px;font-size:0.95rem">📅 Book My Demo</button>
           </form>
           <div class="form-confirm" id="formConfirm">
-            <div class="confirm-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7BC47F" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg></div>
-            <div class="confirm-title">You're on the list.</div>
+            <div class="confirm-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg></div>
+            <div class="confirm-title">You're on the list. 🎉</div>
             <p class="confirm-msg">We'll be in touch within 24 hours to set up your personalized demo.<br>Check your inbox — something good is coming.</p>
           </div>
         </div>
@@ -1771,6 +1174,7 @@
 
 <!-- ===== FOOTER ===== -->
 <footer>
+  <div class="footer-bar"></div>
   <div class="footer-main">
     <div>
       <span class="footer-logo">T2E</span>
@@ -1780,99 +1184,72 @@
     <div class="footer-links">
       <div class="footer-col">
         <div class="footer-col-title">Product</div>
-        <ul>
-          <li><a href="#features">Features</a></li><li><a href="#dashboard">How It Works</a></li>
-          <li><a href="#pricing">Pricing</a></li><li><a href="#roadmap">Roadmap</a></li>
-          <li><a href="#marketplace">Marketplace</a></li>
-        </ul>
+        <ul><li><a href="#features">Features</a></li><li><a href="#dashboard">How It Works</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#roadmap">Roadmap</a></li><li><a href="#marketplace">Marketplace</a></li></ul>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Company</div>
-        <ul>
-          <li><a href="#impact">Our Mission</a></li><li><a href="#demo">Contact</a></li>
-          <li><a href="#personas">Who We Serve</a></li><li><a href="#demo">Careers</a></li>
-          <li><a href="#demo">Press</a></li>
-        </ul>
+        <ul><li><a href="#impact">Our Mission</a></li><li><a href="#demo">Contact</a></li><li><a href="#personas">Who We Serve</a></li><li><a href="#demo">Careers</a></li><li><a href="#demo">Press</a></li></ul>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Resources</div>
-        <ul>
-          <li><a href="#resources">Blog</a></li><li><a href="#resources">Operator Guides</a></li>
-          <li><a href="#resources">Invoice Templates</a></li><li><a href="#resources">Help Center</a></li>
-          <li><a href="#resources">API Docs</a></li>
-        </ul>
+        <ul><li><a href="#blog">Blog</a></li><li><a href="#blog">Operator Guides</a></li><li><a href="#blog">Invoice Templates</a></li><li><a href="#demo">Help Center</a></li><li><a href="#demo">API Docs</a></li></ul>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Connect</div>
-        <ul>
-          <li><a href="#demo">Instagram</a></li><li><a href="#demo">TikTok</a></li>
-          <li><a href="#demo">LinkedIn</a></li><li><a href="#demo">Twitter / X</a></li>
-          <li><a href="#demo">Community Forum</a></li>
-        </ul>
+        <ul><li><a href="#demo">Instagram</a></li><li><a href="#demo">TikTok</a></li><li><a href="#demo">LinkedIn</a></li><li><a href="#demo">Twitter / X</a></li><li><a href="#demo">Community Forum</a></li></ul>
       </div>
     </div>
   </div>
   <div class="footer-bottom container">
     <div class="footer-copy">© 2026 T2E — CRES Ventures. All rights reserved.</div>
-    <div class="footer-legal">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-    </div>
+    <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
   </div>
 </footer>
 
 <script>
-  // NAV scroll blur
+  // Nav scroll
   const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 80);
-  }, { passive: true });
+  window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 60); }, { passive: true });
 
   // Scroll reveal
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  const ro = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); ro.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
 
-  // Chart bar animation
-  let chartAnimated = false;
-  const chartObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && !chartAnimated) {
-        chartAnimated = true;
-        document.querySelectorAll('.chart-bar').forEach((bar, i) => {
-          setTimeout(() => { bar.style.height = bar.dataset.height + 'px'; }, i * 100);
+  // Chart animation
+  let chartDone = false;
+  const co = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !chartDone) {
+        chartDone = true;
+        document.querySelectorAll('.chart-bar').forEach((b, i) => {
+          setTimeout(() => { b.style.height = b.dataset.height + 'px'; }, i * 100);
         });
       }
     });
   }, { threshold: 0.3 });
-  chartObserver.observe(document.getElementById('dashboard'));
+  co.observe(document.getElementById('dashboard'));
 
-  // Form validation & submit
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  function validate(id, condition) {
-    const group = document.getElementById(id).closest('.form-group');
-    group.classList.toggle('error', !condition);
-    return condition;
+  // Blog category toggle
+  function setBlogCat(el) {
+    document.querySelectorAll('.blog-cat').forEach(b => { b.classList.remove('active'); b.classList.add('inactive'); });
+    el.classList.remove('inactive'); el.classList.add('active');
   }
-  document.getElementById('femail').addEventListener('blur', function() {
-    validate('femail', emailRegex.test(this.value));
-  });
+
+  // Form
+  const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function vld(id, ok) { const g = document.getElementById(id).closest('.form-group'); g.classList.toggle('error', !ok); return ok; }
+  document.getElementById('femail').addEventListener('blur', function(){ vld('femail', emailRx.test(this.value)); });
   document.getElementById('contactForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const v1 = validate('fname', document.getElementById('fname').value.trim().length > 0);
-    const v2 = validate('fbiz', document.getElementById('fbiz').value.trim().length > 0);
-    const v3 = validate('ftype', document.getElementById('ftype').value !== '');
-    const v4 = validate('femail', emailRegex.test(document.getElementById('femail').value.trim()));
-    if (v1 && v2 && v3 && v4) {
-      this.style.display = 'none';
-      document.getElementById('formConfirm').style.display = 'flex';
-    }
+    const ok = [
+      vld('fname', document.getElementById('fname').value.trim().length > 0),
+      vld('fbiz', document.getElementById('fbiz').value.trim().length > 0),
+      vld('ftype', document.getElementById('ftype').value !== ''),
+      vld('femail', emailRx.test(document.getElementById('femail').value.trim()))
+    ].every(Boolean);
+    if (ok) { this.style.display = 'none'; document.getElementById('formConfirm').style.display = 'flex'; }
   });
 </script>
 </body>
