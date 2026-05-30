@@ -503,6 +503,8 @@
       border-color: var(--purple-mid);
       color: var(--purple-dark);
     }
+    .reaction-btn.active svg { stroke: var(--purple-dark); }
+    .reaction-btn[data-reaction="love"].active svg { fill: var(--purple-dark); }
     .reaction-btn .count {
       font-size: 13px;
       font-weight: 700;
@@ -1131,10 +1133,22 @@
       <div class="reaction-bar">
         <div class="reaction-bar-label">How did this land?</div>
         <div class="reactions">
-          <button class="reaction-btn" data-reaction="hot">🔥 <span class="label-text">Hot Take</span> <span class="count">47</span></button>
-          <button class="reaction-btn" data-reaction="helpful">💡 <span class="label-text">Helpful</span> <span class="count">134</span></button>
-          <button class="reaction-btn" data-reaction="interesting">🤔 <span class="label-text">Interesting</span> <span class="count">29</span></button>
-          <button class="reaction-btn" data-reaction="love">❤️ <span class="label-text">Love This</span> <span class="count">88</span></button>
+          <button class="reaction-btn" data-reaction="hot">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c0 6-6 6-6 12a6 6 0 0 0 12 0c0-6-6-6-6-12z"/><path d="M12 12c0 3-2 4-2 6a2 2 0 0 0 4 0c0-2-2-3-2-6z"/></svg>
+            <span class="label-text">Hot Take</span> <span class="count">47</span>
+          </button>
+          <button class="reaction-btn" data-reaction="helpful">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+            <span class="label-text">Helpful</span> <span class="count">134</span>
+          </button>
+          <button class="reaction-btn" data-reaction="interesting">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span class="label-text">Interesting</span> <span class="count">29</span>
+          </button>
+          <button class="reaction-btn" data-reaction="love">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="label-text">Love This</span> <span class="count">88</span>
+          </button>
         </div>
       </div>
 
@@ -1378,11 +1392,20 @@
     setupFollowBtn(document.getElementById('sidebarFollowBtn'), '✓ Following Marcus', '+ Follow Marcus');
 
     // ── REACTION BUTTONS ──────────────────────────────────────
-    document.querySelectorAll('.reaction-btn').forEach(btn => {
+    const reactionBtns = document.querySelectorAll('.reaction-btn');
+    reactionBtns.forEach(btn => {
       btn.addEventListener('click', () => {
+        const wasActive = btn.classList.contains('active');
+        // deactivate all first
+        reactionBtns.forEach(b => {
+          if (b !== btn && b.classList.contains('active')) {
+            b.classList.remove('active');
+            const c = b.querySelector('.count');
+            c.textContent = parseInt(c.textContent, 10) - 1;
+          }
+        });
         const countEl = btn.querySelector('.count');
         const currentCount = parseInt(countEl.textContent, 10);
-        const wasActive = btn.classList.contains('active');
         btn.classList.toggle('active');
         countEl.textContent = wasActive ? currentCount - 1 : currentCount + 1;
       });
