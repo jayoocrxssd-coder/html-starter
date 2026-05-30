@@ -6,6 +6,15 @@
   <script defer src="/_vercel/insights/script.js"></script>
   <title>The T2E Journal — Insights for Food Operators</title>
   <meta name="description" content="Operator playbooks, finance guides, industry trends, and community stories from the T2E food platform." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="The T2E Journal — Insights for Food Operators" />
+  <meta property="og:description" content="Operator playbooks, finance guides, industry trends, and community stories from the T2E food platform." />
+  <meta property="og:url" content="https://t2eat.com/blog" />
+  <meta property="og:site_name" content="T2E — Time 2 Eat" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The T2E Journal — Insights for Food Operators" />
+  <meta name="twitter:description" content="Operator playbooks, finance guides, industry trends, and community stories from the T2E food platform." />
+  <link rel="canonical" href="https://t2eat.com/blog" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -912,7 +921,7 @@
     <div class="container">
       <div class="trending-header">
         <h3>🔥 Trending Topics</h3>
-        <a href="#" style="font-size:14px;font-weight:600;color:var(--purple);">View all topics →</a>
+        <a href="blog.html" style="font-size:14px;font-weight:600;color:var(--purple);">View all topics →</a>
       </div>
       <div class="topic-tags">
         <div class="topic-tag">#FoodWaste <span class="count">48 articles</span></div>
@@ -937,10 +946,12 @@
       <div class="newsletter-box reveal">
         <h2>The Weekly Plate 🍽️</h2>
         <p>One operator insight, one finance tip, and one growth hack — every Tuesday morning. Join 18,000+ food professionals.</p>
-        <div class="newsletter-form">
-          <input type="email" placeholder="your@email.com" />
-          <button class="btn btn-primary">Subscribe</button>
-        </div>
+        <form id="blogNewsletterForm" class="newsletter-form" onsubmit="handleBlogNewsletter(event);">
+          <input type="email" id="blogNewsletterEmail" placeholder="your@email.com" />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+        <div id="blogNewsletterError" style="color:#EF4444;font-size:13px;margin-top:8px;display:none;position:relative;z-index:1;">Please enter a valid email.</div>
+        <div id="blogNewsletterSuccess" style="color:#10B981;font-size:16px;font-weight:600;margin-top:12px;display:none;position:relative;z-index:1;">You're in! 🎉 Welcome to the T2E community.</div>
       </div>
     </div>
   </section>
@@ -954,10 +965,10 @@
           <div class="logo">T2E</div>
           <p>The operating platform for the food industry. Built by operators, for operators.</p>
           <div class="footer-social">
-            <div class="social-btn">𝕏</div>
-            <div class="social-btn">in</div>
-            <div class="social-btn">📷</div>
-            <div class="social-btn">▶</div>
+            <a href="https://twitter.com" target="_blank" rel="noopener" class="social-btn">𝕏</a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-btn">in</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener" class="social-btn">📷</a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener" class="social-btn">▶</a>
           </div>
         </div>
         <div class="footer-col">
@@ -973,18 +984,18 @@
           <h4>Resources</h4>
           <div class="footer-links">
             <a href="blog.html">The T2E Journal</a>
-            <a href="#">Help Center</a>
-            <a href="#">API Docs</a>
-            <a href="#">Community</a>
+            <a href="index.html#demo">Help Center</a>
+            <a href="for-businesses.html">API Docs</a>
+            <a href="discover.html">Community</a>
           </div>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
           <div class="footer-links">
-            <a href="#">About T2E</a>
-            <a href="#">Careers</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <a href="index.html#impact">About T2E</a>
+            <a href="index.html#demo">Careers</a>
+            <a href="index.html#demo">Privacy Policy</a>
+            <a href="index.html#demo">Terms of Service</a>
           </div>
         </div>
       </div>
@@ -1019,6 +1030,23 @@
         pill.classList.add('active');
       });
     });
+
+    // Newsletter form handler
+    function handleBlogNewsletter(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('blogNewsletterEmail');
+      const errorEl = document.getElementById('blogNewsletterError');
+      const successEl = document.getElementById('blogNewsletterSuccess');
+      const val = emailInput.value.trim();
+      if (!val || !val.includes('@')) {
+        errorEl.style.display = 'block';
+        successEl.style.display = 'none';
+        return;
+      }
+      errorEl.style.display = 'none';
+      document.getElementById('blogNewsletterForm').style.display = 'none';
+      successEl.style.display = 'block';
+    }
 
     // Scroll reveal
     const revealEls = document.querySelectorAll('.reveal');

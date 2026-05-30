@@ -1214,10 +1214,12 @@
       <div class="sidebar-card">
         <h4>Get the Weekly Plate</h4>
         <p style="font-size:0.85rem;color:var(--gray-500);line-height:1.5;margin-bottom:14px;">One operator insight, one finance tip — every Tuesday.</p>
-        <div class="sidebar-newsletter">
-          <input type="email" placeholder="your@email.com" />
-          <button>Subscribe Free</button>
-        </div>
+        <form id="sidebarNewsletterForm" class="sidebar-newsletter" onsubmit="handleSidebarNewsletter(event);">
+          <input type="email" id="sidebarNewsletterEmail" placeholder="your@email.com" />
+          <button type="submit">Subscribe Free</button>
+        </form>
+        <div id="sidebarNewsletterError" style="color:#EF4444;font-size:12px;margin-top:6px;display:none;">Please enter a valid email.</div>
+        <div id="sidebarNewsletterSuccess" style="color:#10B981;font-size:13px;font-weight:600;margin-top:8px;display:none;">You're in! 🎉 Welcome to the T2E community.</div>
       </div>
 
     </aside>
@@ -1294,10 +1296,12 @@
     <div class="container">
       <h2>Every week, operators like you are reading T2E.</h2>
       <p>Join 18,000+ food professionals getting the Weekly Plate — one operator insight, one finance tip, and one growth hack every Tuesday morning.</p>
-      <div class="newsletter-form">
-        <input type="email" placeholder="your@email.com" />
-        <button class="btn btn-primary">Subscribe Free</button>
-      </div>
+      <form id="ctaNewsletterForm" class="newsletter-form" onsubmit="handleCtaNewsletter(event);">
+        <input type="email" id="ctaNewsletterEmail" placeholder="your@email.com" />
+        <button type="submit" class="btn btn-primary">Subscribe Free</button>
+      </form>
+      <div id="ctaNewsletterError" style="color:#FCA5A5;font-size:13px;margin-top:8px;display:none;position:relative;z-index:1;">Please enter a valid email.</div>
+      <div id="ctaNewsletterSuccess" style="color:#6EE7B7;font-size:16px;font-weight:600;margin-top:12px;display:none;position:relative;z-index:1;">You're in! 🎉 Welcome to the T2E community.</div>
     </div>
   </section>
 
@@ -1310,10 +1314,10 @@
           <div class="logo">T2E</div>
           <p>The operating platform for the food industry. Built by operators, for operators.</p>
           <div class="footer-social">
-            <div class="social-btn">𝕏</div>
-            <div class="social-btn">in</div>
-            <div class="social-btn">📷</div>
-            <div class="social-btn">▶</div>
+            <a href="https://twitter.com" target="_blank" rel="noopener" class="social-btn">𝕏</a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-btn">in</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener" class="social-btn">📷</a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener" class="social-btn">▶</a>
           </div>
         </div>
         <div class="footer-col">
@@ -1329,18 +1333,18 @@
           <h4>Resources</h4>
           <div class="footer-links">
             <a href="blog.html">The T2E Journal</a>
-            <a href="#">Help Center</a>
-            <a href="#">API Docs</a>
-            <a href="#">Community</a>
+            <a href="index.html#demo">Help Center</a>
+            <a href="for-businesses.html">API Docs</a>
+            <a href="discover.html">Community</a>
           </div>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
           <div class="footer-links">
-            <a href="#">About T2E</a>
-            <a href="#">Careers</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <a href="index.html#impact">About T2E</a>
+            <a href="index.html#demo">Careers</a>
+            <a href="index.html#demo">Privacy Policy</a>
+            <a href="index.html#demo">Terms of Service</a>
           </div>
         </div>
       </div>
@@ -1438,6 +1442,35 @@
         setTimeout(() => { copyBtn.textContent = '🔗 Copy Link'; }, 2000);
       }
     });
+
+    // ── NEWSLETTER FORM HANDLERS ──────────────────────────────
+    function handleSidebarNewsletter(e) {
+      e.preventDefault();
+      const val = document.getElementById('sidebarNewsletterEmail').value.trim();
+      const errorEl = document.getElementById('sidebarNewsletterError');
+      const successEl = document.getElementById('sidebarNewsletterSuccess');
+      if (!val || !val.includes('@')) {
+        errorEl.style.display = 'block';
+        return;
+      }
+      errorEl.style.display = 'none';
+      document.getElementById('sidebarNewsletterForm').style.display = 'none';
+      successEl.style.display = 'block';
+    }
+
+    function handleCtaNewsletter(e) {
+      e.preventDefault();
+      const val = document.getElementById('ctaNewsletterEmail').value.trim();
+      const errorEl = document.getElementById('ctaNewsletterError');
+      const successEl = document.getElementById('ctaNewsletterSuccess');
+      if (!val || !val.includes('@')) {
+        errorEl.style.display = 'block';
+        return;
+      }
+      errorEl.style.display = 'none';
+      document.getElementById('ctaNewsletterForm').style.display = 'none';
+      successEl.style.display = 'block';
+    }
 
     // ── SCROLL REVEAL ─────────────────────────────────────────
     const revealEls = document.querySelectorAll('.reveal');
