@@ -604,6 +604,129 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
   font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3);
 }
 
+/* ── Modal Overlay ──────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(0,0,0,.6); backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal-card {
+  width: 460px; max-width: 94vw;
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 20px;
+  padding: 32px 36px 28px;
+  box-shadow: 0 40px 100px rgba(0,0,0,.6);
+  animation: cardIn .3s cubic-bezier(.34,1.4,.64,1);
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px;
+}
+.modal-title {
+  font-size: 16px; font-weight: 800; letter-spacing: -.01em; color: var(--ink);
+}
+.modal-close {
+  width: 28px; height: 28px;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink2); font-size: 13px; transition: all .15s;
+}
+.modal-close:hover { background: var(--bg4); color: var(--ink); }
+.modal-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink3);
+  display: block; margin-bottom: 7px; margin-top: 14px;
+}
+.modal-label:first-of-type { margin-top: 0; }
+.modal-input, .modal-select {
+  width: 100%; background: var(--bg3);
+  border: 0.5px solid var(--border2); color: var(--ink);
+  font-family: 'Syne', -apple-system, sans-serif;
+  font-size: 13px; padding: 11px 13px; border-radius: 10px;
+  outline: none; transition: border-color .15s;
+}
+.modal-select { appearance: none; cursor: pointer; }
+.modal-input:focus, .modal-select:focus { border-color: var(--ink2); }
+.modal-select option { background: var(--bg3); color: var(--ink); }
+.modal-footer {
+  display: flex; gap: 8px; margin-top: 24px; justify-content: flex-end;
+}
+.modal-btn {
+  padding: 10px 20px; border-radius: 9px;
+  font-family: 'Syne', -apple-system, sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; cursor: pointer; transition: all .15s;
+  border: 0.5px solid var(--border2);
+}
+.modal-btn.cancel { background: transparent; color: var(--ink2); }
+.modal-btn.cancel:hover { background: var(--bg3); color: var(--ink); }
+.modal-btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.modal-btn.primary:hover { opacity: .85; }
+
+/* ── Config Modal (smaller) ─────────────────────────── */
+.config-modal-card {
+  width: 380px; max-width: 94vw;
+}
+
+/* ── Priority Chips ─────────────────────────────────── */
+.priority-chip {
+  display: inline-flex; align-items: center;
+  font-size: 8px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 100px;
+}
+.priority-chip.low      { background: rgba(90,176,248,.12);  color: var(--blue);  border: 0.5px solid rgba(90,176,248,.25); }
+.priority-chip.medium   { background: rgba(240,176,48,.12);  color: var(--amber); border: 0.5px solid rgba(240,176,48,.25); }
+.priority-chip.high     { background: rgba(240,104,96,.12);  color: var(--red);   border: 0.5px solid rgba(240,104,96,.25); }
+.priority-chip.urgent   { background: rgba(240,104,168,.14); color: var(--pink);  border: 0.5px solid rgba(240,104,168,.25); }
+
+/* ── Integration Card Grid ──────────────────────────── */
+.integration-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.integration-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 14px;
+  padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: border-color .15s;
+}
+.integration-card:hover { border-color: var(--border2); }
+.integration-card-top {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+}
+.integration-logo {
+  font-size: 26px; line-height: 1; flex-shrink: 0;
+}
+.integration-name {
+  font-size: 13px; font-weight: 700; color: var(--ink);
+  margin-bottom: 2px;
+}
+.integration-category {
+  font-size: 9px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink3);
+}
+.integration-desc {
+  font-size: 11px; font-family: 'DM Mono', monospace;
+  color: var(--ink3); line-height: 1.6;
+}
+.integration-footer {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.conn-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 9px; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 100px;
+}
+.conn-badge.connected    { background: rgba(61,224,144,.1);  color: var(--green); border: 0.5px solid rgba(61,224,144,.2); }
+.conn-badge.disconnected { background: rgba(154,154,152,.1); color: var(--ink3);  border: 0.5px solid var(--border2); }
+.conn-badge.pending      { background: rgba(240,176,48,.1);  color: var(--amber); border: 0.5px solid rgba(240,176,48,.2); }
+.integration-actions { display: flex; gap: 6px; }
+
 /* ── Responsive ─────────────────────────────────────── */
 .menu-toggle {
   display: none; background: none; border: none;
@@ -620,6 +743,7 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
   .row .panel-sm { flex: 1 1 auto; }
   .menu-toggle { display: block; }
   .content { padding: 16px; }
+  .integration-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 520px) {
   .stat-grid { grid-template-columns: 1fr 1fr; }
@@ -681,6 +805,9 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
     <button class="nav-item" onclick="nav('users', this)">
       <span class="nav-icon">◉</span> Users
     </button>
+    <button class="nav-item" onclick="nav('support', this)">
+      <span class="nav-icon">◇</span> Support
+    </button>
     <button class="nav-item" onclick="nav('activity', this)">
       <span class="nav-icon">◎</span> Activity
     </button>
@@ -688,6 +815,11 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
     <div class="sidebar-section-label">Team</div>
     <button class="nav-item" onclick="nav('workers', this)">
       <span class="nav-icon">◈</span> Workers
+    </button>
+
+    <div class="sidebar-section-label">System</div>
+    <button class="nav-item" onclick="nav('integrations', this)">
+      <span class="nav-icon">◫</span> Integrations
     </button>
 
     <div class="sidebar-bottom">
@@ -857,6 +989,7 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
               <button class="filter-chip" onclick="setFilter('suspended',this)">Suspended</button>
             </div>
             <div class="toolbar-right">
+              <button class="action-btn" onclick="openAddUserModal()" style="padding:7px 13px;font-size:10px;border-radius:7px;background:var(--ink);color:var(--bg);border-color:var(--ink)">+ Add User</button>
               <div class="icon-btn" title="Export CSV" onclick="toast('CSV export — connect data source first','📥')">⇩</div>
             </div>
           </div>
@@ -1095,6 +1228,88 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
         </div>
       </div>
 
+      <!-- ══ VIEW: SUPPORT ══ -->
+      <div class="view" id="view-support">
+        <div class="page-header">
+          <div class="page-title">Support</div>
+          <div class="page-sub">User support tickets and requests</div>
+        </div>
+
+        <div class="stat-grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="stat-card">
+            <div class="stat-label">Open Tickets</div>
+            <div class="stat-value" id="support-stat-open">—</div>
+            <div class="stat-delta">No data yet</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Avg Response Time</div>
+            <div class="stat-value">—</div>
+            <div class="stat-delta">No data yet</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Resolved (30d)</div>
+            <div class="stat-value">—</div>
+            <div class="stat-delta">No data yet</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="toolbar">
+            <div class="filter-chips">
+              <button class="filter-chip active" onclick="setSupportFilter('all',this)">All</button>
+              <button class="filter-chip" onclick="setSupportFilter('open',this)">Open</button>
+              <button class="filter-chip" onclick="setSupportFilter('in-progress',this)">In Progress</button>
+              <button class="filter-chip" onclick="setSupportFilter('resolved',this)">Resolved</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>User</th>
+                  <th>Subject</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Assigned To</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="support-tbody">
+                <tr>
+                  <td colspan="8">
+                    <div class="empty-state">
+                      <span class="empty-state-icon">◇</span>
+                      <span class="empty-state-label">No tickets yet</span>
+                      Support tickets appear here once users submit requests
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: INTEGRATIONS ══ -->
+      <div class="view" id="view-integrations">
+        <div class="page-header">
+          <div class="page-title">Integrations</div>
+          <div class="page-sub">Connected services and API keys</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Connected Services</div>
+            <div class="panel-hint" id="integration-count-hint">0 of 8 connected</div>
+          </div>
+          <div class="panel-body">
+            <div class="integration-grid" id="integration-grid"></div>
+          </div>
+        </div>
+      </div>
+
     </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /app -->
@@ -1138,6 +1353,55 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
   </div>
 </div>
 
+<!-- Add User Modal -->
+<div class="modal-overlay" id="add-user-modal" onclick="handleAddUserOverlayClick(event)">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="add-user-modal-title">
+    <div class="modal-header">
+      <div class="modal-title" id="add-user-modal-title">Add User</div>
+      <div class="modal-close" onclick="closeAddUserModal()" aria-label="Close">✕</div>
+    </div>
+    <label class="modal-label" for="au-name">Full Name</label>
+    <input class="modal-input" id="au-name" type="text" placeholder="Jane Smith" autocomplete="off">
+    <label class="modal-label" for="au-email">Email</label>
+    <input class="modal-input" id="au-email" type="email" placeholder="jane@example.com" autocomplete="off">
+    <label class="modal-label" for="au-plan">Plan</label>
+    <select class="modal-select" id="au-plan">
+      <option value="free">Free</option>
+      <option value="pro">Pro</option>
+      <option value="enterprise">Enterprise</option>
+    </select>
+    <label class="modal-label" for="au-status">Status</label>
+    <select class="modal-select" id="au-status">
+      <option value="active">Active</option>
+      <option value="inactive">Inactive</option>
+    </select>
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeAddUserModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="submitAddUser()">Add User</button>
+    </div>
+  </div>
+</div>
+
+<!-- Integration Config Modal -->
+<div class="modal-overlay" id="integration-config-modal" onclick="handleConfigOverlayClick(event)">
+  <div class="modal-card config-modal-card" role="dialog" aria-modal="true" aria-labelledby="config-modal-title">
+    <div class="modal-header">
+      <div class="modal-title" id="config-modal-title">Configure</div>
+      <div class="modal-close" onclick="closeConfigModal()" aria-label="Close">✕</div>
+    </div>
+    <label class="modal-label" for="cfg-apikey">API Key</label>
+    <input class="modal-input" id="cfg-apikey" type="password" placeholder="sk-••••••••••••••••">
+    <label class="modal-label" for="cfg-secret" style="margin-top:12px">Secret Key <span style="color:var(--ink3);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+    <input class="modal-input" id="cfg-secret" type="password" placeholder="Optional secret">
+    <label class="modal-label" for="cfg-webhook" style="margin-top:12px">Webhook URL <span style="color:var(--ink3);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+    <input class="modal-input" id="cfg-webhook" type="url" placeholder="https://…">
+    <div class="modal-footer">
+      <button class="modal-btn cancel" onclick="closeConfigModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="saveIntegrationConfig()">Save & Connect</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════
 // WORKER CREDENTIALS (replace before launch)
@@ -1156,6 +1420,7 @@ const WORKERS = [
 const USERS        = [];
 const TRANSACTIONS = [];
 const ACTIVITY_EVENTS = [];
+const SUPPORT_TICKETS = [];
 
 const WORKER_TABLE = [
   { name:'Command Admin',  email:'admin@warroom.app',   role:'owner',   last:'—', on:true  },
@@ -1231,11 +1496,13 @@ document.getElementById('auth-pass').addEventListener('keydown', e => {
 // NAVIGATION
 // ══════════════════════════════════════════
 const TOPBAR_META = {
-  overview: ['Overview','Platform health at a glance'],
-  revenue:  ['Revenue','MRR, transactions, and payment health'],
-  users:    ['Users','Manage accounts, plans, and access'],
-  activity: ['Activity','Live platform events'],
-  workers:  ['Workers','Admin team access and audit trail'],
+  overview:     ['Overview','Platform health at a glance'],
+  revenue:      ['Revenue','MRR, transactions, and payment health'],
+  users:        ['Users','Manage accounts, plans, and access'],
+  support:      ['Support','User support tickets and requests'],
+  activity:     ['Activity','Live platform events'],
+  workers:      ['Workers','Admin team access and audit trail'],
+  integrations: ['Integrations','Connected services and API keys'],
 };
 
 function nav(section, btn){
@@ -1453,6 +1720,204 @@ function toggleWorker(i, el){
     WORKER_TABLE[i].on ? `${WORKER_TABLE[i].name} access enabled` : `${WORKER_TABLE[i].name} access revoked`,
     WORKER_TABLE[i].on ? '✓' : '🚫'
   );
+}
+
+// ══════════════════════════════════════════
+// ADD USER MODAL
+// ══════════════════════════════════════════
+let _addUserNextId = 1;
+
+function openAddUserModal(){
+  document.getElementById('au-name').value  = '';
+  document.getElementById('au-email').value = '';
+  document.getElementById('au-plan').value  = 'free';
+  document.getElementById('au-status').value = 'active';
+  document.getElementById('add-user-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('au-name').focus(), 50);
+}
+
+function closeAddUserModal(){
+  document.getElementById('add-user-modal').classList.remove('open');
+}
+
+function handleAddUserOverlayClick(e){
+  if(e.target === document.getElementById('add-user-modal')) closeAddUserModal();
+}
+
+function submitAddUser(){
+  const name   = document.getElementById('au-name').value.trim();
+  const email  = document.getElementById('au-email').value.trim();
+  const plan   = document.getElementById('au-plan').value;
+  const status = document.getElementById('au-status').value;
+
+  if(!name || !email){
+    toast('Please fill in Name and Email','⚠');
+    return;
+  }
+
+  const today = new Date().toISOString().slice(0,10);
+  USERS.push({
+    id: _addUserNextId++,
+    name, email, plan, status,
+    joined: today, lastActive: today,
+    biz: 0, missions: 0, exports: 0, axis: 0
+  });
+
+  closeAddUserModal();
+  renderUsers();
+  toast('User added', '✓');
+}
+
+// ══════════════════════════════════════════
+// SUPPORT TICKETS
+// ══════════════════════════════════════════
+let supportFilter = 'all';
+
+function setSupportFilter(f, btn){
+  supportFilter = f;
+  document.querySelectorAll('#view-support .filter-chips .filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  renderSupport();
+}
+
+function priorityChip(p){
+  return `<span class="priority-chip ${p}">${p}</span>`;
+}
+
+function renderSupport(){
+  let list = [...SUPPORT_TICKETS];
+  if(supportFilter !== 'all') list = list.filter(t=>t.status===supportFilter);
+
+  document.getElementById('support-stat-open').textContent =
+    SUPPORT_TICKETS.filter(t=>t.status==='open').length || '—';
+
+  const tbody = document.getElementById('support-tbody');
+  if(list.length === 0){
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
+      <span class="empty-state-icon">◇</span>
+      <span class="empty-state-label">${supportFilter==='all'?'No tickets yet':'No '+supportFilter+' tickets'}</span>
+      ${supportFilter==='all'?'Support tickets appear here once users submit requests':'Try a different filter'}
+    </div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = list.map(t => `
+    <tr>
+      <td class="mono">${t.id}</td>
+      <td class="primary">${t.user}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${t.subject}</td>
+      <td>${priorityChip(t.priority)}</td>
+      <td>${statusBadge(t.status === 'in-progress' ? 'active' : t.status === 'resolved' ? 'paid' : 'inactive')}<span style="display:none">${t.status}</span></td>
+      <td class="mono">${t.created}</td>
+      <td>${t.assignedTo || '—'}</td>
+      <td>
+        <div class="row-actions">
+          <button class="action-btn" onclick="toast('Ticket detail panel coming soon','◇')">View</button>
+          <button class="action-btn" onclick="resolveTicket('${t.id}',this)" ${t.status==='resolved'?'disabled style="opacity:.4;cursor:not-allowed"':''}>Resolve</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function resolveTicket(id){
+  const t = SUPPORT_TICKETS.find(t=>t.id===id);
+  if(!t) return;
+  t.status = 'resolved';
+  renderSupport();
+  toast('Ticket resolved','✓');
+}
+
+// ══════════════════════════════════════════
+// INTEGRATIONS
+// ══════════════════════════════════════════
+const INTEGRATIONS = [
+  { id:'stripe',   name:'Stripe',    category:'Payments',        logo:'💳', desc:'Process subscriptions and one-time payments',          status:'disconnected' },
+  { id:'supabase', name:'Supabase',  category:'Database & Auth', logo:'⚡', desc:'User authentication and real-time database',           status:'disconnected' },
+  { id:'netlify',  name:'Netlify',   category:'Hosting',         logo:'🌐', desc:'Deploy and host your WAR ROOM instance',               status:'disconnected' },
+  { id:'resend',   name:'Resend',    category:'Email',           logo:'✉️',  desc:'Transactional emails, password resets, receipts',      status:'disconnected' },
+  { id:'axisai',   name:'AXIS AI',   category:'AI Layer',        logo:'🤖', desc:'Power the AXIS co-pilot inside WAR ROOM',              status:'disconnected' },
+  { id:'vercel',   name:'Vercel',    category:'Hosting',         logo:'▲',  desc:'Alternative deployment and edge network',              status:'disconnected' },
+  { id:'twilio',   name:'Twilio',    category:'SMS/Comms',       logo:'📱', desc:'SMS notifications and 2FA',                           status:'disconnected' },
+  { id:'posthog',  name:'PostHog',   category:'Analytics',       logo:'🦔', desc:'Product analytics and user behavior tracking',         status:'disconnected' },
+];
+
+let _configTargetId = null;
+
+function renderIntegrations(){
+  const grid = document.getElementById('integration-grid');
+  const connectedCount = INTEGRATIONS.filter(i=>i.status==='connected').length;
+  document.getElementById('integration-count-hint').textContent =
+    `${connectedCount} of ${INTEGRATIONS.length} connected`;
+
+  grid.innerHTML = INTEGRATIONS.map(s => {
+    const isConnected = s.status === 'connected';
+    const actions = isConnected
+      ? `<div class="integration-actions">
+           <button class="action-btn" onclick="openConfigModal('${s.id}')">Configure</button>
+           <button class="action-btn danger" onclick="disconnectIntegration('${s.id}')">Disconnect</button>
+         </div>`
+      : `<div class="integration-actions">
+           <button class="action-btn" style="background:var(--ink);color:var(--bg);border-color:var(--ink)" onclick="openConfigModal('${s.id}')">Connect</button>
+         </div>`;
+    return `
+      <div class="integration-card">
+        <div class="integration-card-top">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="integration-logo">${s.logo}</div>
+            <div>
+              <div class="integration-name">${s.name}</div>
+              <div class="integration-category">${s.category}</div>
+            </div>
+          </div>
+          <span class="conn-badge ${s.status}"><span class="badge-dot"></span>${s.status}</span>
+        </div>
+        <div class="integration-desc">${s.desc}</div>
+        <div class="integration-footer">${actions}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openConfigModal(id){
+  _configTargetId = id;
+  const s = INTEGRATIONS.find(i=>i.id===id);
+  document.getElementById('config-modal-title').textContent = `Configure ${s.name}`;
+  document.getElementById('cfg-apikey').value  = '';
+  document.getElementById('cfg-secret').value  = '';
+  document.getElementById('cfg-webhook').value = '';
+  document.getElementById('integration-config-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('cfg-apikey').focus(), 50);
+}
+
+function closeConfigModal(){
+  document.getElementById('integration-config-modal').classList.remove('open');
+  _configTargetId = null;
+}
+
+function handleConfigOverlayClick(e){
+  if(e.target === document.getElementById('integration-config-modal')) closeConfigModal();
+}
+
+function saveIntegrationConfig(){
+  const apiKey = document.getElementById('cfg-apikey').value.trim();
+  if(!apiKey){
+    toast('API Key is required','⚠');
+    return;
+  }
+  const s = INTEGRATIONS.find(i=>i.id===_configTargetId);
+  if(s) s.status = 'connected';
+  closeConfigModal();
+  renderIntegrations();
+  toast(`${s ? s.name : 'Service'} connected`, '✓');
+}
+
+function disconnectIntegration(id){
+  const s = INTEGRATIONS.find(i=>i.id===id);
+  if(!s) return;
+  s.status = 'disconnected';
+  renderIntegrations();
+  toast(`${s.name} disconnected`, '◫');
 }
 
 // ══════════════════════════════════════════
