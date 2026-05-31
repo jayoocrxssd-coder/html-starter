@@ -1106,64 +1106,64 @@ input[type=range] { width: 100%; accent-color: #22c55e; }
         </div>
       </div>
 
-    </div>
-
-    <!-- ANALYTICS -->
-<div class="view" id="v-analytics">
-  <div class="top-row" style="margin-bottom:0">
-    <div>
-      <div class="page-title">Analytics</div>
-      <div class="page-sub">Your focus patterns &amp; output</div>
-    </div>
-  </div>
-  <div class="scroll">
-
-    <!-- FOCUS TIME CARD -->
-    <div class="card" style="margin-bottom:10px">
-      <div class="section-title" style="margin-bottom:14px">Focus time</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:4px">
-        <div style="background:var(--card2);border-radius:14px;padding:12px;text-align:center">
-          <div id="an-today-focus" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);line-height:1">0m</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase">Today</div>
+      <!-- ANALYTICS -->
+      <div class="view" id="v-analytics">
+        <div class="top-row" style="margin-bottom:0">
+          <div>
+            <div class="page-title">Analytics</div>
+            <div class="page-sub">Your focus patterns &amp; output</div>
+          </div>
         </div>
-        <div style="background:var(--card2);border-radius:14px;padding:12px;text-align:center">
-          <div id="an-sessions" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);line-height:1">0</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase">Sessions</div>
-        </div>
-        <div style="background:var(--card2);border-radius:14px;padding:12px;text-align:center">
-          <div id="an-avg-session" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);line-height:1">0m</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase">Avg session</div>
+        <div class="scroll">
+
+          <!-- FOCUS TIME CARD -->
+          <div class="card" style="margin-bottom:10px">
+            <div class="section-title" style="margin-bottom:14px">Focus time</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:4px">
+              <div style="background:var(--card2);border-radius:14px;padding:12px;text-align:center">
+                <div id="an-today-focus" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);line-height:1">0m</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase">Today</div>
+              </div>
+              <div style="background:var(--card2);border-radius:14px;padding:12px;text-align:center">
+                <div id="an-sessions" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);line-height:1">0</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase">Sessions</div>
+              </div>
+              <div style="background:var(--card2);border-radius:14px;padding:12px;text-align:center">
+                <div id="an-avg-session" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);line-height:1">0m</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:3px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase">Avg session</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- HABIT OUTPUT CARD -->
+          <div class="card" style="margin-bottom:10px">
+            <div class="section-title" style="margin-bottom:14px">Weekly output</div>
+            <div id="an-habit-bars" style="display:flex;flex-direction:column;gap:10px"></div>
+          </div>
+
+          <!-- STREAK LEADERBOARD -->
+          <div class="card" style="margin-bottom:10px">
+            <div class="section-title" style="margin-bottom:14px">Streak leaderboard</div>
+            <div id="an-streak-list" style="display:flex;flex-direction:column;gap:0"></div>
+          </div>
+
+          <!-- COMPLETION HEATMAP -->
+          <div class="card" style="margin-bottom:10px">
+            <div class="section-title" style="margin-bottom:10px">7-day completion</div>
+            <div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:6px" id="an-heatmap"></div>
+            <div id="an-heatmap-labels" style="display:flex;gap:4px"></div>
+          </div>
+
+          <!-- GOAL PROGRESS SUMMARY -->
+          <div class="card" style="margin-bottom:10px">
+            <div class="section-title" style="margin-bottom:14px">Goal progress</div>
+            <div id="an-goal-list" style="display:flex;flex-direction:column;gap:8px"></div>
+          </div>
+
         </div>
       </div>
-    </div>
 
-    <!-- HABIT OUTPUT CARD -->
-    <div class="card" style="margin-bottom:10px">
-      <div class="section-title" style="margin-bottom:14px">Weekly output</div>
-      <div id="an-habit-bars" style="display:flex;flex-direction:column;gap:10px"></div>
     </div>
-
-    <!-- STREAK LEADERBOARD -->
-    <div class="card" style="margin-bottom:10px">
-      <div class="section-title" style="margin-bottom:14px">Streak leaderboard</div>
-      <div id="an-streak-list" style="display:flex;flex-direction:column;gap:0"></div>
-    </div>
-
-    <!-- COMPLETION HEATMAP -->
-    <div class="card" style="margin-bottom:10px">
-      <div class="section-title" style="margin-bottom:10px">7-day completion</div>
-      <div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:6px" id="an-heatmap"></div>
-      <div id="an-heatmap-labels" style="display:flex;gap:4px"></div>
-    </div>
-
-    <!-- GOAL PROGRESS SUMMARY -->
-    <div class="card" style="margin-bottom:10px">
-      <div class="section-title" style="margin-bottom:14px">Goal progress</div>
-      <div id="an-goal-list" style="display:flex;flex-direction:column;gap:8px"></div>
-    </div>
-
-  </div>
-</div>
 
     <!-- HABIT DETAIL SHEET -->
     <div id="habit-detail" style="position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;align-items:flex-end;z-index:30" onclick="if(event.target===this)closeHabitDetail()">
