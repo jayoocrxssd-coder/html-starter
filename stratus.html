@@ -16,7 +16,26 @@
 <meta name="apple-mobile-web-app-title" content="Stratus">
 <meta name="theme-color" content="#000000">
 <title>Stratus</title>
-<link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;Stratus&quot;,&quot;short_name&quot;:&quot;Stratus&quot;,&quot;start_url&quot;:&quot;/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%23000000&quot;,&quot;theme_color&quot;:&quot;%23000000&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2322c55e'/%3E%3Cpath d='M20 65 L50 20 L80 65' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
+<link id="pwa-manifest" rel="manifest">
+<script>
+(function(){
+  const icon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2322c55e'/%3E%3Cpath d='M20 65 L50 20 L80 65' stroke='white' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E";
+  const manifest = {
+    name: "Stratus",
+    short_name: "Stratus",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#000000",
+    theme_color: "#000000",
+    icons: [
+      { src: icon, sizes: "192x192", type: "image/svg+xml" },
+      { src: icon, sizes: "512x512", type: "image/svg+xml" }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  document.getElementById('pwa-manifest').href = URL.createObjectURL(blob);
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -436,54 +455,7 @@ html, body {
   color: inherit;
 }
 
-/* TWEAKS PANEL */
-.tweaks {
-  width: 200px;
-  background: #1a1a1a;
-  border-radius: 20px;
-  padding: 20px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  border: 1px solid #2a2a2a;
-}
-.tw-head { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #666; }
-.tw-sec { border-bottom: 1px solid #222; padding-bottom: 16px; }
-.tw-sec:last-child { border-bottom: none; padding-bottom: 0; }
-.tw-stitle { font-size: 11px; font-weight: 500; color: #999; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
-.tw-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
-.tw-row:last-child { margin-bottom: 0; }
-.tw-lbl { display: flex; justify-content: space-between; font-size: 12px; color: #666; }
-.tw-val { font-size: 12px; font-weight: 600; color: #ccc; }
 input[type=range] { width: 100%; accent-color: #22c55e; }
-input[type=text] {
-  width: 100%;
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 8px 10px;
-  color: #fff;
-  font-family: 'Outfit', sans-serif;
-  font-size: 13px;
-  outline: none;
-}
-.seg { display: flex; gap: 3px; }
-.seg-btn {
-  flex: 1;
-  padding: 6px 0;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  background: transparent;
-  border: 1px solid #333;
-  color: #666;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.15s;
-}
-.seg-btn.on { background: #fff; color: #000; border-color: #fff; }
-.sw-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
 .sw {
   width: 26px;
   height: 26px;
@@ -494,10 +466,6 @@ input[type=text] {
   flex-shrink: 0;
 }
 .sw.on { border-color: #fff; }
-.c-dot { width:6px; height:6px; border-radius:50%; background:#3a3a3c; transition:all 0.25s; }
-.c-dot.active { background:#fff; width:16px; border-radius:3px; }
-#monthly-carousel { scrollbar-width:none; }
-#monthly-carousel::-webkit-scrollbar { display:none; }
 
 /* TAP FEEDBACK */
 .goal-row { transition: opacity 0.15s; }
@@ -856,7 +824,16 @@ input[type=text] {
           <div class="card" style="margin-bottom:10px">
             <div class="section-row">
               <div class="section-title">Today's habits</div>
-              <div class="see-all" onclick="openHabitSheet()" style="cursor:pointer">+ Add</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <select id="habit-sort" onchange="renderRoutineHabits()" style="background:var(--card2);border:none;color:var(--muted);font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;border-radius:8px;padding:4px 8px;cursor:pointer;outline:none">
+                  <option value="default">Default</option>
+                  <option value="streak">Streak</option>
+                  <option value="name">A–Z</option>
+                  <option value="cat">Category</option>
+                  <option value="done">Done last</option>
+                </select>
+                <div class="see-all" onclick="openHabitSheet()" style="cursor:pointer">+ Add</div>
+              </div>
             </div>
             <div id="routine-habit-list"></div>
           </div>
@@ -1059,6 +1036,9 @@ input[type=text] {
               </div>
             </div>
             <button onclick="document.getElementById('reset-confirm').style.display='block'" style="width:100%;padding:11px;border-radius:100px;border:1px solid #ff453a;background:transparent;color:#ff453a;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Reset app data</button>
+            <div style="height:1px;background:var(--card2);margin:12px 0"></div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:10px">Revisit the welcome flow to update your name and focus areas.</div>
+            <button onclick="redoOnboarding()" style="width:100%;padding:11px;border-radius:100px;border:1px solid #3a3a3c;background:transparent;color:var(--white);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Redo onboarding</button>
           </div>
 
           <!-- SUPPORT ACCORDION -->
@@ -1974,7 +1954,16 @@ input[type=text] {
       container.innerHTML = '<div style="text-align:center;padding:20px 0;color:#8e8e93;font-size:13px">No habits yet.<br><span style="color:var(--accent-text);font-weight:600;cursor:pointer" onclick="openHabitSheet()">+ Create your first habit</span></div>';
       return;
     }
-    habits.forEach(h => {
+    const sortSel = document.getElementById('habit-sort');
+    const sortBy = sortSel ? sortSel.value : 'default';
+    const sorted = [...habits].sort((a, b) => {
+      if (sortBy === 'streak') return b.streak - a.streak;
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === 'cat') return a.cat.localeCompare(b.cat);
+      if (sortBy === 'done') return (a.weekDone[TODAY_IDX] ? 1 : 0) - (b.weekDone[TODAY_IDX] ? 1 : 0);
+      return 0;
+    });
+    sorted.forEach(h => {
       const todayDone = h.weekDone[TODAY_IDX];
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #2c2c2e;cursor:pointer';
@@ -2203,7 +2192,7 @@ input[type=text] {
       return;
     }
     const renderGoal = (g, idx, arr, isCompleted) => {
-      const pct = Math.min(Math.round((g.current / g.target) * 100), 100);
+      const pct = g.target > 0 ? Math.min(Math.round((g.current / g.target) * 100), 100) : 0;
       const row = document.createElement('div');
       row.className = 'goal-row';
       row.style.cursor = 'pointer';
@@ -2325,7 +2314,7 @@ input[type=text] {
     if (!g) return;
     g.completed = !g.completed;
     g.completedAt = g.completed ? Date.now() : null;
-    if (g.completed && g.current < g.target) { g.current = g.target; }
+    if (g.completed && g.target > 0 && g.current < g.target) { g.current = g.target; }
     renderAllGoals(); updateHomeStats(); saveToStorage();
     closeGoalDetail();
     showToast(g.completed ? g.name + ' completed! 🎯' : g.name + ' reopened');
@@ -3938,6 +3927,12 @@ self.addEventListener('fetch', e => {
     localStorage.setItem('stratus_install_dismissed', '1');
   }
 
+  function redoOnboarding() {
+    obStep = 1;
+    obName = document.getElementById('profile-name-input')?.value || '';
+    buildOnboarding();
+  }
+
   function doSignOut() {
     const installDismissed = localStorage.getItem('stratus_install_dismissed');
     localStorage.removeItem('stratus_v1');
@@ -3965,12 +3960,17 @@ self.addEventListener('fetch', e => {
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
-        JSON.parse(e.target.result); // validate
+        JSON.parse(e.target.result); // validate JSON before writing
+      } catch(_) {
+        showToast('Invalid backup file — not valid JSON');
+        return;
+      }
+      try {
         localStorage.setItem(STORE_KEY, e.target.result);
         showToast('Backup imported — reloading…');
         setTimeout(() => location.reload(), 800);
-      } catch(_) {
-        showToast('Invalid backup file');
+      } catch(err) {
+        showToast('Import failed: ' + (err.name === 'QuotaExceededError' ? 'storage full' : err.message));
       }
     };
     reader.readAsText(file);
