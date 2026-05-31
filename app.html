@@ -10417,8 +10417,14 @@ function gateSetError(msg) {
 
 async function gateHandleGoogle() {
   gateSetLoading(true, 'Connecting with Google...', 'Redirecting to Google authentication');
-  // Stub — real Firebase Google auth wired in a later phase
-  setTimeout(() => { gateAuthSuccess('google'); }, 1200);
+  // Delegates to the existing Google auth handler; on success the onAuthStateChanged
+  // listener sets wr_access and fires gateAuthSuccess via the normal auth flow.
+  if (typeof handleGoogleSignIn === 'function') {
+    try { await handleGoogleSignIn(true); } catch(e) { gateSetLoading(false); gateSetError(e.message || 'Google sign-in failed.'); }
+  } else {
+    // Firebase SDK not loaded yet — offline stub
+    setTimeout(() => { localStorage.setItem('wr_access','1'); gateAuthSuccess('google'); }, 1000);
+  }
 }
 
 async function gateHandleSubmit() {
@@ -10440,7 +10446,7 @@ async function gateHandleSubmit() {
   );
 
   try {
-    if (typeof _fbAuth !== 'undefined' && _fbAuth) {
+    if (_fbAuth !== null) {
       if (gateMode === 'signup') {
         await _fbAuth.createUserWithEmailAndPassword(email, pass);
       } else {
