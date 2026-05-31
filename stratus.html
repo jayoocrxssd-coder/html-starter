@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Stratus — a clean, focused habit tracker and goal planner. Build streaks, hit goals, and design your daily routine.">
+<meta property="og:title" content="Stratus">
+<meta property="og:description" content="Build habits, track goals, and design your ideal routine.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Stratus">
+<meta name="twitter:description" content="Build habits, track goals, and design your ideal routine.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -498,6 +505,10 @@ input[type=text] {
 .icon-btn:active { transform: scale(0.92); }
 .pill-btn:active { opacity: 0.82; transform: scale(0.98); }
 .nav-tab:active { opacity: 0.7; }
+/* KEYBOARD ACCESSIBILITY */
+.nav-tab:focus-visible, .cal-d:focus-visible, .goal-row:focus-visible, .action-row:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px;
+}
 .action-row:active { opacity: 0.65; }
 .cal-d:active { opacity: 0.6; }
 .nli-hint {
@@ -860,7 +871,16 @@ input[type=text] {
             <div class="card">
               <div class="section-row">
                 <div class="section-title">My goals</div>
-                <div class="see-all" onclick="openGoalSheet()" style="cursor:pointer">+ New</div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <select id="goal-sort" onchange="renderAllGoals()" style="background:var(--card2);border:none;color:var(--muted);font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;border-radius:8px;padding:4px 8px;cursor:pointer;outline:none">
+                    <option value="default">Default</option>
+                    <option value="progress">% Progress</option>
+                    <option value="name">Name A–Z</option>
+                    <option value="cat">Category</option>
+                    <option value="recent">Newest</option>
+                  </select>
+                  <div class="see-all" onclick="openGoalSheet()" style="cursor:pointer">+ New</div>
+                </div>
               </div>
               <div id="all-goals-list"></div>
             </div>
@@ -920,8 +940,15 @@ input[type=text] {
               </div>
               <div id="prod-consistency-pct" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);line-height:1;flex-shrink:0">0%</div>
             </div>
-            <div style="font-size:11px;color:var(--muted);font-weight:500;margin-bottom:8px">Focus areas</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div style="font-size:11px;color:var(--muted);font-weight:500">Focus areas</div>
+              <div onclick="toggleFocusEdit()" style="font-size:11px;font-weight:600;color:var(--accent-text);cursor:pointer">Edit</div>
+            </div>
             <div id="prod-focus-chips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+            <div id="focus-edit-panel" style="display:none;margin-top:12px">
+              <div id="focus-edit-opts" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+              <button onclick="saveFocusEdit()" style="width:100%;padding:10px;border-radius:100px;border:none;background:var(--white);color:#000;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Save</button>
+            </div>
           </div>
 
           <!-- MEMBERSHIP -->
@@ -1012,9 +1039,16 @@ input[type=text] {
             </div>
           </div>
 
-          <!-- DANGER ZONE -->
+          <!-- DATA MANAGEMENT -->
           <div class="card" style="margin-bottom:10px">
-            <div class="section-title" style="margin-bottom:6px">Developer</div>
+            <div class="section-title" style="margin-bottom:6px">Data</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Export or restore all your habits, goals and calendar events.</div>
+            <div style="display:flex;gap:8px;margin-bottom:10px">
+              <button onclick="exportData()" style="flex:1;padding:11px;border-radius:100px;border:1px solid #3a3a3c;background:transparent;color:var(--white);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Export JSON</button>
+              <button onclick="document.getElementById('import-file').click()" style="flex:1;padding:11px;border-radius:100px;border:1px solid #3a3a3c;background:transparent;color:var(--white);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Import JSON</button>
+            </div>
+            <input id="import-file" type="file" accept=".json" style="display:none" onchange="importData(this)">
+            <div style="height:1px;background:var(--card2);margin-bottom:10px"></div>
             <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Reset all app data (for testing)</div>
             <div id="reset-confirm" style="display:none;margin-bottom:10px;padding:14px;background:#ff453a18;border:1px solid #ff453a44;border-radius:14px">
               <div style="font-size:13px;font-weight:600;color:#ff6b6b;margin-bottom:4px">Are you sure?</div>
@@ -1193,9 +1227,18 @@ input[type=text] {
         </div>
 
         <!-- week strip -->
-        <div style="margin-bottom:20px">
+        <div style="margin-bottom:16px">
           <div style="font-size:12px;font-weight:600;color:#8e8e93;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">This week</div>
           <div style="display:flex;gap:6px" id="hd-week"></div>
+        </div>
+
+        <!-- skip today -->
+        <div id="hd-skip-row" style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#2c2c2e;border-radius:12px">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#f2f2f7">Rest day</div>
+            <div style="font-size:11px;color:#8e8e93;margin-top:2px">Skip today without breaking your streak</div>
+          </div>
+          <button id="hd-skip-btn" onclick="skipTodayHabit()" style="padding:8px 16px;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Skip</button>
         </div>
 
         <!-- edit panel (hidden by default) -->
@@ -1280,6 +1323,7 @@ input[type=text] {
           <div style="font-size:12px;font-weight:600;color:#8e8e93;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Notes</div>
           <textarea id="gd-edit-notes" rows="3" style="width:100%;background:#2c2c2e;border:none;border-radius:12px;padding:11px 13px;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;outline:none;resize:none;margin-bottom:16px"></textarea>
           <button onclick="saveGoalEdit()" style="width:100%;padding:13px;border-radius:100px;border:none;background:#fff;color:#000;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px">Save changes</button>
+          <button id="gd-complete-btn" onclick="toggleGoalComplete()" style="width:100%;padding:12px;border-radius:100px;border:1px solid var(--accent);background:var(--accent-bg);color:var(--accent-text);font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px">Mark as complete</button>
           <button onclick="deleteGoal()" style="width:100%;padding:12px;border-radius:100px;border:1px solid #3a3a3c;background:transparent;color:#ff453a;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer">Delete goal</button>
         </div>
         <button onclick="closeGoalDetail()" style="width:100%;padding:13px;border-radius:100px;border:1px solid #2c2c2e;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;cursor:pointer">Close</button>
@@ -1458,6 +1502,18 @@ input[type=text] {
     if (viewId === 'v-analytics') updateAnalytics();
   }
 
+  // Keyboard accessibility — nav tabs and interactive divs
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.setAttribute('tabindex', '0');
+    tab.setAttribute('role', 'tab');
+    tab.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tab.click(); } });
+  });
+  document.querySelectorAll('.cal-d').forEach(d => {
+    d.setAttribute('tabindex', '0');
+    d.setAttribute('role', 'button');
+    d.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); d.click(); } });
+  });
+
   // Horizontal swipe between nav tabs
   (function() {
     const NAV_ORDER = ['v-home','v-cal','v-routine','v-analytics','v-profile'];
@@ -1470,6 +1526,7 @@ input[type=text] {
     }, { passive: true });
     screen.addEventListener('touchend', e => {
       if (swipeLocked) return;
+      swipeLocked = true;
       const dx = e.changedTouches[0].clientX - swipeX;
       const dy = e.changedTouches[0].clientY - swipeY;
       if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
@@ -1808,6 +1865,25 @@ input[type=text] {
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
 
+  function skipTodayHabit() {
+    const h = habits.find(x => x.id === detailHabitId);
+    if (!h) return;
+    if (!h.restLog) h.restLog = {};
+    const key = todayKey();
+    const wasRest = !!h.restLog[key];
+    h.restLog[key] = !wasRest;
+    const btn = document.getElementById('hd-skip-btn');
+    if (btn) {
+      const accent = getComputedStyle(phone).getPropertyValue('--accent').trim() || '#22c55e';
+      btn.textContent = h.restLog[key] ? 'Unskip' : 'Skip';
+      btn.style.background = h.restLog[key] ? accent + '22' : 'transparent';
+      btn.style.color = h.restLog[key] ? accent : '#8e8e93';
+      btn.style.borderColor = h.restLog[key] ? accent : '#3a3a3c';
+    }
+    showToast(h.restLog[key] ? 'Rest day marked — streak protected' : 'Rest day removed');
+    saveToStorage();
+  }
+
   function toggleTodayHabit(id) {
     const h = habits.find(x => x.id === id);
     if (!h) return;
@@ -1827,6 +1903,10 @@ input[type=text] {
     const list = document.getElementById('home-habit-list');
     if (!list) return;
     list.innerHTML = '';
+    if (habits.length === 0) {
+      list.innerHTML = '<div style="text-align:center;padding:20px 0;color:#8e8e93;font-size:13px">No habits yet.<br><span style="color:var(--accent-text);font-weight:600;cursor:pointer" onclick="homeQuickAdd()">+ Add your first habit</span></div>';
+      return;
+    }
     habits.forEach(h => {
       const pct = getWeekPct(h);
       const todayDone = h.weekDone[TODAY_IDX];
@@ -1890,6 +1970,10 @@ input[type=text] {
     const container = document.getElementById('routine-habit-list');
     if (!container) return;
     container.innerHTML = '';
+    if (habits.length === 0) {
+      container.innerHTML = '<div style="text-align:center;padding:20px 0;color:#8e8e93;font-size:13px">No habits yet.<br><span style="color:var(--accent-text);font-weight:600;cursor:pointer" onclick="openHabitSheet()">+ Create your first habit</span></div>';
+      return;
+    }
     habits.forEach(h => {
       const todayDone = h.weekDone[TODAY_IDX];
       const row = document.createElement('div');
@@ -1962,6 +2046,17 @@ input[type=text] {
     document.getElementById('hd-streak').textContent = h.streak + 'd';
     document.getElementById('hd-pct').textContent = Math.min(getWeekPct(h), 100) + '%';
     document.getElementById('hd-target').textContent = h.target + 'x';
+
+    // Skip button state
+    const skipBtn = document.getElementById('hd-skip-btn');
+    if (skipBtn) {
+      const isRest = !!(h.restLog && h.restLog[todayKey()]);
+      const ac = accent;
+      skipBtn.textContent = isRest ? 'Unskip' : 'Skip';
+      skipBtn.style.background = isRest ? ac + '22' : 'transparent';
+      skipBtn.style.color = isRest ? ac : '#8e8e93';
+      skipBtn.style.borderColor = isRest ? ac : '#3a3a3c';
+    }
 
     // 30-day chart — built from real completionLog
     const chart = document.getElementById('hd-chart');
@@ -2092,23 +2187,47 @@ input[type=text] {
     const list = document.getElementById('all-goals-list');
     if (!list) return;
     list.innerHTML = '';
-    goals.forEach((g, i) => {
-      const pct = Math.round((g.current / g.target) * 100);
+    const sortEl = document.getElementById('goal-sort');
+    const sortBy = sortEl ? sortEl.value : 'default';
+    const sortFn = (a, b) => {
+      if (sortBy === 'progress') return (b.current/b.target) - (a.current/a.target);
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
+      if (sortBy === 'cat') return a.cat.localeCompare(b.cat);
+      if (sortBy === 'recent') return (b.createdAt||0) - (a.createdAt||0);
+      return 0;
+    };
+    const active = goals.filter(g => !g.completed).sort(sortFn);
+    const done = goals.filter(g => g.completed).sort(sortFn);
+    if (active.length === 0 && done.length === 0) {
+      list.innerHTML = '<div style="text-align:center;padding:20px 0;color:#8e8e93;font-size:13px">No goals yet.<br><span style="color:var(--accent-text);font-weight:600;cursor:pointer" onclick="openGoalSheet()">+ Add your first goal</span></div>';
+      return;
+    }
+    const renderGoal = (g, idx, arr, isCompleted) => {
+      const pct = Math.min(Math.round((g.current / g.target) * 100), 100);
       const row = document.createElement('div');
       row.className = 'goal-row';
       row.style.cursor = 'pointer';
+      if (isCompleted) row.style.opacity = '0.55';
       row.onclick = () => openGoalDetail(g.id);
       row.innerHTML =
-        '<div class="g-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="color:' + accent + '">' + g.icon + '</svg></div>' +
+        '<div class="g-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" style="color:' + (isCompleted ? '#8e8e93' : accent) + '">' + g.icon + '</svg></div>' +
         '<div style="flex:1;min-width:0">' +
-          '<div class="g-name">' + g.name + '</div>' +
-          '<div class="prog"><div class="prog-fill" style="width:' + Math.min(pct,100) + '%"></div></div>' +
+          '<div class="g-name">' + g.name + (isCompleted ? ' ✓' : '') + '</div>' +
+          '<div class="prog"><div class="prog-fill" style="width:' + pct + '%;background:' + (isCompleted ? '#48484a' : accent) + '"></div></div>' +
           '<div class="g-meta">' + (g.unit === '$' ? '$' + g.current.toLocaleString() : g.current + ' ' + g.unit) + ' · ' + g.cat + '</div>' +
         '</div>' +
-        '<div class="g-pct">' + pct + '%</div>';
+        '<div class="g-pct" style="color:' + (isCompleted ? '#8e8e93' : '') + '">' + pct + '%</div>';
       list.appendChild(row);
-      if (i < goals.length - 1) row.style.borderBottom = '1px solid #2c2c2e';
-    });
+      if (idx < arr.length - 1) row.style.borderBottom = '1px solid #2c2c2e';
+    };
+    active.forEach((g, i) => renderGoal(g, i, active, false));
+    if (done.length > 0) {
+      const sep = document.createElement('div');
+      sep.style.cssText = 'font-size:11px;font-weight:600;color:#8e8e93;letter-spacing:0.08em;text-transform:uppercase;padding:12px 0 4px';
+      sep.textContent = 'Completed';
+      list.appendChild(sep);
+      done.forEach((g, i) => renderGoal(g, i, done, true));
+    }
   }
 
   function openGoalDetail(id) {
@@ -2151,6 +2270,8 @@ input[type=text] {
     // reset edit
     document.getElementById('gd-edit-panel').style.display = 'none';
     document.getElementById('gd-edit-btn').textContent = 'Edit';
+    const completeBtn = document.getElementById('gd-complete-btn');
+    if (completeBtn) completeBtn.textContent = g.completed ? 'Reopen goal' : 'Mark as complete';
     document.getElementById('goal-detail').style.display = 'flex';
   }
 
@@ -2197,6 +2318,17 @@ input[type=text] {
     openGoalDetail(detailGoalId);
     saveToStorage();
     showToast('Goal updated');
+  }
+
+  function toggleGoalComplete() {
+    const g = goals.find(x => x.id === detailGoalId);
+    if (!g) return;
+    g.completed = !g.completed;
+    g.completedAt = g.completed ? Date.now() : null;
+    if (g.completed && g.current < g.target) { g.current = g.target; }
+    renderAllGoals(); updateHomeStats(); saveToStorage();
+    closeGoalDetail();
+    showToast(g.completed ? g.name + ' completed! 🎯' : g.name + ' reopened');
   }
 
   function deleteGoal() {
@@ -2458,6 +2590,32 @@ input[type=text] {
   }
 
   // ── PRODUCTIVITY PROFILE ─────────────────────────────
+  function toggleFocusEdit() {
+    const panel = document.getElementById('focus-edit-panel');
+    if (!panel) return;
+    const isOpen = panel.style.display !== 'none';
+    if (!isOpen) {
+      const optsEl = document.getElementById('focus-edit-opts');
+      const accent = getComputedStyle(phone).getPropertyValue('--accent').trim() || '#22c55e';
+      const allOpts = ['Fitness','Mindset','Finance','Health','Learning','Career','Social','Creative'];
+      optsEl.innerHTML = allOpts.map(o =>
+        `<button onclick="this.dataset.sel=this.dataset.sel==='1'?'0':'1';this.style.background=this.dataset.sel==='1'?'${accent}22':'transparent';this.style.color=this.dataset.sel==='1'?'#fff':'#8e8e93';this.style.borderColor=this.dataset.sel==='1'?'${accent}':'#3a3a3c'"
+          data-opt="${o}" data-sel="${obFocuses.includes(o)?'1':'0'}"
+          style="padding:6px 12px;border-radius:20px;border:1px solid ${obFocuses.includes(o)?accent:'#3a3a3c'};background:${obFocuses.includes(o)?accent+'22':'transparent'};color:${obFocuses.includes(o)?'#fff':'#8e8e93'};font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer">${o}</button>`
+      ).join('');
+    }
+    panel.style.display = isOpen ? 'none' : 'block';
+  }
+
+  function saveFocusEdit() {
+    const opts = document.querySelectorAll('#focus-edit-opts button');
+    obFocuses = Array.from(opts).filter(b => b.dataset.sel === '1').map(b => b.dataset.opt);
+    document.getElementById('focus-edit-panel').style.display = 'none';
+    saveToStorage();
+    updateProductivityProfile();
+    showToast('Focus areas updated');
+  }
+
   function updateProductivityProfile() {
     const card = document.getElementById('productivity-profile-card');
     if (!card) return;
@@ -2708,7 +2866,8 @@ input[type=text] {
       target: newHabFreq,
       unit: 'days/wk',
       createdAt: Date.now(),
-      completionLog: {}
+      completionLog: {},
+      restLog: {}
     });
     closeHabitSheet();
     renderHomeHabits();
@@ -2876,7 +3035,7 @@ input[type=text] {
         if (b.textContent.trim() === timeStr) b.click();
       });
     }
-    const [ey, em, ed] = key.split('-');
+    const [, em, ed] = key.split('-');
     document.getElementById('sheet-day-label').textContent = MONTHS[parseInt(em)-1] + ' ' + parseInt(ed);
   }
 
@@ -3739,6 +3898,26 @@ input[type=text] {
     showToast('Stratus added to your home screen ✦');
   });
 
+  // Register inline service worker for background notifications & offline caching
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+self.addEventListener('push', e => {
+  const data = e.data ? e.data.json() : { title: 'Stratus', body: 'Time to check your habits!' };
+  e.waitUntil(self.registration.showNotification(data.title, {
+    body: data.body, icon: '/icon.png', badge: '/icon.png'
+  }));
+});
+self.addEventListener('install', e => { self.skipWaiting(); });
+self.addEventListener('activate', e => { e.waitUntil(self.clients.claim()); });
+self.addEventListener('fetch', e => {
+  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+});
+`;
+    const swBlob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swUrl).catch(() => {});
+  }
+
   function triggerInstall() {
     if (!deferredInstallPrompt) {
       showToast('Open in Chrome/Safari and use "Add to Home Screen"');
@@ -3760,11 +3939,42 @@ input[type=text] {
   }
 
   function doSignOut() {
-    // Clear session state (keep install-dismissed preference)
     const installDismissed = localStorage.getItem('stratus_install_dismissed');
     localStorage.removeItem('stratus_v1');
     if (installDismissed) localStorage.setItem('stratus_install_dismissed', installDismissed);
     location.reload();
+  }
+
+  function exportData() {
+    saveToStorage();
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) { showToast('No data to export'); return; }
+    const blob = new Blob([raw], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'stratus-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Backup exported');
+  }
+
+  function importData(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        JSON.parse(e.target.result); // validate
+        localStorage.setItem(STORE_KEY, e.target.result);
+        showToast('Backup imported — reloading…');
+        setTimeout(() => location.reload(), 800);
+      } catch(_) {
+        showToast('Invalid backup file');
+      }
+    };
+    reader.readAsText(file);
+    input.value = '';
   }
 </script>
 </body>
