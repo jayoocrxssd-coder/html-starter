@@ -548,7 +548,7 @@ input[type=text] {
             </div>
             <div style="margin-bottom:20px">
               <div style="font-size:11px;font-weight:600;color:#8e8e93;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px">Time of day</div>
-              <div style="display:flex;gap:6px">
+              <div style="display:flex;gap:6px" id="hcat-time-btns">
                 <button onclick="hPickTime(this,'Morning')"   style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Morning</button>
                 <button onclick="hPickTime(this,'Afternoon')" style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Afternoon</button>
                 <button onclick="hPickTime(this,'Evening')"   style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Evening</button>
@@ -706,7 +706,7 @@ input[type=text] {
 
             <div style="margin-bottom:12px">
               <div style="font-size:11px;font-weight:600;color:#8e8e93;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Time</div>
-              <div style="display:flex;gap:6px;margin-bottom:8px">
+              <div style="display:flex;gap:6px;margin-bottom:8px" id="sheet-time-btns">
                 <button onclick="pickTime(this,'Morning')" style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;cursor:pointer">Morning</button>
                 <button onclick="pickTime(this,'Afternoon')" style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;cursor:pointer">Afternoon</button>
                 <button onclick="pickTime(this,'Evening')" style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;cursor:pointer">Evening</button>
@@ -1369,9 +1369,8 @@ input[type=text] {
 
   function toggleLightMode() {
     const toggle = document.getElementById('light-mode-toggle');
-    const isLight = !toggle.classList.contains('off');
-    toggle.classList.toggle('off');
-    applyTheme(isLight ? 'dark' : 'light');
+    const goingLight = toggle.classList.contains('off');
+    applyTheme(goingLight ? 'light' : 'dark');
     saveToStorage();
   }
 
@@ -1386,7 +1385,8 @@ input[type=text] {
       p.style.setProperty('--off-white', '#1c1c1e');
       p.style.setProperty('--muted', '#636366');
       p.style.setProperty('--muted2', '#aeaeb2');
-      document.getElementById('light-mode-toggle')?.classList.remove('off');
+      const tog = document.getElementById('light-mode-toggle');
+      if (tog) tog.classList.remove('off');
     } else {
       p.style.removeProperty('--bg');
       p.style.removeProperty('--card');
@@ -1396,7 +1396,8 @@ input[type=text] {
       p.style.removeProperty('--off-white');
       p.style.removeProperty('--muted');
       p.style.removeProperty('--muted2');
-      document.getElementById('light-mode-toggle')?.classList.add('off');
+      const tog = document.getElementById('light-mode-toggle');
+      if (tog) tog.classList.add('off');
     }
   }
 
@@ -2113,6 +2114,7 @@ input[type=text] {
         cardRadius: getComputedStyle(phone).getPropertyValue('--r').trim(),
         obName: typeof obName !== 'undefined' ? obName : '',
         theme: document.getElementById('light-mode-toggle')?.classList.contains('off') ? 'dark' : 'light',
+        focusTotalSeconds: focusTotalSeconds,
       };
       localStorage.setItem(STORE_KEY, JSON.stringify(snapshot));
     } catch(e) {}
@@ -2153,6 +2155,7 @@ input[type=text] {
         phone.style.setProperty('--r-sm', Math.max(0, numR - 6) + 'px');
       }
       if (data.theme) applyTheme(data.theme);
+      if (data.focusTotalSeconds) { focusTotalSeconds = data.focusTotalSeconds; updateFocusTimeStat(); }
       return true;
     } catch(e) { return false; }
   }
@@ -2955,8 +2958,8 @@ input[type=text] {
 
   // Wire NLI after DOM is ready
   setTimeout(() => {
-    nliAttach('home-title',    'nli-home',    { showTime:true,  catBtns:'hcat-btns' });
-    nliAttach('sheet-title',   'nli-sheet',   { showTime:true,  catBtns:'cat-btns' });
+    nliAttach('home-title',    'nli-home',    { showTime:true,  catBtns:'hcat-btns',      timeBtns:'hcat-time-btns' });
+    nliAttach('sheet-title',   'nli-sheet',   { showTime:true,  catBtns:'cat-btns',        timeBtns:'sheet-time-btns' });
     nliAttach('habit-name-input','nli-habit', { showFreq:true,  catBtns:'habit-cat-btns', freqBtns:'habit-freq-btns' });
   }, 200);
 
