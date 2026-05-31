@@ -2202,7 +2202,7 @@ input[type=text] {
       }
       if (data.theme) applyTheme(data.theme);
       if (data.focusTotalSeconds) { focusTotalSeconds = data.focusTotalSeconds; updateFocusTimeStat(); }
-      if (data.focusBlocksEnabled) { focusBlocksEnabled = true; renderFocusBlocks(); }
+      if (data.focusBlocksEnabled !== undefined) { focusBlocksEnabled = !!data.focusBlocksEnabled; renderFocusBlocks(); }
       return true;
     } catch(e) { return false; }
   }
@@ -2438,16 +2438,14 @@ input[type=text] {
       const done = h.weekDone.filter(Boolean).length;
       return done / h.target < 0.5 && h.streak > 0;
     });
-    const noStreak = habits.filter(h => h.streak === 0 && h.weekDone.some(Boolean) === false);
-
     const recalBtn = document.getElementById('recal-btn');
-    if (behind.length === 0 && noStreak.length === 0) {
+    if (behind.length === 0) {
       banner.style.display = 'none';
       if (recalBtn) recalBtn.style.display = 'none';
       return;
     }
 
-    const urgentNames = [...behind, ...noStreak].slice(0, 2).map(h => h.name);
+    const urgentNames = behind.slice(0, 2).map(h => h.name);
     banner.style.display = 'block';
     banner.innerHTML = '⚠ Priority shift — <strong>' + urgentNames.join(', ') + '</strong> need attention today to protect your streak.';
     if (recalBtn) recalBtn.style.display = 'block';
