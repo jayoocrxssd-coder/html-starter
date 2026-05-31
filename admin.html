@@ -1,0 +1,1736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>WAR ROOM — Command Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap">
+<style>
+/* ── Reset ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+/* ── Obsidian Token System ──────────────────────────── */
+:root {
+  --bg:       #000000;
+  --bg2:      #0d0d0d;
+  --bg3:      #1a1a1a;
+  --bg4:      #242424;
+  --surface:  #111111;
+  --border:   rgba(255,255,255,.06);
+  --border2:  rgba(255,255,255,.11);
+  --ink:      #f0f0ee;
+  --ink2:     #9a9a98;
+  --ink3:     #5a5a58;
+  --red:      #f06860;
+  --green:    #3de090;
+  --amber:    #f0b030;
+  --blue:     #5ab0f8;
+  --violet:   #9c6ee8;
+  --pink:     #f068a8;
+  --sidebar-w: 220px;
+  --topbar-h:  56px;
+}
+
+body {
+  font-family: 'Syne', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Auth Gate ──────────────────────────────────────── */
+#auth-gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+}
+.auth-card {
+  width: 400px; max-width: 94vw;
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 40px 100px rgba(0,0,0,.6);
+  animation: cardIn .35s cubic-bezier(.34,1.4,.64,1);
+}
+@keyframes cardIn {
+  from { transform: translateY(24px) scale(.97); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
+.auth-logo {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 32px;
+}
+.auth-logo-mark {
+  width: 28px; height: 28px; background: var(--ink);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; color: var(--bg);
+}
+.auth-logo-text {
+  font-size: 11px; font-weight: 800; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--ink3);
+}
+.auth-logo-badge {
+  font-size: 8px; font-weight: 700; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--amber);
+  background: rgba(240,176,48,.12); border: 0.5px solid rgba(240,176,48,.25);
+  padding: 2px 7px; border-radius: 100px;
+}
+.auth-heading {
+  font-size: 22px; font-weight: 800; letter-spacing: -.02em;
+  color: var(--ink); margin-bottom: 6px;
+}
+.auth-sub {
+  font-size: 11px; font-family: 'DM Mono', monospace;
+  color: var(--ink3); margin-bottom: 28px; line-height: 1.7;
+}
+.auth-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink3);
+  display: block; margin-bottom: 7px;
+}
+.auth-input {
+  width: 100%; background: var(--bg3);
+  border: 0.5px solid var(--border2); color: var(--ink);
+  font-family: 'Syne', -apple-system, sans-serif;
+  font-size: 13px; padding: 12px 14px; border-radius: 10px;
+  outline: none; transition: border-color .15s; margin-bottom: 14px;
+}
+.auth-input:focus { border-color: var(--ink); }
+.auth-btn {
+  width: 100%; background: var(--ink); color: var(--bg);
+  border: none; font-family: 'Syne', -apple-system, sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 14px; border-radius: 10px;
+  cursor: pointer; transition: opacity .15s; margin-top: 4px;
+}
+.auth-btn:hover { opacity: .85; }
+.auth-error {
+  font-size: 11px; font-family: 'DM Mono', monospace;
+  color: var(--red); margin-top: 10px; min-height: 16px;
+}
+.auth-footer {
+  font-size: 9px; font-family: 'DM Mono', monospace;
+  color: var(--ink3); margin-top: 24px; text-align: center; line-height: 2;
+}
+
+/* ── App Shell ──────────────────────────────────────── */
+#app {
+  display: none;
+  min-height: 100vh;
+}
+#app.visible { display: flex; }
+
+/* ── Sidebar ────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--surface);
+  border-right: 0.5px solid var(--border);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  transition: transform .25s cubic-bezier(.4,0,.2,1);
+}
+.sidebar-logo {
+  padding: 20px 20px 16px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 0.5px solid var(--border);
+  margin-bottom: 8px;
+}
+.sidebar-logo-mark {
+  width: 26px; height: 26px; background: var(--ink);
+  border-radius: 5px; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800; color: var(--bg); flex-shrink: 0;
+}
+.sidebar-logo-text {
+  font-size: 10px; font-weight: 800; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ink); line-height: 1.2;
+}
+.sidebar-logo-sub {
+  font-size: 8px; letter-spacing: .12em; color: var(--amber);
+  text-transform: uppercase; font-weight: 700;
+}
+.sidebar-section-label {
+  font-size: 9px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink3);
+  padding: 12px 20px 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 16px; margin: 1px 8px;
+  border-radius: 8px; cursor: pointer;
+  font-size: 12px; font-weight: 600; letter-spacing: .02em;
+  color: var(--ink2); transition: all .15s;
+  border: none; background: none; width: calc(100% - 16px);
+  text-align: left;
+}
+.nav-item:hover { background: var(--bg3); color: var(--ink); }
+.nav-item.active { background: var(--bg3); color: var(--ink); }
+.nav-item .nav-icon {
+  width: 16px; height: 16px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+}
+.nav-badge {
+  margin-left: auto; font-size: 9px; font-weight: 700;
+  background: var(--red); color: #fff;
+  padding: 2px 6px; border-radius: 100px; min-width: 18px; text-align: center;
+}
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 0.5px solid var(--border);
+}
+.worker-chip {
+  display: flex; align-items: center; gap: 10px;
+}
+.worker-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--ink); flex-shrink: 0;
+}
+.worker-info { flex: 1; min-width: 0; }
+.worker-name {
+  font-size: 11px; font-weight: 700; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.worker-role {
+  font-size: 9px; font-family: 'DM Mono', monospace;
+  color: var(--ink3); letter-spacing: .06em;
+}
+.logout-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--ink3); font-size: 14px; padding: 4px;
+  border-radius: 5px; transition: color .15s;
+}
+.logout-btn:hover { color: var(--red); }
+
+/* ── Main Content ───────────────────────────────────── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+.topbar {
+  height: var(--topbar-h);
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 28px; gap: 16px;
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-title {
+  font-size: 14px; font-weight: 700; letter-spacing: .01em; color: var(--ink);
+}
+.topbar-sub {
+  font-size: 11px; font-family: 'DM Mono', monospace;
+  color: var(--ink3); margin-left: 2px;
+}
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.topbar-date {
+  font-size: 10px; font-family: 'DM Mono', monospace;
+  color: var(--ink3);
+}
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+.content {
+  padding: 28px;
+  flex: 1;
+}
+
+/* ── Section Views ──────────────────────────────────── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── Stat Cards ─────────────────────────────────────── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 14px;
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-label {
+  font-size: 10px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink3);
+  margin-bottom: 10px;
+}
+.stat-value {
+  font-size: 30px; font-weight: 800; letter-spacing: -.03em;
+  color: var(--ink); line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-delta {
+  font-size: 10px; font-family: 'DM Mono', monospace;
+  display: flex; align-items: center; gap: 4px;
+}
+.stat-delta.up { color: var(--green); }
+.stat-delta.down { color: var(--red); }
+.stat-delta.neutral { color: var(--ink3); }
+.stat-sparkline {
+  position: absolute; bottom: 0; right: 0;
+  opacity: .18;
+}
+
+/* ── Row layout ─────────────────────────────────────── */
+.row { display: flex; gap: 16px; margin-bottom: 24px; }
+.row .panel { flex: 1; }
+.row .panel-sm { flex: 0 0 300px; }
+
+/* ── Panel ──────────────────────────────────────────── */
+.panel {
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.panel-header {
+  padding: 16px 20px;
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-title {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink);
+}
+.panel-hint {
+  font-size: 10px; font-family: 'DM Mono', monospace;
+  color: var(--ink3);
+}
+.panel-body { padding: 20px; }
+
+/* ── Chart ──────────────────────────────────────────── */
+.chart-wrap {
+  width: 100%; height: 160px;
+  position: relative;
+}
+.chart-wrap svg { width: 100%; height: 100%; }
+
+/* ── Plan Bar ───────────────────────────────────────── */
+.plan-bar-row {
+  margin-bottom: 14px;
+}
+.plan-bar-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 5px;
+}
+.plan-bar-label {
+  font-size: 11px; font-weight: 600; color: var(--ink2);
+}
+.plan-bar-count {
+  font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink3);
+}
+.plan-bar-track {
+  height: 5px; background: var(--bg3); border-radius: 100px; overflow: hidden;
+}
+.plan-bar-fill {
+  height: 100%; border-radius: 100px;
+  transition: width .6s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── Feed ───────────────────────────────────────────── */
+.feed-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0;
+  border-bottom: 0.5px solid var(--border);
+}
+.feed-item:last-child { border-bottom: none; }
+.feed-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--ink); flex-shrink: 0;
+}
+.feed-info { flex: 1; min-width: 0; }
+.feed-name {
+  font-size: 12px; font-weight: 600; color: var(--ink);
+  margin-bottom: 2px;
+}
+.feed-detail {
+  font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink3);
+}
+.feed-time {
+  font-size: 9px; font-family: 'DM Mono', monospace;
+  color: var(--ink3); white-space: nowrap; flex-shrink: 0;
+}
+.plan-chip {
+  display: inline-flex; align-items: center;
+  font-size: 8px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 100px;
+}
+.plan-chip.free    { background: rgba(90,176,248,.1);  color: var(--blue);   border: 0.5px solid rgba(90,176,248,.2); }
+.plan-chip.pro     { background: rgba(156,110,232,.1); color: var(--violet); border: 0.5px solid rgba(156,110,232,.2); }
+.plan-chip.enterprise { background: rgba(240,176,48,.1); color: var(--amber); border: 0.5px solid rgba(240,176,48,.2); }
+
+/* ── Table ──────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: 12px;
+}
+thead th {
+  font-size: 9px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink3);
+  padding: 10px 14px; text-align: left;
+  border-bottom: 0.5px solid var(--border2);
+  cursor: pointer; white-space: nowrap;
+  user-select: none;
+}
+thead th:hover { color: var(--ink); }
+thead th.sort-asc::after  { content: ' ↑'; color: var(--blue); }
+thead th.sort-desc::after { content: ' ↓'; color: var(--blue); }
+tbody tr {
+  border-bottom: 0.5px solid var(--border);
+  transition: background .1s;
+  cursor: pointer;
+}
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--bg2); }
+td {
+  padding: 12px 14px; color: var(--ink2);
+  white-space: nowrap;
+}
+td.primary { color: var(--ink); font-weight: 600; }
+td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
+
+/* ── Status Badge ───────────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 9px; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; padding: 3px 8px; border-radius: 100px;
+}
+.badge.active    { background: rgba(61,224,144,.1);  color: var(--green); border: 0.5px solid rgba(61,224,144,.2); }
+.badge.inactive  { background: rgba(154,154,152,.1); color: var(--ink3);  border: 0.5px solid var(--border2); }
+.badge.suspended { background: rgba(240,104,96,.1);  color: var(--red);   border: 0.5px solid rgba(240,104,96,.2); }
+.badge.paid      { background: rgba(61,224,144,.1);  color: var(--green); border: 0.5px solid rgba(61,224,144,.2); }
+.badge.failed    { background: rgba(240,104,96,.1);  color: var(--red);   border: 0.5px solid rgba(240,104,96,.2); }
+.badge.refunded  { background: rgba(240,176,48,.1);  color: var(--amber); border: 0.5px solid rgba(240,176,48,.2); }
+.badge-dot {
+  width: 5px; height: 5px; border-radius: 50%; background: currentColor;
+}
+
+/* ── Toolbar ────────────────────────────────────────── */
+.toolbar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 0.5px solid var(--border);
+  flex-wrap: wrap;
+}
+.search-box {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  border-radius: 8px; padding: 8px 12px; flex: 1; min-width: 180px;
+  transition: border-color .15s;
+}
+.search-box:focus-within { border-color: var(--ink2); }
+.search-box input {
+  background: none; border: none; outline: none;
+  font-family: 'Syne', -apple-system, sans-serif;
+  font-size: 12px; color: var(--ink); width: 100%;
+}
+.search-box input::placeholder { color: var(--ink3); }
+.search-icon { color: var(--ink3); font-size: 12px; }
+.filter-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.filter-chip {
+  font-size: 10px; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; padding: 6px 12px; border-radius: 100px;
+  border: 0.5px solid var(--border2); background: transparent;
+  color: var(--ink3); cursor: pointer; transition: all .15s;
+  font-family: 'Syne', -apple-system, sans-serif;
+}
+.filter-chip:hover { border-color: var(--ink2); color: var(--ink); }
+.filter-chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.toolbar-right { margin-left: auto; display: flex; gap: 8px; }
+.icon-btn {
+  width: 32px; height: 32px; border-radius: 7px;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink2); font-size: 13px;
+  transition: all .15s;
+}
+.icon-btn:hover { background: var(--bg4); color: var(--ink); }
+
+/* ── Row Actions ────────────────────────────────────── */
+.row-actions {
+  display: flex; gap: 6px; align-items: center;
+}
+.action-btn {
+  font-size: 9px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; padding: 4px 9px; border-radius: 5px;
+  border: 0.5px solid var(--border2); background: transparent;
+  color: var(--ink3); cursor: pointer; transition: all .15s;
+  font-family: 'Syne', -apple-system, sans-serif;
+}
+.action-btn:hover { background: var(--bg3); color: var(--ink); }
+.action-btn.danger:hover { background: rgba(240,104,96,.1); color: var(--red); border-color: rgba(240,104,96,.3); }
+
+/* ── User Detail Panel ──────────────────────────────── */
+.detail-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
+  display: none; align-items: flex-start; justify-content: flex-end;
+}
+.detail-overlay.open { display: flex; }
+.detail-panel {
+  width: 400px; max-width: 96vw;
+  height: 100vh; background: var(--surface);
+  border-left: 0.5px solid var(--border2);
+  overflow-y: auto;
+  animation: slideIn .25s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideIn {
+  from { transform: translateX(40px); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+.detail-header {
+  padding: 20px;
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; background: var(--surface); z-index: 10;
+}
+.detail-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; color: var(--ink); flex-shrink: 0;
+}
+.detail-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+.detail-email { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3); margin-top: 2px; }
+.detail-close {
+  margin-left: auto; width: 28px; height: 28px;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink2); font-size: 14px; transition: all .15s;
+}
+.detail-close:hover { background: var(--bg4); color: var(--ink); }
+.detail-body { padding: 20px; }
+.detail-section { margin-bottom: 24px; }
+.detail-section-title {
+  font-size: 9px; font-weight: 700; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink3); margin-bottom: 12px;
+}
+.detail-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0; border-bottom: 0.5px solid var(--border);
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-row-label { font-size: 11px; color: var(--ink3); }
+.detail-row-value { font-size: 12px; font-weight: 600; color: var(--ink); font-family: 'DM Mono', monospace; }
+.detail-actions { display: flex; flex-direction: column; gap: 8px; }
+.detail-action-btn {
+  width: 100%; padding: 11px; border-radius: 9px;
+  border: 0.5px solid var(--border2); background: transparent;
+  color: var(--ink); font-family: 'Syne', -apple-system, sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; cursor: pointer; transition: all .15s; text-align: center;
+}
+.detail-action-btn:hover { background: var(--bg3); }
+.detail-action-btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.detail-action-btn.primary:hover { opacity: .85; }
+.detail-action-btn.danger { border-color: rgba(240,104,96,.3); color: var(--red); }
+.detail-action-btn.danger:hover { background: rgba(240,104,96,.1); }
+
+/* ── Revenue ────────────────────────────────────────── */
+.rev-stat-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;
+}
+.transaction-type {
+  display: flex; align-items: center; gap: 8px;
+}
+.tx-icon {
+  width: 28px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center; font-size: 12px;
+  flex-shrink: 0;
+}
+.tx-icon.in  { background: rgba(61,224,144,.1); }
+.tx-icon.out { background: rgba(240,104,96,.1); }
+.tx-icon.ref { background: rgba(240,176,48,.1); }
+
+/* ── Activity ───────────────────────────────────────── */
+.activity-feed { padding: 0 20px; }
+.activity-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 0; border-bottom: 0.5px solid var(--border);
+  position: relative;
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-icon {
+  width: 30px; height: 30px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+.activity-icon.signup   { background: rgba(90,176,248,.1); }
+.activity-icon.upgrade  { background: rgba(61,224,144,.1); }
+.activity-icon.cancel   { background: rgba(240,104,96,.1); }
+.activity-icon.payment  { background: rgba(240,176,48,.1); }
+.activity-icon.login    { background: rgba(154,154,152,.1); }
+.activity-icon.export   { background: rgba(156,110,232,.1); }
+.activity-body { flex: 1; min-width: 0; }
+.activity-text { font-size: 12px; color: var(--ink2); line-height: 1.5; }
+.activity-text strong { color: var(--ink); font-weight: 600; }
+.activity-meta { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink3); margin-top: 3px; }
+.activity-time { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--ink3); white-space: nowrap; padding-top: 2px; }
+
+/* ── Workers ────────────────────────────────────────── */
+.role-chip {
+  display: inline-flex; font-size: 9px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 100px;
+}
+.role-chip.owner   { background: rgba(240,176,48,.1); color: var(--amber); border: 0.5px solid rgba(240,176,48,.2); }
+.role-chip.ops     { background: rgba(90,176,248,.1);  color: var(--blue);  border: 0.5px solid rgba(90,176,248,.2); }
+.role-chip.support { background: rgba(61,224,144,.1);  color: var(--green); border: 0.5px solid rgba(61,224,144,.2); }
+.toggle-switch {
+  width: 36px; height: 20px; border-radius: 100px;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  position: relative; cursor: pointer; transition: background .2s; flex-shrink: 0;
+}
+.toggle-switch.on { background: var(--green); border-color: var(--green); }
+.toggle-switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; transition: transform .2s cubic-bezier(.34,1.4,.64,1);
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+}
+.toggle-switch.on::after { transform: translateX(16px); }
+
+/* ── Empty State ────────────────────────────────────── */
+.empty-state {
+  text-align: center; padding: 48px 20px;
+  color: var(--ink3); font-size: 12px; font-family: 'DM Mono', monospace;
+}
+
+/* ── Toast ──────────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: 10px; padding: 12px 16px;
+  font-size: 12px; font-weight: 600; color: var(--ink);
+  box-shadow: 0 16px 40px rgba(0,0,0,.4);
+  display: flex; align-items: center; gap: 10px;
+  animation: toastIn .25s cubic-bezier(.34,1.4,.64,1);
+  max-width: 320px;
+}
+@keyframes toastIn {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.toast-icon { font-size: 14px; flex-shrink: 0; }
+
+/* ── Page Header ────────────────────────────────────── */
+.page-header {
+  margin-bottom: 24px;
+}
+.page-title {
+  font-size: 20px; font-weight: 800; letter-spacing: -.02em; color: var(--ink);
+  margin-bottom: 4px;
+}
+.page-sub {
+  font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3);
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+.menu-toggle {
+  display: none; background: none; border: none;
+  color: var(--ink); font-size: 20px; cursor: pointer; padding: 4px;
+}
+@media (max-width: 860px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { transform: translateX(-220px); width: 220px; }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .rev-stat-grid { grid-template-columns: 1fr; }
+  .row { flex-direction: column; }
+  .row .panel-sm { flex: 1 1 auto; }
+  .menu-toggle { display: block; }
+  .content { padding: 16px; }
+}
+@media (max-width: 520px) {
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .stat-value { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     AUTH GATE
+════════════════════════════════════════════ -->
+<div id="auth-gate">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-mark">W</div>
+      <span class="auth-logo-text">War Room</span>
+      <span class="auth-logo-badge">Admin</span>
+    </div>
+    <div class="auth-heading">Command Portal</div>
+    <div class="auth-sub">Restricted access — authorized personnel only.<br>This session is logged and audited.</div>
+    <label class="auth-label">Work Email</label>
+    <input class="auth-input" id="auth-email" type="email" placeholder="you@warroom.app" autocomplete="email">
+    <label class="auth-label">Password</label>
+    <input class="auth-input" id="auth-pass" type="password" placeholder="••••••••••" autocomplete="current-password">
+    <button class="auth-btn" id="auth-submit" onclick="doLogin()">Access Command Portal</button>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-footer">
+      WAR ROOM · Admin Portal v1.0<br>
+      Unauthorized access is prohibited and monitored.
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     APP SHELL
+════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">W</div>
+      <div>
+        <div class="sidebar-logo-text">War Room</div>
+        <div class="sidebar-logo-sub">Command Portal</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section-label">Analytics</div>
+    <button class="nav-item active" onclick="nav('overview', this)">
+      <span class="nav-icon">⬡</span> Overview
+    </button>
+    <button class="nav-item" onclick="nav('revenue', this)">
+      <span class="nav-icon">◈</span> Revenue
+    </button>
+
+    <div class="sidebar-section-label">Management</div>
+    <button class="nav-item" onclick="nav('users', this)">
+      <span class="nav-icon">◉</span> Users
+    </button>
+    <button class="nav-item" onclick="nav('activity', this)">
+      <span class="nav-icon">◎</span> Activity
+      <span class="nav-badge" id="activity-badge">12</span>
+    </button>
+
+    <div class="sidebar-section-label">Team</div>
+    <button class="nav-item" onclick="nav('workers', this)">
+      <span class="nav-icon">◈</span> Workers
+    </button>
+
+    <div class="sidebar-bottom">
+      <div class="worker-chip">
+        <div class="worker-avatar" id="sidebar-avatar">—</div>
+        <div class="worker-info">
+          <div class="worker-name" id="sidebar-name">—</div>
+          <div class="worker-role" id="sidebar-role">—</div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()" title="Sign out">⏻</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+      <div>
+        <div class="topbar-title" id="topbar-title">Overview</div>
+        <div class="topbar-sub" id="topbar-sub">Platform health at a glance</div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-date" id="topbar-date"></div>
+        <div class="status-dot" title="Systems operational"></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ VIEW: OVERVIEW ══ -->
+      <div class="view active" id="view-overview">
+        <div class="page-header">
+          <div class="page-title">Overview</div>
+          <div class="page-sub">Platform health · Updated just now</div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Users</div>
+            <div class="stat-value">2,847</div>
+            <div class="stat-delta up">▲ 14.2% vs last month</div>
+            <svg class="stat-sparkline" width="80" height="40" viewBox="0 0 80 40">
+              <polyline points="0,35 13,28 26,32 39,18 52,22 65,10 80,14" fill="none" stroke="#3de090" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Active This Week</div>
+            <div class="stat-value">1,204</div>
+            <div class="stat-delta up">▲ 8.7% vs last week</div>
+            <svg class="stat-sparkline" width="80" height="40" viewBox="0 0 80 40">
+              <polyline points="0,30 13,24 26,28 39,20 52,16 65,18 80,12" fill="none" stroke="#5ab0f8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">MRR</div>
+            <div class="stat-value">$18,240</div>
+            <div class="stat-delta up">▲ $1,840 vs last month</div>
+            <svg class="stat-sparkline" width="80" height="40" viewBox="0 0 80 40">
+              <polyline points="0,38 13,32 26,30 39,22 52,18 65,12 80,8" fill="none" stroke="#f0b030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Churn Rate</div>
+            <div class="stat-value">2.1%</div>
+            <div class="stat-delta down">▼ 0.3% vs last month</div>
+            <svg class="stat-sparkline" width="80" height="40" viewBox="0 0 80 40">
+              <polyline points="0,10 13,14 26,12 39,18 52,16 65,20 80,22" fill="none" stroke="#f06860" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Revenue — 30 Day</div>
+              <div class="panel-hint">MRR trend</div>
+            </div>
+            <div class="panel-body">
+              <div class="chart-wrap">
+                <svg id="rev-chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-sm">
+            <div class="panel-header">
+              <div class="panel-title">Plan Mix</div>
+              <div class="panel-hint">All users</div>
+            </div>
+            <div class="panel-body">
+              <div class="plan-bar-row">
+                <div class="plan-bar-meta">
+                  <span class="plan-bar-label">Free</span>
+                  <span class="plan-bar-count">1,680 · 59%</span>
+                </div>
+                <div class="plan-bar-track">
+                  <div class="plan-bar-fill" style="width:59%;background:var(--blue)"></div>
+                </div>
+              </div>
+              <div class="plan-bar-row">
+                <div class="plan-bar-meta">
+                  <span class="plan-bar-label">Pro</span>
+                  <span class="plan-bar-count">1,002 · 35%</span>
+                </div>
+                <div class="plan-bar-track">
+                  <div class="plan-bar-fill" style="width:35%;background:var(--violet)"></div>
+                </div>
+              </div>
+              <div class="plan-bar-row">
+                <div class="plan-bar-meta">
+                  <span class="plan-bar-label">Enterprise</span>
+                  <span class="plan-bar-count">165 · 6%</span>
+                </div>
+                <div class="plan-bar-track">
+                  <div class="plan-bar-fill" style="width:6%;background:var(--amber)"></div>
+                </div>
+              </div>
+
+              <div style="margin-top:20px">
+                <div class="detail-section-title">New Signups</div>
+                <div id="signup-feed"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Signups — 7 Day</div>
+              <div class="panel-hint">Daily new users</div>
+            </div>
+            <div class="panel-body">
+              <div class="chart-wrap" style="height:120px">
+                <svg id="signup-chart" viewBox="0 0 600 120" preserveAspectRatio="none"></svg>
+              </div>
+            </div>
+          </div>
+          <div class="panel panel-sm">
+            <div class="panel-header">
+              <div class="panel-title">Quick Stats</div>
+            </div>
+            <div class="panel-body" style="padding:0">
+              <div class="detail-row" style="padding:12px 20px">
+                <span class="detail-row-label">ARR</span>
+                <span class="detail-row-value" style="color:var(--green)">$218,880</span>
+              </div>
+              <div class="detail-row" style="padding:12px 20px">
+                <span class="detail-row-label">Avg Revenue / User</span>
+                <span class="detail-row-value">$6.40</span>
+              </div>
+              <div class="detail-row" style="padding:12px 20px">
+                <span class="detail-row-label">Trial Conversions</span>
+                <span class="detail-row-value" style="color:var(--blue)">34.2%</span>
+              </div>
+              <div class="detail-row" style="padding:12px 20px">
+                <span class="detail-row-label">Failed Payments</span>
+                <span class="detail-row-value" style="color:var(--red)">18</span>
+              </div>
+              <div class="detail-row" style="padding:12px 20px">
+                <span class="detail-row-label">Refunds (30d)</span>
+                <span class="detail-row-value" style="color:var(--amber)">$420</span>
+              </div>
+              <div class="detail-row" style="padding:12px 20px;border-bottom:none">
+                <span class="detail-row-label">Support Tickets</span>
+                <span class="detail-row-value">7 open</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: USERS ══ -->
+      <div class="view" id="view-users">
+        <div class="page-header">
+          <div class="page-title">Users</div>
+          <div class="page-sub">Manage accounts, plans, and access</div>
+        </div>
+        <div class="panel">
+          <div class="toolbar">
+            <div class="search-box">
+              <span class="search-icon">⌕</span>
+              <input type="text" placeholder="Search by name or email…" id="user-search" oninput="filterUsers()">
+            </div>
+            <div class="filter-chips">
+              <button class="filter-chip active" onclick="setFilter('all',this)">All</button>
+              <button class="filter-chip" onclick="setFilter('free',this)">Free</button>
+              <button class="filter-chip" onclick="setFilter('pro',this)">Pro</button>
+              <button class="filter-chip" onclick="setFilter('enterprise',this)">Enterprise</button>
+              <button class="filter-chip" onclick="setFilter('suspended',this)">Suspended</button>
+            </div>
+            <div class="toolbar-right">
+              <div class="icon-btn" title="Export CSV" onclick="toast('CSV export coming soon','📥')">⇩</div>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th onclick="sortUsers('name',this)">Name</th>
+                  <th onclick="sortUsers('email',this)">Email</th>
+                  <th onclick="sortUsers('plan',this)">Plan</th>
+                  <th onclick="sortUsers('joined',this)">Joined</th>
+                  <th onclick="sortUsers('lastActive',this)">Last Active</th>
+                  <th onclick="sortUsers('status',this)">Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody"></tbody>
+            </table>
+          </div>
+          <div style="padding:12px 20px;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)" id="users-count">— users</div>
+            <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)">Page 1 of 1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: REVENUE ══ -->
+      <div class="view" id="view-revenue">
+        <div class="page-header">
+          <div class="page-title">Revenue</div>
+          <div class="page-sub">MRR, transactions, and payment health</div>
+        </div>
+
+        <div class="rev-stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">MRR</div>
+            <div class="stat-value">$18,240</div>
+            <div class="stat-delta up">▲ 11.2% month-over-month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">New MRR (30d)</div>
+            <div class="stat-value">$3,120</div>
+            <div class="stat-delta up">▲ from 26 upgrades</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Churned MRR (30d)</div>
+            <div class="stat-value">$840</div>
+            <div class="stat-delta down">▼ 7 cancellations</div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-bottom:24px">
+          <div class="panel-header">
+            <div class="panel-title">MRR Timeline — 30 Day</div>
+            <div class="panel-hint">Net revenue</div>
+          </div>
+          <div class="panel-body">
+            <div class="chart-wrap" style="height:180px">
+              <svg id="rev-chart-full" viewBox="0 0 800 180" preserveAspectRatio="none"></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Recent Transactions</div>
+              <div class="panel-hint">Last 30 days</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Plan</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="tx-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel panel-sm">
+            <div class="panel-header">
+              <div class="panel-title">Failed Payments</div>
+              <span class="badge failed"><span class="badge-dot"></span>18 pending</span>
+            </div>
+            <div style="padding:0" id="failed-payments-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: ACTIVITY ══ -->
+      <div class="view" id="view-activity">
+        <div class="page-header">
+          <div class="page-title">Activity</div>
+          <div class="page-sub">Live platform events · Auto-refreshes every 30s</div>
+        </div>
+        <div class="panel">
+          <div class="toolbar" style="justify-content:space-between">
+            <div class="filter-chips">
+              <button class="filter-chip active" onclick="setActivityFilter('all',this)">All</button>
+              <button class="filter-chip" onclick="setActivityFilter('signup',this)">Signups</button>
+              <button class="filter-chip" onclick="setActivityFilter('upgrade',this)">Upgrades</button>
+              <button class="filter-chip" onclick="setActivityFilter('cancel',this)">Cancels</button>
+              <button class="filter-chip" onclick="setActivityFilter('payment',this)">Payments</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div class="status-dot"></div>
+              <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)">Live</span>
+            </div>
+          </div>
+          <div class="activity-feed" id="activity-feed"></div>
+        </div>
+      </div>
+
+      <!-- ══ VIEW: WORKERS ══ -->
+      <div class="view" id="view-workers">
+        <div class="page-header">
+          <div class="page-title">Workers</div>
+          <div class="page-sub">Admin team access and audit trail</div>
+        </div>
+
+        <div class="row">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Team Access</div>
+              <div class="panel-hint" style="font-size:9px">3 active workers</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Worker</th>
+                    <th>Role</th>
+                    <th>Last Login</th>
+                    <th>Actions Today</th>
+                    <th>Access</th>
+                  </tr>
+                </thead>
+                <tbody id="workers-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel panel-sm">
+            <div class="panel-header">
+              <div class="panel-title">Credentials</div>
+              <div class="panel-hint">Mock — replace before launch</div>
+            </div>
+            <div class="panel-body" style="padding:0">
+              <div class="detail-row" style="padding:12px 20px;flex-direction:column;align-items:flex-start;gap:4px">
+                <div class="detail-row-label">Owner</div>
+                <div class="detail-row-value" style="color:var(--amber)">admin@warroom.app</div>
+                <div style="font-size:9px;font-family:'DM Mono',monospace;color:var(--ink3)">warroom2026</div>
+              </div>
+              <div class="detail-row" style="padding:12px 20px;flex-direction:column;align-items:flex-start;gap:4px">
+                <div class="detail-row-label">Ops</div>
+                <div class="detail-row-value" style="color:var(--blue)">ops@warroom.app</div>
+                <div style="font-size:9px;font-family:'DM Mono',monospace;color:var(--ink3)">ops2026</div>
+              </div>
+              <div class="detail-row" style="padding:12px 20px;flex-direction:column;align-items:flex-start;gap:4px;border-bottom:none">
+                <div class="detail-row-label">Support</div>
+                <div class="detail-row-value" style="color:var(--green)">support@warroom.app</div>
+                <div style="font-size:9px;font-family:'DM Mono',monospace;color:var(--ink3)">support2026</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Audit Log</div>
+            <div class="panel-hint">Worker actions</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Worker</th>
+                  <th>Action</th>
+                  <th>Target</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="audit-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- User Detail Side Panel -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail(event)">
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-header">
+      <div class="detail-avatar" id="dp-avatar"></div>
+      <div>
+        <div class="detail-name" id="dp-name"></div>
+        <div class="detail-email" id="dp-email"></div>
+      </div>
+      <div class="detail-close" onclick="closeDetailPanel()">✕</div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section">
+        <div class="detail-section-title">Account Details</div>
+        <div class="detail-row"><span class="detail-row-label">Plan</span><span class="detail-row-value" id="dp-plan"></span></div>
+        <div class="detail-row"><span class="detail-row-label">Status</span><span class="detail-row-value" id="dp-status"></span></div>
+        <div class="detail-row"><span class="detail-row-label">Joined</span><span class="detail-row-value" id="dp-joined"></span></div>
+        <div class="detail-row"><span class="detail-row-label">Last Active</span><span class="detail-row-value" id="dp-last"></span></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-title">Usage</div>
+        <div class="detail-row"><span class="detail-row-label">Businesses tracked</span><span class="detail-row-value" id="dp-biz"></span></div>
+        <div class="detail-row"><span class="detail-row-label">Missions created</span><span class="detail-row-value" id="dp-missions"></span></div>
+        <div class="detail-row"><span class="detail-row-label">P&L exports</span><span class="detail-row-value" id="dp-exports"></span></div>
+        <div class="detail-row"><span class="detail-row-label">AXIS sessions</span><span class="detail-row-value" id="dp-axis"></span></div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-title">Actions</div>
+        <div class="detail-actions">
+          <button class="detail-action-btn primary" onclick="toast('Plan change flow coming with Stripe integration','◈')">Change Plan</button>
+          <button class="detail-action-btn" onclick="toast('Impersonation session started — view only','👁')">Impersonate User</button>
+          <button class="detail-action-btn" onclick="toast('Password reset email sent','✉')">Send Password Reset</button>
+          <button class="detail-action-btn danger" id="dp-suspend-btn" onclick="handleSuspend()">Suspend Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// MOCK DATA
+// ══════════════════════════════════════════
+
+const WORKERS = [
+  { email: 'admin@warroom.app',   pass: 'warroom2026', name: 'Command Admin',  role: 'owner',   initials: 'CA' },
+  { email: 'ops@warroom.app',     pass: 'ops2026',     name: 'Ops Lead',       role: 'ops',     initials: 'OL' },
+  { email: 'support@warroom.app', pass: 'support2026', name: 'Support Agent',  role: 'support', initials: 'SA' },
+];
+
+const PLANS = ['free','pro','enterprise'];
+const STATUSES = ['active','active','active','active','inactive','suspended'];
+const FIRST = ['Marcus','Jordan','Priya','Devon','Aaliyah','Tyler','Simone','Elijah','Nina','Cole','Zara','Andre','Luna','Mia','Remy','Sage','Dante','Lyra','Omar','Cleo'];
+const LAST  = ['Webb','Chen','Okafor','Rivera','Stone','Park','Nakamura','Torres','Patel','Grant','Ellis','Kim','Vasquez','Osei','Brooks','Huang','Carter','Diaz','Williams','Ahmad'];
+
+function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function pickFrom(arr){ return arr[rnd(0,arr.length-1)]; }
+
+function genUsers(n){
+  const out=[];
+  const now=Date.now();
+  for(let i=0;i<n;i++){
+    const fn=pickFrom(FIRST), ln=pickFrom(LAST);
+    const joinOffset=rnd(1,365)*86400000;
+    const lastOffset=rnd(0,30)*86400000;
+    const plan=PLANS[rnd(0,PLANS.length-1)];
+    out.push({
+      id: i+1,
+      name: fn+' '+ln,
+      email: fn.toLowerCase()+'.'+ln.toLowerCase()+'@'+pickFrom(['gmail.com','icloud.com','outlook.com','yahoo.com']),
+      plan,
+      joined: new Date(now-joinOffset).toISOString().slice(0,10),
+      lastActive: new Date(now-lastOffset).toISOString().slice(0,10),
+      status: plan==='suspended'?'suspended':pickFrom(STATUSES),
+      biz: rnd(1,8), missions: rnd(2,40), exports: rnd(0,15), axis: rnd(0,200),
+    });
+  }
+  return out;
+}
+
+const USERS = genUsers(120);
+
+const ACTIVITY_EVENTS = (() => {
+  const types=[
+    {t:'signup',  icon:'signup',  label:'New signup'},
+    {t:'upgrade', icon:'upgrade', label:'Plan upgrade'},
+    {t:'cancel',  icon:'cancel',  label:'Cancellation'},
+    {t:'payment', icon:'payment', label:'Payment'},
+    {t:'login',   icon:'login',   label:'Login'},
+    {t:'export',  icon:'export',  label:'Data export'},
+  ];
+  const evts=[];
+  const now=Date.now();
+  for(let i=0;i<60;i++){
+    const u=USERS[rnd(0,USERS.length-1)];
+    const tp=pickFrom(types);
+    const mins=rnd(0,2880);
+    let detail='';
+    if(tp.t==='signup') detail='Joined on '+u.plan+' plan';
+    else if(tp.t==='upgrade') detail='Free → '+pickFrom(['Pro','Enterprise']);
+    else if(tp.t==='cancel') detail='Cancelled '+u.plan+' plan';
+    else if(tp.t==='payment') detail='$'+pickFrom([9,19,49,99])+'.00 charged';
+    else if(tp.t==='login') detail='Web session started';
+    else if(tp.t==='export') detail='P&L CSV downloaded';
+    evts.push({ user:u.name, type:tp.t, icon:tp.icon, detail, mins });
+  }
+  return evts.sort((a,b)=>a.mins-b.mins);
+})();
+
+const TRANSACTIONS = (() => {
+  const txs=[];
+  const statuses=['paid','paid','paid','failed','refunded'];
+  for(let i=0;i<30;i++){
+    const u=USERS[rnd(0,USERS.length-1)];
+    const plan=u.plan;
+    const amount=plan==='enterprise'?99:plan==='pro'?19:0;
+    const days=rnd(0,30);
+    txs.push({ user:u.name, plan, amount:'$'+amount+'.00', date:daysAgo(days), status:pickFrom(statuses) });
+  }
+  return txs;
+})();
+
+const FAILED_PAYMENTS = TRANSACTIONS.filter(t=>t.status==='failed').slice(0,8);
+
+const AUDIT_LOG = [
+  { worker:'Command Admin', action:'Suspended account',      target:'user #847', time:'2 min ago' },
+  { worker:'Ops Lead',      action:'Changed plan',           target:'user #1203', time:'14 min ago' },
+  { worker:'Support Agent', action:'Sent password reset',    target:'user #392',  time:'31 min ago' },
+  { worker:'Command Admin', action:'Exported user CSV',      target:'All users',  time:'1 hr ago' },
+  { worker:'Ops Lead',      action:'Toggled worker access',  target:'Support Agent', time:'2 hrs ago' },
+  { worker:'Support Agent', action:'Impersonated session',   target:'user #558',  time:'3 hrs ago' },
+  { worker:'Command Admin', action:'Viewed revenue report',  target:'May 2026',   time:'4 hrs ago' },
+];
+
+const WORKER_TABLE = [
+  { name:'Command Admin',  email:'admin@warroom.app',   role:'owner',   last:'Just now',    actions:14, on:true  },
+  { name:'Ops Lead',       email:'ops@warroom.app',     role:'ops',     last:'18 min ago',  actions:7,  on:true  },
+  { name:'Support Agent',  email:'support@warroom.app', role:'support', last:'41 min ago',  actions:3,  on:true  },
+];
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function daysAgo(n){
+  const d=new Date(Date.now()-n*86400000);
+  return d.toISOString().slice(0,10);
+}
+function fmtMins(m){
+  if(m<60) return m+'m ago';
+  if(m<1440) return Math.floor(m/60)+'h ago';
+  return Math.floor(m/1440)+'d ago';
+}
+function initials(name){ return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+function planChip(p){ return `<span class="plan-chip ${p}">${p}</span>`; }
+function statusBadge(s){ return `<span class="badge ${s}"><span class="badge-dot"></span>${s}</span>`; }
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+let currentWorker = null;
+
+function doLogin(){
+  const email = document.getElementById('auth-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('auth-pass').value;
+  const err   = document.getElementById('auth-error');
+
+  const worker = WORKERS.find(w => w.email === email && w.pass === pass);
+  if(!worker){
+    err.textContent = 'Invalid credentials. Check your email and password.';
+    document.getElementById('auth-pass').value = '';
+    return;
+  }
+
+  currentWorker = worker;
+  err.textContent = '';
+
+  // Populate sidebar
+  document.getElementById('sidebar-avatar').textContent = worker.initials;
+  document.getElementById('sidebar-name').textContent   = worker.name;
+  document.getElementById('sidebar-role').textContent   = worker.role;
+
+  // Show app
+  document.getElementById('auth-gate').style.display = 'none';
+  const app = document.getElementById('app');
+  app.classList.add('visible');
+
+  // Boot data
+  updateDate();
+  renderRevChart('rev-chart', 30, 400, 160);
+  renderRevChart('rev-chart-full', 30, 600, 180);
+  renderBarChart();
+  renderSignupFeed();
+  renderUsers();
+  renderTransactions();
+  renderFailedPayments();
+  renderActivity();
+  renderWorkers();
+  renderAuditLog();
+
+  // Support role — restrict revenue tab
+  if(worker.role === 'support'){
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      if(btn.textContent.includes('Revenue')){
+        btn.style.opacity = '.3';
+        btn.style.pointerEvents = 'none';
+      }
+    });
+  }
+}
+
+function doLogout(){
+  currentWorker = null;
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('auth-gate').style.display = 'flex';
+  document.getElementById('auth-pass').value = '';
+}
+
+document.getElementById('auth-pass').addEventListener('keydown', e => {
+  if(e.key === 'Enter') doLogin();
+});
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+const TOPBAR_META = {
+  overview: ['Overview','Platform health at a glance'],
+  revenue:  ['Revenue','MRR, transactions, and payment health'],
+  users:    ['Users','Manage accounts, plans, and access'],
+  activity: ['Activity','Live platform events'],
+  workers:  ['Workers','Admin team access and audit trail'],
+};
+
+function nav(section, btn){
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-'+section).classList.add('active');
+  btn.classList.add('active');
+
+  const [title, sub] = TOPBAR_META[section];
+  document.getElementById('topbar-title').textContent = title;
+  document.getElementById('topbar-sub').textContent   = sub;
+
+  if(section === 'activity'){
+    document.getElementById('activity-badge').style.display = 'none';
+  }
+  closeSidebar();
+
+  if(section === 'revenue'){
+    setTimeout(()=>{ renderRevChart('rev-chart-full', 30, 800, 180); }, 50);
+  }
+}
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// ══════════════════════════════════════════
+// DATE
+// ══════════════════════════════════════════
+function updateDate(){
+  const now = new Date();
+  document.getElementById('topbar-date').textContent =
+    now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+}
+
+// ══════════════════════════════════════════
+// CHARTS
+// ══════════════════════════════════════════
+function renderRevChart(id, days, W, H){
+  const el = document.getElementById(id);
+  if(!el) return;
+
+  // Generate mock MRR data
+  const vals = [];
+  let base = 14800;
+  for(let i=0;i<days;i++){
+    base += rnd(-120, 320);
+    vals.push(Math.max(12000, base));
+  }
+
+  const min = Math.min(...vals) * 0.97;
+  const max = Math.max(...vals) * 1.02;
+  const pad = { t:12, r:8, b:8, l:8 };
+  const cw = W - pad.l - pad.r;
+  const ch = H - pad.t - pad.b;
+
+  const pts = vals.map((v, i) => {
+    const x = pad.l + (i / (vals.length-1)) * cw;
+    const y = pad.t + ch - ((v - min) / (max - min)) * ch;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+
+  // Area fill
+  const firstX = pad.l.toFixed(1);
+  const lastX  = (pad.l + cw).toFixed(1);
+  const baseY  = (pad.t + ch).toFixed(1);
+  const area   = `${firstX},${baseY} ${pts} ${lastX},${baseY}`;
+
+  el.innerHTML = `
+    <defs>
+      <linearGradient id="grad-${id}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f0b030" stop-opacity=".25"/>
+        <stop offset="100%" stop-color="#f0b030" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polygon points="${area}" fill="url(#grad-${id})"/>
+    <polyline points="${pts}" fill="none" stroke="#f0b030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  `;
+}
+
+function renderBarChart(){
+  const el = document.getElementById('signup-chart');
+  if(!el) return;
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const vals = [28,42,37,55,61,33,48];
+  const W=600, H=120;
+  const max=Math.max(...vals);
+  const barW = 60, gap = (W - days.length*barW) / (days.length+1);
+
+  let html='';
+  days.forEach((d,i)=>{
+    const x = gap + i*(barW+gap);
+    const bh = (vals[i]/max)*(H-30);
+    const y  = H - bh - 20;
+    const col = i===4?'#5ab0f8':'#3de090';
+    html += `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="4" fill="${col}" opacity="${i===4?1:.65}"/>`;
+    html += `<text x="${x+barW/2}" y="${H-4}" text-anchor="middle" fill="#5a5a58" font-size="12" font-family="DM Mono,monospace">${d}</text>`;
+    html += `<text x="${x+barW/2}" y="${y-5}" text-anchor="middle" fill="#9a9a98" font-size="11" font-family="DM Mono,monospace">${vals[i]}</text>`;
+  });
+  el.innerHTML = html;
+}
+
+// ══════════════════════════════════════════
+// SIGNUP FEED
+// ══════════════════════════════════════════
+function renderSignupFeed(){
+  const recent = USERS.slice(0,5);
+  const el = document.getElementById('signup-feed');
+  el.innerHTML = recent.map(u => `
+    <div class="feed-item">
+      <div class="feed-avatar">${initials(u.name)}</div>
+      <div class="feed-info">
+        <div class="feed-name">${u.name}</div>
+        <div class="feed-detail">${planChip(u.plan)} · ${u.joined}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════
+// USERS TABLE
+// ══════════════════════════════════════════
+let userFilter = 'all';
+let userSort   = { key: 'joined', dir: -1 };
+
+function renderUsers(){
+  let list = [...USERS];
+
+  // Filter
+  if(userFilter !== 'all'){
+    list = list.filter(u =>
+      userFilter === 'suspended' ? u.status === 'suspended' : u.plan === userFilter
+    );
+  }
+
+  // Search
+  const q = (document.getElementById('user-search')?.value || '').toLowerCase();
+  if(q) list = list.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+
+  // Sort
+  list.sort((a,b)=>{
+    const av = a[userSort.key]||'', bv = b[userSort.key]||'';
+    return av < bv ? -userSort.dir : av > bv ? userSort.dir : 0;
+  });
+
+  const tbody = document.getElementById('users-tbody');
+  tbody.innerHTML = list.map(u => `
+    <tr onclick="openDetail(${u.id})">
+      <td class="primary">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--ink);flex-shrink:0">${initials(u.name)}</div>
+          ${u.name}
+        </div>
+      </td>
+      <td class="mono">${u.email}</td>
+      <td>${planChip(u.plan)}</td>
+      <td class="mono">${u.joined}</td>
+      <td class="mono">${u.lastActive}</td>
+      <td>${statusBadge(u.status)}</td>
+      <td onclick="event.stopPropagation()">
+        <div class="row-actions">
+          <button class="action-btn" onclick="openDetail(${u.id})">View</button>
+          <button class="action-btn" onclick="toast('Plan change flow coming soon','◈')">Plan</button>
+          <button class="action-btn danger" onclick="suspendUser(${u.id})">Suspend</button>
+        </div>
+      </td>
+    </tr>
+  `).join('') || `<tr><td colspan="7"><div class="empty-state">No users match this filter.</div></td></tr>`;
+
+  document.getElementById('users-count').textContent = `${list.length} of ${USERS.length} users`;
+}
+
+function setFilter(f, btn){
+  userFilter = f;
+  document.querySelectorAll('.filter-chips .filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  renderUsers();
+}
+
+function filterUsers(){ renderUsers(); }
+
+function sortUsers(key, th){
+  if(userSort.key === key) userSort.dir *= -1;
+  else { userSort.key = key; userSort.dir = 1; }
+  document.querySelectorAll('thead th').forEach(t=>{
+    t.classList.remove('sort-asc','sort-desc');
+  });
+  th.classList.add(userSort.dir===1?'sort-asc':'sort-desc');
+  renderUsers();
+}
+
+function suspendUser(id){
+  const u = USERS.find(u=>u.id===id);
+  if(!u) return;
+  u.status = u.status==='suspended' ? 'active' : 'suspended';
+  renderUsers();
+  toast(u.status==='suspended'?`${u.name} suspended`:`${u.name} reinstated`, u.status==='suspended'?'🚫':'✓');
+}
+
+// ══════════════════════════════════════════
+// USER DETAIL PANEL
+// ══════════════════════════════════════════
+let detailUserId = null;
+
+function openDetail(id){
+  const u = USERS.find(u=>u.id===id);
+  if(!u) return;
+  detailUserId = id;
+
+  document.getElementById('dp-avatar').textContent  = initials(u.name);
+  document.getElementById('dp-name').textContent    = u.name;
+  document.getElementById('dp-email').textContent   = u.email;
+  document.getElementById('dp-plan').textContent    = u.plan;
+  document.getElementById('dp-status').textContent  = u.status;
+  document.getElementById('dp-joined').textContent  = u.joined;
+  document.getElementById('dp-last').textContent    = u.lastActive;
+  document.getElementById('dp-biz').textContent     = u.biz;
+  document.getElementById('dp-missions').textContent= u.missions;
+  document.getElementById('dp-exports').textContent = u.exports;
+  document.getElementById('dp-axis').textContent    = u.axis;
+
+  const suspBtn = document.getElementById('dp-suspend-btn');
+  suspBtn.textContent = u.status==='suspended' ? 'Reinstate Account' : 'Suspend Account';
+
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+function closeDetailPanel(){
+  document.getElementById('detail-overlay').classList.remove('open');
+  detailUserId = null;
+}
+function closeDetail(e){
+  if(e.target === document.getElementById('detail-overlay')) closeDetailPanel();
+}
+function handleSuspend(){
+  if(detailUserId) suspendUser(detailUserId);
+  closeDetailPanel();
+}
+
+// ══════════════════════════════════════════
+// TRANSACTIONS
+// ══════════════════════════════════════════
+function renderTransactions(){
+  const tbody = document.getElementById('tx-tbody');
+  tbody.innerHTML = TRANSACTIONS.map(tx => `
+    <tr>
+      <td class="primary">${tx.user}</td>
+      <td>${planChip(tx.plan)}</td>
+      <td class="mono" style="color:${tx.status==='failed'?'var(--red)':tx.status==='refunded'?'var(--amber)':'var(--green)'}">${tx.amount}</td>
+      <td class="mono">${tx.date}</td>
+      <td>${statusBadge(tx.status)}</td>
+      <td>
+        ${tx.status==='failed'?`<button class="action-btn" onclick="toast('Retry queued','↻')">Retry</button>`:
+          tx.status==='paid'?`<button class="action-btn" onclick="toast('Refund initiated','↩')">Refund</button>`:
+          `<span style="font-size:10px;color:var(--ink3);font-family:'DM Mono',monospace">—</span>`}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderFailedPayments(){
+  const el = document.getElementById('failed-payments-list');
+  el.innerHTML = FAILED_PAYMENTS.map(fp => `
+    <div class="detail-row" style="padding:12px 20px;align-items:center">
+      <div>
+        <div style="font-size:12px;font-weight:600;color:var(--ink)">${fp.user}</div>
+        <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)">${fp.amount} · ${fp.date}</div>
+      </div>
+      <button class="action-btn" onclick="toast('Retry queued for ${fp.user}','↻')" style="margin-left:auto">Retry</button>
+    </div>
+  `).join('') || `<div class="empty-state">No failed payments.</div>`;
+}
+
+// ══════════════════════════════════════════
+// ACTIVITY
+// ══════════════════════════════════════════
+let activityFilter = 'all';
+
+function renderActivity(){
+  let list = [...ACTIVITY_EVENTS];
+  if(activityFilter !== 'all') list = list.filter(e=>e.type===activityFilter);
+
+  const el = document.getElementById('activity-feed');
+  const icons = { signup:'🆕', upgrade:'⬆', cancel:'✕', payment:'◈', login:'⬡', export:'⇩' };
+  el.innerHTML = list.map(e => `
+    <div class="activity-item">
+      <div class="activity-icon ${e.icon}">${icons[e.type]||'·'}</div>
+      <div class="activity-body">
+        <div class="activity-text"><strong>${e.user}</strong> — ${e.detail}</div>
+        <div class="activity-meta">${e.type.toUpperCase()}</div>
+      </div>
+      <div class="activity-time">${fmtMins(e.mins)}</div>
+    </div>
+  `).join('') || `<div class="empty-state" style="padding:32px">No events match this filter.</div>`;
+}
+
+function setActivityFilter(f, btn){
+  activityFilter = f;
+  document.querySelectorAll('#view-activity .filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  renderActivity();
+}
+
+// Auto-refresh activity
+let activityInterval = null;
+setInterval(()=>{
+  if(document.getElementById('view-activity').classList.contains('active')){
+    renderActivity();
+  }
+}, 30000);
+
+// ══════════════════════════════════════════
+// WORKERS
+// ══════════════════════════════════════════
+function renderWorkers(){
+  const tbody = document.getElementById('workers-tbody');
+  tbody.innerHTML = WORKER_TABLE.map((w,i) => `
+    <tr>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--ink)">${initials(w.name)}</div>
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--ink)">${w.name}</div>
+            <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)">${w.email}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="role-chip ${w.role}">${w.role}</span></td>
+      <td class="mono">${w.last}</td>
+      <td class="mono" style="color:var(--ink2)">${w.actions}</td>
+      <td>
+        <div class="toggle-switch ${w.on?'on':''}" onclick="toggleWorker(${i},this)"></div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function toggleWorker(i, el){
+  WORKER_TABLE[i].on = !WORKER_TABLE[i].on;
+  el.classList.toggle('on');
+  toast(WORKER_TABLE[i].on ? `${WORKER_TABLE[i].name} access enabled` : `${WORKER_TABLE[i].name} access revoked`, WORKER_TABLE[i].on ? '✓' : '🚫');
+}
+
+function renderAuditLog(){
+  const tbody = document.getElementById('audit-tbody');
+  tbody.innerHTML = AUDIT_LOG.map(a => `
+    <tr>
+      <td class="primary">${a.worker}</td>
+      <td style="color:var(--ink2)">${a.action}</td>
+      <td class="mono">${a.target}</td>
+      <td class="mono">${a.time}</td>
+    </tr>
+  `).join('');
+}
+
+// ══════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════
+function toast(msg, icon='✓'){
+  const existing = document.querySelector('.toast');
+  if(existing) existing.remove();
+
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = `<span class="toast-icon">${icon}</span><span>${msg}</span>`;
+  document.body.appendChild(el);
+  setTimeout(()=>{
+    el.style.transition = 'opacity .3s, transform .3s';
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(8px)';
+    setTimeout(()=>el.remove(), 320);
+  }, 2800);
+}
+</script>
+</body>
+</html>
