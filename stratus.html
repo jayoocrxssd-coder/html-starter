@@ -794,11 +794,12 @@ input[type=text] {
 
             <div style="margin-bottom:20px">
               <div style="font-size:11px;font-weight:600;color:#8e8e93;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Target frequency</div>
-              <div style="display:flex;gap:6px" id="habit-freq-btns">
+              <div style="display:flex;gap:6px;flex-wrap:wrap" id="habit-freq-btns">
                 <button onclick="hfPick(this,7)" style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s">Daily</button>
                 <button onclick="hfPick(this,5)" style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s">5x / wk</button>
                 <button onclick="hfPick(this,4)" style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s">4x / wk</button>
                 <button onclick="hfPick(this,3)" style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s">3x / wk</button>
+                <button onclick="hfPick(this,2)" style="flex:1;padding:9px 0;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s">2x / wk</button>
               </div>
             </div>
 
@@ -1015,7 +1016,15 @@ input[type=text] {
           <div class="card" style="margin-bottom:10px">
             <div class="section-title" style="margin-bottom:6px">Developer</div>
             <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Reset all app data (for testing)</div>
-            <button onclick="if(confirm('Reset all Stratus data? This cannot be undone.')){localStorage.removeItem('stratus_v1');location.reload();}" style="width:100%;padding:11px;border-radius:100px;border:1px solid #ff453a;background:transparent;color:#ff453a;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Reset app data</button>
+            <div id="reset-confirm" style="display:none;margin-bottom:10px;padding:14px;background:#ff453a18;border:1px solid #ff453a44;border-radius:14px">
+              <div style="font-size:13px;font-weight:600;color:#ff6b6b;margin-bottom:4px">Are you sure?</div>
+              <div style="font-size:12px;color:#8e8e93;margin-bottom:12px">This will permanently delete all habits, goals, calendar events and settings. Cannot be undone.</div>
+              <div style="display:flex;gap:8px">
+                <button onclick="localStorage.removeItem('stratus_v1');location.reload();" style="flex:1;padding:10px;border-radius:100px;border:none;background:#ff453a;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Yes, reset</button>
+                <button onclick="document.getElementById('reset-confirm').style.display='none'" style="flex:1;padding:10px;border-radius:100px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
+              </div>
+            </div>
+            <button onclick="document.getElementById('reset-confirm').style.display='block'" style="width:100%;padding:11px;border-radius:100px;border:1px solid #ff453a;background:transparent;color:#ff453a;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Reset app data</button>
           </div>
 
           <!-- SUPPORT ACCORDION -->
@@ -1070,7 +1079,15 @@ input[type=text] {
           </div>
 
           <!-- SIGN OUT -->
-          <button style="width:100%;padding:13px;border-radius:100px;border:1px solid #3a3a3c;background:transparent;color:#ff453a;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px">Sign out</button>
+          <div id="signout-confirm" style="display:none;margin-bottom:10px;padding:14px;background:#ff453a18;border:1px solid #ff453a44;border-radius:14px">
+            <div style="font-size:13px;font-weight:600;color:#ff6b6b;margin-bottom:4px">Sign out?</div>
+            <div style="font-size:12px;color:#8e8e93;margin-bottom:12px">Your data stays saved on this device. You'll see the welcome screen next time.</div>
+            <div style="display:flex;gap:8px">
+              <button onclick="doSignOut()" style="flex:1;padding:10px;border-radius:100px;border:none;background:#ff453a;color:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer">Sign out</button>
+              <button onclick="document.getElementById('signout-confirm').style.display='none'" style="flex:1;padding:10px;border-radius:100px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Cancel</button>
+            </div>
+          </div>
+          <button onclick="document.getElementById('signout-confirm').style.display='block'" style="width:100%;padding:13px;border-radius:100px;border:1px solid #3a3a3c;background:transparent;color:#ff453a;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px">Sign out</button>
 
         </div>
       </div>
@@ -2129,8 +2146,16 @@ input[type=text] {
     const g = goals.find(x => x.id === detailGoalId);
     if (!g) return;
     const newName = document.getElementById('gd-edit-name').value.trim();
-    const newCurrent = parseFloat(document.getElementById('gd-edit-current').value) || g.current;
+    const rawCurrent = document.getElementById('gd-edit-current').value.trim();
+    const newCurrent = rawCurrent === '' ? g.current : parseFloat(rawCurrent);
     const newNotes = document.getElementById('gd-edit-notes').value.trim();
+    if (isNaN(newCurrent) || newCurrent < 0) {
+      const inp = document.getElementById('gd-edit-current');
+      inp.style.border = '1px solid #ff453a';
+      setTimeout(() => { inp.style.border = 'none'; }, 1200);
+      showToast('Progress must be a valid number');
+      return;
+    }
     if (newName) g.name = newName;
     g.current = newCurrent;
     if (newNotes) g.notes = newNotes;
@@ -2206,7 +2231,7 @@ input[type=text] {
       setTimeout(() => inp.style.border = 'none', 1200);
       return;
     }
-    const target = parseFloat(targetRaw) || 100;
+    const target = (targetRaw !== '' && !isNaN(parseFloat(targetRaw)) && parseFloat(targetRaw) > 0) ? parseFloat(targetRaw) : 100;
     const cat = newGoalCat || 'General';
     const newId = goals.length ? Math.max(...goals.map(g => g.id)) + 1 : 1;
     goals.push({
@@ -2246,12 +2271,12 @@ input[type=text] {
         goals: goals,
         monthlyGoals: monthlyGoals,
         calEvents: calEvents,
-        userName: document.getElementById('profile-name-input')?.value || '',
+        userName: document.getElementById('profile-name-input')?.value || (typeof obName !== 'undefined' ? obName : '') || '',
         accent: getComputedStyle(phone).getPropertyValue('--accent').trim(),
         accentBg: getComputedStyle(phone).getPropertyValue('--accent-bg').trim(),
         accentText: getComputedStyle(phone).getPropertyValue('--accent-text').trim(),
         cardRadius: getComputedStyle(phone).getPropertyValue('--r').trim(),
-        obName: typeof obName !== 'undefined' ? obName : '',
+        obFocuses: typeof obFocuses !== 'undefined' ? obFocuses : [],
         theme: document.getElementById('light-mode-toggle')?.classList.contains('off') ? 'dark' : 'light',
         focusTotalSeconds: focusTotalSeconds,
         focusSessionCount: focusSessionCount,
@@ -2285,6 +2310,10 @@ input[type=text] {
       if (data.userName) {
         const nameInput = document.getElementById('profile-name-input');
         if (nameInput) { nameInput.value = data.userName; setName(data.userName); }
+        if (typeof obName !== 'undefined') obName = data.userName;
+      }
+      if (data.obFocuses && Array.isArray(data.obFocuses)) {
+        if (typeof obFocuses !== 'undefined') obFocuses = data.obFocuses;
       }
       if (data.accent) {
         phone.style.setProperty('--accent', data.accent);
@@ -2745,14 +2774,15 @@ input[type=text] {
     events.forEach((ev, idx) => {
       const card = document.createElement('div');
       card.className = 'event-card';
-      card.style.position = 'relative';
+      card.style.cssText = 'position:relative;cursor:pointer';
+      card.onclick = (e) => { if (!e.target.closest('[data-del]')) openEditSheet(key, idx); };
       card.innerHTML =
         '<div class="event-bar" style="background:' + (ev.accent ? accent : '#3a3a3c') + '"></div>' +
         '<div style="flex:1">' +
           '<div class="event-title">' + ev.title + '</div>' +
           '<div class="event-meta">' + ev.meta + '</div>' +
         '</div>' +
-        '<div onclick="deleteEvent(\'' + key + '\',' + idx + ')" style="color:#48484a;font-size:18px;cursor:pointer;padding:0 4px;line-height:1">&times;</div>';
+        '<div data-del onclick="deleteEvent(\'' + key + '\',' + idx + ')" style="color:#48484a;font-size:18px;cursor:pointer;padding:0 4px;line-height:1">&times;</div>';
       container.appendChild(card);
     });
   }
@@ -2786,6 +2816,32 @@ input[type=text] {
 
   function closeAddSheet() {
     document.getElementById('add-sheet').style.display = 'none';
+    editEventKey = null; editEventIdx = null;
+  }
+
+  let editEventKey = null, editEventIdx = null;
+
+  function openEditSheet(key, idx) {
+    const ev = calEvents[key] && calEvents[key][idx];
+    if (!ev) return;
+    editEventKey = key; editEventIdx = idx;
+    openAddSheet();
+    document.getElementById('sheet-title').value = ev.title;
+    // parse meta for category and time: "Morning · Fitness 🔁" or "Morning · Fitness"
+    const metaParts = ev.meta.split(' · ');
+    const timeStr = metaParts[0] ? metaParts[0].trim() : '';
+    const catStr = metaParts[1] ? metaParts[1].replace('🔁','').trim() : '';
+    if (catStr) {
+      document.querySelectorAll('#cat-btns button').forEach(b => {
+        if (b.textContent.trim() === catStr) b.click();
+      });
+    }
+    if (timeStr) {
+      document.querySelectorAll('#sheet-time-btns button').forEach(b => {
+        if (b.textContent.trim() === timeStr) b.click();
+      });
+    }
+    document.getElementById('sheet-day-label').textContent = key;
   }
 
   function pickCat(btn, cat) {
@@ -2957,6 +3013,20 @@ input[type=text] {
     const cat = sheetCat || 'General';
     const time = sheetTime || 'Anytime';
     const repeat = sheetRepeat || 'none';
+
+    // Edit mode — update in place
+    if (editEventKey !== null && editEventIdx !== null) {
+      if (calEvents[editEventKey] && calEvents[editEventKey][editEventIdx]) {
+        calEvents[editEventKey][editEventIdx].title = title;
+        calEvents[editEventKey][editEventIdx].meta = time + ' · ' + cat;
+        calEvents[editEventKey][editEventIdx].accent = cat === 'Fitness';
+      }
+      saveToStorage();
+      buildCalendar();
+      closeAddSheet();
+      showToast('Event updated');
+      return;
+    }
 
     // build list of days to add
     const base = new Date(selYear, selMonth - 1, selDay);
@@ -3280,41 +3350,48 @@ input[type=text] {
     return { cat, time, freq };
   }
 
+  function nliApply(parsed, opts) {
+    const { cat, time, freq } = parsed;
+    if (cat && opts.catBtns) {
+      document.querySelectorAll('#' + opts.catBtns + ' button').forEach(b => {
+        if (b.textContent.trim() === cat) b.click();
+      });
+    }
+    if (time && opts.timeBtns) {
+      document.querySelectorAll('#' + opts.timeBtns + ' button').forEach(b => {
+        if (b.textContent.trim() === time) b.click();
+      });
+    }
+    if (freq && opts.freqBtns) {
+      const freqMap = {7:'Daily',5:'5x / wk',4:'4x / wk',3:'3x / wk',2:'2x / wk'};
+      document.querySelectorAll('#' + opts.freqBtns + ' button').forEach(b => {
+        if (b.textContent.trim() === freqMap[freq]) b.click();
+      });
+    }
+  }
+
   function nliAttach(inputId, hintId, opts) {
     const inp = document.getElementById(inputId);
     const hint = document.getElementById(hintId);
     if (!inp || !hint) return;
+    let nliTimer = null;
     inp.addEventListener('input', () => {
-      const { cat, time, freq } = nliParse(inp.value);
-      const parts = [];
-      if (cat) parts.push('Category: ' + cat);
-      if (opts?.showTime && time) parts.push('Time: ' + time);
-      if (opts?.showFreq && freq) parts.push('Frequency: ' + freq + 'x/wk');
-      if (parts.length) {
-        hint.textContent = '✦ Detected — ' + parts.join(' · ') + '  (tap to apply)';
-        hint.classList.add('show');
-        hint.onclick = () => {
-          if (cat && opts?.catBtns) {
-            document.querySelectorAll('#' + opts.catBtns + ' button').forEach(b => {
-              if (b.textContent.trim() === cat) b.click();
-            });
-          }
-          if (time && opts?.timeBtns) {
-            document.querySelectorAll('#' + opts.timeBtns + ' button').forEach(b => {
-              if (b.textContent.trim() === time) b.click();
-            });
-          }
-          if (freq && opts?.freqBtns) {
-            const freqMap = {7:'Daily',5:'5x / wk',4:'4x / wk',3:'3x / wk'};
-            document.querySelectorAll('#' + opts.freqBtns + ' button').forEach(b => {
-              if (b.textContent.trim() === freqMap[freq]) b.click();
-            });
-          }
+      clearTimeout(nliTimer);
+      nliTimer = setTimeout(() => {
+        const parsed = nliParse(inp.value);
+        const { cat, time, freq } = parsed;
+        const parts = [];
+        if (cat) parts.push('Category: ' + cat);
+        if (opts.showTime && time) parts.push('Time: ' + time);
+        if (opts.showFreq && freq) parts.push('Frequency: ' + freq + 'x/wk');
+        if (parts.length) {
+          hint.textContent = '✦ Applied — ' + parts.join(' · ');
+          hint.classList.add('show');
+          nliApply(parsed, opts);
+        } else {
           hint.classList.remove('show');
-        };
-      } else {
-        hint.classList.remove('show');
-      }
+        }
+      }, 400);
     });
   }
 
@@ -3620,6 +3697,14 @@ input[type=text] {
     const banner = document.getElementById('install-banner');
     if (banner) banner.style.display = 'none';
     localStorage.setItem('stratus_install_dismissed', '1');
+  }
+
+  function doSignOut() {
+    // Clear session state (keep install-dismissed preference)
+    const installDismissed = localStorage.getItem('stratus_install_dismissed');
+    localStorage.removeItem('stratus_v1');
+    if (installDismissed) localStorage.setItem('stratus_install_dismissed', installDismissed);
+    location.reload();
   }
 </script>
 </body>
