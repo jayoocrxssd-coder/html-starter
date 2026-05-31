@@ -3159,6 +3159,7 @@ input[type=text] {
 
   // ── FOCUS MODE ────────────────────────────────────────
   var focusTotalSeconds = 0;
+  let focusSessionCount = 0;
   let focusHabitId = null;
   let focusTimerInterval = null;
   let focusSeconds = 0;
@@ -3468,8 +3469,6 @@ input[type=text] {
   }
 
   // ── DEEP WORK ANALYTICS ───────────────────────────────
-  let focusSessionCount = 0;
-
   function updateAnalytics() {
     const accent = getComputedStyle(phone).getPropertyValue('--accent').trim() || '#22c55e';
 
