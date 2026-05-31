@@ -1757,6 +1757,7 @@ input[type=text] {
 
     // remove last border
     if (list.lastChild) list.lastChild.style.borderBottom = 'none';
+    updateProductivityProfile();
   }
 
   function renderRoutineHabits() {
@@ -1784,6 +1785,7 @@ input[type=text] {
       container.appendChild(row);
     });
     if (container.lastChild) container.lastChild.style.borderBottom = 'none';
+    updateProductivityProfile();
   }
 
   function updateTaskRing() {
@@ -2158,6 +2160,7 @@ input[type=text] {
         obName: typeof obName !== 'undefined' ? obName : '',
         theme: document.getElementById('light-mode-toggle')?.classList.contains('off') ? 'dark' : 'light',
         focusTotalSeconds: focusTotalSeconds,
+        focusBlocksEnabled: focusBlocksEnabled,
       };
       localStorage.setItem(STORE_KEY, JSON.stringify(snapshot));
     } catch(e) {}
@@ -2199,6 +2202,7 @@ input[type=text] {
       }
       if (data.theme) applyTheme(data.theme);
       if (data.focusTotalSeconds) { focusTotalSeconds = data.focusTotalSeconds; updateFocusTimeStat(); }
+      if (data.focusBlocksEnabled) { focusBlocksEnabled = true; renderFocusBlocks(); }
       return true;
     } catch(e) { return false; }
   }
@@ -2890,6 +2894,9 @@ input[type=text] {
   updateTaskRing();
   updateHomeStats();
   buildCalendar();
+  updateProductivityProfile();
+  renderFocusBlocks();
+  runPriorityRecalibration();
 
   // ── ONBOARDING ────────────────────────────────────────
   let obStep = 1;
