@@ -611,10 +611,10 @@ input[type=text] {
               <div class="ring-center">
                 <svg width="54" height="54" viewBox="0 0 54 54">
                   <circle cx="27" cy="27" r="22" fill="none" stroke="#2c2c2e" stroke-width="4.5"/>
-                  <circle class="task-ring-arc" cx="27" cy="27" r="22" fill="none" stroke="var(--accent,#22c55e)" stroke-width="4.5" stroke-dasharray="88 50" stroke-linecap="round" transform="rotate(-90 27 27)"/>
+                  <circle id="home-ring-arc" cx="27" cy="27" r="22" fill="none" stroke="var(--accent,#22c55e)" stroke-width="4.5" stroke-dasharray="0 138" stroke-linecap="round" transform="rotate(-90 27 27)"/>
                 </svg>
               </div>
-              <div class="ring-num task-ring-num">4/6</div>
+              <div class="ring-num" id="home-ring-num">0/0</div>
               <div class="stat-unit" style="text-align:center">Completed</div>
             </div>
             <div class="stat-card">
@@ -818,10 +818,10 @@ input[type=text] {
               <div class="ring-center">
                 <svg width="46" height="46" viewBox="0 0 46 46">
                   <circle cx="23" cy="23" r="18" fill="none" stroke="#2c2c2e" stroke-width="4"/>
-                  <circle class="task-ring-arc" cx="23" cy="23" r="18" fill="none" stroke="var(--accent,#22c55e)" stroke-width="4" stroke-dasharray="0 113" stroke-linecap="round" transform="rotate(-90 23 23)"/>
+                  <circle id="routine-ring-arc" cx="23" cy="23" r="18" fill="none" stroke="var(--accent,#22c55e)" stroke-width="4" stroke-dasharray="0 113" stroke-linecap="round" transform="rotate(-90 23 23)"/>
                 </svg>
               </div>
-              <div class="ring-num task-ring-num">0/0</div>
+              <div class="ring-num" id="routine-ring-num">0/0</div>
               <div class="stat-unit" style="text-align:center">Completed</div>
             </div>
             <div class="stat-card">
@@ -1139,10 +1139,7 @@ input[type=text] {
     <div class="card" style="margin-bottom:10px">
       <div class="section-title" style="margin-bottom:10px">7-day completion</div>
       <div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:6px" id="an-heatmap"></div>
-      <div style="display:flex;justify-content:space-between">
-        <div style="font-size:10px;color:var(--muted)">Mon</div>
-        <div style="font-size:10px;color:var(--muted)">Sun</div>
-      </div>
+      <div id="an-heatmap-labels" style="display:flex;gap:4px"></div>
     </div>
 
     <!-- GOAL PROGRESS SUMMARY -->
@@ -1460,6 +1457,29 @@ input[type=text] {
     if (view) view.classList.add('active');
     if (viewId === 'v-analytics') updateAnalytics();
   }
+
+  // Horizontal swipe between nav tabs
+  (function() {
+    const NAV_ORDER = ['v-home','v-cal','v-routine','v-analytics','v-profile'];
+    let swipeX = 0, swipeY = 0, swipeLocked = false;
+    const screen = document.querySelector('.screen');
+    screen.addEventListener('touchstart', e => {
+      swipeX = e.touches[0].clientX;
+      swipeY = e.touches[0].clientY;
+      swipeLocked = false;
+    }, { passive: true });
+    screen.addEventListener('touchend', e => {
+      if (swipeLocked) return;
+      const dx = e.changedTouches[0].clientX - swipeX;
+      const dy = e.changedTouches[0].clientY - swipeY;
+      if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
+      const activeTab = document.querySelector('.nav-tab.active');
+      if (!activeTab) return;
+      const cur = NAV_ORDER.indexOf(activeTab.dataset.v);
+      const next = dx < 0 ? Math.min(cur + 1, NAV_ORDER.length - 1) : Math.max(cur - 1, 0);
+      if (next !== cur) sw(document.querySelector('.nav-tab[data-v="' + NAV_ORDER[next] + '"]'));
+    }, { passive: true });
+  })();
 
   // init nav state — no inline styles needed, CSS handles active color
 
@@ -1896,13 +1916,24 @@ input[type=text] {
   function updateTaskRing() {
     const total = habits.length;
     const done = total > 0 ? habits.filter(h => h.weekDone[TODAY_IDX]).length : 0;
-    const pct = total > 0 ? done / total : 0;
-    const circ = 2 * Math.PI * 22;
-    const dash = circ * pct;
-    document.querySelectorAll('.task-ring-arc').forEach(el => {
-      el.setAttribute('stroke-dasharray', dash.toFixed(1) + ' ' + (circ - dash).toFixed(1));
-    });
-    document.querySelectorAll('.task-ring-num').forEach(el => el.textContent = total > 0 ? done + '/' + total : '—');
+    const label = total > 0 ? done + '/' + total : '—';
+
+    // Home ring (r=22, circ≈138)
+    const circH = 2 * Math.PI * 22;
+    const dashH = total > 0 ? (done / total) * circH : 0;
+    const homeArc = document.getElementById('home-ring-arc');
+    const homeNum = document.getElementById('home-ring-num');
+    if (homeArc) homeArc.setAttribute('stroke-dasharray', dashH.toFixed(1) + ' ' + (circH - dashH).toFixed(1));
+    if (homeNum) homeNum.textContent = label;
+
+    // Routine ring (r=18, circ≈113)
+    const circR = 2 * Math.PI * 18;
+    const dashR = total > 0 ? (done / total) * circR : 0;
+    const routineArc = document.getElementById('routine-ring-arc');
+    const routineNum = document.getElementById('routine-ring-num');
+    if (routineArc) routineArc.setAttribute('stroke-dasharray', dashR.toFixed(1) + ' ' + (circR - dashR).toFixed(1));
+    if (routineNum) routineNum.textContent = label;
+
     const heroBody = document.getElementById('hero-habits-body');
     if (heroBody) heroBody.textContent = total === 0 ? 'Add your first habit to get started.' : 'You have ' + (total - done) + ' habit' + (total - done !== 1 ? 's' : '') + ' left for today.';
   }
@@ -2341,7 +2372,11 @@ input[type=text] {
         if (smartPingsEnabled) startSmartPings();
       }
       return true;
-    } catch(e) { return false; }
+    } catch(e) {
+      console.warn('Stratus: failed to load saved data, starting fresh.', e);
+      try { localStorage.removeItem(STORE_KEY); } catch(_) {}
+      return false;
+    }
   }
 
   // ── LIVE DATE ────────────────────────────────────────
@@ -2841,7 +2876,8 @@ input[type=text] {
         if (b.textContent.trim() === timeStr) b.click();
       });
     }
-    document.getElementById('sheet-day-label').textContent = key;
+    const [ey, em, ed] = key.split('-');
+    document.getElementById('sheet-day-label').textContent = MONTHS[parseInt(em)-1] + ' ' + parseInt(ed);
   }
 
   function pickCat(btn, cat) {
@@ -2967,7 +3003,7 @@ input[type=text] {
       if (!dragging) return;
       dragging = false;
       inner.style.transition = 'transform 0.35s cubic-bezier(.22,1,.36,1)';
-      if (curY > 120) {
+      if (curY > window.innerHeight * 0.22) {
         inner.style.transform = 'translateY(100%)';
         setTimeout(() => {
           overlay.style.display = 'none';
@@ -3073,8 +3109,16 @@ input[type=text] {
     if (e.target === this) closeAddSheet();
   });
 
+  // hoisted onboarding state so loadFromStorage can restore them
+  let obName = '';
+  let obFocuses = [];
+
   // init — load saved data first, then render
   const hadSavedData = loadFromStorage();
+  // On first launch, respect OS color scheme preference
+  if (!hadSavedData && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    applyTheme('light');
+  }
   renderHomeHabits();
   renderRoutineHabits();
   renderAllGoals();
@@ -3089,8 +3133,6 @@ input[type=text] {
 
   // ── ONBOARDING ────────────────────────────────────────
   let obStep = 1;
-  let obName = '';
-  let obFocuses = [];
 
   const FOCUS_OPTS = [
     { label: 'Fitness',  icon: '🏋️' },
@@ -3457,7 +3499,6 @@ input[type=text] {
     const status = document.getElementById('voice-status');
     const { cat, time } = nliParse(transcript);
 
-    // Clean up: remove filler words, extract task name
     const cleaned = transcript
       .replace(/\b(add|create|schedule|remind me to|i need to|i want to|put|set)\b/gi, '')
       .replace(/\b(this morning|this afternoon|tonight|today|tomorrow)\b/gi, '')
@@ -3467,25 +3508,34 @@ input[type=text] {
 
     const title = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
     if (!title || title.length < 2) {
-      if (status) status.textContent = '⚠ Could not understand — try again';
+      if (status) { status.style.display = 'block'; status.textContent = '⚠ Could not understand — try again'; }
       return;
     }
 
+    // Show confirmation step before adding
+    if (status) {
+      status.style.display = 'block';
+      status.innerHTML =
+        '<div style="margin-bottom:8px">Heard: <strong>"' + title + '"</strong><br>' +
+        '<span style="color:var(--muted);font-size:11px">' + (time || 'Anytime') + ' · ' + (cat || 'General') + '</span></div>' +
+        '<div style="display:flex;gap:6px">' +
+          '<button onclick="confirmVoiceAdd(\'' + title.replace(/'/g, "\\'") + '\',\'' + (time||'Anytime') + '\',\'' + (cat||'General') + '\')" ' +
+            'style="flex:1;padding:8px;border-radius:20px;border:none;background:var(--accent);color:#000;font-family:\'Outfit\',sans-serif;font-size:12px;font-weight:700;cursor:pointer">Add</button>' +
+          '<button onclick="document.getElementById(\'voice-status\').style.display=\'none\'" ' +
+            'style="flex:1;padding:8px;border-radius:20px;border:1px solid #3a3a3c;background:transparent;color:#8e8e93;font-family:\'Outfit\',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Discard</button>' +
+        '</div>';
+    }
+  }
+
+  function confirmVoiceAdd(title, time, cat) {
     const today = new Date();
     const key = calKey(today.getFullYear(), today.getMonth()+1, today.getDate());
     if (!calEvents[key]) calEvents[key] = [];
-    calEvents[key].push({
-      title: title,
-      meta: (time || 'Anytime') + ' · ' + (cat || 'General'),
-      accent: cat === 'Fitness',
-      fromVoice: true,
-    });
-
-    if (status) status.textContent = '✦ Added: "' + title + '" → ' + (time || 'Anytime') + ' · ' + (cat || 'General');
+    calEvents[key].push({ title, meta: time + ' · ' + cat, accent: cat === 'Fitness', fromVoice: true });
+    const status = document.getElementById('voice-status');
+    if (status) status.style.display = 'none';
     saveToStorage();
     showToast('Voice added: ' + title);
-
-    // Re-run optimize to show updated schedule
     setTimeout(() => aiOptimizeSchedule(), 400);
   }
 
@@ -3625,18 +3675,28 @@ input[type=text] {
       }
     }
 
-    // 7-day heatmap
+    // 7-day heatmap — real completionLog data, last 7 calendar days
     const heatEl = document.getElementById('an-heatmap');
+    const heatLabels = document.getElementById('an-heatmap-labels');
+    const DAY_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
     if (heatEl) {
-      heatEl.innerHTML = WEEK_LABELS.map((lbl, i) => {
+      const days = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        days.push({ key: calKey(d.getFullYear(), d.getMonth()+1, d.getDate()), label: DAY_SHORT[d.getDay()] });
+      }
+      heatEl.innerHTML = days.map(({ key }) => {
         const total = habits.length;
-        const done = total > 0 ? habits.filter(h => h.weekDone[i]).length : 0;
+        const done = total > 0 ? habits.filter(h => h.completionLog && h.completionLog[key]).length : 0;
         const rate = total > 0 ? done / total : 0;
-        const h = Math.max(8, Math.round(rate * 52));
-        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;justify-content:flex-end">
-          <div style="width:100%;height:${h}px;border-radius:4px 4px 0 0;background:${rate >= 0.7 ? accent : rate >= 0.4 ? accent + '66' : 'var(--card2)'};transition:height 0.4s cubic-bezier(.22,1,.36,1)"></div>
+        const barH = Math.max(8, Math.round(rate * 52));
+        return `<div style="flex:1;height:100%;display:flex;align-items:flex-end">
+          <div style="width:100%;height:${barH}px;border-radius:4px 4px 0 0;background:${rate >= 0.7 ? accent : rate >= 0.4 ? accent + '66' : 'var(--card2)'};transition:height 0.4s cubic-bezier(.22,1,.36,1)"></div>
         </div>`;
       }).join('');
+      if (heatLabels) heatLabels.innerHTML = days.map(({ label }) =>
+        `<div style="flex:1;font-size:9px;color:var(--muted);text-align:center;font-weight:500">${label}</div>`
+      ).join('');
     }
 
     // Goal progress summary
