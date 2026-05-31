@@ -176,11 +176,6 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-size: 13px;
 }
-.nav-badge {
-  margin-left: auto; font-size: 9px; font-weight: 700;
-  background: var(--red); color: #fff;
-  padding: 2px 6px; border-radius: 100px; min-width: 18px; text-align: center;
-}
 .sidebar-bottom {
   margin-top: auto;
   padding: 16px;
@@ -284,14 +279,7 @@ body {
 }
 .stat-delta {
   font-size: 10px; font-family: 'DM Mono', monospace;
-  display: flex; align-items: center; gap: 4px;
-}
-.stat-delta.up { color: var(--green); }
-.stat-delta.down { color: var(--red); }
-.stat-delta.neutral { color: var(--ink3); }
-.stat-sparkline {
-  position: absolute; bottom: 0; right: 0;
-  opacity: .18;
+  color: var(--ink3);
 }
 
 /* ── Row layout ─────────────────────────────────────── */
@@ -350,40 +338,6 @@ body {
   transition: width .6s cubic-bezier(.4,0,.2,1);
 }
 
-/* ── Feed ───────────────────────────────────────────── */
-.feed-item {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 12px 0;
-  border-bottom: 0.5px solid var(--border);
-}
-.feed-item:last-child { border-bottom: none; }
-.feed-avatar {
-  width: 28px; height: 28px; border-radius: 50%;
-  background: var(--bg3); border: 0.5px solid var(--border2);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700; color: var(--ink); flex-shrink: 0;
-}
-.feed-info { flex: 1; min-width: 0; }
-.feed-name {
-  font-size: 12px; font-weight: 600; color: var(--ink);
-  margin-bottom: 2px;
-}
-.feed-detail {
-  font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink3);
-}
-.feed-time {
-  font-size: 9px; font-family: 'DM Mono', monospace;
-  color: var(--ink3); white-space: nowrap; flex-shrink: 0;
-}
-.plan-chip {
-  display: inline-flex; align-items: center;
-  font-size: 8px; font-weight: 700; letter-spacing: .1em;
-  text-transform: uppercase; padding: 2px 7px; border-radius: 100px;
-}
-.plan-chip.free    { background: rgba(90,176,248,.1);  color: var(--blue);   border: 0.5px solid rgba(90,176,248,.2); }
-.plan-chip.pro     { background: rgba(156,110,232,.1); color: var(--violet); border: 0.5px solid rgba(156,110,232,.2); }
-.plan-chip.enterprise { background: rgba(240,176,48,.1); color: var(--amber); border: 0.5px solid rgba(240,176,48,.2); }
-
 /* ── Table ──────────────────────────────────────────── */
 .table-wrap { overflow-x: auto; }
 table {
@@ -430,6 +384,16 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
 .badge-dot {
   width: 5px; height: 5px; border-radius: 50%; background: currentColor;
 }
+
+/* ── Plan Chip ──────────────────────────────────────── */
+.plan-chip {
+  display: inline-flex; align-items: center;
+  font-size: 8px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 2px 7px; border-radius: 100px;
+}
+.plan-chip.free       { background: rgba(90,176,248,.1);  color: var(--blue);   border: 0.5px solid rgba(90,176,248,.2); }
+.plan-chip.pro        { background: rgba(156,110,232,.1); color: var(--violet); border: 0.5px solid rgba(156,110,232,.2); }
+.plan-chip.enterprise { background: rgba(240,176,48,.1);  color: var(--amber);  border: 0.5px solid rgba(240,176,48,.2); }
 
 /* ── Toolbar ────────────────────────────────────────── */
 .toolbar {
@@ -556,24 +520,12 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
 .rev-stat-grid {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;
 }
-.transaction-type {
-  display: flex; align-items: center; gap: 8px;
-}
-.tx-icon {
-  width: 28px; height: 28px; border-radius: 7px;
-  display: flex; align-items: center; justify-content: center; font-size: 12px;
-  flex-shrink: 0;
-}
-.tx-icon.in  { background: rgba(61,224,144,.1); }
-.tx-icon.out { background: rgba(240,104,96,.1); }
-.tx-icon.ref { background: rgba(240,176,48,.1); }
 
 /* ── Activity ───────────────────────────────────────── */
 .activity-feed { padding: 0 20px; }
 .activity-item {
   display: flex; align-items: flex-start; gap: 14px;
   padding: 14px 0; border-bottom: 0.5px solid var(--border);
-  position: relative;
 }
 .activity-item:last-child { border-bottom: none; }
 .activity-icon {
@@ -619,8 +571,11 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
 /* ── Empty State ────────────────────────────────────── */
 .empty-state {
   text-align: center; padding: 48px 20px;
-  color: var(--ink3); font-size: 12px; font-family: 'DM Mono', monospace;
+  color: var(--ink3); font-size: 11px; font-family: 'DM Mono', monospace;
+  line-height: 2;
 }
+.empty-state-icon { font-size: 28px; display: block; margin-bottom: 12px; opacity: .4; }
+.empty-state-label { color: var(--ink2); font-size: 13px; font-weight: 600; font-family: 'Syne', sans-serif; display: block; margin-bottom: 6px; }
 
 /* ── Toast ──────────────────────────────────────────── */
 .toast {
@@ -640,9 +595,7 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
 .toast-icon { font-size: 14px; flex-shrink: 0; }
 
 /* ── Page Header ────────────────────────────────────── */
-.page-header {
-  margin-bottom: 24px;
-}
+.page-header { margin-bottom: 24px; }
 .page-title {
   font-size: 20px; font-weight: 800; letter-spacing: -.02em; color: var(--ink);
   margin-bottom: 4px;
@@ -730,7 +683,6 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
     </button>
     <button class="nav-item" onclick="nav('activity', this)">
       <span class="nav-icon">◎</span> Activity
-      <span class="nav-badge" id="activity-badge">12</span>
     </button>
 
     <div class="sidebar-section-label">Team</div>
@@ -770,41 +722,29 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
       <div class="view active" id="view-overview">
         <div class="page-header">
           <div class="page-title">Overview</div>
-          <div class="page-sub">Platform health · Updated just now</div>
+          <div class="page-sub">Platform health · Connect your data source to populate</div>
         </div>
 
         <div class="stat-grid">
           <div class="stat-card">
             <div class="stat-label">Total Users</div>
-            <div class="stat-value">2,847</div>
-            <div class="stat-delta up">▲ 14.2% vs last month</div>
-            <svg class="stat-sparkline" width="80" height="40" viewBox="0 0 80 40">
-              <polyline points="0,35 13,28 26,32 39,18 52,22 65,10 80,14" fill="none" stroke="#3de090" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <div class="stat-value" id="stat-total-users">—</div>
+            <div class="stat-delta" id="stat-total-users-delta">No data yet</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Active This Week</div>
-            <div class="stat-value">1,204</div>
-            <div class="stat-delta up">▲ 8.7% vs last week</div>
-            <svg class="stat-sparkline" width="80" height="40" viewBox="0 0 80 40">
-              <polyline points="0,30 13,24 26,28 39,20 52,16 65,18 80,12" fill="none" stroke="#5ab0f8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <div class="stat-value" id="stat-active">—</div>
+            <div class="stat-delta" id="stat-active-delta">No data yet</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">MRR</div>
-            <div class="stat-value">$18,240</div>
-            <div class="stat-delta up">▲ $1,840 vs last month</div>
-            <svg class="stat-sparkline" width="80" height="40" viewBox="0 0 80 40">
-              <polyline points="0,38 13,32 26,30 39,22 52,18 65,12 80,8" fill="none" stroke="#f0b030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <div class="stat-value" id="stat-mrr">—</div>
+            <div class="stat-delta" id="stat-mrr-delta">No data yet</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Churn Rate</div>
-            <div class="stat-value">2.1%</div>
-            <div class="stat-delta down">▼ 0.3% vs last month</div>
-            <svg class="stat-sparkline" width="80" height="40" viewBox="0 0 80 40">
-              <polyline points="0,10 13,14 26,12 39,18 52,16 65,20 80,22" fill="none" stroke="#f06860" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <div class="stat-value" id="stat-churn">—</div>
+            <div class="stat-delta" id="stat-churn-delta">No data yet</div>
           </div>
         </div>
 
@@ -815,8 +755,12 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
               <div class="panel-hint">MRR trend</div>
             </div>
             <div class="panel-body">
-              <div class="chart-wrap">
-                <svg id="rev-chart" viewBox="0 0 600 160" preserveAspectRatio="none"></svg>
+              <div class="chart-wrap" id="rev-chart-wrap">
+                <div class="empty-state">
+                  <span class="empty-state-icon">◈</span>
+                  <span class="empty-state-label">No revenue data yet</span>
+                  Connect Stripe to see your MRR timeline
+                </div>
               </div>
             </div>
           </div>
@@ -825,38 +769,19 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
               <div class="panel-title">Plan Mix</div>
               <div class="panel-hint">All users</div>
             </div>
-            <div class="panel-body">
-              <div class="plan-bar-row">
-                <div class="plan-bar-meta">
-                  <span class="plan-bar-label">Free</span>
-                  <span class="plan-bar-count">1,680 · 59%</span>
-                </div>
-                <div class="plan-bar-track">
-                  <div class="plan-bar-fill" style="width:59%;background:var(--blue)"></div>
-                </div>
+            <div class="panel-body" id="plan-mix-body">
+              <div class="empty-state" style="padding:24px 0">
+                <span class="empty-state-icon">◉</span>
+                <span class="empty-state-label">No users yet</span>
+                Plan breakdown appears once users sign up
               </div>
-              <div class="plan-bar-row">
-                <div class="plan-bar-meta">
-                  <span class="plan-bar-label">Pro</span>
-                  <span class="plan-bar-count">1,002 · 35%</span>
-                </div>
-                <div class="plan-bar-track">
-                  <div class="plan-bar-fill" style="width:35%;background:var(--violet)"></div>
-                </div>
-              </div>
-              <div class="plan-bar-row">
-                <div class="plan-bar-meta">
-                  <span class="plan-bar-label">Enterprise</span>
-                  <span class="plan-bar-count">165 · 6%</span>
-                </div>
-                <div class="plan-bar-track">
-                  <div class="plan-bar-fill" style="width:6%;background:var(--amber)"></div>
-                </div>
-              </div>
-
               <div style="margin-top:20px">
-                <div class="detail-section-title">New Signups</div>
-                <div id="signup-feed"></div>
+                <div class="detail-section-title">Recent Signups</div>
+                <div id="signup-feed">
+                  <div class="empty-state" style="padding:16px 0;font-size:10px">
+                    No signups yet
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -869,8 +794,12 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
               <div class="panel-hint">Daily new users</div>
             </div>
             <div class="panel-body">
-              <div class="chart-wrap" style="height:120px">
-                <svg id="signup-chart" viewBox="0 0 600 120" preserveAspectRatio="none"></svg>
+              <div class="chart-wrap" style="height:120px" id="signup-chart-wrap">
+                <div class="empty-state" style="padding:12px 0">
+                  <span class="empty-state-icon" style="font-size:20px">⬡</span>
+                  <span class="empty-state-label" style="font-size:12px">No signup data yet</span>
+                  Daily signups appear here once users join
+                </div>
               </div>
             </div>
           </div>
@@ -881,27 +810,27 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
             <div class="panel-body" style="padding:0">
               <div class="detail-row" style="padding:12px 20px">
                 <span class="detail-row-label">ARR</span>
-                <span class="detail-row-value" style="color:var(--green)">$218,880</span>
+                <span class="detail-row-value" id="qs-arr" style="color:var(--green)">—</span>
               </div>
               <div class="detail-row" style="padding:12px 20px">
                 <span class="detail-row-label">Avg Revenue / User</span>
-                <span class="detail-row-value">$6.40</span>
+                <span class="detail-row-value" id="qs-arpu">—</span>
               </div>
               <div class="detail-row" style="padding:12px 20px">
                 <span class="detail-row-label">Trial Conversions</span>
-                <span class="detail-row-value" style="color:var(--blue)">34.2%</span>
+                <span class="detail-row-value" id="qs-conv" style="color:var(--blue)">—</span>
               </div>
               <div class="detail-row" style="padding:12px 20px">
                 <span class="detail-row-label">Failed Payments</span>
-                <span class="detail-row-value" style="color:var(--red)">18</span>
+                <span class="detail-row-value" id="qs-failed" style="color:var(--red)">—</span>
               </div>
               <div class="detail-row" style="padding:12px 20px">
                 <span class="detail-row-label">Refunds (30d)</span>
-                <span class="detail-row-value" style="color:var(--amber)">$420</span>
+                <span class="detail-row-value" id="qs-refunds" style="color:var(--amber)">—</span>
               </div>
               <div class="detail-row" style="padding:12px 20px;border-bottom:none">
                 <span class="detail-row-label">Support Tickets</span>
-                <span class="detail-row-value">7 open</span>
+                <span class="detail-row-value" id="qs-tickets">—</span>
               </div>
             </div>
           </div>
@@ -928,7 +857,7 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
               <button class="filter-chip" onclick="setFilter('suspended',this)">Suspended</button>
             </div>
             <div class="toolbar-right">
-              <div class="icon-btn" title="Export CSV" onclick="toast('CSV export coming soon','📥')">⇩</div>
+              <div class="icon-btn" title="Export CSV" onclick="toast('CSV export — connect data source first','📥')">⇩</div>
             </div>
           </div>
           <div class="table-wrap">
@@ -944,11 +873,21 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="users-tbody"></tbody>
+              <tbody id="users-tbody">
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state">
+                      <span class="empty-state-icon">◉</span>
+                      <span class="empty-state-label">No users yet</span>
+                      Users will appear here once they sign up for WAR ROOM
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
           <div style="padding:12px 20px;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between">
-            <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)" id="users-count">— users</div>
+            <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)" id="users-count">0 users</div>
             <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)">Page 1 of 1</div>
           </div>
         </div>
@@ -964,18 +903,18 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
         <div class="rev-stat-grid">
           <div class="stat-card">
             <div class="stat-label">MRR</div>
-            <div class="stat-value">$18,240</div>
-            <div class="stat-delta up">▲ 11.2% month-over-month</div>
+            <div class="stat-value">—</div>
+            <div class="stat-delta">Connect Stripe to populate</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">New MRR (30d)</div>
-            <div class="stat-value">$3,120</div>
-            <div class="stat-delta up">▲ from 26 upgrades</div>
+            <div class="stat-value">—</div>
+            <div class="stat-delta">No data yet</div>
           </div>
           <div class="stat-card">
             <div class="stat-label">Churned MRR (30d)</div>
-            <div class="stat-value">$840</div>
-            <div class="stat-delta down">▼ 7 cancellations</div>
+            <div class="stat-value">—</div>
+            <div class="stat-delta">No data yet</div>
           </div>
         </div>
 
@@ -986,7 +925,11 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
           </div>
           <div class="panel-body">
             <div class="chart-wrap" style="height:180px">
-              <svg id="rev-chart-full" viewBox="0 0 800 180" preserveAspectRatio="none"></svg>
+              <div class="empty-state">
+                <span class="empty-state-icon">◈</span>
+                <span class="empty-state-label">No revenue data yet</span>
+                Wire up Stripe webhooks to see your MRR timeline here
+              </div>
             </div>
           </div>
         </div>
@@ -1009,16 +952,32 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody id="tx-tbody"></tbody>
+                <tbody id="tx-tbody">
+                  <tr>
+                    <td colspan="6">
+                      <div class="empty-state">
+                        <span class="empty-state-icon">◈</span>
+                        <span class="empty-state-label">No transactions yet</span>
+                        Transactions appear here once payments are processed
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
               </table>
             </div>
           </div>
           <div class="panel panel-sm">
             <div class="panel-header">
               <div class="panel-title">Failed Payments</div>
-              <span class="badge failed"><span class="badge-dot"></span>18 pending</span>
+              <span class="badge inactive"><span class="badge-dot"></span>0 pending</span>
             </div>
-            <div style="padding:0" id="failed-payments-list"></div>
+            <div id="failed-payments-list">
+              <div class="empty-state" style="padding:32px 20px">
+                <span class="empty-state-icon" style="font-size:20px">✓</span>
+                <span class="empty-state-label" style="font-size:12px">All clear</span>
+                No failed payments on record
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1027,7 +986,7 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
       <div class="view" id="view-activity">
         <div class="page-header">
           <div class="page-title">Activity</div>
-          <div class="page-sub">Live platform events · Auto-refreshes every 30s</div>
+          <div class="page-sub">Live platform events · Connect your data source to stream events</div>
         </div>
         <div class="panel">
           <div class="toolbar" style="justify-content:space-between">
@@ -1040,10 +999,16 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
             </div>
             <div style="display:flex;align-items:center;gap:8px">
               <div class="status-dot"></div>
-              <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)">Live</span>
+              <span style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)">Listening</span>
             </div>
           </div>
-          <div class="activity-feed" id="activity-feed"></div>
+          <div class="activity-feed" id="activity-feed">
+            <div class="empty-state" style="padding:48px 0">
+              <span class="empty-state-icon">◎</span>
+              <span class="empty-state-label">No activity yet</span>
+              Events stream here as users sign up, upgrade, cancel, and transact
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1058,7 +1023,7 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
           <div class="panel">
             <div class="panel-header">
               <div class="panel-title">Team Access</div>
-              <div class="panel-hint" style="font-size:9px">3 active workers</div>
+              <div class="panel-hint" style="font-size:9px" id="workers-count-hint">3 active workers</div>
             </div>
             <div class="table-wrap">
               <table>
@@ -1067,7 +1032,6 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
                     <th>Worker</th>
                     <th>Role</th>
                     <th>Last Login</th>
-                    <th>Actions Today</th>
                     <th>Access</th>
                   </tr>
                 </thead>
@@ -1078,7 +1042,7 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
           <div class="panel panel-sm">
             <div class="panel-header">
               <div class="panel-title">Credentials</div>
-              <div class="panel-hint">Mock — replace before launch</div>
+              <div class="panel-hint">Replace before launch</div>
             </div>
             <div class="panel-body" style="padding:0">
               <div class="detail-row" style="padding:12px 20px;flex-direction:column;align-items:flex-start;gap:4px">
@@ -1115,7 +1079,17 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
                   <th>Time</th>
                 </tr>
               </thead>
-              <tbody id="audit-tbody"></tbody>
+              <tbody id="audit-tbody">
+                <tr>
+                  <td colspan="4">
+                    <div class="empty-state">
+                      <span class="empty-state-icon" style="font-size:20px">◎</span>
+                      <span class="empty-state-label" style="font-size:12px">No actions logged yet</span>
+                      Worker actions will appear here as the team uses the portal
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
@@ -1154,9 +1128,9 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
       <div class="detail-section">
         <div class="detail-section-title">Actions</div>
         <div class="detail-actions">
-          <button class="detail-action-btn primary" onclick="toast('Plan change flow coming with Stripe integration','◈')">Change Plan</button>
-          <button class="detail-action-btn" onclick="toast('Impersonation session started — view only','👁')">Impersonate User</button>
-          <button class="detail-action-btn" onclick="toast('Password reset email sent','✉')">Send Password Reset</button>
+          <button class="detail-action-btn primary" onclick="toast('Plan change — wire up Stripe billing first','◈')">Change Plan</button>
+          <button class="detail-action-btn" onclick="toast('Impersonation requires Supabase auth integration','👁')">Impersonate User</button>
+          <button class="detail-action-btn" onclick="toast('Password reset requires email provider integration','✉')">Send Password Reset</button>
           <button class="detail-action-btn danger" id="dp-suspend-btn" onclick="handleSuspend()">Suspend Account</button>
         </div>
       </div>
@@ -1166,117 +1140,32 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
 
 <script>
 // ══════════════════════════════════════════
-// MOCK DATA
+// WORKER CREDENTIALS (replace before launch)
 // ══════════════════════════════════════════
-
 const WORKERS = [
   { email: 'admin@warroom.app',   pass: 'warroom2026', name: 'Command Admin',  role: 'owner',   initials: 'CA' },
   { email: 'ops@warroom.app',     pass: 'ops2026',     name: 'Ops Lead',       role: 'ops',     initials: 'OL' },
   { email: 'support@warroom.app', pass: 'support2026', name: 'Support Agent',  role: 'support', initials: 'SA' },
 ];
 
-const PLANS = ['free','pro','enterprise'];
-const STATUSES = ['active','active','active','active','inactive','suspended'];
-const FIRST = ['Marcus','Jordan','Priya','Devon','Aaliyah','Tyler','Simone','Elijah','Nina','Cole','Zara','Andre','Luna','Mia','Remy','Sage','Dante','Lyra','Omar','Cleo'];
-const LAST  = ['Webb','Chen','Okafor','Rivera','Stone','Park','Nakamura','Torres','Patel','Grant','Ellis','Kim','Vasquez','Osei','Brooks','Huang','Carter','Diaz','Williams','Ahmad'];
-
-function rnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-function pickFrom(arr){ return arr[rnd(0,arr.length-1)]; }
-
-function genUsers(n){
-  const out=[];
-  const now=Date.now();
-  for(let i=0;i<n;i++){
-    const fn=pickFrom(FIRST), ln=pickFrom(LAST);
-    const joinOffset=rnd(1,365)*86400000;
-    const lastOffset=rnd(0,30)*86400000;
-    const plan=PLANS[rnd(0,PLANS.length-1)];
-    out.push({
-      id: i+1,
-      name: fn+' '+ln,
-      email: fn.toLowerCase()+'.'+ln.toLowerCase()+'@'+pickFrom(['gmail.com','icloud.com','outlook.com','yahoo.com']),
-      plan,
-      joined: new Date(now-joinOffset).toISOString().slice(0,10),
-      lastActive: new Date(now-lastOffset).toISOString().slice(0,10),
-      status: plan==='suspended'?'suspended':pickFrom(STATUSES),
-      biz: rnd(1,8), missions: rnd(2,40), exports: rnd(0,15), axis: rnd(0,200),
-    });
-  }
-  return out;
-}
-
-const USERS = genUsers(120);
-
-const ACTIVITY_EVENTS = (() => {
-  const types=[
-    {t:'signup',  icon:'signup',  label:'New signup'},
-    {t:'upgrade', icon:'upgrade', label:'Plan upgrade'},
-    {t:'cancel',  icon:'cancel',  label:'Cancellation'},
-    {t:'payment', icon:'payment', label:'Payment'},
-    {t:'login',   icon:'login',   label:'Login'},
-    {t:'export',  icon:'export',  label:'Data export'},
-  ];
-  const evts=[];
-  const now=Date.now();
-  for(let i=0;i<60;i++){
-    const u=USERS[rnd(0,USERS.length-1)];
-    const tp=pickFrom(types);
-    const mins=rnd(0,2880);
-    let detail='';
-    if(tp.t==='signup') detail='Joined on '+u.plan+' plan';
-    else if(tp.t==='upgrade') detail='Free → '+pickFrom(['Pro','Enterprise']);
-    else if(tp.t==='cancel') detail='Cancelled '+u.plan+' plan';
-    else if(tp.t==='payment') detail='$'+pickFrom([9,19,49,99])+'.00 charged';
-    else if(tp.t==='login') detail='Web session started';
-    else if(tp.t==='export') detail='P&L CSV downloaded';
-    evts.push({ user:u.name, type:tp.t, icon:tp.icon, detail, mins });
-  }
-  return evts.sort((a,b)=>a.mins-b.mins);
-})();
-
-const TRANSACTIONS = (() => {
-  const txs=[];
-  const statuses=['paid','paid','paid','failed','refunded'];
-  for(let i=0;i<30;i++){
-    const u=USERS[rnd(0,USERS.length-1)];
-    const plan=u.plan;
-    const amount=plan==='enterprise'?99:plan==='pro'?19:0;
-    const days=rnd(0,30);
-    txs.push({ user:u.name, plan, amount:'$'+amount+'.00', date:daysAgo(days), status:pickFrom(statuses) });
-  }
-  return txs;
-})();
-
-const FAILED_PAYMENTS = TRANSACTIONS.filter(t=>t.status==='failed').slice(0,8);
-
-const AUDIT_LOG = [
-  { worker:'Command Admin', action:'Suspended account',      target:'user #847', time:'2 min ago' },
-  { worker:'Ops Lead',      action:'Changed plan',           target:'user #1203', time:'14 min ago' },
-  { worker:'Support Agent', action:'Sent password reset',    target:'user #392',  time:'31 min ago' },
-  { worker:'Command Admin', action:'Exported user CSV',      target:'All users',  time:'1 hr ago' },
-  { worker:'Ops Lead',      action:'Toggled worker access',  target:'Support Agent', time:'2 hrs ago' },
-  { worker:'Support Agent', action:'Impersonated session',   target:'user #558',  time:'3 hrs ago' },
-  { worker:'Command Admin', action:'Viewed revenue report',  target:'May 2026',   time:'4 hrs ago' },
-];
+// ══════════════════════════════════════════
+// DATA STORE
+// These arrays are empty — populate via your
+// Supabase / Stripe integration at launch.
+// ══════════════════════════════════════════
+const USERS        = [];
+const TRANSACTIONS = [];
+const ACTIVITY_EVENTS = [];
 
 const WORKER_TABLE = [
-  { name:'Command Admin',  email:'admin@warroom.app',   role:'owner',   last:'Just now',    actions:14, on:true  },
-  { name:'Ops Lead',       email:'ops@warroom.app',     role:'ops',     last:'18 min ago',  actions:7,  on:true  },
-  { name:'Support Agent',  email:'support@warroom.app', role:'support', last:'41 min ago',  actions:3,  on:true  },
+  { name:'Command Admin',  email:'admin@warroom.app',   role:'owner',   last:'—', on:true  },
+  { name:'Ops Lead',       email:'ops@warroom.app',     role:'ops',     last:'—', on:true  },
+  { name:'Support Agent',  email:'support@warroom.app', role:'support', last:'—', on:true  },
 ];
 
 // ══════════════════════════════════════════
 // HELPERS
 // ══════════════════════════════════════════
-function daysAgo(n){
-  const d=new Date(Date.now()-n*86400000);
-  return d.toISOString().slice(0,10);
-}
-function fmtMins(m){
-  if(m<60) return m+'m ago';
-  if(m<1440) return Math.floor(m/60)+'h ago';
-  return Math.floor(m/1440)+'d ago';
-}
 function initials(name){ return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
 function planChip(p){ return `<span class="plan-chip ${p}">${p}</span>`; }
 function statusBadge(s){ return `<span class="badge ${s}"><span class="badge-dot"></span>${s}</span>`; }
@@ -1301,33 +1190,25 @@ function doLogin(){
   currentWorker = worker;
   err.textContent = '';
 
-  // Populate sidebar
   document.getElementById('sidebar-avatar').textContent = worker.initials;
   document.getElementById('sidebar-name').textContent   = worker.name;
   document.getElementById('sidebar-role').textContent   = worker.role;
 
-  // Show app
-  document.getElementById('auth-gate').style.display = 'none';
-  const app = document.getElementById('app');
-  app.classList.add('visible');
+  // Log login time on worker table entry
+  const wEntry = WORKER_TABLE.find(w => w.email === worker.email);
+  if(wEntry) wEntry.last = 'Just now';
 
-  // Boot data
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('app').classList.add('visible');
+
   updateDate();
-  renderRevChart('rev-chart', 30, 400, 160);
-  renderRevChart('rev-chart-full', 30, 600, 180);
-  renderBarChart();
-  renderSignupFeed();
-  renderUsers();
-  renderTransactions();
-  renderFailedPayments();
-  renderActivity();
   renderWorkers();
-  renderAuditLog();
+  renderUsers();
 
   // Support role — restrict revenue tab
   if(worker.role === 'support'){
     document.querySelectorAll('.nav-item').forEach(btn => {
-      if(btn.textContent.includes('Revenue')){
+      if(btn.textContent.trim().startsWith('◈') && btn.textContent.includes('Revenue')){
         btn.style.opacity = '.3';
         btn.style.pointerEvents = 'none';
       }
@@ -1362,119 +1243,21 @@ function nav(section, btn){
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('view-'+section).classList.add('active');
   btn.classList.add('active');
-
   const [title, sub] = TOPBAR_META[section];
   document.getElementById('topbar-title').textContent = title;
   document.getElementById('topbar-sub').textContent   = sub;
-
-  if(section === 'activity'){
-    document.getElementById('activity-badge').style.display = 'none';
-  }
   closeSidebar();
-
-  if(section === 'revenue'){
-    setTimeout(()=>{ renderRevChart('rev-chart-full', 30, 800, 180); }, 50);
-  }
 }
 
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('open');
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); }
+function closeSidebar()  { document.getElementById('sidebar').classList.remove('open'); }
 
 // ══════════════════════════════════════════
 // DATE
 // ══════════════════════════════════════════
 function updateDate(){
-  const now = new Date();
   document.getElementById('topbar-date').textContent =
-    now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-}
-
-// ══════════════════════════════════════════
-// CHARTS
-// ══════════════════════════════════════════
-function renderRevChart(id, days, W, H){
-  const el = document.getElementById(id);
-  if(!el) return;
-
-  // Generate mock MRR data
-  const vals = [];
-  let base = 14800;
-  for(let i=0;i<days;i++){
-    base += rnd(-120, 320);
-    vals.push(Math.max(12000, base));
-  }
-
-  const min = Math.min(...vals) * 0.97;
-  const max = Math.max(...vals) * 1.02;
-  const pad = { t:12, r:8, b:8, l:8 };
-  const cw = W - pad.l - pad.r;
-  const ch = H - pad.t - pad.b;
-
-  const pts = vals.map((v, i) => {
-    const x = pad.l + (i / (vals.length-1)) * cw;
-    const y = pad.t + ch - ((v - min) / (max - min)) * ch;
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
-
-  // Area fill
-  const firstX = pad.l.toFixed(1);
-  const lastX  = (pad.l + cw).toFixed(1);
-  const baseY  = (pad.t + ch).toFixed(1);
-  const area   = `${firstX},${baseY} ${pts} ${lastX},${baseY}`;
-
-  el.innerHTML = `
-    <defs>
-      <linearGradient id="grad-${id}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#f0b030" stop-opacity=".25"/>
-        <stop offset="100%" stop-color="#f0b030" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <polygon points="${area}" fill="url(#grad-${id})"/>
-    <polyline points="${pts}" fill="none" stroke="#f0b030" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-  `;
-}
-
-function renderBarChart(){
-  const el = document.getElementById('signup-chart');
-  if(!el) return;
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const vals = [28,42,37,55,61,33,48];
-  const W=600, H=120;
-  const max=Math.max(...vals);
-  const barW = 60, gap = (W - days.length*barW) / (days.length+1);
-
-  let html='';
-  days.forEach((d,i)=>{
-    const x = gap + i*(barW+gap);
-    const bh = (vals[i]/max)*(H-30);
-    const y  = H - bh - 20;
-    const col = i===4?'#5ab0f8':'#3de090';
-    html += `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="4" fill="${col}" opacity="${i===4?1:.65}"/>`;
-    html += `<text x="${x+barW/2}" y="${H-4}" text-anchor="middle" fill="#5a5a58" font-size="12" font-family="DM Mono,monospace">${d}</text>`;
-    html += `<text x="${x+barW/2}" y="${y-5}" text-anchor="middle" fill="#9a9a98" font-size="11" font-family="DM Mono,monospace">${vals[i]}</text>`;
-  });
-  el.innerHTML = html;
-}
-
-// ══════════════════════════════════════════
-// SIGNUP FEED
-// ══════════════════════════════════════════
-function renderSignupFeed(){
-  const recent = USERS.slice(0,5);
-  const el = document.getElementById('signup-feed');
-  el.innerHTML = recent.map(u => `
-    <div class="feed-item">
-      <div class="feed-avatar">${initials(u.name)}</div>
-      <div class="feed-info">
-        <div class="feed-name">${u.name}</div>
-        <div class="feed-detail">${planChip(u.plan)} · ${u.joined}</div>
-      </div>
-    </div>
-  `).join('');
+    new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
 }
 
 // ══════════════════════════════════════════
@@ -1486,65 +1269,70 @@ let userSort   = { key: 'joined', dir: -1 };
 function renderUsers(){
   let list = [...USERS];
 
-  // Filter
   if(userFilter !== 'all'){
     list = list.filter(u =>
       userFilter === 'suspended' ? u.status === 'suspended' : u.plan === userFilter
     );
   }
 
-  // Search
   const q = (document.getElementById('user-search')?.value || '').toLowerCase();
   if(q) list = list.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
 
-  // Sort
   list.sort((a,b)=>{
     const av = a[userSort.key]||'', bv = b[userSort.key]||'';
     return av < bv ? -userSort.dir : av > bv ? userSort.dir : 0;
   });
 
   const tbody = document.getElementById('users-tbody');
-  tbody.innerHTML = list.map(u => `
-    <tr onclick="openDetail(${u.id})">
-      <td class="primary">
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="width:24px;height:24px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--ink);flex-shrink:0">${initials(u.name)}</div>
-          ${u.name}
-        </div>
-      </td>
-      <td class="mono">${u.email}</td>
-      <td>${planChip(u.plan)}</td>
-      <td class="mono">${u.joined}</td>
-      <td class="mono">${u.lastActive}</td>
-      <td>${statusBadge(u.status)}</td>
-      <td onclick="event.stopPropagation()">
-        <div class="row-actions">
-          <button class="action-btn" onclick="openDetail(${u.id})">View</button>
-          <button class="action-btn" onclick="toast('Plan change flow coming soon','◈')">Plan</button>
-          <button class="action-btn danger" onclick="suspendUser(${u.id})">Suspend</button>
-        </div>
-      </td>
-    </tr>
-  `).join('') || `<tr><td colspan="7"><div class="empty-state">No users match this filter.</div></td></tr>`;
+  if(list.length === 0){
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+      <span class="empty-state-icon">◉</span>
+      <span class="empty-state-label">${userFilter==='all'?'No users yet':'No users match this filter'}</span>
+      ${userFilter==='all'?'Users appear here once they sign up for WAR ROOM':'Try a different filter or search term'}
+    </div></td></tr>`;
+  } else {
+    tbody.innerHTML = list.map(u => `
+      <tr onclick="openDetail(${u.id})">
+        <td class="primary">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--ink);flex-shrink:0">${initials(u.name)}</div>
+            ${u.name}
+          </div>
+        </td>
+        <td class="mono">${u.email}</td>
+        <td>${planChip(u.plan)}</td>
+        <td class="mono">${u.joined}</td>
+        <td class="mono">${u.lastActive}</td>
+        <td>${statusBadge(u.status)}</td>
+        <td onclick="event.stopPropagation()">
+          <div class="row-actions">
+            <button class="action-btn" onclick="openDetail(${u.id})">View</button>
+            <button class="action-btn" onclick="toast('Plan change — wire up Stripe billing first','◈')">Plan</button>
+            <button class="action-btn danger" onclick="suspendUser(${u.id})">Suspend</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
 
-  document.getElementById('users-count').textContent = `${list.length} of ${USERS.length} users`;
+  document.getElementById('users-count').textContent =
+    list.length === USERS.length
+      ? `${USERS.length} users`
+      : `${list.length} of ${USERS.length} users`;
 }
 
 function setFilter(f, btn){
   userFilter = f;
-  document.querySelectorAll('.filter-chips .filter-chip').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('#view-users .filter-chips .filter-chip').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
   renderUsers();
 }
-
 function filterUsers(){ renderUsers(); }
 
 function sortUsers(key, th){
   if(userSort.key === key) userSort.dir *= -1;
   else { userSort.key = key; userSort.dir = 1; }
-  document.querySelectorAll('thead th').forEach(t=>{
-    t.classList.remove('sort-asc','sort-desc');
-  });
+  document.querySelectorAll('#view-users thead th').forEach(t=>t.classList.remove('sort-asc','sort-desc'));
   th.classList.add(userSort.dir===1?'sort-asc':'sort-desc');
   renderUsers();
 }
@@ -1566,22 +1354,19 @@ function openDetail(id){
   const u = USERS.find(u=>u.id===id);
   if(!u) return;
   detailUserId = id;
-
-  document.getElementById('dp-avatar').textContent  = initials(u.name);
-  document.getElementById('dp-name').textContent    = u.name;
-  document.getElementById('dp-email').textContent   = u.email;
-  document.getElementById('dp-plan').textContent    = u.plan;
-  document.getElementById('dp-status').textContent  = u.status;
-  document.getElementById('dp-joined').textContent  = u.joined;
-  document.getElementById('dp-last').textContent    = u.lastActive;
-  document.getElementById('dp-biz').textContent     = u.biz;
-  document.getElementById('dp-missions').textContent= u.missions;
-  document.getElementById('dp-exports').textContent = u.exports;
-  document.getElementById('dp-axis').textContent    = u.axis;
-
-  const suspBtn = document.getElementById('dp-suspend-btn');
-  suspBtn.textContent = u.status==='suspended' ? 'Reinstate Account' : 'Suspend Account';
-
+  document.getElementById('dp-avatar').textContent   = initials(u.name);
+  document.getElementById('dp-name').textContent     = u.name;
+  document.getElementById('dp-email').textContent    = u.email;
+  document.getElementById('dp-plan').textContent     = u.plan;
+  document.getElementById('dp-status').textContent   = u.status;
+  document.getElementById('dp-joined').textContent   = u.joined   || '—';
+  document.getElementById('dp-last').textContent     = u.lastActive || '—';
+  document.getElementById('dp-biz').textContent      = u.biz      ?? '—';
+  document.getElementById('dp-missions').textContent = u.missions  ?? '—';
+  document.getElementById('dp-exports').textContent  = u.exports   ?? '—';
+  document.getElementById('dp-axis').textContent     = u.axis      ?? '—';
+  document.getElementById('dp-suspend-btn').textContent =
+    u.status==='suspended' ? 'Reinstate Account' : 'Suspend Account';
   document.getElementById('detail-overlay').classList.add('open');
 }
 
@@ -1598,61 +1383,9 @@ function handleSuspend(){
 }
 
 // ══════════════════════════════════════════
-// TRANSACTIONS
-// ══════════════════════════════════════════
-function renderTransactions(){
-  const tbody = document.getElementById('tx-tbody');
-  tbody.innerHTML = TRANSACTIONS.map(tx => `
-    <tr>
-      <td class="primary">${tx.user}</td>
-      <td>${planChip(tx.plan)}</td>
-      <td class="mono" style="color:${tx.status==='failed'?'var(--red)':tx.status==='refunded'?'var(--amber)':'var(--green)'}">${tx.amount}</td>
-      <td class="mono">${tx.date}</td>
-      <td>${statusBadge(tx.status)}</td>
-      <td>
-        ${tx.status==='failed'?`<button class="action-btn" onclick="toast('Retry queued','↻')">Retry</button>`:
-          tx.status==='paid'?`<button class="action-btn" onclick="toast('Refund initiated','↩')">Refund</button>`:
-          `<span style="font-size:10px;color:var(--ink3);font-family:'DM Mono',monospace">—</span>`}
-      </td>
-    </tr>
-  `).join('');
-}
-
-function renderFailedPayments(){
-  const el = document.getElementById('failed-payments-list');
-  el.innerHTML = FAILED_PAYMENTS.map(fp => `
-    <div class="detail-row" style="padding:12px 20px;align-items:center">
-      <div>
-        <div style="font-size:12px;font-weight:600;color:var(--ink)">${fp.user}</div>
-        <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3)">${fp.amount} · ${fp.date}</div>
-      </div>
-      <button class="action-btn" onclick="toast('Retry queued for ${fp.user}','↻')" style="margin-left:auto">Retry</button>
-    </div>
-  `).join('') || `<div class="empty-state">No failed payments.</div>`;
-}
-
-// ══════════════════════════════════════════
-// ACTIVITY
+// ACTIVITY FILTERS
 // ══════════════════════════════════════════
 let activityFilter = 'all';
-
-function renderActivity(){
-  let list = [...ACTIVITY_EVENTS];
-  if(activityFilter !== 'all') list = list.filter(e=>e.type===activityFilter);
-
-  const el = document.getElementById('activity-feed');
-  const icons = { signup:'🆕', upgrade:'⬆', cancel:'✕', payment:'◈', login:'⬡', export:'⇩' };
-  el.innerHTML = list.map(e => `
-    <div class="activity-item">
-      <div class="activity-icon ${e.icon}">${icons[e.type]||'·'}</div>
-      <div class="activity-body">
-        <div class="activity-text"><strong>${e.user}</strong> — ${e.detail}</div>
-        <div class="activity-meta">${e.type.toUpperCase()}</div>
-      </div>
-      <div class="activity-time">${fmtMins(e.mins)}</div>
-    </div>
-  `).join('') || `<div class="empty-state" style="padding:32px">No events match this filter.</div>`;
-}
 
 function setActivityFilter(f, btn){
   activityFilter = f;
@@ -1661,13 +1394,32 @@ function setActivityFilter(f, btn){
   renderActivity();
 }
 
-// Auto-refresh activity
-let activityInterval = null;
-setInterval(()=>{
-  if(document.getElementById('view-activity').classList.contains('active')){
-    renderActivity();
+function renderActivity(){
+  let list = [...ACTIVITY_EVENTS];
+  if(activityFilter !== 'all') list = list.filter(e=>e.type===activityFilter);
+
+  const el = document.getElementById('activity-feed');
+  if(list.length === 0){
+    el.innerHTML = `<div class="empty-state" style="padding:48px 0">
+      <span class="empty-state-icon">◎</span>
+      <span class="empty-state-label">${activityFilter==='all'?'No activity yet':'No '+activityFilter+' events yet'}</span>
+      Events stream here as users sign up, upgrade, cancel, and transact
+    </div>`;
+    return;
   }
-}, 30000);
+
+  const icons = { signup:'🆕', upgrade:'⬆', cancel:'✕', payment:'◈', login:'⬡', export:'⇩' };
+  el.innerHTML = list.map(e => `
+    <div class="activity-item">
+      <div class="activity-icon ${e.icon}">${icons[e.type]||'·'}</div>
+      <div class="activity-body">
+        <div class="activity-text"><strong>${e.user}</strong> — ${e.detail}</div>
+        <div class="activity-meta">${e.type.toUpperCase()}</div>
+      </div>
+      <div class="activity-time">${e.time||'just now'}</div>
+    </div>
+  `).join('');
+}
 
 // ══════════════════════════════════════════
 // WORKERS
@@ -1687,7 +1439,6 @@ function renderWorkers(){
       </td>
       <td><span class="role-chip ${w.role}">${w.role}</span></td>
       <td class="mono">${w.last}</td>
-      <td class="mono" style="color:var(--ink2)">${w.actions}</td>
       <td>
         <div class="toggle-switch ${w.on?'on':''}" onclick="toggleWorker(${i},this)"></div>
       </td>
@@ -1698,19 +1449,10 @@ function renderWorkers(){
 function toggleWorker(i, el){
   WORKER_TABLE[i].on = !WORKER_TABLE[i].on;
   el.classList.toggle('on');
-  toast(WORKER_TABLE[i].on ? `${WORKER_TABLE[i].name} access enabled` : `${WORKER_TABLE[i].name} access revoked`, WORKER_TABLE[i].on ? '✓' : '🚫');
-}
-
-function renderAuditLog(){
-  const tbody = document.getElementById('audit-tbody');
-  tbody.innerHTML = AUDIT_LOG.map(a => `
-    <tr>
-      <td class="primary">${a.worker}</td>
-      <td style="color:var(--ink2)">${a.action}</td>
-      <td class="mono">${a.target}</td>
-      <td class="mono">${a.time}</td>
-    </tr>
-  `).join('');
+  toast(
+    WORKER_TABLE[i].on ? `${WORKER_TABLE[i].name} access enabled` : `${WORKER_TABLE[i].name} access revoked`,
+    WORKER_TABLE[i].on ? '✓' : '🚫'
+  );
 }
 
 // ══════════════════════════════════════════
@@ -1719,7 +1461,6 @@ function renderAuditLog(){
 function toast(msg, icon='✓'){
   const existing = document.querySelector('.toast');
   if(existing) existing.remove();
-
   const el = document.createElement('div');
   el.className = 'toast';
   el.innerHTML = `<span class="toast-icon">${icon}</span><span>${msg}</span>`;
