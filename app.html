@@ -7456,9 +7456,9 @@ function appendBlocker(text){
 // ── END OF MONTH ──
 function initEom(){
   const now=new Date();
-  const prevMonth=new Date(now.getFullYear(), now.getMonth()-1, 1);
-  const monthName=prevMonth.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-  const ym=prevMonth.toISOString().slice(0,7);
+  const thisMonth=new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthName=thisMonth.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const ym=thisMonth.toISOString().slice(0,7);
 
   document.getElementById('eomTitle').textContent=monthName+' — How did it go?';
   document.getElementById('eomSub').textContent='Your full month breakdown before you close out '+monthName+'.';
