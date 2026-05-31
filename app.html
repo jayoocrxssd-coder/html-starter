@@ -10641,7 +10641,8 @@ function infoGateSubmit() {
 
   const name = (document.getElementById('infoGateName').value || '').trim();
   const biz  = (document.getElementById('infoGateBiz').value  || '').trim();
-  const marketing = document.getElementById('infoGateMarketingCheck').checked;
+  const marketingEl = document.getElementById('infoGateMarketingCheck');
+  const marketing = marketingEl ? marketingEl.checked : false;
 
   // Seed state so onboarding fields are pre-filled
   if (!S.profile) S.profile = {};
@@ -10665,9 +10666,11 @@ function infoGateLaunchOnboarding() {
   showPage('dashboard');
   setTimeout(() => {
     if (typeof initOnboarding === 'function') initOnboarding();
-    // Pre-fill name into onboarding step 1 if we captured it
-    const nameEl = document.getElementById('obName');
-    if (nameEl && S.profile && S.profile.name) nameEl.value = S.profile.name;
+    // Pre-fill name AFTER initOnboarding has rendered step 1, not inside the same tick
+    setTimeout(() => {
+      const nameEl = document.getElementById('obName');
+      if (nameEl && S.profile && S.profile.name) nameEl.value = S.profile.name;
+    }, 50);
   }, 420);
 }
 
