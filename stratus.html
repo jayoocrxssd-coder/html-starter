@@ -580,7 +580,9 @@ input[type=text] {
             <div class="divider"></div>
             <div class="hero-body" id="hero-habits-body">You have 3 goals in progress today.</div>
             <div class="hero-hint">Stay consistent — small steps compound.</div>
+            <div id="recal-banner" style="display:none;margin-bottom:12px;padding:10px 13px;background:#ff453a18;border:1px solid #ff453a44;border-radius:12px;font-size:12px;color:#ff6b6b;font-weight:500;line-height:1.5"></div>
             <button class="pill-btn" onclick="navToRoutine()">View today's plan</button>
+            <button id="recal-btn" onclick="recalibrateNow()" style="display:none;width:100%;padding:11px;border-radius:100px;border:1px solid #ff453a;background:transparent;color:#ff453a;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px">⚠ Recalibrate priorities</button>
           </div>
 
           <div class="g2">
@@ -629,6 +631,17 @@ input[type=text] {
               <div id="focus-time-stat" style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--white);line-height:1;letter-spacing:0.01em">0m</div>
             </div>
             <div style="width:44px;height:44px;border-radius:14px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-size:22px">⚡</div>
+          </div>
+
+          <div class="card" style="margin-bottom:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <div>
+                <div class="section-title">AI Schedule</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">Optimize today's plan</div>
+              </div>
+              <button onclick="aiOptimizeSchedule()" style="padding:9px 16px;border-radius:20px;border:1px solid var(--accent);background:var(--accent-bg);color:var(--accent-text);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer">✦ Optimize</button>
+            </div>
+            <div id="ai-schedule-preview" style="font-size:12px;color:var(--muted);line-height:1.6">Tap Optimize to generate your ideal daily plan.</div>
           </div>
 
           <div class="card" id="home-habits-card">
@@ -815,6 +828,17 @@ input[type=text] {
           </div>
 
           <div class="card" style="margin-bottom:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div class="section-title">Auto Focus Blocks</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px" id="focus-blocks-sub">AI schedules deep work between your habits</div>
+              </div>
+              <div id="focus-blocks-toggle" class="toggle off" onclick="toggleFocusBlocks()"></div>
+            </div>
+            <div id="focus-blocks-list" style="margin-top:12px;display:none"></div>
+          </div>
+
+          <div class="card" style="margin-bottom:10px">
             <div class="section-row">
               <div class="section-title">Today's habits</div>
               <div class="see-all" onclick="openHabitSheet()" style="cursor:pointer">+ Add</div>
@@ -875,6 +899,25 @@ input[type=text] {
             <!-- Inline name edit -->
             <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px">Display name</div>
             <input id="profile-name-input" type="text" value="" placeholder="Your name" oninput="setName(this.value)" style="width:100%;background:var(--card2);border:none;border-radius:10px;padding:11px 13px;color:var(--white);font-family:'Outfit',sans-serif;font-size:14px;outline:none">
+          </div>
+
+          <!-- PRODUCTIVITY PROFILE CARD -->
+          <div class="card" style="margin-bottom:10px" id="productivity-profile-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <div class="section-title">Productivity Profile</div>
+              <div id="prod-style-badge" style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:var(--accent-bg);color:var(--accent-text)">Balanced</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+              <div style="flex:1">
+                <div style="font-size:11px;color:var(--muted);font-weight:500;margin-bottom:4px">Weekly consistency</div>
+                <div style="height:6px;background:var(--card2);border-radius:4px;overflow:hidden">
+                  <div id="prod-consistency-bar" style="height:100%;background:var(--accent);border-radius:4px;width:0%;transition:width 0.6s cubic-bezier(.22,1,.36,1)"></div>
+                </div>
+              </div>
+              <div id="prod-consistency-pct" style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);line-height:1;flex-shrink:0">0%</div>
+            </div>
+            <div style="font-size:11px;color:var(--muted);font-weight:500;margin-bottom:8px">Focus areas</div>
+            <div id="prod-focus-chips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
           </div>
 
           <!-- MEMBERSHIP -->
@@ -2226,6 +2269,197 @@ input[type=text] {
         bar.className = 'b' + (rate >= 0.6 ? ' on' : rate >= 0.3 ? ' mid' : '');
       });
     }
+    runPriorityRecalibration();
+  }
+
+  // ── PRODUCTIVITY PROFILE ─────────────────────────────
+  function updateProductivityProfile() {
+    const card = document.getElementById('productivity-profile-card');
+    if (!card) return;
+    const accent = getComputedStyle(phone).getPropertyValue('--accent').trim() || '#22c55e';
+
+    // Consistency score
+    const total = habits.length * 7;
+    const done = habits.reduce((sum, h) => sum + h.weekDone.filter(Boolean).length, 0);
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    const bar = document.getElementById('prod-consistency-bar');
+    const pctEl = document.getElementById('prod-consistency-pct');
+    if (bar) bar.style.width = pct + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
+
+    // Style badge
+    const badge = document.getElementById('prod-style-badge');
+    if (badge) {
+      const style = pct >= 80 ? 'High Output' : pct >= 50 ? 'Building' : habits.length === 0 ? 'Getting Started' : 'Developing';
+      badge.textContent = style;
+    }
+
+    // Focus chips
+    const chipsEl = document.getElementById('prod-focus-chips');
+    if (!chipsEl) return;
+    const focusAreas = typeof obFocuses !== 'undefined' && obFocuses.length > 0
+      ? obFocuses
+      : [...new Set(habits.map(h => h.cat))];
+    chipsEl.innerHTML = '';
+    if (focusAreas.length === 0) {
+      chipsEl.innerHTML = '<div style="font-size:12px;color:var(--muted)">Complete onboarding to set focus areas</div>';
+      return;
+    }
+    focusAreas.forEach(f => {
+      const chip = document.createElement('div');
+      chip.style.cssText = 'padding:5px 12px;border-radius:20px;background:' + accent + '22;color:' + accent + ';font-size:12px;font-weight:600;border:1px solid ' + accent + '44';
+      chip.textContent = f;
+      chipsEl.appendChild(chip);
+    });
+  }
+
+  // ── AI SCHEDULE OPTIMIZATION ─────────────────────────
+  const CAT_ENERGY = {
+    Fitness: 0, Health: 1, Learning: 2, Career: 3, Finance: 4, Mindset: 5, General: 6
+  };
+  const TIME_ORDER = { Morning: 0, Afternoon: 1, Evening: 2, Anytime: 3 };
+
+  function aiOptimizeSchedule() {
+    const today = new Date();
+    const key = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+    const events = calEvents[key] ? [...calEvents[key]] : [];
+
+    // Add unfinished habits as virtual events
+    habits.forEach(h => {
+      if (!h.weekDone[TODAY_IDX]) {
+        events.push({ title: h.name, meta: 'Habit · ' + h.cat, cat: h.cat, virtual: true });
+      }
+    });
+
+    if (events.length === 0) {
+      document.getElementById('ai-schedule-preview').innerHTML =
+        '<span style="color:var(--muted)">No tasks for today. Add some first!</span>';
+      return;
+    }
+
+    // Sort by energy pattern
+    events.sort((a, b) => {
+      const aCat = a.cat || (a.meta ? a.meta.split(' · ').pop() : 'General');
+      const bCat = b.cat || (b.meta ? b.meta.split(' · ').pop() : 'General');
+      const aTime = TIME_ORDER[a.meta?.split(' · ')[0]] ?? 3;
+      const bTime = TIME_ORDER[b.meta?.split(' · ')[0]] ?? 3;
+      const aEnergy = CAT_ENERGY[aCat] ?? 6;
+      const bEnergy = CAT_ENERGY[bCat] ?? 6;
+      return (aTime * 10 + aEnergy) - (bTime * 10 + bEnergy);
+    });
+
+    // Assign optimal time slots
+    const slots = ['6:00 AM','7:30 AM','9:00 AM','10:30 AM','12:00 PM','2:00 PM','4:00 PM','6:00 PM','8:00 PM'];
+    const accent = getComputedStyle(phone).getPropertyValue('--accent').trim() || '#22c55e';
+    const preview = document.getElementById('ai-schedule-preview');
+    if (!preview) return;
+
+    const lines = events.slice(0, 6).map((ev, i) => {
+      const time = slots[i] || slots[slots.length-1];
+      const cat = ev.cat || (ev.meta ? ev.meta.split(' · ').pop() : '');
+      return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--card2)">
+        <div style="font-size:11px;font-weight:600;color:${accent};min-width:52px">${time}</div>
+        <div style="flex:1;font-size:13px;font-weight:500;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ev.title}</div>
+        <div style="font-size:10px;color:var(--muted);flex-shrink:0">${cat}</div>
+      </div>`;
+    }).join('');
+
+    preview.innerHTML = lines +
+      `<div style="margin-top:8px;font-size:11px;color:${accent};font-weight:600">✦ ${events.length} tasks optimized for peak output</div>`;
+    showToast('Schedule optimized ✦');
+  }
+
+  // ── AUTOMATED FOCUS BLOCKS ────────────────────────────
+  let focusBlocksEnabled = false;
+
+  function toggleFocusBlocks() {
+    focusBlocksEnabled = !focusBlocksEnabled;
+    const tog = document.getElementById('focus-blocks-toggle');
+    if (tog) { focusBlocksEnabled ? tog.classList.remove('off') : tog.classList.add('off'); }
+    renderFocusBlocks();
+    saveToStorage();
+  }
+
+  function renderFocusBlocks() {
+    const list = document.getElementById('focus-blocks-list');
+    const sub = document.getElementById('focus-blocks-sub');
+    if (!list) return;
+    if (!focusBlocksEnabled) {
+      list.style.display = 'none';
+      if (sub) sub.textContent = 'AI schedules deep work between your habits';
+      return;
+    }
+    list.style.display = 'block';
+    const accent = getComputedStyle(phone).getPropertyValue('--accent').trim() || '#22c55e';
+
+    // Generate blocks based on incomplete habits
+    const pending = habits.filter(h => !h.weekDone[TODAY_IDX]);
+    if (pending.length === 0) {
+      list.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:4px 0">All habits done — great work! No focus blocks needed.</div>';
+      if (sub) sub.textContent = 'All clear for today';
+      return;
+    }
+
+    const blockTimes = ['9:00 AM','11:00 AM','2:00 PM','4:30 PM'];
+    const durations = ['45 min','60 min','30 min','45 min'];
+    const blocks = pending.slice(0, 4).map((h, i) => ({
+      time: blockTimes[i] || blockTimes[0],
+      duration: durations[i] || '45 min',
+      label: 'Deep work: ' + h.name,
+      cat: h.cat,
+      habitId: h.id,
+    }));
+
+    list.innerHTML = '<div style="height:1px;background:var(--card2);margin-bottom:10px"></div>' +
+      blocks.map(b =>
+        `<div onclick="enterFocusMode(${b.habitId})" style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:${accent}11;border:1px solid ${accent}33;border-radius:12px;margin-bottom:6px;cursor:pointer">
+          <div style="font-size:11px;font-weight:700;color:${accent};min-width:56px">${b.time}</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:var(--white)">${b.label}</div>
+            <div style="font-size:10px;color:var(--muted);margin-top:1px">${b.duration} · ${b.cat}</div>
+          </div>
+          <div style="font-size:16px">⚡</div>
+        </div>`
+      ).join('');
+
+    if (sub) sub.textContent = blocks.length + ' focus block' + (blocks.length !== 1 ? 's' : '') + ' scheduled today';
+  }
+
+  // ── PRIORITY RECALIBRATION ────────────────────────────
+  function runPriorityRecalibration() {
+    const banner = document.getElementById('recal-banner');
+    if (!banner) return;
+
+    const behind = habits.filter(h => {
+      const done = h.weekDone.filter(Boolean).length;
+      return done / h.target < 0.5 && h.streak > 0;
+    });
+    const noStreak = habits.filter(h => h.streak === 0 && h.weekDone.some(Boolean) === false);
+
+    const recalBtn = document.getElementById('recal-btn');
+    if (behind.length === 0 && noStreak.length === 0) {
+      banner.style.display = 'none';
+      if (recalBtn) recalBtn.style.display = 'none';
+      return;
+    }
+
+    const urgentNames = [...behind, ...noStreak].slice(0, 2).map(h => h.name);
+    banner.style.display = 'block';
+    banner.innerHTML = '⚠ Priority shift — <strong>' + urgentNames.join(', ') + '</strong> need attention today to protect your streak.';
+    if (recalBtn) recalBtn.style.display = 'block';
+  }
+
+  function recalibrateNow() {
+    // Re-sort habit display by urgency (least % done first)
+    habits.sort((a, b) => {
+      const aPct = a.weekDone.filter(Boolean).length / a.target;
+      const bPct = b.weekDone.filter(Boolean).length / b.target;
+      return aPct - bPct;
+    });
+    renderHomeHabits();
+    renderRoutineHabits();
+    runPriorityRecalibration();
+    showToast('Priorities recalibrated ✦');
   }
 
   // ── DYNAMIC GREETING ─────────────────────────────────
