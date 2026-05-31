@@ -639,9 +639,13 @@ input[type=text] {
                 <div class="section-title">AI Schedule</div>
                 <div style="font-size:11px;color:var(--muted);margin-top:2px">Optimize today's plan</div>
               </div>
-              <button onclick="aiOptimizeSchedule()" style="padding:9px 16px;border-radius:20px;border:1px solid var(--accent);background:var(--accent-bg);color:var(--accent-text);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer">✦ Optimize</button>
+              <div style="display:flex;gap:6px">
+                <button onclick="startVoiceAdd()" id="voice-btn" style="padding:9px 14px;border-radius:20px;border:1px solid var(--card3);background:var(--card2);color:var(--white);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer">🎙 Voice</button>
+                <button onclick="aiOptimizeSchedule()" style="padding:9px 16px;border-radius:20px;border:1px solid var(--accent);background:var(--accent-bg);color:var(--accent-text);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer">✦ Optimize</button>
+              </div>
             </div>
             <div id="ai-schedule-preview" style="font-size:12px;color:var(--muted);line-height:1.6">Tap Optimize to generate your ideal daily plan.</div>
+            <div id="voice-status" style="display:none;margin-top:8px;padding:8px 12px;background:var(--card2);border-radius:10px;font-size:12px;color:var(--white);font-weight:500"></div>
           </div>
 
           <div class="card" id="home-habits-card">
@@ -995,9 +999,16 @@ input[type=text] {
               <div class="settings-lbl">Weekly digest</div>
               <div class="toggle off" onclick="this.classList.toggle('off')"></div>
             </div>
-            <div class="settings-row" style="border:none">
+            <div class="settings-row">
               <div class="settings-lbl">Goal reminders</div>
               <div class="toggle" onclick="this.classList.toggle('off')"></div>
+            </div>
+            <div class="settings-row" style="border:none">
+              <div>
+                <div class="settings-lbl">Smart context pings</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px">Timely nudges based on your habits</div>
+              </div>
+              <div id="smart-pings-toggle" class="toggle off" onclick="toggleSmartPings()"></div>
             </div>
           </div>
 
@@ -2161,6 +2172,7 @@ input[type=text] {
         theme: document.getElementById('light-mode-toggle')?.classList.contains('off') ? 'dark' : 'light',
         focusTotalSeconds: focusTotalSeconds,
         focusBlocksEnabled: focusBlocksEnabled,
+        smartPingsEnabled: smartPingsEnabled,
       };
       localStorage.setItem(STORE_KEY, JSON.stringify(snapshot));
     } catch(e) {}
@@ -2203,6 +2215,12 @@ input[type=text] {
       if (data.theme) applyTheme(data.theme);
       if (data.focusTotalSeconds) { focusTotalSeconds = data.focusTotalSeconds; updateFocusTimeStat(); }
       if (data.focusBlocksEnabled !== undefined) { focusBlocksEnabled = !!data.focusBlocksEnabled; renderFocusBlocks(); }
+      if (data.smartPingsEnabled !== undefined) {
+        smartPingsEnabled = !!data.smartPingsEnabled;
+        const tog = document.getElementById('smart-pings-toggle');
+        if (tog) { smartPingsEnabled ? tog.classList.remove('off') : tog.classList.add('off'); }
+        if (smartPingsEnabled) startSmartPings();
+      }
       return true;
     } catch(e) { return false; }
   }
@@ -3202,6 +3220,171 @@ input[type=text] {
     nliAttach('habit-name-input','nli-habit', { showFreq:true,  catBtns:'habit-cat-btns', freqBtns:'habit-freq-btns' });
   }, 200);
 
+
+  // ── VOICE-TO-SCHEDULE ─────────────────────────────────
+  let voiceRecognition = null;
+  let voiceListening = false;
+
+  function startVoiceAdd() {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const btn = document.getElementById('voice-btn');
+    const status = document.getElementById('voice-status');
+
+    if (!SpeechRec) {
+      showToast('Voice not supported on this browser');
+      return;
+    }
+
+    if (voiceListening) {
+      if (voiceRecognition) voiceRecognition.stop();
+      return;
+    }
+
+    voiceRecognition = new SpeechRec();
+    voiceRecognition.lang = 'en-US';
+    voiceRecognition.interimResults = true;
+    voiceRecognition.maxAlternatives = 1;
+
+    voiceListening = true;
+    if (btn) { btn.textContent = '⏹ Stop'; btn.style.borderColor = '#ff453a'; btn.style.color = '#ff453a'; }
+    if (status) { status.style.display = 'block'; status.textContent = 'Listening… speak your task'; }
+
+    voiceRecognition.onresult = (e) => {
+      const transcript = Array.from(e.results).map(r => r[0].transcript).join('');
+      if (status) status.textContent = '📝 "' + transcript + '"';
+      if (e.results[e.results.length - 1].isFinal) {
+        processVoiceInput(transcript);
+      }
+    };
+
+    voiceRecognition.onerror = (e) => {
+      voiceListening = false;
+      if (btn) { btn.textContent = '🎙 Voice'; btn.style.borderColor = 'var(--card3)'; btn.style.color = 'var(--white)'; }
+      if (status) { status.textContent = 'Error: ' + (e.error === 'not-allowed' ? 'Microphone permission denied' : e.error); }
+    };
+
+    voiceRecognition.onend = () => {
+      voiceListening = false;
+      if (btn) { btn.textContent = '🎙 Voice'; btn.style.borderColor = 'var(--card3)'; btn.style.color = 'var(--white)'; }
+    };
+
+    voiceRecognition.start();
+  }
+
+  function processVoiceInput(transcript) {
+    const status = document.getElementById('voice-status');
+    const { cat, time } = nliParse(transcript);
+
+    // Clean up: remove filler words, extract task name
+    const cleaned = transcript
+      .replace(/\b(add|create|schedule|remind me to|i need to|i want to|put|set)\b/gi, '')
+      .replace(/\b(this morning|this afternoon|tonight|today|tomorrow)\b/gi, '')
+      .trim()
+      .replace(/^[\s,]+|[\s,]+$/g, '')
+      .replace(/\s+/g, ' ');
+
+    const title = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+    if (!title || title.length < 2) {
+      if (status) status.textContent = '⚠ Could not understand — try again';
+      return;
+    }
+
+    const today = new Date();
+    const key = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+    if (!calEvents[key]) calEvents[key] = [];
+    calEvents[key].push({
+      title: title,
+      meta: (time || 'Anytime') + ' · ' + (cat || 'General'),
+      accent: cat === 'Fitness',
+      fromVoice: true,
+    });
+
+    if (status) status.textContent = '✦ Added: "' + title + '" → ' + (time || 'Anytime') + ' · ' + (cat || 'General');
+    saveToStorage();
+    showToast('Voice added: ' + title);
+
+    // Re-run optimize to show updated schedule
+    setTimeout(() => aiOptimizeSchedule(), 400);
+  }
+
+  // ── SMART REMINDERS / CONTEXT PINGS ──────────────────
+  let smartPingsEnabled = false;
+  let smartPingsInterval = null;
+
+  function toggleSmartPings() {
+    smartPingsEnabled = !smartPingsEnabled;
+    const tog = document.getElementById('smart-pings-toggle');
+    if (tog) { smartPingsEnabled ? tog.classList.remove('off') : tog.classList.add('off'); }
+
+    if (smartPingsEnabled) {
+      requestNotificationPermission();
+      startSmartPings();
+    } else {
+      stopSmartPings();
+    }
+    saveToStorage();
+  }
+
+  function requestNotificationPermission() {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }
+
+  function startSmartPings() {
+    stopSmartPings();
+    // Check every 30 minutes (demo: every 30s in dev)
+    smartPingsInterval = setInterval(checkContextPings, 30000);
+    // Run immediately
+    checkContextPings();
+  }
+
+  function stopSmartPings() {
+    if (smartPingsInterval) { clearInterval(smartPingsInterval); smartPingsInterval = null; }
+  }
+
+  function checkContextPings() {
+    if (!smartPingsEnabled) return;
+    const now = new Date();
+    const hour = now.getHours();
+
+    // Build contextual message based on time + habit state
+    const pending = habits.filter(h => !h.weekDone[TODAY_IDX]);
+    const done = habits.filter(h => h.weekDone[TODAY_IDX]);
+    if (habits.length === 0) return;
+
+    let msg = null;
+    if (hour >= 6 && hour < 9 && pending.length > 0) {
+      msg = '☀ Morning check-in: ' + pending.length + ' habit' + (pending.length > 1 ? 's' : '') + ' waiting. Start with ' + pending[0].name + '.';
+    } else if (hour >= 12 && hour < 14 && pending.length > 0) {
+      msg = '🌤 Midday check: ' + done.length + '/' + habits.length + ' habits done. Keep the momentum going.';
+    } else if (hour >= 17 && hour < 20 && pending.length > 0) {
+      msg = '🌆 Evening wind-down: ' + pending.length + ' habit' + (pending.length > 1 ? 's' : '') + ' left. You still have time.';
+    } else if (hour >= 20 && pending.length > 0) {
+      msg = '🌙 Last call: ' + pending.map(h => h.name).join(', ') + ' — close out your day strong.';
+    }
+
+    if (!msg) return;
+
+    // In-app toast ping
+    showToast(msg);
+
+    // Native notification if permitted
+    if ('Notification' in window && Notification.permission === 'granted') {
+      try {
+        new Notification('Stratus', { body: msg, icon: '/favicon.ico', tag: 'stratus-ping' });
+      } catch(e) {}
+    }
+  }
+
+  // Expose for manual trigger (testing)
+  function pingNow() {
+    if (!smartPingsEnabled) {
+      showToast('Enable Smart Pings first');
+      return;
+    }
+    checkContextPings();
+  }
 </script>
 </body>
 </html>
