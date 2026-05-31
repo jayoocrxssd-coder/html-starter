@@ -2817,6 +2817,149 @@ input[type=text] {
     buildOnboarding();
   }
 
+  // ── FOCUS MODE ────────────────────────────────────────
+  var focusTotalSeconds = 0;
+  let focusHabitId = null;
+  let focusTimerInterval = null;
+  let focusSeconds = 0;
+  let focusPaused = false;
+
+  function enterFocusMode(habitId) {
+    const h = habits.find(x => x.id === habitId);
+    if (!h) return;
+    focusHabitId = habitId;
+    focusSeconds = 0;
+    focusPaused = false;
+    const accent = getComputedStyle(phone).getPropertyValue('--accent').trim() || '#22c55e';
+    document.getElementById('focus-task-name').textContent = h.name;
+    document.getElementById('focus-cat').textContent = h.cat + ' · ' + h.target + 'x/wk';
+    document.getElementById('focus-label').style.color = accent;
+    document.getElementById('focus-done-btn').style.background = accent;
+    document.getElementById('focus-timer').textContent = '00:00';
+    document.getElementById('focus-pause-btn').textContent = 'Pause';
+    document.getElementById('focus-overlay').style.display = 'flex';
+    clearInterval(focusTimerInterval);
+    focusTimerInterval = setInterval(() => {
+      if (!focusPaused) {
+        focusSeconds++;
+        const m = String(Math.floor(focusSeconds / 60)).padStart(2,'0');
+        const s = String(focusSeconds % 60).padStart(2,'0');
+        document.getElementById('focus-timer').textContent = m + ':' + s;
+      }
+    }, 1000);
+  }
+
+  function exitFocusMode() {
+    clearInterval(focusTimerInterval);
+    document.getElementById('focus-overlay').style.display = 'none';
+    focusHabitId = null;
+  }
+
+  function toggleFocusPause() {
+    focusPaused = !focusPaused;
+    document.getElementById('focus-pause-btn').textContent = focusPaused ? 'Resume' : 'Pause';
+  }
+
+  function completeFocusTask() {
+    if (focusHabitId) {
+      const h = habits.find(x => x.id === focusHabitId);
+      if (h && !h.weekDone[TODAY_IDX]) toggleTodayHabit(focusHabitId);
+    }
+    focusTotalSeconds += focusSeconds;
+    updateFocusTimeStat();
+    exitFocusMode();
+    showToast('Focus session complete ✦');
+  }
+
+  function updateFocusTimeStat() {
+    const el = document.getElementById('focus-time-stat');
+    if (!el) return;
+    const h = Math.floor(focusTotalSeconds / 3600);
+    const m = Math.floor((focusTotalSeconds % 3600) / 60);
+    el.textContent = h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+  }
+
+  // ── NATURAL LANGUAGE INPUT ────────────────────────────
+  const NLI_CATS = {
+    fitness:['fitness','gym','workout','run','exercise','lift','cardio','yoga','sport','walk','hike'],
+    finance:['finance','money','save','budget','invest','spend','cost','income','earning','bill'],
+    mindset:['mindset','meditate','journal','reflect','grateful','focus','breathe','mental','calm'],
+    health:['health','sleep','water','eat','diet','meal','nutrition','vitamins','rest','doctor'],
+    learning:['learn','study','read','book','course','practice','skill','class','research','write'],
+    career:['career','work','job','email','meeting','project','client','deadline','office','network'],
+  };
+  const NLI_TIMES = {
+    Morning:['morning','am','early','sunrise','breakfast','wake'],
+    Afternoon:['afternoon','lunch','noon','midday','pm'],
+    Evening:['evening','night','dinner','sunset','before bed','bedtime'],
+  };
+  const NLI_FREQS = {
+    7:['daily','every day','7x','7 days'],
+    5:['5x','five times','5 days','weekday'],
+    4:['4x','four times','4 days'],
+    3:['3x','three times','3 days'],
+  };
+
+  function nliParse(text) {
+    const lower = text.toLowerCase();
+    let cat = null, time = null, freq = null;
+    for (const [c, words] of Object.entries(NLI_CATS)) {
+      if (words.some(w => lower.includes(w))) { cat = c.charAt(0).toUpperCase() + c.slice(1); break; }
+    }
+    for (const [t, words] of Object.entries(NLI_TIMES)) {
+      if (words.some(w => lower.includes(w))) { time = t; break; }
+    }
+    for (const [f, words] of Object.entries(NLI_FREQS)) {
+      if (words.some(w => lower.includes(w))) { freq = parseInt(f); break; }
+    }
+    return { cat, time, freq };
+  }
+
+  function nliAttach(inputId, hintId, opts) {
+    const inp = document.getElementById(inputId);
+    const hint = document.getElementById(hintId);
+    if (!inp || !hint) return;
+    inp.addEventListener('input', () => {
+      const { cat, time, freq } = nliParse(inp.value);
+      const parts = [];
+      if (cat) parts.push('Category: ' + cat);
+      if (opts?.showTime && time) parts.push('Time: ' + time);
+      if (opts?.showFreq && freq) parts.push('Frequency: ' + freq + 'x/wk');
+      if (parts.length) {
+        hint.textContent = '✦ Detected — ' + parts.join(' · ') + '  (tap to apply)';
+        hint.classList.add('show');
+        hint.onclick = () => {
+          if (cat && opts?.catBtns) {
+            document.querySelectorAll('#' + opts.catBtns + ' button').forEach(b => {
+              if (b.textContent.trim() === cat) b.click();
+            });
+          }
+          if (time && opts?.timeBtns) {
+            document.querySelectorAll('#' + opts.timeBtns + ' button').forEach(b => {
+              if (b.textContent.trim() === time) b.click();
+            });
+          }
+          if (freq && opts?.freqBtns) {
+            const freqMap = {7:'Daily',5:'5x / wk',4:'4x / wk',3:'3x / wk'};
+            document.querySelectorAll('#' + opts.freqBtns + ' button').forEach(b => {
+              if (b.textContent.trim() === freqMap[freq]) b.click();
+            });
+          }
+          hint.classList.remove('show');
+        };
+      } else {
+        hint.classList.remove('show');
+      }
+    });
+  }
+
+  // Wire NLI after DOM is ready
+  setTimeout(() => {
+    nliAttach('home-title',    'nli-home',    { showTime:true,  catBtns:'hcat-btns' });
+    nliAttach('sheet-title',   'nli-sheet',   { showTime:true,  catBtns:'cat-btns' });
+    nliAttach('habit-name-input','nli-habit', { showFreq:true,  catBtns:'habit-cat-btns', freqBtns:'habit-freq-btns' });
+  }, 200);
+
 </script>
 </body>
 </html>
