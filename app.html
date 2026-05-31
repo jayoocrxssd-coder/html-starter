@@ -1646,6 +1646,32 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .gate-overlay.hidden{display:none}
 .gate-overlay.fading{opacity:0;pointer-events:none}
 
+/* ── BASE INFO + ToS SCREEN ── */
+.info-gate-overlay{position:fixed;inset:0;z-index:10080;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .45s ease;overflow-y:auto;overflow-x:hidden;padding:40px 20px}
+.info-gate-overlay.hidden{display:none}
+.info-gate-overlay.fading{opacity:0;pointer-events:none}
+.info-gate-card{background:var(--surface);border:.5px solid var(--border2);border-radius:22px;width:100%;max-width:480px;padding:40px;box-shadow:0 32px 90px rgba(0,0,0,.2);animation:launch-in .38s cubic-bezier(.34,1.4,.64,1);position:relative}
+.info-gate-eyebrow{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace;margin-bottom:10px}
+.info-gate-title{font-size:24px;font-weight:800;color:var(--text);letter-spacing:-.025em;line-height:1.15;margin-bottom:6px}
+.info-gate-sub{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);margin-bottom:28px;line-height:1.7}
+.info-gate-label{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:7px;display:block}
+.info-gate-input{width:100%;background:var(--bg2);border:.5px solid var(--border2);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:13px 15px;border-radius:11px;outline:none;transition:border-color .15s;margin-bottom:18px;box-sizing:border-box}
+.info-gate-input:focus{border-color:var(--accent)}
+.info-gate-input::placeholder{color:var(--text3)}
+.info-gate-divider{height:.5px;background:var(--border2);margin:24px 0}
+.info-gate-tos-box{background:var(--bg2);border:.5px solid var(--border2);border-radius:12px;padding:16px;max-height:160px;overflow-y:auto;font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);line-height:1.8;margin-bottom:16px}
+.info-gate-tos-box h4{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);margin-bottom:6px;margin-top:10px}
+.info-gate-tos-box h4:first-child{margin-top:0}
+.info-gate-check-row{display:flex;align-items:flex-start;gap:11px;margin-bottom:12px;cursor:pointer}
+.info-gate-check-row input[type=checkbox]{width:17px;height:17px;flex-shrink:0;margin-top:1px;accent-color:var(--accent);cursor:pointer}
+.info-gate-check-label{font-size:11px;font-family:'DM Mono',monospace;color:var(--text2);line-height:1.6;cursor:pointer}
+.info-gate-check-label a{color:var(--accent);text-decoration:underline;cursor:pointer}
+.info-gate-cta{width:100%;background:var(--accent);color:var(--accent-fg);border:none;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:15px;border-radius:12px;cursor:pointer;transition:all .15s;margin-top:8px}
+.info-gate-cta:hover{opacity:.85;transform:translateY(-1px)}
+.info-gate-cta:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.info-gate-error{font-size:11px;color:var(--red);font-family:'DM Mono',monospace;margin-top:10px;min-height:16px}
+@media(max-width:540px){.info-gate-card{padding:28px 22px}}
+
 /* ── PLAN SELECT SCREEN ── */
 .plan-gate-overlay{position:fixed;inset:0;z-index:10090;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .45s ease;overflow-y:auto;overflow-x:hidden;padding:40px 20px}
 .plan-gate-overlay.hidden{display:none}
@@ -10570,11 +10596,79 @@ function planGateNext() {
   planGateHide(() => baseInfoShow());
 }
 
-// Phase 3 stub — filled in next phase
+// ── PHASE 3: BASE INFO + ToS ─────────────────────────────────
 function baseInfoShow() {
-  // STUB: kick off onboarding until Phase 3 is built
+  const ov = document.getElementById('infoGateOverlay');
+  if (!ov) { infoGateLaunchOnboarding(); return; }
+  // Reset form
+  const nameEl = document.getElementById('infoGateName');
+  const bizEl  = document.getElementById('infoGateBiz');
+  const tosEl  = document.getElementById('infoGateTosCheck');
+  const errEl  = document.getElementById('infoGateError');
+  const btn    = document.getElementById('infoGateCtaBtn');
+  if (nameEl) nameEl.value = '';
+  if (bizEl)  bizEl.value  = '';
+  if (tosEl)  tosEl.checked = false;
+  if (errEl)  errEl.textContent = '';
+  if (btn)    btn.disabled = true;
+  ov.classList.remove('hidden');
+  ov.scrollTop = 0;
+  setTimeout(() => { if (nameEl) nameEl.focus(); }, 120);
+}
+
+function infoGateHide(cb) {
+  const ov = document.getElementById('infoGateOverlay');
+  if (!ov) { if (cb) cb(); return; }
+  ov.classList.add('fading');
+  setTimeout(() => { ov.classList.add('hidden'); ov.classList.remove('fading'); if (cb) cb(); }, 450);
+}
+
+function infoGateCheckChange() {
+  const agreed = document.getElementById('infoGateTosCheck').checked;
+  const btn    = document.getElementById('infoGateCtaBtn');
+  if (btn) btn.disabled = !agreed;
+  const errEl = document.getElementById('infoGateError');
+  if (agreed && errEl) errEl.textContent = '';
+}
+
+function infoGateSubmit() {
+  const tosEl = document.getElementById('infoGateTosCheck');
+  if (!tosEl || !tosEl.checked) {
+    const errEl = document.getElementById('infoGateError');
+    if (errEl) errEl.textContent = 'Please agree to the Terms of Service to continue.';
+    return;
+  }
+
+  const name = (document.getElementById('infoGateName').value || '').trim();
+  const biz  = (document.getElementById('infoGateBiz').value  || '').trim();
+  const marketing = document.getElementById('infoGateMarketingCheck').checked;
+
+  // Seed state so onboarding fields are pre-filled
+  if (!S.profile) S.profile = {};
+  if (name) {
+    S.profile.name = name;
+    S.profile.greetingName = name;
+  }
+  if (marketing !== undefined) S.profile.marketingOptIn = marketing;
+  S.tosAgreedAt = new Date().toISOString();
+
+  // Pre-fill first business name if provided — onboarding will inherit it
+  if (biz) {
+    if (!S._setupBizName) S._setupBizName = biz;
+  }
+
+  save();
+  infoGateHide(() => infoGateLaunchOnboarding());
+}
+
+function infoGateLaunchOnboarding() {
   showPage('dashboard');
-  setTimeout(() => initOnboarding(), 400);
+  setTimeout(() => {
+    if (typeof initOnboarding === 'function') initOnboarding();
+    // Pre-fill name into onboarding step 1 if we captured it
+    const nameEl = document.getElementById('obName');
+    if (nameEl && S.profile && S.profile.name) nameEl.value = S.profile.name;
+  }, 420);
 }
 
 function bootApp() {
@@ -11848,6 +11942,62 @@ function renderSeatCount() {
       <button class="btn btn-p" onclick="handleUpgradeClick();closeModal('upgradePromptModal')">See Plans &rarr;</button>
       <button class="btn btn-g" onclick="closeModal('upgradePromptModal')">Not now</button>
     </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     BASE INFO + ToS — Phase 3 of the new user signup flow
+     Shown after plan selection, before onboarding
+     ══════════════════════════════════════════════════════════ -->
+<div class="info-gate-overlay hidden" id="infoGateOverlay">
+  <div class="gate-bg-grid" style="opacity:.10"></div>
+
+  <div class="info-gate-card">
+    <div class="info-gate-eyebrow">Step 2 of 2 — Almost there</div>
+    <div class="info-gate-title">Tell us a little<br>about yourself.</div>
+    <div class="info-gate-sub">Just a few quick things before we open the doors.<br>You can fill in everything else during setup.</div>
+
+    <!-- Name -->
+    <label class="info-gate-label" for="infoGateName">Your name</label>
+    <input class="info-gate-input" type="text" id="infoGateName" placeholder="e.g. Alex, Jordan, Marcus…"
+      maxlength="40" autocomplete="given-name"
+      onkeydown="if(event.key==='Enter')document.getElementById('infoGateBiz').focus()">
+
+    <!-- First business / project -->
+    <label class="info-gate-label" for="infoGateBiz">Your first business or project <span style="font-weight:400;text-transform:none;letter-spacing:0;opacity:.6">(optional)</span></label>
+    <input class="info-gate-input" type="text" id="infoGateBiz" placeholder="e.g. Acme Studio, Side Project, My Brand…"
+      maxlength="60" autocomplete="organization"
+      onkeydown="if(event.key==='Enter')document.getElementById('infoGateTosCheck').focus()">
+
+    <div class="info-gate-divider"></div>
+
+    <!-- ToS scroll box -->
+    <div class="info-gate-tos-box" id="infoGateTosBox">
+      <h4>Terms of Service</h4>
+      By using War Room you agree to use the platform lawfully and in good faith. You retain full ownership of all data you create. We do not sell your personal data to third parties. Your data is encrypted in transit and at rest. You may delete your account and all associated data at any time from Profile → Danger Zone. War Room is provided "as is" without warranty of any kind. We reserve the right to update these terms with reasonable notice.
+      <h4>Privacy Policy</h4>
+      We collect only what's needed to run the service: your email address, usage data for improving the product, and any content you choose to store. We use Firebase (Google) for authentication and cloud storage. Analytics data is anonymised and never linked to your identity. You can request a copy of your data or ask for it to be deleted by contacting support. We will never share identifiable information with advertisers or data brokers.
+      <h4>Acceptable Use</h4>
+      War Room may not be used for illegal activity, harassment, spam, or any purpose that violates applicable law. Accounts found in violation may be suspended without notice. We reserve the right to refuse service to anyone for any reason.
+    </div>
+
+    <!-- ToS checkbox -->
+    <label class="info-gate-check-row" for="infoGateTosCheck">
+      <input type="checkbox" id="infoGateTosCheck" onchange="infoGateCheckChange()">
+      <span class="info-gate-check-label">I have read and agree to the <a onclick="document.getElementById('infoGateTosBox').scrollIntoView({behavior:'smooth'})">Terms of Service</a> and <a onclick="document.getElementById('infoGateTosBox').scrollIntoView({behavior:'smooth'})">Privacy Policy</a>.</span>
+    </label>
+
+    <!-- Marketing opt-in -->
+    <label class="info-gate-check-row" for="infoGateMarketingCheck">
+      <input type="checkbox" id="infoGateMarketingCheck" checked>
+      <span class="info-gate-check-label">Send me occasional product updates and tips. (Optional — unsubscribe any time.)</span>
+    </label>
+
+    <div class="info-gate-error" id="infoGateError"></div>
+
+    <button class="info-gate-cta" id="infoGateCtaBtn" onclick="infoGateSubmit()" disabled>
+      Enter the War Room →
+    </button>
   </div>
 </div>
 
