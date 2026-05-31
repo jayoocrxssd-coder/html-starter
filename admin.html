@@ -577,6 +577,76 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
 .empty-state-icon { font-size: 28px; display: block; margin-bottom: 12px; opacity: .4; }
 .empty-state-label { color: var(--ink2); font-size: 13px; font-weight: 600; font-family: 'Syne', sans-serif; display: block; margin-bottom: 6px; }
 
+/* ── Support Badges ─────────────────────────────────── */
+.badge.open        { background: rgba(90,176,248,.1);  color: var(--blue);   border: 0.5px solid rgba(90,176,248,.2); }
+.badge.in-progress { background: rgba(240,176,48,.1);  color: var(--amber);  border: 0.5px solid rgba(240,176,48,.2); }
+.badge.resolved    { background: rgba(61,224,144,.1);  color: var(--green);  border: 0.5px solid rgba(61,224,144,.2); }
+
+/* ── Dark/Light Mode Toggle ─────────────────────────── */
+.theme-toggle {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: var(--bg3); border: 0.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--ink2); font-size: 13px;
+  transition: all .15s; flex-shrink: 0;
+}
+.theme-toggle:hover { background: var(--bg4); color: var(--ink); }
+
+/* ── Light Mode Override ────────────────────────────── */
+body.light {
+  --bg:       #f4f4f2;
+  --bg2:      #ececea;
+  --bg3:      #e2e2e0;
+  --bg4:      #d8d8d6;
+  --surface:  #ffffff;
+  --border:   rgba(0,0,0,.06);
+  --border2:  rgba(0,0,0,.13);
+  --ink:      #0e0e0d;
+  --ink2:     #525250;
+  --ink3:     #9a9a98;
+  --red:      #c53020;
+  --green:    #1a7048;
+  --amber:    #c07c00;
+  --blue:     #1e4890;
+  --violet:   #5825b8;
+  --pink:     #c02e7a;
+}
+
+/* ── Confirm Dialog ─────────────────────────────────── */
+.confirm-overlay {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(0,0,0,.55); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+}
+.confirm-overlay.open { display: flex; }
+.confirm-card {
+  width: 340px; max-width: 94vw;
+  background: var(--surface);
+  border: 0.5px solid var(--border2);
+  border-radius: 16px; padding: 28px;
+  box-shadow: 0 32px 80px rgba(0,0,0,.5);
+  animation: cardIn .25s cubic-bezier(.34,1.4,.64,1);
+}
+.confirm-title {
+  font-size: 15px; font-weight: 800; color: var(--ink);
+  margin-bottom: 8px; letter-spacing: -.01em;
+}
+.confirm-body {
+  font-size: 12px; color: var(--ink2); line-height: 1.6;
+  font-family: 'DM Mono', monospace; margin-bottom: 22px;
+}
+.confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.confirm-btn {
+  padding: 9px 18px; border-radius: 8px;
+  font-family: 'Syne', -apple-system, sans-serif;
+  font-size: 11px; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; cursor: pointer; transition: all .15s; border: none;
+}
+.confirm-btn.cancel { background: var(--bg3); color: var(--ink2); }
+.confirm-btn.cancel:hover { background: var(--bg4); color: var(--ink); }
+.confirm-btn.danger { background: var(--red); color: #fff; }
+.confirm-btn.danger:hover { opacity: .85; }
+
 /* ── Toast ──────────────────────────────────────────── */
 .toast {
   position: fixed; bottom: 24px; right: 24px; z-index: 9999;
@@ -794,31 +864,31 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
     </div>
 
     <div class="sidebar-section-label">Analytics</div>
-    <button class="nav-item active" onclick="nav('overview', this)">
+    <button class="nav-item active" data-section="overview" onclick="nav('overview', this)">
       <span class="nav-icon">⬡</span> Overview
     </button>
-    <button class="nav-item" onclick="nav('revenue', this)">
+    <button class="nav-item" data-section="revenue" onclick="nav('revenue', this)">
       <span class="nav-icon">◈</span> Revenue
     </button>
 
     <div class="sidebar-section-label">Management</div>
-    <button class="nav-item" onclick="nav('users', this)">
+    <button class="nav-item" data-section="users" onclick="nav('users', this)">
       <span class="nav-icon">◉</span> Users
     </button>
-    <button class="nav-item" onclick="nav('support', this)">
+    <button class="nav-item" data-section="support" onclick="nav('support', this)">
       <span class="nav-icon">◇</span> Support
     </button>
-    <button class="nav-item" onclick="nav('activity', this)">
+    <button class="nav-item" data-section="activity" onclick="nav('activity', this)">
       <span class="nav-icon">◎</span> Activity
     </button>
 
     <div class="sidebar-section-label">Team</div>
-    <button class="nav-item" onclick="nav('workers', this)">
+    <button class="nav-item" data-section="workers" onclick="nav('workers', this)">
       <span class="nav-icon">◈</span> Workers
     </button>
 
     <div class="sidebar-section-label">System</div>
-    <button class="nav-item" onclick="nav('integrations', this)">
+    <button class="nav-item" data-section="integrations" onclick="nav('integrations', this)">
       <span class="nav-icon">◫</span> Integrations
     </button>
 
@@ -844,6 +914,7 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
       </div>
       <div class="topbar-right">
         <div class="topbar-date" id="topbar-date"></div>
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" aria-label="Toggle light/dark mode" title="Toggle theme">◑</button>
         <div class="status-dot" title="Systems operational"></div>
       </div>
     </div>
@@ -990,7 +1061,7 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
             </div>
             <div class="toolbar-right">
               <button class="action-btn" onclick="openAddUserModal()" style="padding:7px 13px;font-size:10px;border-radius:7px;background:var(--ink);color:var(--bg);border-color:var(--ink)">+ Add User</button>
-              <div class="icon-btn" title="Export CSV" onclick="toast('CSV export — connect data source first','📥')">⇩</div>
+              <div class="icon-btn" title="Export CSV" aria-label="Export users as CSV" onclick="toast('CSV export — connect data source first','📥')">⇩</div>
             </div>
           </div>
           <div class="table-wrap">
@@ -1255,11 +1326,18 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
 
         <div class="panel">
           <div class="toolbar">
+            <div class="search-box" style="max-width:220px">
+              <span class="search-icon">⌕</span>
+              <input type="text" placeholder="Search tickets…" id="support-search" aria-label="Search support tickets" oninput="renderSupport()">
+            </div>
             <div class="filter-chips">
               <button class="filter-chip active" onclick="setSupportFilter('all',this)">All</button>
               <button class="filter-chip" onclick="setSupportFilter('open',this)">Open</button>
               <button class="filter-chip" onclick="setSupportFilter('in-progress',this)">In Progress</button>
               <button class="filter-chip" onclick="setSupportFilter('resolved',this)">Resolved</button>
+            </div>
+            <div class="toolbar-right">
+              <div class="icon-btn" title="Export tickets CSV" aria-label="Export support tickets as CSV" onclick="toast('CSV export — connect data source first','📥')">⇩</div>
             </div>
           </div>
           <div class="table-wrap">
@@ -1402,6 +1480,18 @@ td.mono { font-family: 'DM Mono', monospace; font-size: 11px; }
   </div>
 </div>
 
+<!-- Confirm Dialog -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-card" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="confirm-title" id="confirm-title">Are you sure?</div>
+    <div class="confirm-body" id="confirm-body"></div>
+    <div class="confirm-actions">
+      <button class="confirm-btn cancel" id="confirm-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="confirm-btn danger" id="confirm-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ══════════════════════════════════════════
 // WORKER CREDENTIALS (replace before launch)
@@ -1432,8 +1522,43 @@ const WORKER_TABLE = [
 // HELPERS
 // ══════════════════════════════════════════
 function initials(name){ return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
-function planChip(p){ return `<span class="plan-chip ${p}">${p}</span>`; }
-function statusBadge(s){ return `<span class="badge ${s}"><span class="badge-dot"></span>${s}</span>`; }
+function planChip(p){ return `<span class="plan-chip ${p}">${he(p)}</span>`; }
+function statusBadge(s){ return `<span class="badge ${s}"><span class="badge-dot"></span>${he(s)}</span>`; }
+
+// XSS-safe HTML escape — run all user-supplied strings through this before innerHTML
+function he(str){
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Confirm dialog
+let _confirmCallback = null;
+function showConfirm(title, body, onConfirm){
+  document.getElementById('confirm-title').textContent = title;
+  document.getElementById('confirm-body').textContent  = body;
+  _confirmCallback = onConfirm;
+  document.getElementById('confirm-overlay').classList.add('open');
+  document.getElementById('confirm-ok').focus();
+}
+function closeConfirm(){
+  document.getElementById('confirm-overlay').classList.remove('open');
+  _confirmCallback = null;
+}
+document.getElementById('confirm-ok').addEventListener('click', ()=>{
+  if(_confirmCallback) _confirmCallback();
+  closeConfirm();
+});
+
+// Theme toggle
+function toggleTheme(){
+  const isLight = document.body.classList.toggle('light');
+  document.getElementById('theme-btn').textContent = isLight ? '◐' : '◑';
+}
+
+// Email format validation
+function isValidEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+// URL format validation
+function isValidUrl(u){ try { new URL(u); return true; } catch{ return false; } }
 
 // ══════════════════════════════════════════
 // AUTH
@@ -1469,20 +1594,44 @@ function doLogin(){
   updateDate();
   renderWorkers();
   renderUsers();
+  renderSupport();
+  renderIntegrations();
 
-  // Support role — restrict revenue tab
-  if(worker.role === 'support'){
-    document.querySelectorAll('.nav-item').forEach(btn => {
-      if(btn.textContent.trim().startsWith('◈') && btn.textContent.includes('Revenue')){
-        btn.style.opacity = '.3';
-        btn.style.pointerEvents = 'none';
-      }
-    });
-  }
+  // Support role — restrict revenue tab using data-section attribute
+  const SUPPORT_BLOCKED = ['revenue'];
+  document.querySelectorAll('.nav-item[data-section]').forEach(btn => {
+    const blocked = worker.role === 'support' && SUPPORT_BLOCKED.includes(btn.dataset.section);
+    btn.style.opacity      = blocked ? '.3' : '';
+    btn.style.pointerEvents = blocked ? 'none' : '';
+    btn.setAttribute('aria-disabled', blocked ? 'true' : 'false');
+  });
 }
 
 function doLogout(){
   currentWorker = null;
+  // Reset all filter/sort state so next login starts clean
+  userFilter    = 'all';
+  supportFilter = 'all';
+  userSort      = { key: 'joined', dir: -1 };
+  document.querySelectorAll('.filter-chip').forEach(c => {
+    c.classList.remove('active');
+    if(c.textContent.trim() === 'All') c.classList.add('active');
+  });
+  document.querySelectorAll('thead th').forEach(t => t.classList.remove('sort-asc','sort-desc'));
+  // Reset nav to overview
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-overview').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelector('.nav-item[data-section="overview"]').classList.add('active');
+  // Re-enable all nav items (role restrictions reset)
+  document.querySelectorAll('.nav-item[data-section]').forEach(btn=>{
+    btn.style.opacity=''; btn.style.pointerEvents=''; btn.removeAttribute('aria-disabled');
+  });
+  document.getElementById('topbar-title').textContent = 'Overview';
+  document.getElementById('topbar-sub').textContent   = 'Platform health at a glance';
+  // Clear search boxes
+  const us = document.getElementById('user-search');    if(us) us.value='';
+  const ss = document.getElementById('support-search'); if(ss) ss.value='';
   document.getElementById('app').classList.remove('visible');
   document.getElementById('auth-gate').style.display = 'flex';
   document.getElementById('auth-pass').value = '';
@@ -1491,6 +1640,26 @@ function doLogout(){
 document.getElementById('auth-pass').addEventListener('keydown', e => {
   if(e.key === 'Enter') doLogin();
 });
+
+// Global Escape key closes any open modal/overlay
+document.addEventListener('keydown', e => {
+  if(e.key !== 'Escape') return;
+  if(document.getElementById('add-user-modal').classList.contains('open'))       closeAddUserModal();
+  else if(document.getElementById('integration-config-modal').classList.contains('open')) closeConfigModal();
+  else if(document.getElementById('confirm-overlay').classList.contains('open')) closeConfirm();
+  else if(document.getElementById('detail-overlay').classList.contains('open'))  closeDetailPanel();
+});
+
+// Focus trap helper — keeps Tab key inside an open modal
+function trapFocus(modalEl){
+  const focusable = modalEl.querySelectorAll('button,input,select,textarea,[tabindex]:not([tabindex="-1"])');
+  const first = focusable[0], last = focusable[focusable.length-1];
+  modalEl.addEventListener('keydown', function handler(e){
+    if(e.key !== 'Tab') return;
+    if(e.shiftKey){ if(document.activeElement===first){ e.preventDefault(); last.focus(); } }
+    else           { if(document.activeElement===last){  e.preventDefault(); first.focus(); } }
+  });
+}
 
 // ══════════════════════════════════════════
 // NAVIGATION
@@ -1562,14 +1731,14 @@ function renderUsers(){
       <tr onclick="openDetail(${u.id})">
         <td class="primary">
           <div style="display:flex;align-items:center;gap:8px">
-            <div style="width:24px;height:24px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--ink);flex-shrink:0">${initials(u.name)}</div>
-            ${u.name}
+            <div style="width:24px;height:24px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--ink);flex-shrink:0">${he(initials(u.name))}</div>
+            ${he(u.name)}
           </div>
         </td>
-        <td class="mono">${u.email}</td>
+        <td class="mono">${he(u.email)}</td>
         <td>${planChip(u.plan)}</td>
-        <td class="mono">${u.joined}</td>
-        <td class="mono">${u.lastActive}</td>
+        <td class="mono">${he(u.joined)}</td>
+        <td class="mono">${he(u.lastActive)}</td>
         <td>${statusBadge(u.status)}</td>
         <td onclick="event.stopPropagation()">
           <div class="row-actions">
@@ -1592,6 +1761,9 @@ function setFilter(f, btn){
   userFilter = f;
   document.querySelectorAll('#view-users .filter-chips .filter-chip').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
+  // Clear sort indicators when filter changes to avoid stale UI
+  document.querySelectorAll('#view-users thead th').forEach(t=>t.classList.remove('sort-asc','sort-desc'));
+  userSort = { key: 'joined', dir: -1 };
   renderUsers();
 }
 function filterUsers(){ renderUsers(); }
@@ -1714,12 +1886,23 @@ function renderWorkers(){
 }
 
 function toggleWorker(i, el){
-  WORKER_TABLE[i].on = !WORKER_TABLE[i].on;
-  el.classList.toggle('on');
-  toast(
-    WORKER_TABLE[i].on ? `${WORKER_TABLE[i].name} access enabled` : `${WORKER_TABLE[i].name} access revoked`,
-    WORKER_TABLE[i].on ? '✓' : '🚫'
-  );
+  const w = WORKER_TABLE[i];
+  if(w.on){
+    // Revoking — confirm first
+    showConfirm(
+      `Revoke ${w.name}'s access?`,
+      `This will prevent ${w.name} from accessing the Command Portal until re-enabled.`,
+      () => {
+        w.on = false;
+        renderWorkers();
+        toast(`${w.name} access revoked`, '🚫');
+      }
+    );
+  } else {
+    w.on = true;
+    renderWorkers();
+    toast(`${w.name} access enabled`, '✓');
+  }
 }
 
 // ══════════════════════════════════════════
@@ -1728,12 +1911,13 @@ function toggleWorker(i, el){
 let _addUserNextId = 1;
 
 function openAddUserModal(){
-  document.getElementById('au-name').value  = '';
-  document.getElementById('au-email').value = '';
-  document.getElementById('au-plan').value  = 'free';
+  document.getElementById('au-name').value   = '';
+  document.getElementById('au-email').value  = '';
+  document.getElementById('au-plan').value   = 'free';
   document.getElementById('au-status').value = 'active';
-  document.getElementById('add-user-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('au-name').focus(), 50);
+  const modal = document.getElementById('add-user-modal');
+  modal.classList.add('open');
+  setTimeout(()=>{ document.getElementById('au-name').focus(); trapFocus(modal.querySelector('.modal-card')); }, 50);
 }
 
 function closeAddUserModal(){
@@ -1746,13 +1930,18 @@ function handleAddUserOverlayClick(e){
 
 function submitAddUser(){
   const name   = document.getElementById('au-name').value.trim();
-  const email  = document.getElementById('au-email').value.trim();
+  const email  = document.getElementById('au-email').value.trim().toLowerCase();
   const plan   = document.getElementById('au-plan').value;
   const status = document.getElementById('au-status').value;
 
   if(!name || !email){
-    toast('Please fill in Name and Email','⚠');
-    return;
+    toast('Please fill in Name and Email','⚠'); return;
+  }
+  if(!isValidEmail(email)){
+    toast('Enter a valid email address','⚠'); return;
+  }
+  if(USERS.find(u => u.email === email)){
+    toast('A user with that email already exists','⚠'); return;
   }
 
   const today = new Date().toISOString().slice(0,10);
@@ -1765,7 +1954,8 @@ function submitAddUser(){
 
   closeAddUserModal();
   renderUsers();
-  toast('User added', '✓');
+  updateQsTickets();
+  toast(`${name} added`, '✓');
 }
 
 // ══════════════════════════════════════════
@@ -1788,36 +1978,50 @@ function renderSupport(){
   let list = [...SUPPORT_TICKETS];
   if(supportFilter !== 'all') list = list.filter(t=>t.status===supportFilter);
 
-  document.getElementById('support-stat-open').textContent =
-    SUPPORT_TICKETS.filter(t=>t.status==='open').length || '—';
+  // Search filter
+  const q = (document.getElementById('support-search')?.value || '').toLowerCase();
+  if(q) list = list.filter(t =>
+    t.user.toLowerCase().includes(q) || t.subject.toLowerCase().includes(q) || t.id.toLowerCase().includes(q)
+  );
+
+  const openCount = SUPPORT_TICKETS.filter(t=>t.status==='open').length;
+  document.getElementById('support-stat-open').textContent = openCount || '—';
+  updateQsTickets();
 
   const tbody = document.getElementById('support-tbody');
   if(list.length === 0){
     tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">
       <span class="empty-state-icon">◇</span>
-      <span class="empty-state-label">${supportFilter==='all'?'No tickets yet':'No '+supportFilter+' tickets'}</span>
-      ${supportFilter==='all'?'Support tickets appear here once users submit requests':'Try a different filter'}
+      <span class="empty-state-label">${supportFilter==='all'&&!q?'No tickets yet':'No matching tickets'}</span>
+      ${supportFilter==='all'&&!q?'Support tickets appear here once users submit requests':'Try a different filter or search term'}
     </div></td></tr>`;
     return;
   }
 
   tbody.innerHTML = list.map(t => `
     <tr>
-      <td class="mono">${t.id}</td>
-      <td class="primary">${t.user}</td>
-      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${t.subject}</td>
+      <td class="mono">${he(t.id)}</td>
+      <td class="primary">${he(t.user)}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis">${he(t.subject)}</td>
       <td>${priorityChip(t.priority)}</td>
-      <td>${statusBadge(t.status === 'in-progress' ? 'active' : t.status === 'resolved' ? 'paid' : 'inactive')}<span style="display:none">${t.status}</span></td>
-      <td class="mono">${t.created}</td>
-      <td>${t.assignedTo || '—'}</td>
+      <td><span class="badge ${he(t.status)}"><span class="badge-dot"></span>${he(t.status)}</span></td>
+      <td class="mono">${he(t.created)}</td>
+      <td>${he(t.assignedTo || '—')}</td>
       <td>
         <div class="row-actions">
           <button class="action-btn" onclick="toast('Ticket detail panel coming soon','◇')">View</button>
-          <button class="action-btn" onclick="resolveTicket('${t.id}',this)" ${t.status==='resolved'?'disabled style="opacity:.4;cursor:not-allowed"':''}>Resolve</button>
+          <button class="action-btn" onclick="resolveTicket('${he(t.id)}')" ${t.status==='resolved'?'disabled style="opacity:.4;cursor:not-allowed"':''}>Resolve</button>
         </div>
       </td>
     </tr>
   `).join('');
+}
+
+function updateQsTickets(){
+  const el = document.getElementById('qs-tickets');
+  if(!el) return;
+  const open = SUPPORT_TICKETS.filter(t=>t.status!=='resolved').length;
+  el.textContent = open ? `${open} open` : '0 open';
 }
 
 function resolveTicket(id){
@@ -1886,8 +2090,9 @@ function openConfigModal(id){
   document.getElementById('cfg-apikey').value  = '';
   document.getElementById('cfg-secret').value  = '';
   document.getElementById('cfg-webhook').value = '';
-  document.getElementById('integration-config-modal').classList.add('open');
-  setTimeout(()=>document.getElementById('cfg-apikey').focus(), 50);
+  const cfgModal = document.getElementById('integration-config-modal');
+  cfgModal.classList.add('open');
+  setTimeout(()=>{ document.getElementById('cfg-apikey').focus(); trapFocus(cfgModal.querySelector('.modal-card')); }, 50);
 }
 
 function closeConfigModal(){
@@ -1900,10 +2105,13 @@ function handleConfigOverlayClick(e){
 }
 
 function saveIntegrationConfig(){
-  const apiKey = document.getElementById('cfg-apikey').value.trim();
+  const apiKey  = document.getElementById('cfg-apikey').value.trim();
+  const webhook = document.getElementById('cfg-webhook').value.trim();
   if(!apiKey){
-    toast('API Key is required','⚠');
-    return;
+    toast('API Key is required','⚠'); return;
+  }
+  if(webhook && !isValidUrl(webhook)){
+    toast('Webhook URL must be a valid URL (https://…)','⚠'); return;
   }
   const s = INTEGRATIONS.find(i=>i.id===_configTargetId);
   if(s) s.status = 'connected';
@@ -1915,22 +2123,39 @@ function saveIntegrationConfig(){
 function disconnectIntegration(id){
   const s = INTEGRATIONS.find(i=>i.id===id);
   if(!s) return;
-  s.status = 'disconnected';
-  renderIntegrations();
-  toast(`${s.name} disconnected`, '◫');
+  showConfirm(
+    `Disconnect ${s.name}?`,
+    `This will remove the connection. You'll need to re-enter your API key to reconnect.`,
+    () => {
+      s.status = 'disconnected';
+      renderIntegrations();
+      toast(`${s.name} disconnected`, '◫');
+    }
+  );
 }
 
 // ══════════════════════════════════════════
-// TOAST
+// TOAST  (queued — animates out before next one appears)
 // ══════════════════════════════════════════
+let _toastTimer = null;
 function toast(msg, icon='✓'){
   const existing = document.querySelector('.toast');
-  if(existing) existing.remove();
+  if(existing){
+    clearTimeout(_toastTimer);
+    existing.style.transition = 'opacity .15s, transform .15s';
+    existing.style.opacity = '0';
+    existing.style.transform = 'translateY(8px)';
+    setTimeout(()=>{ existing.remove(); _showToast(msg,icon); }, 160);
+  } else {
+    _showToast(msg, icon);
+  }
+}
+function _showToast(msg, icon){
   const el = document.createElement('div');
   el.className = 'toast';
-  el.innerHTML = `<span class="toast-icon">${icon}</span><span>${msg}</span>`;
+  el.innerHTML = `<span class="toast-icon">${he(icon)}</span><span>${he(msg)}</span>`;
   document.body.appendChild(el);
-  setTimeout(()=>{
+  _toastTimer = setTimeout(()=>{
     el.style.transition = 'opacity .3s, transform .3s';
     el.style.opacity = '0';
     el.style.transform = 'translateY(8px)';
