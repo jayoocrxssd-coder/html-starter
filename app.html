@@ -2552,7 +2552,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   <!-- BUDGET OVERVIEW -->
   <div id="budgetOverviewSection"><div class="budget-section">
     <div class="sec-hdr" style="margin-bottom:6px">
-      <div class="sec-title">Life Budget — May 2026</div>
+      <div class="sec-title" id="lifeBudgetTitle">Life Budget</div>
       <button class="btn btn-g btn-sm" onclick="openBudgetModal()">⚙ Set Budget</button>
     </div>
     <div class="empty-state" style="padding:16px 0;min-height:auto"><div class="empty-state-icon" style="font-size:18px">◎</div><div class="empty-state-text">No monthly budget set yet.<br>Click ⚙ Set Budget to get started.</div></div>
@@ -2963,7 +2963,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
               <div class="settings-label">Greeting Name</div>
               <div class="settings-sub">Used in dashboard greeting</div>
             </div>
-            <input type="text" id="greetingNameInput" placeholder="Sir" style="width:120px">
+            <input type="text" id="greetingNameInput" placeholder="e.g. Alex" style="width:120px">
           </div>
         </div>
         <div class="card">
@@ -3840,7 +3840,7 @@ const DEFAULT = {
   backups: [],
   trackerPeriod: 'month',
   whiteboards: {},
-  profile: {name:'',role:'',avatar:'◈',greetingName:'Sir',warRoomName:'',theme:'stratus',accent:'',radius:'10',font:'syne'},
+  profile: {name:'',role:'',avatar:'◈',greetingName:'',warRoomName:'',theme:'stratus',accent:'',radius:'10',font:'syne'},
   onboarded: false,
   nextId: 1,
   monthlyBudgets: {},
@@ -3948,7 +3948,7 @@ function updateClocks() {
   const be = document.getElementById('bigEstClock'); if (be) be.textContent = estStr;
   document.getElementById('dateDisplay').textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
   const gh = now.getHours();
-  const gn=(S.profile&&S.profile.name&&S.profile.name.trim())||(S.profile&&S.profile.greetingName)||'Sir';const dg = document.getElementById('dashGreeting'); if (dg) dg.textContent = (gh<12?'Good morning':gh<17?'Good afternoon':gh<21?'Good evening':'Good night') + ', ' + gn + '.';
+  const gn=(S.profile&&S.profile.name&&S.profile.name.trim())||(S.profile&&S.profile.greetingName&&S.profile.greetingName.trim())||'';const dg = document.getElementById('dashGreeting'); if (dg) dg.textContent = (gh<12?'Good morning':gh<17?'Good afternoon':gh<21?'Good evening':'Good night') + (gn?', '+gn:'') + '.';
   const dd = document.getElementById('dashDate'); if (dd) dd.textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   checkAlarms(h, m, s);
 }
@@ -4060,7 +4060,7 @@ function getAISystemPrompt(){
   const name = getAIName();
   const persona = (S.profile&&S.profile.aiPersona)||'axis';
   const context = (S.profile&&S.profile.aiContext)||'';
-  const greetingName = (S.profile&&S.profile.greetingName)||'Sir';
+  const greetingName = (S.profile&&S.profile.greetingName&&S.profile.greetingName.trim())||'';
 
   const PERSONAS = {
     axis: `You are ${name} — the AI command intelligence inside the operator's personal War Room, built for CRES Ventures. You operate exactly like AXIS from Iron Man: you are calm, precise, tactically brilliant, and occasionally laced with dry wit. You never use filler words, never give corporate speak, never pad responses. Every sentence you produce should either inform a decision, flag a risk, or accelerate execution.
@@ -6567,7 +6567,7 @@ function renderProfilePage(){
   const ni=document.getElementById('profileNameInput');if(ni)ni.value=p.name||'';
   const ri=document.getElementById('profileRoleInput');if(ri)ri.value=p.role||'';
   const ai=document.getElementById('avatarEmojiInput');if(ai)ai.value=p.avatar||'';
-  const gni=document.getElementById('greetingNameInput');if(gni)gni.value=p.greetingName||'Sir';
+  const gni=document.getElementById('greetingNameInput');if(gni)gni.value=p.greetingName||'';
   const wrni=document.getElementById('warRoomNameInput');if(wrni)wrni.value=p.warRoomName||'';
   // AI settings
   const aiNameIn=document.getElementById('aiNameInput');if(aiNameIn)aiNameIn.value=p.aiName||'';
@@ -6640,7 +6640,7 @@ function saveProfile(){
   S.profile.avatar=av||'◈';
   S.profile.name=document.getElementById('profileNameInput').value.trim();
   S.profile.role=document.getElementById('profileRoleInput').value.trim();
-  S.profile.greetingName=document.getElementById('greetingNameInput').value.trim()||'Sir';
+  S.profile.greetingName=document.getElementById('greetingNameInput').value.trim()||'';
   S.profile.warRoomName=document.getElementById('warRoomNameInput')?.value.trim()||'';
   updateAppName();
   // Update avatar display
@@ -7371,9 +7371,9 @@ function showLaunch(id){
 function initDebrief(){
   const now = new Date();
   const gh = now.getHours();
-  const gn = (S.profile&&S.profile.name&&S.profile.name.trim())||(S.profile&&S.profile.greetingName)||'Sir';
+  const gn = (S.profile&&S.profile.name&&S.profile.name.trim())||(S.profile&&S.profile.greetingName&&S.profile.greetingName.trim())||'';
   const realGreet = gh<12?'Good morning':gh<17?'Good afternoon':gh<21?'Good evening':'Good night';
-  document.getElementById('debriefGreeting').textContent = realGreet + ', ' + gn + '.';
+  document.getElementById('debriefGreeting').textContent = realGreet + (gn?', '+gn:'') + '.';
   document.getElementById('debriefDate').textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
 
   // populate biz tags
@@ -7848,7 +7848,11 @@ function renderBills(){
   renderMonthlyTrend();
   updateBadges();
   const lbl=document.getElementById('billMonthLabel');
-  if(lbl)lbl.textContent=new Date().toLocaleDateString('en-US',{month:'short',year:'numeric'});
+  const _now=new Date();
+  const _mStr=_now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  if(lbl)lbl.textContent=_now.toLocaleDateString('en-US',{month:'short',year:'numeric'});
+  const lbt=document.getElementById('lifeBudgetTitle');
+  if(lbt)lbt.textContent='Life Budget — '+_mStr;
 }
 
 // ── PERSONAL LIFE CATEGORIES ──
@@ -10030,7 +10034,7 @@ function obFinish(){
   if(!S.profile)S.profile={};
   S.profile.name = obData.name;
   S.profile.role = obData.role;
-  S.profile.greetingName = obData.name||'Sir';
+  S.profile.greetingName = obData.name||'';
   S.profile.avatar = '◈';
   S.profile.operatorType = obData.operatorType;
   S.profile.theme = obData.theme;
