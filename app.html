@@ -1645,6 +1645,40 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .gate-overlay{position:fixed;inset:0;z-index:10100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .45s ease;overflow:hidden}
 .gate-overlay.hidden{display:none}
 .gate-overlay.fading{opacity:0;pointer-events:none}
+
+/* ── PLAN SELECT SCREEN ── */
+.plan-gate-overlay{position:fixed;inset:0;z-index:10090;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .45s ease;overflow-y:auto;overflow-x:hidden;padding:40px 20px}
+.plan-gate-overlay.hidden{display:none}
+.plan-gate-overlay.fading{opacity:0;pointer-events:none}
+.plan-gate-header{text-align:center;margin-bottom:40px}
+.plan-gate-eyebrow{font-size:9px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;font-family:'DM Mono',monospace}
+.plan-gate-title{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-.03em;line-height:1.1;margin-bottom:8px}
+.plan-gate-sub{font-size:12px;font-family:'DM Mono',monospace;color:var(--text3);line-height:1.7}
+.plan-cards{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;max-width:860px;width:100%}
+.plan-card{background:var(--surface);border:.5px solid var(--border2);border-radius:20px;padding:28px 26px;width:260px;flex-shrink:0;cursor:pointer;transition:border-color .2s,box-shadow .2s,transform .15s;position:relative;display:flex;flex-direction:column;gap:0}
+.plan-card:hover{border-color:var(--accent);box-shadow:0 12px 40px rgba(0,0,0,.12);transform:translateY(-3px)}
+.plan-card.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent),0 16px 48px rgba(0,0,0,.14)}
+.plan-card-recommended{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--accent-fg);font-size:8px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:4px 14px;border-radius:100px;white-space:nowrap}
+.plan-card-check{position:absolute;top:18px;right:18px;width:20px;height:20px;border-radius:50%;background:var(--accent);display:none;align-items:center;justify-content:center}
+.plan-card.selected .plan-card-check{display:flex}
+.plan-card-check svg{width:11px;height:11px;stroke:var(--accent-fg);stroke-width:2.5}
+.plan-card-name{font-size:13px;font-weight:800;color:var(--text);letter-spacing:.01em;margin-bottom:4px;text-transform:uppercase;letter-spacing:.1em}
+.plan-card-price{font-size:32px;font-weight:800;color:var(--text);letter-spacing:-.04em;line-height:1;margin-bottom:4px}
+.plan-card-price span{font-size:13px;font-weight:500;color:var(--text3);letter-spacing:0}
+.plan-card-cycle{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-bottom:20px}
+.plan-card-divider{height:.5px;background:var(--border2);margin-bottom:16px}
+.plan-card-features{display:flex;flex-direction:column;gap:9px;margin-bottom:auto}
+.plan-card-feature{display:flex;align-items:flex-start;gap:9px;font-size:11px;color:var(--text2);line-height:1.4}
+.plan-card-feature-icon{color:var(--green);font-size:11px;flex-shrink:0;margin-top:1px}
+.plan-card-feature-icon.muted{color:var(--text3)}
+.plan-select-btn{margin-top:22px;width:100%;background:var(--bg2);color:var(--text2);border:.5px solid var(--border2);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:12px;border-radius:11px;cursor:pointer;transition:all .15s}
+.plan-card:hover .plan-select-btn,.plan-card.selected .plan-select-btn{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.plan-gate-cta{margin-top:32px;text-align:center}
+.plan-gate-cta-btn{background:var(--accent);color:var(--accent-fg);border:none;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:15px 48px;border-radius:12px;cursor:pointer;transition:all .15s}
+.plan-gate-cta-btn:hover{opacity:.85;transform:translateY(-1px)}
+.plan-gate-cta-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.plan-gate-note{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:12px}
+@media(max-width:600px){.plan-cards{flex-direction:column;align-items:center}.plan-card{width:100%;max-width:340px}}
 .gate-bg-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.18;pointer-events:none}
 .gate-bg-glow{position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,var(--accent) 0%,transparent 70%);opacity:.06;pointer-events:none}
 .gate-brand{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:48px;position:relative}
@@ -10491,15 +10525,54 @@ function gateShowPrivacy() {
   alert('Privacy Policy will be displayed in the next step.');
 }
 
-// Placeholder stubs for Phase 2 & 3 (filled out in their respective phases)
+// ── PHASE 2: PLAN SELECT ──────────────────────────────────────
+let selectedPlan = null;
+
 function planSelectShow() {
-  // Phase 2 — plan picker
-  // STUB: for now skip straight to Phase 3
-  baseInfoShow();
+  const ov = document.getElementById('planGateOverlay');
+  if (!ov) { baseInfoShow(); return; }
+  // Reset to no selection
+  selectedPlan = null;
+  ['personal','small_business','enterprise'].forEach(p => {
+    const c = document.getElementById('planCard-' + p);
+    if (c) c.classList.remove('selected');
+  });
+  const btn = document.getElementById('planGateNextBtn');
+  if (btn) btn.disabled = true;
+  ov.classList.remove('hidden');
+  // Scroll to top in case user scrolled on mobile
+  ov.scrollTop = 0;
 }
+
+function planGateHide(cb) {
+  const ov = document.getElementById('planGateOverlay');
+  if (!ov) { if (cb) cb(); return; }
+  ov.classList.add('fading');
+  setTimeout(() => { ov.classList.add('hidden'); ov.classList.remove('fading'); if (cb) cb(); }, 450);
+}
+
+function planSelectCard(plan) {
+  selectedPlan = plan;
+  ['personal','small_business','enterprise'].forEach(p => {
+    const c = document.getElementById('planCard-' + p);
+    if (c) c.classList.toggle('selected', p === plan);
+  });
+  const btn = document.getElementById('planGateNextBtn');
+  if (btn) btn.disabled = false;
+}
+
+function planGateNext() {
+  if (!selectedPlan) return;
+  // Persist plan choice to state so Profile page reflects it immediately
+  if (!S.profile) S.profile = {};
+  S.profile.currentPlan = selectedPlan;
+  save();
+  planGateHide(() => baseInfoShow());
+}
+
+// Phase 3 stub — filled in next phase
 function baseInfoShow() {
-  // Phase 3 — base info + ToS
-  // STUB: for now kick off onboarding
+  // STUB: kick off onboarding until Phase 3 is built
   showPage('dashboard');
   setTimeout(() => initOnboarding(), 400);
 }
@@ -11775,6 +11848,93 @@ function renderSeatCount() {
       <button class="btn btn-p" onclick="handleUpgradeClick();closeModal('upgradePromptModal')">See Plans &rarr;</button>
       <button class="btn btn-g" onclick="closeModal('upgradePromptModal')">Not now</button>
     </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PLAN SELECT SCREEN — Phase 2 of the new user signup flow
+     Shown after auth, before base info / ToS
+     ══════════════════════════════════════════════════════════ -->
+<div class="plan-gate-overlay hidden" id="planGateOverlay">
+  <div class="gate-bg-grid" style="opacity:.12"></div>
+
+  <div class="plan-gate-header">
+    <div class="plan-gate-eyebrow">Step 1 of 2 — Choose your plan</div>
+    <div class="plan-gate-title">Your War Room,<br>your terms.</div>
+    <div class="plan-gate-sub">Pick the plan that fits where you're at.<br>You can upgrade any time from your profile.</div>
+  </div>
+
+  <div class="plan-cards" id="planCards">
+
+    <!-- Personal -->
+    <div class="plan-card" id="planCard-personal" onclick="planSelectCard('personal')">
+      <div class="plan-card-check">
+        <svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3"/></svg>
+      </div>
+      <div class="plan-card-name">Personal</div>
+      <div class="plan-card-price">$11<span>/mo</span></div>
+      <div class="plan-card-cycle">Billed monthly · cancel anytime</div>
+      <div class="plan-card-divider"></div>
+      <div class="plan-card-features">
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Up to 3 businesses</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Full War Room suite</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>AXIS AI assistant</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Cloud sync across devices</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Goals, P&amp;L, Calendar &amp; more</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon muted">—</span>Team seats</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon muted">—</span>Shared workspaces</div>
+      </div>
+      <button class="plan-select-btn" onclick="planSelectCard('personal');event.stopPropagation()">Select Personal</button>
+    </div>
+
+    <!-- Small Business (recommended) -->
+    <div class="plan-card" id="planCard-small_business" onclick="planSelectCard('small_business')">
+      <div class="plan-card-recommended">Recommended</div>
+      <div class="plan-card-check">
+        <svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3"/></svg>
+      </div>
+      <div class="plan-card-name">Small Business</div>
+      <div class="plan-card-price">$14<span>/mo</span></div>
+      <div class="plan-card-cycle">Billed monthly · cancel anytime</div>
+      <div class="plan-card-divider"></div>
+      <div class="plan-card-features">
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Up to 3 businesses</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Full War Room suite</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>AXIS AI assistant</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Cloud sync across devices</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Goals, P&amp;L, Calendar &amp; more</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>3 team seats included</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Shared workspaces</div>
+      </div>
+      <button class="plan-select-btn" onclick="planSelectCard('small_business');event.stopPropagation()">Select Small Business</button>
+    </div>
+
+    <!-- Enterprise -->
+    <div class="plan-card" id="planCard-enterprise" onclick="planSelectCard('enterprise')">
+      <div class="plan-card-check">
+        <svg viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3"/></svg>
+      </div>
+      <div class="plan-card-name">Enterprise</div>
+      <div class="plan-card-price" style="font-size:22px;padding-top:5px">Custom</div>
+      <div class="plan-card-cycle">Contact us for pricing</div>
+      <div class="plan-card-divider"></div>
+      <div class="plan-card-features">
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Unlimited businesses</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Full War Room suite</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>AXIS AI assistant</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Cloud sync across devices</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Goals, P&amp;L, Calendar &amp; more</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>Unlimited team seats</div>
+        <div class="plan-card-feature"><span class="plan-card-feature-icon">✓</span>White-label &amp; custom branding</div>
+      </div>
+      <button class="plan-select-btn" onclick="planSelectCard('enterprise');event.stopPropagation()">Select Enterprise</button>
+    </div>
+
+  </div>
+
+  <div class="plan-gate-cta">
+    <button class="plan-gate-cta-btn" id="planGateNextBtn" onclick="planGateNext()" disabled>Continue →</button>
+    <div class="plan-gate-note">No credit card required to start. 14-day free trial on all plans.</div>
   </div>
 </div>
 
