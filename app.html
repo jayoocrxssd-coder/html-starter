@@ -9947,7 +9947,11 @@ function redoOnboarding(){
 
 function initOnboarding(){
   obStep = 0;
-  obData = {name:'',role:'',operatorType:'',businesses:[],goals:[],theme:'stratus',dark:false};
+  // Seed name & business from the pre-onboarding signup flow if present
+  const seedName = (S.profile && S.profile.name) || '';
+  const seedBiz  = S._setupBizName || '';
+  obData = {name: seedName, role:'', operatorType:'', businesses:[], goals:[], theme:'stratus', dark:false};
+  if (seedBiz) obData.businesses.push({name: seedBiz, status: 'Active'});
   // Populate theme row
   const tr = document.getElementById('obThemeRow');
   if(tr){
@@ -9961,6 +9965,12 @@ function initOnboarding(){
   renderObProgress();
   showObStep(0);
   document.getElementById('obOverlay').style.display='flex';
+  // Pre-fill Step 1 name input and Step 3 biz list from signup data
+  setTimeout(() => {
+    const nameEl = document.getElementById('obName');
+    if (nameEl && obData.name) nameEl.value = obData.name;
+    renderObBizList();
+  }, 50);
 }
 
 function renderObProgress(){
@@ -9997,6 +10007,7 @@ function obBack(){
 }
 
 function skipOnboarding(){
+  delete S._setupBizName;
   S.onboarded = true;
   document.getElementById('app').classList.toggle('dark', S.dark);
   applyTheme();
@@ -10148,6 +10159,8 @@ function obFinish(){
   });
 
   recalculateNextId();
+  // Clean up signup flow scratch keys
+  delete S._setupBizName;
   // Mark onboarding complete
   S.onboarded = true;
 
@@ -10664,14 +10677,8 @@ function infoGateSubmit() {
 
 function infoGateLaunchOnboarding() {
   showPage('dashboard');
-  setTimeout(() => {
-    if (typeof initOnboarding === 'function') initOnboarding();
-    // Pre-fill name AFTER initOnboarding has rendered step 1, not inside the same tick
-    setTimeout(() => {
-      const nameEl = document.getElementById('obName');
-      if (nameEl && S.profile && S.profile.name) nameEl.value = S.profile.name;
-    }, 50);
-  }, 420);
+  // initOnboarding seeds name + biz from S.profile and S._setupBizName internally
+  setTimeout(() => { if (typeof initOnboarding === 'function') initOnboarding(); }, 420);
 }
 
 function bootApp() {
