@@ -1163,6 +1163,57 @@ input[type=range] { width: 100%; accent-color: #22c55e; }
         </div>
       </div>
 
+      <!-- ONBOARDING -->
+      <div class="view" id="v-onboarding" style="background:#000;padding:0">
+        <div style="display:flex;flex-direction:column;height:100%;padding:calc(env(safe-area-inset-top,0px) + 48px) 28px calc(env(safe-area-inset-bottom,0px) + 32px);font-family:'Outfit',sans-serif">
+
+          <!-- progress dots -->
+          <div id="ob-dots" style="display:flex;gap:6px;margin-bottom:40px"></div>
+
+          <!-- step 1: name -->
+          <div id="ob-s1" style="flex:1;display:flex;flex-direction:column">
+            <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+              <div style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#22c55e;margin-bottom:16px">Welcome to Stratus</div>
+              <div style="font-size:38px;font-weight:700;color:#fff;letter-spacing:-1.5px;line-height:1.05;margin-bottom:12px">Your rise<br>starts here.</div>
+              <div style="font-size:15px;color:#8e8e93;margin-bottom:48px;line-height:1.6">Build habits. Track goals. Own your day.<br>Let's start with a name.</div>
+              <input id="ob-name-input" type="text" placeholder="What do your friends call you?" autocomplete="off" autocorrect="off"
+                style="width:100%;background:#1c1c1e;border:1.5px solid #2c2c2e;border-radius:16px;padding:18px 20px;color:#fff;font-family:'Outfit',sans-serif;font-size:18px;font-weight:500;outline:none;-webkit-appearance:none;"
+                oninput="obName=this.value"
+              />
+            </div>
+            <button onclick="obNext()" style="width:100%;padding:18px;background:#22c55e;border:none;border-radius:16px;color:#000;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:-0.2px;margin-top:24px">Let's go →</button>
+            <button onclick="obSkip()" style="width:100%;padding:14px;background:transparent;border:none;border-radius:16px;color:#48484a;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px">Skip for now</button>
+          </div>
+
+          <!-- step 2: focus areas -->
+          <div id="ob-s2" style="display:none;flex:1;flex-direction:column">
+            <div style="flex:1;display:flex;flex-direction:column">
+              <div style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#22c55e;margin-bottom:16px">Step 2 of 3</div>
+              <div id="ob-s2-title" style="font-size:32px;font-weight:700;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:10px">What are you focused on?</div>
+              <div style="font-size:15px;color:#8e8e93;margin-bottom:32px">Pick everything that applies. You can always change this later.</div>
+              <div id="ob-focus-chips" style="display:flex;flex-wrap:wrap;gap:10px"></div>
+            </div>
+            <button id="ob-s2-btn" onclick="obNext()" style="width:100%;padding:18px;background:#1c1c1e;border:1.5px solid #2c2c2e;border-radius:16px;color:#8e8e93;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;transition:all 0.3s;margin-top:32px">Skip for now →</button>
+          </div>
+
+          <!-- step 3: confirmation -->
+          <div id="ob-s3" style="display:none;flex:1;flex-direction:column">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+              <div style="width:80px;height:80px;border-radius:24px;background:#22c55e18;border:1.5px solid #22c55e44;display:flex;align-items:center;justify-content:center;margin-bottom:28px">
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+                  <path d="M6 18l8 8L30 10" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#22c55e;margin-bottom:14px">You're all set</div>
+              <div id="ob-s3-title" style="font-size:34px;font-weight:700;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:14px">Ready to rise? 🚀</div>
+              <div id="ob-s3-body" style="font-size:15px;color:#8e8e93;line-height:1.6;max-width:280px">Start by adding your first habit or goal. Stratus tracks the rest.</div>
+            </div>
+            <button onclick="obFinish()" style="width:100%;padding:18px;background:#22c55e;border:none;border-radius:16px;color:#000;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:-0.2px;margin-top:24px">Let's go ✦</button>
+          </div>
+
+        </div>
+      </div>
+
     </div>
 
     <!-- HABIT DETAIL SHEET -->
@@ -3293,151 +3344,106 @@ input[type=range] { width: 100%; accent-color: #22c55e; }
     { label: 'Creative', icon: '🎨' },
   ];
 
-  function buildOnboarding() {
-    const existing = document.getElementById('onboarding-overlay');
-    if (existing) existing.remove();
-
-    const overlay = document.createElement('div');
-    overlay.id = 'onboarding-overlay';
-    overlay.style.cssText = `
-      position:fixed;inset:0;background:#000;z-index:9999;
-      display:flex;flex-direction:column;
-      padding: calc(env(safe-area-inset-top,0px) + 48px) 28px calc(env(safe-area-inset-bottom,0px) + 32px);
-      font-family:'Outfit',sans-serif;
-      transition:opacity 0.5s cubic-bezier(.22,1,.36,1);
-    `;
-
-    const accent = '#22c55e';
-
-    // step dots
-    const dots = [1,2,3].map(i =>
-      `<div style="width:${obStep===i?20:6}px;height:6px;border-radius:3px;background:${obStep===i?accent:'#2c2c2e'};transition:all 0.3s"></div>`
-    ).join('');
-
-    let body = '';
-
-    if (obStep === 1) {
-      body = `
-        <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
-          <div style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${accent};margin-bottom:16px">Welcome to Stratus</div>
-          <div style="font-size:38px;font-weight:700;color:#fff;letter-spacing:-1.5px;line-height:1.05;margin-bottom:12px">Your rise<br>starts here.</div>
-          <div style="font-size:15px;color:#8e8e93;margin-bottom:48px;line-height:1.6">Build habits. Track goals. Own your day.<br>Let's start with a name.</div>
-          <input id="ob-name-input" type="text" placeholder="What do your friends call you?" autocomplete="off" autocorrect="off"
-            style="width:100%;background:#1c1c1e;border:1.5px solid #2c2c2e;border-radius:16px;padding:18px 20px;color:#fff;font-family:'Outfit',sans-serif;font-size:18px;font-weight:500;outline:none;-webkit-appearance:none;"
-            oninput="obName=this.value"
-            value="${obName}"
-          />
-        </div>
-        <button onclick="obNext()" style="width:100%;padding:18px;background:${accent};border:none;border-radius:16px;color:#000;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:-0.2px;margin-top:24px">
-          Let's go →
-        </button>
-        <button onclick="obSkip()" style="width:100%;padding:14px;background:transparent;border:none;border-radius:16px;color:#48484a;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;cursor:pointer;margin-top:8px">
-          Skip for now
-        </button>
-      `;
-    } else if (obStep === 2) {
-      const chips = FOCUS_OPTS.map(f => {
-        const on = obFocuses.includes(f.label);
-        return `<button onclick="obToggleFocus('${f.label}',this)" style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:${on ? accent+'22' : '#1c1c1e'};border:1.5px solid ${on ? accent : '#2c2c2e'};border-radius:12px;color:${on ? '#fff' : '#8e8e93'};font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s">
-          <span>${f.icon}</span>${f.label}
-        </button>`;
-      }).join('');
-      body = `
-        <div style="flex:1;display:flex;flex-direction:column">
-          <div style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${accent};margin-bottom:16px">Step 2 of 3</div>
-          <div style="font-size:32px;font-weight:700;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:10px">What are you focused on${obName ? ', ' + obName : ''}?</div>
-          <div style="font-size:15px;color:#8e8e93;margin-bottom:32px">Pick everything that applies. You can always change this later.</div>
-          <div style="display:flex;flex-wrap:wrap;gap:10px">${chips}</div>
-        </div>
-        <button onclick="obNext()" style="width:100%;padding:18px;background:${obFocuses.length ? accent : '#1c1c1e'};border:1.5px solid ${obFocuses.length ? accent : '#2c2c2e'};border-radius:16px;color:${obFocuses.length ? '#000' : '#8e8e93'};font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;transition:all 0.3s;margin-top:32px">
-          ${obFocuses.length ? 'Continue →' : 'Skip for now →'}
-        </button>
-      `;
-    } else if (obStep === 3) {
-      body = `
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
-          <div style="width:80px;height:80px;border-radius:24px;background:${accent}18;border:1.5px solid ${accent}44;display:flex;align-items:center;justify-content:center;margin-bottom:28px">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-              <path d="M6 18l8 8L30 10" stroke="${accent}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div style="font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${accent};margin-bottom:14px">You're all set</div>
-          <div style="font-size:34px;font-weight:700;color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:14px">Ready to rise${obName ? ',<br>' + obName : ''}? 🚀</div>
-          <div style="font-size:15px;color:#8e8e93;line-height:1.6;max-width:280px">
-            ${obFocuses.length ? 'Your focus areas: <span style="color:#fff;font-weight:600">' + obFocuses.slice(0,3).join(', ') + (obFocuses.length > 3 ? ' +' + (obFocuses.length-3) + ' more' : '') + '</span><br><br>' : ''}
-            Start by adding your first habit or goal. Stratus tracks the rest.
-          </div>
-        </div>
-        <button onclick="obFinish()" style="width:100%;padding:18px;background:${accent};border:none;border-radius:16px;color:#000;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;letter-spacing:-0.2px;margin-top:24px">
-          Let's go ✦
-        </button>
-      `;
-    }
-
-    overlay.innerHTML = `
-      <div style="display:flex;gap:6px;margin-bottom:40px">${dots}</div>
-      ${body}
-    `;
-
-    document.body.appendChild(overlay);
-    if (obStep === 1) setTimeout(() => overlay.querySelector('#ob-name-input')?.focus(), 200);
+  function showOnboarding() {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('v-onboarding').classList.add('active');
+    showObStep(obStep);
   }
 
-  function obToggleFocus(label, btn) {
-    const idx = obFocuses.indexOf(label);
-    if (idx > -1) {
-      obFocuses.splice(idx, 1);
-    } else {
-      obFocuses.push(label);
+  function showObStep(step) {
+    obStep = step;
+    const accent = getComputedStyle(phone).getPropertyValue('--accent').trim() || '#22c55e';
+
+    // update progress dots
+    const dotsEl = document.getElementById('ob-dots');
+    if (dotsEl) {
+      dotsEl.innerHTML = [1,2,3].map(i =>
+        `<div style="width:${obStep===i?20:6}px;height:6px;border-radius:3px;background:${obStep===i?accent:'#2c2c2e'};transition:all 0.3s"></div>`
+      ).join('');
     }
-    buildOnboarding(); // re-render to update button state
+
+    // show correct step, hide others
+    ['ob-s1','ob-s2','ob-s3'].forEach((id, idx) => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = (idx + 1 === step) ? 'flex' : 'none';
+    });
+
+    if (step === 1) {
+      const inp = document.getElementById('ob-name-input');
+      if (inp) { inp.value = obName; setTimeout(() => inp.focus(), 200); }
+    } else if (step === 2) {
+      const title = document.getElementById('ob-s2-title');
+      if (title) title.textContent = 'What are you focused on' + (obName ? ', ' + obName : '') + '?';
+      renderObFocusChips();
+    } else if (step === 3) {
+      const title = document.getElementById('ob-s3-title');
+      if (title) title.innerHTML = 'Ready to rise' + (obName ? ',<br>' + obName : '') + '? 🚀';
+      const body = document.getElementById('ob-s3-body');
+      if (body) {
+        body.innerHTML = obFocuses.length
+          ? 'Your focus areas: <span style="color:#fff;font-weight:600">' + obFocuses.slice(0,3).join(', ') + (obFocuses.length > 3 ? ' +' + (obFocuses.length-3) + ' more' : '') + '</span><br><br>Start by adding your first habit or goal. Stratus tracks the rest.'
+          : 'Start by adding your first habit or goal. Stratus tracks the rest.';
+      }
+    }
+  }
+
+  function renderObFocusChips() {
+    const accent = getComputedStyle(phone).getPropertyValue('--accent').trim() || '#22c55e';
+    const chipsEl = document.getElementById('ob-focus-chips');
+    if (!chipsEl) return;
+    chipsEl.innerHTML = FOCUS_OPTS.map(f => {
+      const on = obFocuses.includes(f.label);
+      return `<button onclick="obToggleFocus('${f.label}')" style="display:flex;align-items:center;gap:8px;padding:12px 16px;background:${on ? accent+'22' : '#1c1c1e'};border:1.5px solid ${on ? accent : '#2c2c2e'};border-radius:12px;color:${on ? '#fff' : '#8e8e93'};font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s"><span>${f.icon}</span>${f.label}</button>`;
+    }).join('');
+    const btn = document.getElementById('ob-s2-btn');
+    if (btn) {
+      btn.style.background = obFocuses.length ? accent : '#1c1c1e';
+      btn.style.borderColor = obFocuses.length ? accent : '#2c2c2e';
+      btn.style.color = obFocuses.length ? '#000' : '#8e8e93';
+      btn.textContent = obFocuses.length ? 'Continue →' : 'Skip for now →';
+    }
+  }
+
+  function obToggleFocus(label) {
+    const idx = obFocuses.indexOf(label);
+    if (idx > -1) obFocuses.splice(idx, 1);
+    else obFocuses.push(label);
+    renderObFocusChips();
   }
 
   function obSkip() {
     saveToStorage();
-    const overlay = document.getElementById('onboarding-overlay');
-    if (overlay) {
-      overlay.style.opacity = '0';
-      overlay.style.transform = 'scale(1.03)';
-      overlay.style.transition = 'opacity 0.5s cubic-bezier(.22,1,.36,1), transform 0.5s cubic-bezier(.22,1,.36,1)';
-      setTimeout(() => overlay.remove(), 500);
-    }
+    const homeTab = document.querySelector('.nav-tab[data-v="v-home"]');
+    if (homeTab) sw(homeTab);
   }
 
   function obNext() {
     if (obStep === 1) {
       const inp = document.getElementById('ob-name-input');
-      obName = (inp ? inp.value.trim() : obName);
+      obName = inp ? inp.value.trim() : obName;
       if (!obName) {
         if (inp) { inp.style.borderColor = '#ff453a'; setTimeout(() => inp.style.borderColor = '#2c2c2e', 1200); }
         return;
       }
     }
-    obStep++;
-    buildOnboarding();
+    showObStep(obStep + 1);
   }
 
   function obFinish() {
-    // apply name
     if (obName) {
       setName(obName);
-      const profileInput = document.querySelector('#v-profile input[type=text]');
+      const profileInput = document.getElementById('profile-name-input');
       if (profileInput) profileInput.value = obName;
     }
     saveToStorage();
-    // dismiss
-    const overlay = document.getElementById('onboarding-overlay');
-    if (overlay) {
-      overlay.style.opacity = '0';
-      overlay.style.transform = 'scale(1.03)';
-      overlay.style.transition = 'opacity 0.5s cubic-bezier(.22,1,.36,1), transform 0.5s cubic-bezier(.22,1,.36,1)';
-      setTimeout(() => overlay.remove(), 500);
-    }
+    const homeTab = document.querySelector('.nav-tab[data-v="v-home"]');
+    if (homeTab) sw(homeTab);
   }
 
   // kick off onboarding only for new users
   if (!hadSavedData) {
-    buildOnboarding();
+    showOnboarding();
   }
 
   // ── FOCUS MODE ────────────────────────────────────────
@@ -3930,7 +3936,7 @@ self.addEventListener('fetch', e => {
   function redoOnboarding() {
     obStep = 1;
     obName = document.getElementById('profile-name-input')?.value || '';
-    buildOnboarding();
+    showOnboarding();
   }
 
   function doSignOut() {
