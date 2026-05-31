@@ -10837,12 +10837,18 @@ function handleGoogleSignIn() {
           } else {
             fbInitUser({uid: profile.id||'', displayName: profile.name||'', email: profile.email||'', photoURL: profile.picture||''});
           }
-          // Dismiss auth overlay
-          const ov = document.getElementById('authOverlay');
-          if(ov){ ov.classList.add('fading'); setTimeout(()=>{ ov.style.display='none'; ov.classList.remove('fading'); }, 400); }
-          // Trigger onboarding if new user
-          const isNew = !S.profile.name && !S.profile.googleName;
-          if(isNew && typeof initOnboarding === 'function') initOnboarding();
+          // Dismiss whichever auth overlay is currently visible
+          const gateOv = document.getElementById('gateOverlay');
+          const authOv = document.getElementById('authOverlay');
+          if(gateOv && !gateOv.classList.contains('hidden')) {
+            // Called from the pre-auth gate — advance through the new signup flow
+            gateAuthSuccess('google');
+          } else {
+            if(authOv){ authOv.classList.add('fading'); setTimeout(()=>{ authOv.style.display='none'; authOv.classList.remove('fading'); }, 400); }
+            // Legacy path: trigger onboarding if new user
+            const isNew = !S.profile.name && !S.profile.googleName;
+            if(isNew && typeof initOnboarding === 'function') initOnboarding();
+          }
         } catch(e) {
           if(btn){ btn.disabled=false; }
         }
