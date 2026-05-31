@@ -583,7 +583,7 @@ input[type=text] {
 </div>
           <div class="hero-card">
             <div class="greeting">Good morning,</div>
-            <div class="name" id="hero-name">Jaylen</div>
+            <div class="name" id="hero-name">you</div>
             <div class="divider"></div>
             <div class="hero-body" id="hero-habits-body">You have 3 goals in progress today.</div>
             <div class="hero-hint">Stay consistent — small steps compound.</div>
@@ -903,7 +903,7 @@ input[type=text] {
               <div class="avatar" id="profile-avatar">S</div>
               <div style="flex:1">
                 <div style="font-size:17px;font-weight:700;color:var(--white);letter-spacing:-0.3px" id="profile-name">Stratus</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px">Member since May 2026</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px" id="member-since">Member since —</div>
               </div>
               <span class="badge">Free</span>
             </div>
@@ -1762,8 +1762,8 @@ input[type=text] {
 
   // ── SHARED HABITS STORE ──────────────────────────────
   // Each habit: { id, name, cat, icon, streak, weekDone[7 bools], target, unit }
-  // weekDone index 0=Mon ... 6=Sun, today = index 4 (Fri May 1)
-  const TODAY_IDX = 4;
+  // weekDone index 0=Mon ... 6=Sun; compute today dynamically (Sun=0→6, Mon=1→0 ... Sat=6→5)
+  const TODAY_IDX = (new Date().getDay() + 6) % 7;
   const WEEK_LABELS = ['M','T','W','T','F','S','S'];
 
   const habits = [];
@@ -2317,6 +2317,13 @@ input[type=text] {
     // keep monthly panel title current
     const ml = document.getElementById('monthly-panel-title');
     if (ml) ml.textContent = months[now.getMonth()] + ' ' + now.getFullYear();
+    // member since — set once on first load if not already stored
+    const ms = document.getElementById('member-since');
+    if (ms) {
+      const stored = localStorage.getItem('stratus_member_since');
+      if (!stored) localStorage.setItem('stratus_member_since', months[now.getMonth()] + ' ' + now.getFullYear());
+      ms.textContent = 'Member since ' + (stored || months[now.getMonth()] + ' ' + now.getFullYear());
+    }
   }
   setLiveDate();
 
@@ -2649,7 +2656,8 @@ input[type=text] {
   // seed data: key = "YYYY-M-D"
   const calEvents = {};
 
-  let selYear = 2026, selMonth = 5, selDay = 1;
+  const _now = new Date();
+  let selYear = _now.getFullYear(), selMonth = _now.getMonth() + 1, selDay = _now.getDate();
   let sheetCat = '', sheetTime = '';
 
   function calKey(y, m, d) { return y + '-' + m + '-' + d; }
