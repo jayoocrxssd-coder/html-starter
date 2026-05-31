@@ -2039,7 +2039,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 <div class="page active" id="page-dashboard">
   <div class="ph">
     <div>
-      <div class="pt" id="dashGreeting">Good afternoon, cRes.</div>
+      <div class="pt" id="dashGreeting">Good morning.</div>
       <div class="ps" id="dashDate">Saturday, May 16</div>
     </div>
     <div class="ps" id="sessionInfoDisplay" style="text-align:right">Session: 00:00:00</div>
@@ -2963,7 +2963,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
               <div class="settings-label">Greeting Name</div>
               <div class="settings-sub">Used in dashboard greeting</div>
             </div>
-            <input type="text" id="greetingNameInput" placeholder="e.g. Alex" style="width:120px">
+            <input type="text" id="greetingNameInput" placeholder="Name" style="width:120px">
           </div>
         </div>
         <div class="card">
@@ -3985,7 +3985,8 @@ function setTimerState(r) {
   const bb = document.getElementById('bigTimerBtn'); if (bb) bb.textContent = r ? 'PAUSE SESSION' : 'START SESSION';
   const bt = document.getElementById('bigTimer'); if (bt) bt.classList.toggle('running', r);
   const ds = document.getElementById('dashTimerStatus'); if (ds) ds.textContent = r ? 'Session active' : 'Session paused';
-  const bs = document.getElementById('bigTimerStatus'); if (bs) bs.textContent = r ? 'Session running, Sir.' : 'Awaiting orders, Sir.';
+  const _gn2=(S.profile&&S.profile.name&&S.profile.name.trim())||(S.profile&&S.profile.greetingName&&S.profile.greetingName.trim())||'';
+  const bs = document.getElementById('bigTimerStatus'); if (bs) bs.textContent = (r ? 'Session running' : 'Awaiting orders') + (_gn2?', '+_gn2:'') + '.';
 }
 function syncTimerUI() {
   const fmt = fmtTime(timerSeconds);
