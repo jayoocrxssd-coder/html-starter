@@ -830,13 +830,55 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .event-popup-type{display:none}
 
 /* ── ONBOARDING ── */
+/* ── ONBOARDING PHASE 1: structure, motion, progress bar ── */
 .ob-overlay{position:fixed;inset:0;z-index:2000;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .4s ease}
 .ob-overlay.fading{opacity:0;pointer-events:none}
 .ob-shell{width:100%;max-width:680px;padding:0 20px}
-.ob-progress{display:flex;gap:4px;margin-bottom:32px;justify-content:center}
-.ob-pip{height:3px;width:32px;border-radius:2px;background:var(--bg3);transition:background .3s}
-.ob-pip.active{background:var(--accent)}
-.ob-card{background:var(--surface);border:.5px solid var(--border2);border-radius:20px;overflow:hidden;animation:launch-in .3s cubic-bezier(.34,1.4,.64,1)}
+
+/* Progress bar replaces pips */
+.ob-progress{position:relative;height:3px;background:var(--bg3);border-radius:2px;margin-bottom:32px;overflow:hidden}
+.ob-progress-fill{position:absolute;left:0;top:0;height:100%;background:var(--accent);border-radius:2px;transition:width .45s cubic-bezier(.4,0,.2,1)}
+
+/* Card: clip overflow so slides stay inside */
+.ob-card{background:var(--surface);border:.5px solid var(--border2);border-radius:20px;overflow:hidden;position:relative}
+
+/* Step wrapper — all steps sit in flow; only active one visible */
+.ob-step-wrap{width:100%}
+.ob-step-wrap.ob-entering-fwd{animation:ob-slide-in-fwd .32s cubic-bezier(.34,1.2,.64,1) both}
+.ob-step-wrap.ob-entering-back{animation:ob-slide-in-back .32s cubic-bezier(.34,1.2,.64,1) both}
+.ob-step-wrap.ob-leaving-fwd{animation:ob-slide-out-fwd .22s ease-in both}
+.ob-step-wrap.ob-leaving-back{animation:ob-slide-out-back .22s ease-in both}
+
+@keyframes ob-slide-in-fwd{from{opacity:0;transform:translateX(48px)}to{opacity:1;transform:translateX(0)}}
+@keyframes ob-slide-in-back{from{opacity:0;transform:translateX(-48px)}to{opacity:1;transform:translateX(0)}}
+@keyframes ob-slide-out-fwd{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-48px)}}
+@keyframes ob-slide-out-back{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(48px)}}
+
+/* Staggered content entrance — children of ob-header and ob-body */
+.ob-step-wrap.ob-entering-fwd .ob-eyebrow,
+.ob-step-wrap.ob-entering-back .ob-eyebrow{animation:ob-child-in .28s .06s cubic-bezier(.34,1.2,.64,1) both}
+.ob-step-wrap.ob-entering-fwd .ob-title,
+.ob-step-wrap.ob-entering-back .ob-title{animation:ob-child-in .28s .10s cubic-bezier(.34,1.2,.64,1) both}
+.ob-step-wrap.ob-entering-fwd .ob-sub,
+.ob-step-wrap.ob-entering-back .ob-sub{animation:ob-child-in .28s .14s cubic-bezier(.34,1.2,.64,1) both}
+.ob-step-wrap.ob-entering-fwd .ob-body,
+.ob-step-wrap.ob-entering-back .ob-body{animation:ob-child-in .3s .18s cubic-bezier(.34,1.2,.64,1) both}
+.ob-step-wrap.ob-entering-fwd .ob-footer,
+.ob-step-wrap.ob-entering-back .ob-footer{animation:ob-child-in .28s .22s cubic-bezier(.34,1.2,.64,1) both}
+
+@keyframes ob-child-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Reduced-motion: kill all onboarding transitions */
+@media(prefers-reduced-motion:reduce){
+  .ob-step-wrap.ob-entering-fwd,.ob-step-wrap.ob-entering-back,
+  .ob-step-wrap.ob-leaving-fwd,.ob-step-wrap.ob-leaving-back,
+  .ob-step-wrap.ob-entering-fwd .ob-eyebrow,.ob-step-wrap.ob-entering-back .ob-eyebrow,
+  .ob-step-wrap.ob-entering-fwd .ob-title,.ob-step-wrap.ob-entering-back .ob-title,
+  .ob-step-wrap.ob-entering-fwd .ob-sub,.ob-step-wrap.ob-entering-back .ob-sub,
+  .ob-step-wrap.ob-entering-fwd .ob-body,.ob-step-wrap.ob-entering-back .ob-body,
+  .ob-step-wrap.ob-entering-fwd .ob-footer,.ob-step-wrap.ob-entering-back .ob-footer{animation:none!important}
+  .ob-progress-fill{transition:none!important}
+}
 .ob-header{padding:36px 40px 0}
 .ob-eyebrow{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
 .ob-error{display:none;font-size:11px;color:#e05;font-weight:700;margin-top:8px;padding:8px 12px;background:rgba(238,0,85,.07);border-radius:8px}
@@ -9948,6 +9990,7 @@ document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){closeEventPopup()
 
 const OB_STEPS = 9; // 0-8: 0=welcome, 1=ToS, 2=identity, 3=operator type, 4=plan, 5=businesses, 6=goals, 7=theme, 8=summary
 let obStep = 0;
+let _obPrevStep = -1;
 let obData = {
   name: '', role: '', operatorType: '',
   businesses: [], goals: [],
@@ -9965,6 +10008,7 @@ function redoOnboarding(){
 
 function initOnboarding(){
   obStep = 0;
+  _obPrevStep = -1;
   // Seed name & business from the pre-onboarding signup flow if present
   const seedName = (S.profile && S.profile.name) || '';
   const seedBiz  = S._setupBizName || '';
@@ -9992,17 +10036,42 @@ function initOnboarding(){
 }
 
 function renderObProgress(){
-  const el=document.getElementById('obProgress');if(!el)return;
-  el.innerHTML=Array.from({length:OB_STEPS},(_,i)=>
-    `<div class="ob-pip ${i<=obStep?'active':''}"></div>`
-  ).join('');
+  const fill=document.getElementById('obProgressFill');if(!fill)return;
+  // Step 0 shows a sliver so bar is visible immediately; step 8 = 100%
+  const pct=obStep===0?4:Math.round((obStep/(OB_STEPS-1))*100);
+  fill.style.width=pct+'%';
 }
 
 function showObStep(step){
+  const direction=step>_obPrevStep?'fwd':'back';
+  // Hide current active step with leave animation
   for(let i=0;i<OB_STEPS;i++){
-    const el=document.getElementById('obStep'+i);
-    if(el)el.style.display=i===step?'block':'none';
+    const wrap=document.getElementById('obStep'+i);
+    if(!wrap)continue;
+    if(i===_obPrevStep&&i!==step){
+      wrap.classList.remove('ob-entering-fwd','ob-entering-back');
+      wrap.classList.add(direction==='fwd'?'ob-leaving-fwd':'ob-leaving-back');
+      // Capture wrap reference so timeout targets the correct element even if user advances quickly
+      const leavingWrap=wrap;
+      setTimeout(()=>{
+        leavingWrap.style.display='none';
+        leavingWrap.classList.remove('ob-leaving-fwd','ob-leaving-back');
+      },220);
+    } else if(i!==step){
+      wrap.style.display='none';
+      wrap.classList.remove('ob-entering-fwd','ob-entering-back','ob-leaving-fwd','ob-leaving-back');
+    }
   }
+  // Show incoming step
+  const next=document.getElementById('obStep'+step);
+  if(next){
+    next.style.display='block';
+    next.classList.remove('ob-entering-fwd','ob-entering-back','ob-leaving-fwd','ob-leaving-back');
+    // Force reflow so animation triggers fresh
+    void next.offsetWidth;
+    next.classList.add(direction==='fwd'?'ob-entering-fwd':'ob-entering-back');
+  }
+  _obPrevStep=step;
   renderObProgress();
   // Step-specific setup
   if(step===7) renderObThemePreview();
@@ -11730,11 +11799,11 @@ function renderSeatCount() {
 <!-- ═══ ONBOARDING OVERLAY ═══ -->
 <div class="ob-overlay" id="obOverlay" style="display:none">
   <div class="ob-shell">
-    <div class="ob-progress" id="obProgress"></div>
+    <div class="ob-progress" id="obProgress"><div class="ob-progress-fill" id="obProgressFill" style="width:4%"></div></div>
     <div class="ob-card" id="obCard">
 
       <!-- STEP 0: Welcome -->
-      <div id="obStep0">
+      <div id="obStep0" class="ob-step-wrap">
         <div class="ob-header">
           <div class="ob-eyebrow">Welcome to War Room</div>
           <div class="ob-title">Your personal<br>War Room awaits.</div>
@@ -11754,7 +11823,7 @@ function renderSeatCount() {
       </div>
 
       <!-- STEP 1: Terms of Service & Privacy Policy -->
-      <div id="obStep1" style="display:none">
+      <div id="obStep1" class="ob-step-wrap" style="display:none">
         <div class="ob-header">
           <div class="ob-eyebrow">Step 1 of 8 · Legal</div>
           <div class="ob-title">Before we begin.</div>
@@ -11786,7 +11855,7 @@ function renderSeatCount() {
       </div>
 
       <!-- STEP 2: Your name -->
-      <div id="obStep2" style="display:none">
+      <div id="obStep2" class="ob-step-wrap" style="display:none">
         <div class="ob-header">
           <div class="ob-eyebrow">Step 2 of 8 · Identity</div>
           <div class="ob-title">What should War Room<br>call you?</div>
@@ -11808,7 +11877,7 @@ function renderSeatCount() {
       </div>
 
       <!-- STEP 3: Operator type -->
-      <div id="obStep3" style="display:none">
+      <div id="obStep3" class="ob-step-wrap" style="display:none">
         <div class="ob-header">
           <div class="ob-eyebrow">Step 3 of 8 · How You Work</div>
           <div class="ob-title">How do you best<br>describe yourself?</div>
@@ -11855,7 +11924,7 @@ function renderSeatCount() {
       </div>
 
       <!-- STEP 4: Plan picker -->
-      <div id="obStep4" style="display:none">
+      <div id="obStep4" class="ob-step-wrap" style="display:none">
         <div class="ob-header">
           <div class="ob-eyebrow">Step 4 of 8 · Your Plan</div>
           <div class="ob-title">Choose your<br>War Room plan.</div>
@@ -11894,7 +11963,7 @@ function renderSeatCount() {
       </div>
 
       <!-- STEP 5: Add businesses -->
-      <div id="obStep5" style="display:none">
+      <div id="obStep5" class="ob-step-wrap" style="display:none">
         <div class="ob-header">
           <div class="ob-eyebrow">Step 5 of 8 · Your Ventures</div>
           <div class="ob-title">What businesses are<br>you running?</div>
@@ -11920,7 +11989,7 @@ function renderSeatCount() {
       </div>
 
       <!-- STEP 6: First goals -->
-      <div id="obStep6" style="display:none">
+      <div id="obStep6" class="ob-step-wrap" style="display:none">
         <div class="ob-header">
           <div class="ob-eyebrow">Step 6 of 8 · Monthly Goals</div>
           <div class="ob-title">What are you focused on<br>this month?</div>
@@ -11947,7 +12016,7 @@ function renderSeatCount() {
       </div>
 
       <!-- STEP 7: Theme pick -->
-      <div id="obStep7" style="display:none">
+      <div id="obStep7" class="ob-step-wrap" style="display:none">
         <div class="ob-header">
           <div class="ob-eyebrow">Step 7 of 8 · Look &amp; Feel</div>
           <div class="ob-title">Make it yours.</div>
@@ -11969,7 +12038,7 @@ function renderSeatCount() {
       </div>
 
       <!-- STEP 8: Summary & launch -->
-      <div id="obStep8" style="display:none">
+      <div id="obStep8" class="ob-step-wrap" style="display:none">
         <div class="ob-header">
           <div class="ob-eyebrow">Step 8 of 8 · Ready</div>
           <div class="ob-title" id="obLaunchTitle">You're all set.</div>
