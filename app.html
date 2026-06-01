@@ -833,7 +833,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 /* ── ONBOARDING PHASE 1: structure, motion, progress bar ── */
 .ob-overlay{position:fixed;inset:0;z-index:2000;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:opacity .4s ease}
 .ob-overlay.fading{opacity:0;pointer-events:none}
-.ob-shell{width:100%;max-width:680px;padding:0 20px}
+.ob-shell{width:100%;max-width:760px;padding:0 20px}
 
 /* Progress bar replaces pips */
 .ob-progress{position:relative;height:3px;background:var(--bg3);border-radius:2px;margin-bottom:32px;overflow:hidden}
@@ -894,18 +894,50 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .ob-tos-check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
 .ob-tos-check-row label{font-size:12px;color:var(--text);line-height:1.5;cursor:pointer}
 .ob-tos-check-row a{color:var(--accent);text-decoration:underline}
-.ob-plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
-.ob-plan-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--r);padding:18px 14px;cursor:pointer;transition:transform .18s cubic-bezier(.34,1.2,.64,1),box-shadow .18s,border-color .15s;text-align:center;position:relative;overflow:hidden}
+/* ── Plan picker redesign ── */
+.ob-plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+.ob-plan-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:14px;padding:20px 16px 16px;cursor:pointer;transition:transform .18s cubic-bezier(.34,1.2,.64,1),box-shadow .18s,border-color .15s;text-align:left;position:relative;overflow:hidden;display:flex;flex-direction:column}
 .ob-plan-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1)}
 .ob-plan-card.sel{border-color:var(--accent);background:var(--accent-bg,var(--bg2));box-shadow:0 0 0 2px var(--accent),0 8px 24px rgba(0,0,0,.1);transform:translateY(-3px)}
-/* Ripple on plan card click */
-.ob-ripple{position:absolute;border-radius:50%;background:color-mix(in srgb,var(--accent) 25%,transparent);transform:scale(0);animation:ob-ripple-out .5s ease-out forwards;pointer-events:none}
-@keyframes ob-ripple-out{to{transform:scale(4);opacity:0}}
-/* Most Popular badge pulse */
-.ob-plan-badge{position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--accent-fg,#fff);font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 10px;border-radius:100px;white-space:nowrap;animation:ob-badge-pulse 2.4s ease-in-out infinite}
-.ob-plan-name{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--text);margin-bottom:4px}
-.ob-plan-price{font-size:18px;font-weight:800;color:var(--accent);margin-bottom:6px}
-.ob-plan-desc{font-size:10px;color:var(--text3);line-height:1.5}
+.ob-plan-card.ob-plan-featured{background:var(--text);border-color:var(--text)}
+.ob-plan-card.ob-plan-featured .ob-plan-name,.ob-plan-card.ob-plan-featured .ob-plan-tagline{color:var(--bg)!important}
+.ob-plan-card.ob-plan-featured .ob-plan-price-num{color:var(--accent-fg,var(--bg))!important}
+.ob-plan-card.ob-plan-featured .ob-plan-price-per{color:color-mix(in srgb,var(--bg) 65%,transparent)!important}
+.ob-plan-card.ob-plan-featured .ob-plan-divider{border-color:rgba(255,255,255,.12)!important}
+.ob-plan-card.ob-plan-featured .ob-plan-feat{color:rgba(255,255,255,.75)!important}
+.ob-plan-card.ob-plan-featured .ob-plan-feat-icon{color:var(--accent)!important}
+.ob-plan-card.ob-plan-featured .ob-plan-feat.ob-plan-feat-no{color:rgba(255,255,255,.3)!important}
+.ob-plan-card.ob-plan-featured.sel{box-shadow:0 0 0 2px var(--accent),0 10px 32px rgba(0,0,0,.22)!important}
+.ob-plan-card.ob-plan-featured:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,.22)}
+.ob-plan-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#e03;color:#fff;font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 12px;border-radius:0 0 8px 8px;white-space:nowrap;animation:ob-badge-pulse 2.4s ease-in-out infinite}
+.ob-plan-name{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;margin-top:4px}
+.ob-plan-price-row{display:flex;align-items:flex-end;gap:2px;margin-bottom:4px}
+.ob-plan-price-sup{font-size:14px;font-weight:800;color:var(--text);line-height:1;margin-bottom:6px}
+.ob-plan-price-num{font-size:38px;font-weight:800;color:var(--text);line-height:1;letter-spacing:-.03em}
+.ob-plan-price-per{font-size:11px;font-weight:600;color:var(--text3);margin-bottom:4px}
+.ob-plan-tagline{font-size:11px;color:var(--text3);line-height:1.5;margin-bottom:12px;min-height:30px}
+.ob-plan-divider{border:none;border-top:.5px solid var(--border2);margin:10px 0}
+.ob-plan-feats{display:flex;flex-direction:column;gap:7px;flex:1}
+.ob-plan-feat{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--text2);line-height:1.4}
+.ob-plan-feat-icon{font-size:11px;flex-shrink:0;margin-top:1px;color:var(--green,#1a7048)}
+.ob-plan-feat.ob-plan-feat-no{color:var(--text3);text-decoration:line-through}
+.ob-plan-feat.ob-plan-feat-no .ob-plan-feat-icon{color:var(--text3)}
+.ob-plan-feat strong{font-weight:700;color:inherit}
+.ob-plan-cta{margin-top:14px;width:100%;padding:9px 0;border-radius:8px;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1.5px solid var(--border2);background:transparent;color:var(--text);transition:all .15s;text-align:center}
+.ob-plan-cta:hover{border-color:var(--accent);color:var(--accent)}
+.ob-plan-card.sel .ob-plan-cta,.ob-plan-card.ob-plan-featured .ob-plan-cta{background:var(--accent);border-color:var(--accent);color:var(--accent-fg,#fff)}
+.ob-plan-cta:disabled{opacity:.45;cursor:default}
+/* Billing toggle */
+.ob-billing-toggle{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px}
+.ob-billing-label{font-size:11px;font-weight:700;color:var(--text3)}
+.ob-billing-label.active{color:var(--text)}
+.ob-billing-switch{width:36px;height:20px;border-radius:100px;background:var(--bg3);border:.5px solid var(--border2);position:relative;cursor:pointer;transition:background .2s}
+.ob-billing-switch.annual{background:var(--accent)}
+.ob-billing-switch::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s cubic-bezier(.34,1.4,.64,1);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ob-billing-switch.annual::after{transform:translateX(16px)}
+.ob-billing-chip{font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px;background:var(--green-bg,#e4f4ec);color:var(--green,#1a7048);border:.5px solid var(--green,#1a7048)}
+.ob-plan-footer-note{text-align:center;font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:10px;line-height:1.6}
+.ob-plan-footer-note span{color:var(--accent)}
 @keyframes ob-badge-pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 40%,transparent)}50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 0%,transparent)}}
 .ob-enterprise-contact{margin-top:14px;padding:14px;background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--r);display:none}
 /* Custom ToS checkboxes with animated SVG checkmark */
@@ -10083,7 +10115,8 @@ function initOnboarding(){
   // Seed name & business from the pre-onboarding signup flow if present
   const seedName = (S.profile && S.profile.name) || '';
   const seedBiz  = S._setupBizName || '';
-  obData = {name: seedName, role:'', operatorType:'', businesses:[], goals:[], theme:'stratus', dark:false, plan:'', tosAgreed:false, privacyAgreed:false};
+  _obBillingAnnual = false;
+  obData = {name: seedName, role:'', operatorType:'', businesses:[], goals:[], theme:'stratus', dark:false, plan:'', billing:'monthly', tosAgreed:false, privacyAgreed:false};
   if (seedBiz) obData.businesses.push({name: seedBiz, status: 'Active'});
   // Populate theme row
   const tr = document.getElementById('obThemeRow');
@@ -10256,6 +10289,7 @@ function obFireRipple(el, e){
 }
 
 function selectObPlan(el, plan, e){
+  if(plan==='small_business_coming') return; // Coming Soon — not selectable
   document.querySelectorAll('.ob-plan-card').forEach(c=>c.classList.remove('sel'));
   el.classList.add('sel');
   obData.plan=plan;
@@ -10264,6 +10298,23 @@ function selectObPlan(el, plan, e){
   // Show/hide enterprise contact block
   const ent=document.getElementById('obEnterpriseContact');
   if(ent) ent.style.display=plan==='enterprise'?'block':'none';
+}
+
+let _obBillingAnnual=false;
+function obToggleBilling(){
+  _obBillingAnnual=!_obBillingAnnual;
+  const sw=document.getElementById('obBillingSwitch');
+  const lbl1=document.getElementById('obBillingLbl1');
+  const lbl2=document.getElementById('obBillingLbl2');
+  if(sw) sw.classList.toggle('annual',_obBillingAnnual);
+  if(lbl1) lbl1.classList.toggle('active',!_obBillingAnnual);
+  if(lbl2) lbl2.classList.toggle('active',_obBillingAnnual);
+  // Update prices
+  const pPersonal=document.getElementById('obPricePersonal');
+  const pBiz=document.getElementById('obPriceBiz');
+  if(pPersonal) pPersonal.textContent=_obBillingAnnual?'9':'11';
+  if(pBiz) pBiz.textContent=_obBillingAnnual?'12':'14';
+  obData.billing=_obBillingAnnual?'annual':'monthly';
 }
 
 // ToS card glow — lights up when both boxes are checked
@@ -10483,6 +10534,7 @@ function obFinish(e){
   S.profile.avatar = '◈';
   S.profile.operatorType = obData.operatorType;
   S.profile.plan = obData.plan;
+  S.profile.billing = obData.billing||'monthly';
   S.profile.theme = obData.theme;
   S.profile.font = 'syne';
   S.profile.radius = '10';
@@ -12175,33 +12227,95 @@ function renderSeatCount() {
         <div class="ob-header">
           <div class="ob-eyebrow">Step 4 of 8 · Your Plan</div>
           <div class="ob-title">Choose your<br>War Room plan.</div>
-          <div class="ob-sub">Select the plan that fits your operation. You can upgrade anytime.</div>
+          <div class="ob-sub">Founder pricing locked in at launch. Upgrade or change anytime.</div>
         </div>
-        <div class="ob-body">
+        <div class="ob-body" style="padding-top:16px">
+
+          <!-- Billing toggle -->
+          <div class="ob-billing-toggle">
+            <span class="ob-billing-label active" id="obBillingLbl1">Monthly</span>
+            <div class="ob-billing-switch" id="obBillingSwitch" onclick="obToggleBilling()"></div>
+            <span class="ob-billing-label" id="obBillingLbl2">Annual</span>
+            <span class="ob-billing-chip">2 Months Free</span>
+          </div>
+
+          <!-- Plan cards -->
           <div class="ob-plan-grid">
+
+            <!-- Personal -->
             <div class="ob-plan-card" onclick="selectObPlan(this,'personal',event)">
               <div class="ob-plan-name">Personal</div>
-              <div class="ob-plan-price">Free</div>
-              <div class="ob-plan-desc">Solo operators, freelancers &amp; individuals. Core tools, one workspace.</div>
+              <div class="ob-plan-price-row">
+                <span class="ob-plan-price-sup">$</span>
+                <span class="ob-plan-price-num" id="obPricePersonal">11</span>
+                <span class="ob-plan-price-per">/mo</span>
+              </div>
+              <div class="ob-plan-tagline">Built for the solo operator.<br>Full War Room, zero noise.</div>
+              <hr class="ob-plan-divider">
+              <div class="ob-plan-feats">
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Full War Room dashboard</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>P&amp;L tracker + CSV export</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Mission board + whiteboard</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Calendar + AXIS daily briefing</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>1 workspace / user</div>
+                <div class="ob-plan-feat ob-plan-feat-no"><span class="ob-plan-feat-icon">✕</span>Team accounts</div>
+              </div>
+              <button class="ob-plan-cta" onclick="selectObPlan(this.closest('.ob-plan-card'),'personal',event)">Get Started →</button>
             </div>
-            <div class="ob-plan-card" onclick="selectObPlan(this,'small_business',event)" style="position:relative">
+
+            <!-- Small Business (featured) -->
+            <div class="ob-plan-card ob-plan-featured" onclick="selectObPlan(this,'small_business_coming',event)" style="position:relative">
               <div class="ob-plan-badge">Most Popular</div>
-              <div class="ob-plan-name">Small Business</div>
-              <div class="ob-plan-price">$19<span style="font-size:11px;font-weight:600">/mo</span></div>
-              <div class="ob-plan-desc">Multi-venture tracking, full P&amp;L, AXIS AI, team features &amp; cloud sync.</div>
+              <div class="ob-plan-name" style="margin-top:10px">Small Business</div>
+              <div class="ob-plan-price-row">
+                <span class="ob-plan-price-sup" style="color:var(--accent)">$</span>
+                <span class="ob-plan-price-num" id="obPriceBiz" style="color:var(--accent)">14</span>
+                <span class="ob-plan-price-per">/mo</span>
+              </div>
+              <div class="ob-plan-tagline" style="color:var(--accent)">Command your crew.<br>One room, one mission.</div>
+              <hr class="ob-plan-divider">
+              <div class="ob-plan-feats">
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Everything in Personal</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span><strong>3 team seats included</strong></div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span><strong>Shared mission board + calendar</strong></div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Shared whiteboard</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Team task assignment</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Business P&amp;L (owner-controlled)</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Private layers per member</div>
+              </div>
+              <button class="ob-plan-cta" disabled>Coming Soon</button>
             </div>
+
+            <!-- Enterprise -->
             <div class="ob-plan-card" onclick="selectObPlan(this,'enterprise',event)">
               <div class="ob-plan-name">Enterprise</div>
-              <div class="ob-plan-price" style="font-size:14px;padding-top:4px">Contact Us</div>
-              <div class="ob-plan-desc">Custom deployment, white-label, dedicated support &amp; SLA.</div>
+              <div class="ob-plan-price-row" style="align-items:baseline;margin-bottom:6px">
+                <span class="ob-plan-price-num" style="font-size:26px">Custom</span>
+              </div>
+              <div class="ob-plan-tagline">We build it around you.<br>Direct line to CRES.</div>
+              <hr class="ob-plan-divider">
+              <div class="ob-plan-feats">
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Everything in Small Business</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>White-label / custom branding</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Unlimited team seats</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Dedicated onboarding</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Custom feature builds</div>
+                <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Direct line to CRES Ventures</div>
+              </div>
+              <button class="ob-plan-cta" onclick="selectObPlan(this.closest('.ob-plan-card'),'enterprise',event)">Contact Us →</button>
             </div>
+
           </div>
+
+          <!-- Enterprise email -->
           <div class="ob-enterprise-contact" id="obEnterpriseContact">
-            <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Enterprise Inquiry</div>
-            <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">Our team will reach out to set up your custom deployment. Enter your business email and we'll be in touch within 1 business day.</div>
+            <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Enterprise Inquiry</div>
+            <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.6">Our team will reach out within 1 business day to set up your custom deployment.</div>
             <input class="ob-input" id="obEnterpriseEmail" placeholder="Business email address..." style="margin-bottom:0">
           </div>
+
           <div class="ob-error" id="obPlanError"></div>
+          <div class="ob-plan-footer-note">Beta access is free · Personal saves $24/yr · <span>Small Business saves $28/yr (2 months free)</span> · Founder pricing locks in at launch.</div>
         </div>
         <div class="ob-footer">
           <span class="ob-skip" onclick="obBack()">← Back</span>
