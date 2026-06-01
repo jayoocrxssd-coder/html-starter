@@ -5571,7 +5571,14 @@ const KCOLS=['Planned','In Progress','Done'];
 function renderKanban(){
   const filter=document.getElementById('strategyBizFilter')?.value||'all';
   let tasks=S.tasks;
-  if(filter!=='all')tasks=tasks.filter(t=>String(t.bizId)===filter);
+  if(filter==='all'){
+    // show everything
+  } else if(filter==='-1'){
+    // "My Project" — tasks with no bizId or bizId === -1
+    tasks=tasks.filter(t=>!t.bizId||t.bizId===-1);
+  } else {
+    tasks=tasks.filter(t=>String(t.bizId)===filter);
+  }
   document.getElementById('kanbanBoard').innerHTML=KCOLS.map(col=>{
     const colTasks=tasks.filter(t=>t.status===col);
     const isDoneCol=col==='Done';
@@ -5591,7 +5598,8 @@ function renderKanban(){
 function dumpCompletedMissions(){
   const filter=document.getElementById('strategyBizFilter')?.value||'all';
   let doneTasks=S.tasks.filter(t=>t.status==='Done');
-  if(filter!=='all')doneTasks=doneTasks.filter(t=>String(t.bizId)===filter);
+  if(filter==='-1')doneTasks=doneTasks.filter(t=>!t.bizId||t.bizId===-1);
+  else if(filter!=='all')doneTasks=doneTasks.filter(t=>String(t.bizId)===filter);
   if(!doneTasks.length)return;
   _dangerConfirm(`Permanently delete all ${doneTasks.length} completed mission${doneTasks.length>1?'s':''}? This cannot be undone.`,function(){
     const doneIds=new Set(doneTasks.map(t=>t.id));
@@ -10266,7 +10274,22 @@ function obBack(){
 }
 
 function skipOnboarding(){
-  // Skip is disabled — onboarding is required. No-op.
+  if(!S.profile)S.profile={};
+  S.profile.name=S.profile.name||'Tester';
+  S.profile.plan=S.profile.plan||'personal';
+  S.profile.billing=S.profile.billing||'monthly';
+  S.onboarded=true;
+  save();
+  const overlay=document.getElementById('obOverlay');
+  overlay.classList.add('ob-exit');
+  setTimeout(()=>{
+    overlay.style.display='none';
+    overlay.classList.remove('ob-exit','fading');
+    refreshBizNav();
+    refreshSelects();
+    renderProfileBizGrid();
+    renderDashboard();
+  },400);
 }
 
 function selectObRole(el, type){
@@ -12099,6 +12122,7 @@ function renderSeatCount() {
 <div class="ob-overlay" id="obOverlay" style="display:none">
   <div class="ob-shell">
     <div class="ob-progress" id="obProgress"><div class="ob-progress-fill" id="obProgressFill" style="width:4%"></div></div>
+    <div style="text-align:right;padding:0 4px 4px;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3)"><span style="cursor:pointer;border-bottom:1px dashed currentColor;opacity:.55" onclick="skipOnboarding()" title="Dev shortcut — skips onboarding">skip (dev)</span></div>
     <div class="ob-card" id="obCard">
 
       <!-- STEP 0: Welcome -->
@@ -12260,7 +12284,7 @@ function renderSeatCount() {
                 <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>1 workspace / user</div>
                 <div class="ob-plan-feat ob-plan-feat-no"><span class="ob-plan-feat-icon">✕</span>Team accounts</div>
               </div>
-              <button class="ob-plan-cta" onclick="selectObPlan(this.closest('.ob-plan-card'),'personal',event)">Get Started →</button>
+              <button class="ob-plan-cta" onclick="selectObPlan(this.closest('.ob-plan-card'),'personal',event);obNext()">Get Started →</button>
             </div>
 
             <!-- Small Business (featured) -->
@@ -12302,7 +12326,7 @@ function renderSeatCount() {
                 <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Custom feature builds</div>
                 <div class="ob-plan-feat"><span class="ob-plan-feat-icon">✓</span>Direct line to CRES Ventures</div>
               </div>
-              <button class="ob-plan-cta" onclick="selectObPlan(this.closest('.ob-plan-card'),'enterprise',event)">Contact Us →</button>
+              <button class="ob-plan-cta" onclick="selectObPlan(this.closest('.ob-plan-card'),'enterprise',event);obNext()">Contact Us →</button>
             </div>
 
           </div>
