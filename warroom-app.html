@@ -1082,6 +1082,34 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   }
   .mob-drive-btn:active { background: var(--bg3); }
   .mob-appear-btn { display: flex !important; }
+
+  /* ── Phase C: Dashboard widget optimisation ── */
+  /* Hide inline AXIS panel on dashboard — use full AXIS page via More tab */
+  .ai-panel { display: none !important; }
+
+  /* Dashboard row: remove fixed min-heights so cards don't overflow */
+  #page-dashboard .row > div[style*="min-height"] { min-height: 0 !important; }
+
+  /* KPI strip: 2-col */
+  #kpiStrip { grid-template-columns: repeat(2,1fr) !important; gap: 8px; }
+
+  /* Hide desktop goal/chart column on dashboard (chart still in tracker) */
+  #page-dashboard .col[style*="flex:.85"] { display: none !important; }
+
+  /* ── Phase D: AXIS page — full-height native feel ── */
+  #page-axis { padding: 0 !important; display: flex; flex-direction: column; height: 100%; }
+  #page-axis > div { padding: 0 !important; max-width: 100% !important; height: 100%; }
+  /* Compact AXIS header */
+  #page-axis [style*="padding:22px"] { padding: 12px 16px 10px !important; }
+  /* AXIS messages: full remaining height */
+  .axis-overlay-msgs { padding: 14px 16px !important; }
+  /* AXIS input bar: safe-area aware */
+  #page-axis [style*="padding:14px 26px"] {
+    padding: 10px 12px calc(env(safe-area-inset-bottom, 0px) + 10px) 12px !important;
+  }
+  /* Briefing/Clear buttons: smaller on mobile */
+  #briefingBtnAxis { font-size: 9px !important; padding: 5px 9px !important; }
+
 }
 
 /* ── Extra small (≤480px) ── */
@@ -3917,14 +3945,37 @@ function escapeHTML(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt
 
 const DEFAULT = {
   dark: false,
-  businesses: [],
-  tasks: [],
-  entries: [],
-  notes: [],
-  goals: [],
+  businesses: [
+    {id:1,name:'My Venture',color:'#6c8fff',type:'SaaS',stage:'Revenue',active:true,founded:'2024-01-01'}
+  ],
+  tasks: [
+    {id:2,title:'Define Q3 growth strategy',status:'Planned',priority:'High',bizId:1,notes:'',due:'',createdAt:Date.now()},
+    {id:3,title:'Launch landing page v2',status:'In Progress',priority:'High',bizId:1,notes:'Design done, needs dev',due:'',createdAt:Date.now()},
+    {id:4,title:'Set up Stripe billing',status:'In Progress',priority:'Medium',bizId:1,notes:'',due:'',createdAt:Date.now()},
+    {id:5,title:'Onboard first 3 beta users',status:'Done',priority:'High',bizId:1,notes:'Completed June 1',due:'',createdAt:Date.now()}
+  ],
+  entries: [
+    {id:6,type:'revenue',amount:4200,category:'Sales',bizId:1,date:'2026-05-01',note:'Client retainer'},
+    {id:7,type:'revenue',amount:1800,category:'Sales',bizId:1,date:'2026-05-15',note:'One-time project'},
+    {id:8,type:'expense',amount:890,category:'Software',bizId:1,date:'2026-05-05',note:'SaaS tools'},
+    {id:9,type:'expense',amount:400,category:'Marketing',bizId:1,date:'2026-05-20',note:'Ads'},
+    {id:10,type:'revenue',amount:5100,category:'Sales',bizId:1,date:'2026-06-01',note:'June retainer'}
+  ],
+  notes: [
+    {id:11,title:'Competitor analysis',content:'Researched 5 competitors. Gap: no mobile-first option in our space.',bizId:1,tags:['intel','strategy'],createdAt:Date.now()}
+  ],
+  goals: [
+    {id:12,title:'Reach $10k MRR',target:10000,current:5100,unit:'$',bizId:1,deadline:'2026-12-31',createdAt:Date.now()},
+    {id:13,title:'Close 5 paying clients',target:5,current:2,unit:'clients',bizId:1,deadline:'2026-09-30',createdAt:Date.now()}
+  ],
   goalLog: [],
-  recent: [],
-  wins: [],
+  recent: [
+    {id:14,text:'Reviewed Q2 P&L — net positive for first time',bizId:1,createdAt:Date.now()},
+    {id:15,text:'Finished landing page wireframes',bizId:1,createdAt:Date.now()}
+  ],
+  wins: [
+    {id:16,title:'First paying customer',category:'Revenue',bizId:1,date:'2026-04-15',note:'Landed first client at $1,500/mo'}
+  ],
   streams: {},
   alarms: [],
   sessions: [],
@@ -3935,12 +3986,12 @@ const DEFAULT = {
   backups: [],
   trackerPeriod: 'month',
   whiteboards: {},
-  profile: {name:'',role:'',avatar:'◈',greetingName:'',warRoomName:'',theme:'stratus',accent:'',radius:'10',font:'syne'},
-  onboarded: false,
-  nextId: 1,
+  profile: {name:'Operator',role:'Founder',avatar:'◈',greetingName:'Operator',warRoomName:'WAR ROOM',theme:'stratus',accent:'',radius:'10',font:'syne'},
+  onboarded: true,
+  nextId: 17,
   monthlyBudgets: {},
   lastBriefingTs: null,
-  xp: 0,
+  xp: 120,
   achievements: [],
   monthlyReviews: [],
 };
