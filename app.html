@@ -980,11 +980,28 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   .ob-card{transition:none!important}
   .ob-swatch{transition:none!important}
 }
-.ob-summary-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:.5px solid var(--border)}
+.ob-summary-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:.5px solid var(--border);opacity:0;animation:ob-child-in .3s ease both}
 .ob-summary-row:last-child{border-bottom:none}
 .ob-summary-icon{width:32px;height:32px;border-radius:8px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
 .ob-summary-label{font-size:11px;font-weight:700;color:var(--text)}
 .ob-summary-val{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px}
+/* Launch button pulse */
+.ob-launch-btn{position:relative;overflow:visible}
+.ob-launch-btn::after{content:'';position:absolute;inset:-4px;border-radius:inherit;border:2px solid var(--accent);opacity:0;animation:ob-launch-pulse 2s ease-in-out infinite}
+@keyframes ob-launch-pulse{0%,100%{opacity:0;transform:scale(1)}50%{opacity:.45;transform:scale(1.06)}}
+/* Particle burst container */
+.ob-burst{position:fixed;pointer-events:none;z-index:3000}
+.ob-particle{position:absolute;width:6px;height:6px;border-radius:50%;animation:ob-particle-fly var(--dur,.6s) ease-out forwards}
+@keyframes ob-particle-fly{to{transform:translate(var(--tx,0),var(--ty,-60px)) scale(0);opacity:0}}
+/* Overlay spring exit */
+.ob-overlay.ob-exit{animation:ob-overlay-exit .45s cubic-bezier(.34,1.2,.64,1) forwards}
+@keyframes ob-overlay-exit{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.94)}}
+@media(prefers-reduced-motion:reduce){
+  .ob-summary-row{animation:none!important;opacity:1!important}
+  .ob-launch-btn::after{animation:none!important}
+  .ob-particle{display:none!important}
+  .ob-overlay.ob-exit{animation:none!important}
+}
 
 /* ══════════════════════════════
    MOBILE RESPONSIVE LAYOUT
@@ -10434,8 +10451,8 @@ function renderObSummary(){
     {icon:'🎯',label:'Monthly Goals',val:obData.goals.length?obData.goals.length+' goal'+(obData.goals.length>1?'s':'')+' set':'None yet — add from dashboard'},
     {icon:'🎨',label:'Theme',val:(THEMES[obData.theme]||THEMES.stratus).name+' · '+(obData.dark?'Dark':'Light')+' mode'},
   ];
-  el.innerHTML=rows.map(r=>`
-    <div class="ob-summary-row">
+  el.innerHTML=rows.map((r,i)=>`
+    <div class="ob-summary-row" style="animation-delay:${(i*80)+80}ms">
       <div class="ob-summary-icon">${r.icon}</div>
       <div>
         <div class="ob-summary-label">${r.label}</div>
@@ -10454,7 +10471,10 @@ function renderObSummary(){
   if(tipEl)tipEl.innerHTML='<b>Your briefing style:</b> '+(tips[obData.operatorType]||'War Room will adapt its briefings based on your goals and activity.');
 }
 
-function obFinish(){
+function obFinish(e){
+  // Particle burst from button
+  if(e) _obLaunchBurst(e);
+
   // Commit all onboarding data to state
   if(!S.profile)S.profile={};
   S.profile.name = obData.name;
@@ -10493,12 +10513,12 @@ function obFinish(){
   // Cloud sync retry — currentUser may be set by the time onboarding finishes
   setTimeout(()=>{ if(typeof currentUser!=='undefined'&&currentUser&&typeof saveToCloud==='function') saveToCloud(true); },2500);
 
-  // Close overlay
+  // Close overlay with spring exit
   const overlay=document.getElementById('obOverlay');
-  overlay.classList.add('fading');
+  overlay.classList.add('ob-exit');
   setTimeout(()=>{
     overlay.style.display='none';
-    overlay.classList.remove('fading');
+    overlay.classList.remove('ob-exit','fading');
     refreshBizNav();
     refreshSelects();
     renderProfileBizGrid();
@@ -10506,6 +10526,28 @@ function obFinish(){
     // If they added businesses, show a quick debrief after a beat
     setTimeout(()=>checkLaunchSequence(),600);
   },400);
+}
+
+function _obLaunchBurst(e){
+  const COLORS=['var(--accent)','var(--green,#22c55e)','var(--blue,#3b82f6)','var(--violet,#8b5cf6)','var(--pink,#ec4899)'];
+  const COUNT=18;
+  const cx=e.clientX, cy=e.clientY;
+  const container=document.createElement('div');
+  container.className='ob-burst';
+  container.style.cssText=`left:${cx}px;top:${cy}px`;
+  for(let i=0;i<COUNT;i++){
+    const p=document.createElement('div');
+    p.className='ob-particle';
+    const angle=(i/COUNT)*2*Math.PI;
+    const dist=40+Math.random()*60;
+    const tx=Math.round(Math.cos(angle)*dist);
+    const ty=Math.round(Math.sin(angle)*dist-30);
+    const dur=(0.45+Math.random()*0.3).toFixed(2)+'s';
+    p.style.cssText=`background:${COLORS[i%COLORS.length]};--tx:${tx}px;--ty:${ty}px;--dur:${dur};left:-3px;top:-3px`;
+    container.appendChild(p);
+  }
+  document.body.appendChild(container);
+  setTimeout(()=>container.remove(),900);
 }
 
 function openModal(id){
@@ -12255,7 +12297,7 @@ function renderSeatCount() {
         </div>
         <div class="ob-footer">
           <span class="ob-skip" onclick="obBack()">← Back</span>
-          <button class="btn btn-p" onclick="obFinish()" style="padding:12px 32px;font-size:13px">Launch War Room →</button>
+          <button class="btn btn-p ob-launch-btn" id="obLaunchBtn" onclick="obFinish(event)" style="padding:12px 32px;font-size:13px">Launch War Room →</button>
         </div>
       </div>
 
