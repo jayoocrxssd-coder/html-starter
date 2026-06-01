@@ -755,7 +755,7 @@
         <span class="s-ph">Ask <b>AXIS</b> or jump to…</span>
         <span class="s-kbd">⌘ K</span>
       </button>
-      <div class="top-avatar" id="topAvatar" onclick="goPage('more')" aria-label="Profile">CR<div class="ndot"></div></div>
+      <div class="top-avatar" id="topAvatar" onclick="goPage('more')" aria-label="Profile"><div class="ndot"></div></div>
     </div>
     <div class="top-r2">
       <div class="top-crumb" id="topCrumb" data-secondary="0">
@@ -767,7 +767,7 @@
         <span class="now" id="crumbNow">Dashboard</span>
       </div>
       <button id="topBizBtn" class="top-biz" onclick="openSheet('bizSheet')">
-        <span class="pip"></span>Stratus Labs<span class="ch">⌄</span>
+        <span class="pip"></span><span class="ch">⌄</span>
       </button>
     </div>
   </div>
@@ -778,7 +778,7 @@
     <!-- ══ DASHBOARD ══ -->
     <div class="page active" id="page-dashboard">
       <div class="greet-card">
-        <div class="pt" id="dashGreeting">Good afternoon, cRes.</div>
+        <div class="pt" id="dashGreeting"></div>
         <div class="ps" id="dashDate"></div>
         <div class="row" id="dashMiniRow"></div>
       </div>
@@ -813,7 +813,7 @@
             <button class="btn btn-g btn-sm" onclick="goPage('goals')">Open →</button>
           </div>
           <div class="bpb" id="dashGoalsBody"></div>
-          <div class="prog-track"><div class="prog-fill" id="dashGoalsProg" style="width:59%"></div></div>
+          <div class="prog-track"><div class="prog-fill" id="dashGoalsProg" style="width:0%"></div></div>
         </div>
 
         <!-- P&L Chart -->
@@ -852,7 +852,7 @@
     <!-- ══ MISSION BOARD ══ -->
     <div class="page" id="page-missions">
       <div class="ph">
-        <div class="ps"><b>14 missions</b> across 3 ventures · 4 due today</div>
+        <div class="ps" id="missionsMeta"></div>
         <div class="pa">
           <button class="iconbtn" aria-label="Filter">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
@@ -864,46 +864,12 @@
       </div>
 
       <div class="km-tabs">
-        <button class="km-tab active" onclick="setMissionTab('planned',this)">Planned <span class="count">5</span></button>
-        <button class="km-tab" onclick="setMissionTab('progress',this)">In Progress <span class="count">4</span></button>
-        <button class="km-tab" onclick="setMissionTab('done',this)">Done <span class="count">5</span></button>
+        <button class="km-tab active" onclick="setMissionTab('planned',this)">Planned <span class="count">0</span></button>
+        <button class="km-tab" onclick="setMissionTab('progress',this)">In Progress <span class="count">0</span></button>
+        <button class="km-tab" onclick="setMissionTab('done',this)">Done <span class="count">0</span></button>
       </div>
 
       <div class="km-list" id="missionList">
-        <div class="task-card">
-          <div class="meta"><span class="pri high">High</span><span class="biz">Stratus Labs</span></div>
-          <div class="ttl">Ship pricing page v2 to production</div>
-          <div class="ds">Includes new tier copy, annual toggle, and SMB plan card. Already in staging.</div>
-          <div class="ft">
-            <span>Due May 20</span>
-            <span class="late">· 2d late</span>
-            <span class="avatar">CR</span>
-          </div>
-        </div>
-        <div class="task-card">
-          <div class="meta"><span class="pri med">Med</span><span class="biz">Atlas</span></div>
-          <div class="ttl">Q3 OKRs first draft</div>
-          <div class="ds">Lock 3 company-level objectives + 2 KRs each. Review with team Wed.</div>
-          <div class="ft"><span>Due May 28</span><span class="avatar">CR</span></div>
-        </div>
-        <div class="task-card">
-          <div class="meta"><span class="pri med">Med</span><span class="biz">Stratus Labs</span></div>
-          <div class="ttl">Investor follow-up emails</div>
-          <div class="ds">12 outstanding. Group by status: hot/warm/cold. Personalize hot ones.</div>
-          <div class="ft"><span>Due May 22</span><span class="avatar">CR</span></div>
-        </div>
-        <div class="task-card">
-          <div class="meta"><span class="pri low">Low</span><span class="biz">CRES Ventures</span></div>
-          <div class="ttl">Annual report — collect financials</div>
-          <div class="ds">Need P&amp;L summaries from all 3 ventures. Export from War Room CSV.</div>
-          <div class="ft"><span>Due Jun 5</span><span class="avatar">CR</span></div>
-        </div>
-        <div class="task-card">
-          <div class="meta"><span class="pri low">Low</span><span class="biz">Stratus Labs</span></div>
-          <div class="ttl">Refresh competitor intel doc</div>
-          <div class="ds">Pricing changed for Notion and Linear last week. Update spreadsheet.</div>
-          <div class="ft"><span>No due date</span><span class="avatar">CR</span></div>
-        </div>
         <button class="add-task">+ Add Mission</button>
       </div>
     </div>
@@ -911,7 +877,7 @@
     <!-- ══ P&L TRACKER ══ -->
     <div class="page" id="page-tracker">
       <div class="ph">
-        <div class="ps">Weekly · Monthly · Annual · <b>+18% wk/wk</b></div>
+        <div class="ps" id="trackerMeta"></div>
         <div class="pa">
           <button class="iconbtn" aria-label="Export">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
@@ -930,10 +896,10 @@
       </div>
 
       <div class="pnl-grid">
-        <div class="card card-sm"><div class="cl">Revenue</div><div class="cv pos">$4,820</div><div class="cs">+18% wk/wk</div></div>
-        <div class="card card-sm"><div class="cl">Expenses</div><div class="cv neg">$2,140</div><div class="cs">-4% wk/wk</div></div>
-        <div class="card card-sm"><div class="cl">Net</div><div class="cv pos">$2,680</div><div class="cs">56% margin</div></div>
-        <div class="card card-sm"><div class="cl">Entries</div><div class="cv">23</div><div class="cs">12 rev · 11 exp</div></div>
+        <div class="card card-sm"><div class="cl">Revenue</div><div class="cv pos" id="trackerRevenue"></div><div class="cs" id="trackerRevenueSub"></div></div>
+        <div class="card card-sm"><div class="cl">Expenses</div><div class="cv neg" id="trackerExpenses"></div><div class="cs" id="trackerExpensesSub"></div></div>
+        <div class="card card-sm"><div class="cl">Net</div><div class="cv pos" id="trackerNet"></div><div class="cs" id="trackerNetSub"></div></div>
+        <div class="card card-sm"><div class="cl">Entries</div><div class="cv" id="trackerEntries"></div><div class="cs" id="trackerEntriesSub"></div></div>
       </div>
 
       <div class="card mb14" style="padding:14px">
@@ -951,7 +917,7 @@
     <!-- ══ CALENDAR ══ -->
     <div class="page" id="page-calendar">
       <div class="ph">
-        <div class="ps">May 2026 · <b>4 events today</b></div>
+        <div class="ps" id="calendarMeta"></div>
         <div class="pa">
           <button class="iconbtn" aria-label="Filter">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
@@ -965,7 +931,7 @@
       <div class="cal-wrap">
         <div class="cal-hdr">
           <button class="cal-nav-btn">‹</button>
-          <div class="cal-month" id="calMonthLabel">May 2026</div>
+          <div class="cal-month" id="calMonthLabel"></div>
           <button class="cal-nav-btn">›</button>
           <button class="cal-today">Today</button>
         </div>
@@ -992,20 +958,20 @@
       <div class="profile-hero">
         <div class="top">
           <div class="av-wrap">
-            <div class="av" id="moreAv">CR<span class="live"></span></div>
+            <div class="av" id="moreAv"><span class="live"></span></div>
           </div>
           <div class="pid">
-            <div class="nm" id="moreNm">cRes Operator</div>
-            <div class="ro" id="moreRo">FOUNDER · CRES VENTURES · EST 2024</div>
+            <div class="nm" id="moreNm"></div>
+            <div class="ro" id="moreRo"></div>
           </div>
           <button class="ed" onclick="goPage('profile')" aria-label="Edit profile">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5l4 4L7 21H3v-4z"/></svg>
           </button>
         </div>
         <div class="stats">
-          <div class="st"><div class="lb">Session</div><div class="vl mono" id="moreSess">02:14:33</div></div>
-          <div class="st"><div class="lb">Week</div><div class="vl">42.6h</div></div>
-          <div class="st"><div class="lb">Net YTD</div><div class="vl pos">+$14.8k</div></div>
+          <div class="st"><div class="lb">Session</div><div class="vl mono" id="moreSess">00:00:00</div></div>
+          <div class="st"><div class="lb">Week</div><div class="vl" id="moreWeek"></div></div>
+          <div class="st"><div class="lb">Net YTD</div><div class="vl pos" id="moreNetYtd"></div></div>
         </div>
       </div>
 
@@ -1031,35 +997,14 @@
 
       <!-- Activity -->
       <div class="menu-section" style="margin-top:6px">Recent activity</div>
-      <div class="activity-card">
-        <div class="act-row">
-          <div class="ic gr">✓</div>
-          <div class="tx"><b>Send pricing draft</b> marked done · Atlas</div>
-          <div class="ts">9m ago</div>
-        </div>
-        <div class="act-row">
-          <div class="ic bl">↑</div>
-          <div class="tx">Invoice <b>INV-0143</b> sent to Beacon Co · $1,200</div>
-          <div class="ts">1h ago</div>
-        </div>
-        <div class="act-row">
-          <div class="ic am">◐</div>
-          <div class="tx">AXIS flagged margin drag · Atlas COGS +8%</div>
-          <div class="ts">3h ago</div>
-        </div>
-        <div class="act-row">
-          <div class="ic rd">!</div>
-          <div class="tx"><b>AWS bill</b> $214 is 11 days overdue · Stratus</div>
-          <div class="ts">today</div>
-        </div>
-      </div>
+      <div class="activity-card" id="activityCard"></div>
 
       <div class="menu-section">Modules</div>
       <div class="menu-list">
         <div class="menu-row" onclick="goPage('timer')"><div class="ic">◷</div>Focus Timer<div class="ar">›</div></div>
-        <div class="menu-row" onclick="goPage('intel')"><div class="ic">◉</div>Intel Notes<div class="bdg">47</div><div class="ar" style="margin-left:8px">›</div></div>
-        <div class="menu-row" onclick="goPage('bills')"><div class="ic">◫</div>Bills &amp; Expenses<div class="bdg">3</div><div class="ar" style="margin-left:8px">›</div></div>
-        <div class="menu-row" onclick="goPage('invoices')"><div class="ic">△</div>Invoices<div class="bdg">2</div><div class="ar" style="margin-left:8px">›</div></div>
+        <div class="menu-row" onclick="goPage('intel')"><div class="ic">◉</div>Intel Notes<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('bills')"><div class="ic">◫</div>Bills &amp; Expenses<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('invoices')"><div class="ic">△</div>Invoices<div class="ar">›</div></div>
         <div class="menu-row" onclick="goPage('goals')"><div class="ic">◎</div>Goals<div class="ar">›</div></div>
         <div class="menu-row" onclick="goPage('whiteboard')"><div class="ic">⤢</div>Whiteboard<div class="ar">›</div></div>
         <div class="menu-row" onclick="goPage('videocalls')"><div class="ic">▣</div>Video Calls<div class="ar">›</div></div>
@@ -1071,7 +1016,7 @@
         <div class="menu-row" onclick="openSheet('bizSheet')"><div class="ic">▦</div>Switch business<div class="ar">›</div></div>
         <div class="menu-row" onclick="openSheet('addBizSheet')"><div class="ic">+</div>Add business<div class="ar">›</div></div>
         <div class="menu-row" onclick="goPage('sync')"><div class="ic">↻</div>Sync &amp; backup<div class="ar">›</div></div>
-        <div class="menu-row" onclick="goPage('updates')"><div class="ic">⟳</div>Updates<div class="bdg">v5.2</div><div class="ar" style="margin-left:8px">›</div></div>
+        <div class="menu-row" onclick="goPage('updates')"><div class="ic">⟳</div>Updates<div class="ar">›</div></div>
       </div>
 
       <div class="menu-section">Account</div>
@@ -1082,7 +1027,7 @@
         <div class="menu-row" style="color:var(--red)" onclick="alert('Signed out')"><div class="ic" style="color:var(--red)">↗</div>Sign out</div>
       </div>
 
-      <p style="text-align:center;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin:14px 0 4px" id="moreVersion">v5.2 · Sync OK · <span style="color:var(--green)">● ONLINE</span></p>
+      <p style="text-align:center;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin:14px 0 4px" id="moreVersion"></p>
     </div>
 
     <!-- ══ PROFILE & SETTINGS ══ -->
@@ -1097,7 +1042,7 @@
       <div class="form-card">
         <div class="ft"><span class="ix">◐</span>Identity</div>
         <div class="avatar-pick">
-          <div class="av-big" id="profileAvBig">CR</div>
+          <div class="av-big" id="profileAvBig"></div>
           <div class="meta">
             <div class="ti">Profile photo</div>
             <div class="sb">PNG or JPG · Max 4MB</div>
@@ -1107,10 +1052,10 @@
             </div>
           </div>
         </div>
-        <div class="form-row"><label>Full name</label><input type="text" id="profileFullName" value="cRes Operator"></div>
-        <div class="form-row"><label>Email</label><input type="email" id="profileEmail" value="operator@cresventures.io"><div class="hint">Verified · 2FA enabled</div></div>
+        <div class="form-row"><label>Full name</label><input type="text" id="profileFullName" value=""></div>
+        <div class="form-row"><label>Email</label><input type="email" id="profileEmail" value=""><div class="hint">Verified · 2FA enabled</div></div>
         <div class="form-grid2">
-          <div class="form-row"><label>Role / Title</label><input type="text" id="profileRole" value="Founder · CRES Ventures"></div>
+          <div class="form-row"><label>Role / Title</label><input type="text" id="profileRole" value=""></div>
           <div class="form-row"><label>Timezone</label><select><option>America / New York (EST)</option><option>America / Los Angeles</option><option>Europe / London</option></select></div>
         </div>
         <div class="form-grid2">
@@ -1128,11 +1073,11 @@
           <button class="theme-pick auto"><div class="sw"></div>Auto</button>
         </div>
         <div class="form-grid2" style="margin-top:14px">
-          <div class="form-row"><label>Default business</label><select id="defaultBizSelect"><option>Stratus Labs</option><option>Atlas</option><option>CRES Ventures</option><option>Last used</option></select></div>
+          <div class="form-row"><label>Default business</label><select id="defaultBizSelect"><option>Last used</option></select></div>
           <div class="form-row"><label>Currency</label><select><option>USD ($)</option><option>EUR (€)</option><option>GBP (£)</option><option>CAD (C$)</option></select></div>
         </div>
         <div class="form-grid2">
-          <div class="form-row"><label>Date format</label><select><option>Jun 1, 2026</option><option>2026-06-01</option><option>01/06/2026</option></select></div>
+          <div class="form-row"><label>Date format</label><select><option>Select format</option></select></div>
           <div class="form-row"><label>Week starts on</label><select><option>Sunday</option><option>Monday</option></select></div>
         </div>
       </div>
@@ -1174,7 +1119,7 @@
         <div style="padding:5px 0 4px">
           <div class="conn-row">
             <div class="ic" style="background:#fff;border:.5px solid var(--border2)">G</div>
-            <div class="mid"><div class="nm">Google</div><div class="em">operator@cresventures.io · Calendar &amp; Gmail</div></div>
+            <div class="mid"><div class="nm">Google</div><div class="em">Calendar &amp; Gmail</div></div>
             <button class="ac live">Connected</button>
           </div>
           <div class="conn-row">
@@ -1184,7 +1129,7 @@
           </div>
           <div class="conn-row">
             <div class="ic" style="background:#4a154b;color:#fff">#</div>
-            <div class="mid"><div class="nm">Slack</div><div class="em">Stratus + Atlas workspaces</div></div>
+            <div class="mid"><div class="nm">Slack</div><div class="em">Workspaces</div></div>
             <button class="ac">Connect</button>
           </div>
           <div class="conn-row">
@@ -1225,7 +1170,7 @@
           <button class="btn btn-g">Manage</button>
         </div>
         <div class="meta-row">
-          <span>Renews <b>Jul 1, 2026</b></span>
+          <span>Renews <b>—</b></span>
           <span>·</span>
           <span>Card ending <b>•••• 4421</b></span>
         </div>
@@ -1307,28 +1252,7 @@
       </div>
 
       <div class="menu-section">Billing history</div>
-      <div class="card" style="padding:0">
-        <div class="bill-his-row">
-          <div class="ic">✓</div>
-          <div class="mid"><div class="nm">Personal · Monthly</div><div class="sub">Paid · Jun 1, 2026 · Card •••• 4421</div></div>
-          <div class="amt">$11.00</div>
-        </div>
-        <div class="bill-his-row">
-          <div class="ic">✓</div>
-          <div class="mid"><div class="nm">Personal · Monthly</div><div class="sub">Paid · May 1, 2026</div></div>
-          <div class="amt">$11.00</div>
-        </div>
-        <div class="bill-his-row">
-          <div class="ic">✓</div>
-          <div class="mid"><div class="nm">Personal · Monthly</div><div class="sub">Paid · Apr 1, 2026</div></div>
-          <div class="amt">$11.00</div>
-        </div>
-        <div class="bill-his-row">
-          <div class="ic">✓</div>
-          <div class="mid"><div class="nm">Personal · Monthly</div><div class="sub">Paid · Mar 1, 2026</div></div>
-          <div class="amt">$11.00</div>
-        </div>
-      </div>
+      <div class="card" style="padding:0" id="billingHistory"></div>
       <p style="text-align:center;font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin:14px 0 4px">Download invoices · Update payment method · Cancel anytime</p>
     </div>
 
@@ -1351,17 +1275,17 @@
         <button class="help-tile">
           <div class="ic">📖</div>
           <div class="ti">Docs &amp; guides</div>
-          <div class="ds">120 articles · v5.2</div>
+          <div class="ds">Articles &amp; guides</div>
         </button>
         <button class="help-tile" onclick="goPage('updates')">
           <div class="ic">⟳</div>
           <div class="ti">Changelog</div>
-          <div class="ds">v5.2 · May 20, 2026</div>
+          <div class="ds">Latest release notes</div>
         </button>
         <button class="help-tile">
           <div class="ic">✉</div>
           <div class="ti">Contact us</div>
-          <div class="ds">support@cresventures.io</div>
+          <div class="ds">Get in touch</div>
         </button>
       </div>
 
@@ -1488,10 +1412,10 @@
       </div>
 
       <div class="ver-hero">
-        <div class="vbox"><div class="lb">VER</div><div class="num" id="verHeroNum">5.2</div></div>
+        <div class="vbox"><div class="lb">VER</div><div class="num" id="verHeroNum"></div></div>
         <div class="mid">
           <div class="ti">You're up to date<span class="ok">Latest</span></div>
-          <div class="sb" id="verHeroSub">v5.2 · shipped May 20, 2026</div>
+          <div class="sb" id="verHeroSub"></div>
         </div>
       </div>
 
@@ -1510,7 +1434,7 @@
     <!-- ══ FOCUS TIMER ══ -->
     <div class="page" id="page-timer">
       <div class="ph">
-        <div class="ps">Session tracking · <b>02:14:33</b> today</div>
+        <div class="ps" id="timerMeta">Session tracking</div>
       </div>
 
       <div class="big-timer-card">
@@ -1523,7 +1447,7 @@
         </div>
         <div class="sess-form">
           <div><label>Session Label</label><input type="text" placeholder="What are you working on?"></div>
-          <div><label>Business</label><select class="biz-select"><option>Stratus Labs</option><option>Atlas</option><option>CRES Ventures</option><option>No business</option></select></div>
+          <div><label>Business</label><select class="biz-select"><option>No business</option></select></div>
         </div>
       </div>
 
@@ -1535,24 +1459,19 @@
         </div>
         <label>Set alarm</label>
         <div class="row" style="margin-top:4px"><input type="time" style="flex:1"><button class="btn btn-p">Set</button></div>
-        <div class="alarm-list">
-          <div class="alarm-item"><span class="t">14:00</span><span style="color:var(--text2)">Investor call</span><span style="color:var(--green);font-size:9px">ACTIVE</span></div>
-          <div class="alarm-item"><span class="t">16:30</span><span style="color:var(--text2)">Pricing sync</span><span style="color:var(--green);font-size:9px">ACTIVE</span></div>
-        </div>
+        <div class="alarm-list" id="alarmList"></div>
       </div>
 
       <div class="card mb14" style="margin-top:12px">
-        <div class="sec-hdr"><div class="sec-title">Session Log</div><span class="ps">Today · 3 sessions</span></div>
-        <div class="mission-row"><div class="ck">◷</div><div class="nm">Deep work · pricing v2</div><div class="biz">Stratus</div><div class="due">1h 42m</div></div>
-        <div class="mission-row"><div class="ck">◷</div><div class="nm">Investor email batch</div><div class="biz">Stratus</div><div class="due">38m</div></div>
-        <div class="mission-row"><div class="ck">◷</div><div class="nm">Q3 OKR draft</div><div class="biz">Atlas</div><div class="due">22m</div></div>
+        <div class="sec-hdr"><div class="sec-title">Session Log</div><span class="ps" id="sessionLogMeta"></span></div>
+        <div id="sessionLog"></div>
       </div>
     </div>
 
     <!-- ══ INTEL NOTES ══ -->
     <div class="page" id="page-intel">
       <div class="ph">
-        <div class="ps"><b>51 entries</b> · 14 tags · last Jun 1</div>
+        <div class="ps" id="intelMeta"></div>
         <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="Add">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         </button>
@@ -1562,11 +1481,8 @@
         <input type="text" placeholder="Search intel...">
       </div>
 
-      <div class="seg" style="margin-bottom:14px">
+      <div class="seg" style="margin-bottom:14px" id="intelSeg">
         <button class="active">All</button>
-        <button>Stratus</button>
-        <button>Atlas</button>
-        <button>CRES</button>
       </div>
 
       <div class="note-grid" id="intelGrid"></div>
@@ -1575,17 +1491,17 @@
     <!-- ══ BILLS ══ -->
     <div class="page" id="page-bills">
       <div class="ph">
-        <div class="ps"><b>$4,820</b> due this month · 12 bills · 1 overdue</div>
+        <div class="ps" id="billsMeta"></div>
         <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="Add">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         </button>
       </div>
 
       <div class="bills-summary">
-        <div class="card card-sm"><div class="cl">Due This Month</div><div class="cv neg">$4,820</div><div class="cs">12 bills</div></div>
-        <div class="card card-sm"><div class="cl">Paid YTD</div><div class="cv">$23,640</div><div class="cs">58 paid</div></div>
-        <div class="card card-sm"><div class="cl">Overdue</div><div class="cv neg">$214</div><div class="cs">1 bill</div></div>
-        <div class="card card-sm"><div class="cl">Recurring</div><div class="cv">$3,420</div><div class="cs">/ mo</div></div>
+        <div class="card card-sm"><div class="cl">Due This Month</div><div class="cv neg" id="billsDueAmt"></div><div class="cs" id="billsDueCt"></div></div>
+        <div class="card card-sm"><div class="cl">Paid YTD</div><div class="cv" id="billsPaidYtd"></div><div class="cs" id="billsPaidCt"></div></div>
+        <div class="card card-sm"><div class="cl">Overdue</div><div class="cv neg" id="billsOverdueAmt"></div><div class="cs" id="billsOverdueCt"></div></div>
+        <div class="card card-sm"><div class="cl">Recurring</div><div class="cv" id="billsRecurring"></div><div class="cs">/ mo</div></div>
       </div>
 
       <div class="seg" style="margin-bottom:14px">
@@ -1601,7 +1517,7 @@
     <!-- ══ INVOICES ══ -->
     <div class="page" id="page-invoices">
       <div class="ph">
-        <div class="ps"><b>$8,420</b> outstanding · 14 invoices · 2 overdue</div>
+        <div class="ps" id="invoicesMeta"></div>
         <div class="pa">
           <button class="iconbtn" aria-label="Export">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
@@ -1613,10 +1529,10 @@
       </div>
 
       <div class="pnl-grid">
-        <div class="card card-sm"><div class="cl">Outstanding</div><div class="cv">$8,420</div><div class="cs">7 open</div></div>
-        <div class="card card-sm"><div class="cl">Paid YTD</div><div class="cv pos">$42,640</div><div class="cs">58 invoices</div></div>
-        <div class="card card-sm"><div class="cl">Overdue</div><div class="cv neg">$4,200</div><div class="cs">2 invoices</div></div>
-        <div class="card card-sm"><div class="cl">Avg DSO</div><div class="cv">18d</div><div class="cs">-3d vs LM</div></div>
+        <div class="card card-sm"><div class="cl">Outstanding</div><div class="cv" id="invOutstanding"></div><div class="cs" id="invOutstandingCt"></div></div>
+        <div class="card card-sm"><div class="cl">Paid YTD</div><div class="cv pos" id="invPaidYtd"></div><div class="cs" id="invPaidCt"></div></div>
+        <div class="card card-sm"><div class="cl">Overdue</div><div class="cv neg" id="invOverdue"></div><div class="cs" id="invOverdueCt"></div></div>
+        <div class="card card-sm"><div class="cl">Avg DSO</div><div class="cv" id="invDso"></div><div class="cs" id="invDsoSub"></div></div>
       </div>
 
       <div class="seg">
@@ -1632,7 +1548,7 @@
     <!-- ══ GOALS ══ -->
     <div class="page" id="page-goals">
       <div class="ph">
-        <div class="ps"><b>10 goals</b> · 7 on track · 2 at risk · 1 behind</div>
+        <div class="ps" id="goalsMeta"></div>
         <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="New Goal">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         </button>
@@ -1644,16 +1560,12 @@
             <circle cx="39" cy="39" r="32" fill="none" stroke="var(--bg2)" stroke-width="8"/>
             <circle cx="39" cy="39" r="32" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="60" transform="rotate(-90 39 39)"/>
           </svg>
-          <div class="pct">70%</div>
+          <div class="pct" id="goalRingPct"></div>
         </div>
         <div class="meta">
-          <div class="lbl">May · Composite</div>
-          <div class="ti">7 of 10 on track</div>
-          <div class="breakdown">
-            <span><span class="pip" style="background:var(--green)"></span>7 on track</span>
-            <span><span class="pip" style="background:var(--amber)"></span>2 at risk</span>
-            <span><span class="pip" style="background:var(--red)"></span>1 behind</span>
-          </div>
+          <div class="lbl" id="goalsHeroLbl"></div>
+          <div class="ti" id="goalsHeroTi"></div>
+          <div class="breakdown" id="goalsHeroBreakdown"></div>
         </div>
       </div>
 
@@ -1663,44 +1575,13 @@
         <button>Annual</button>
       </div>
 
-      <div class="col">
-        <div class="goal-card">
-          <div class="top"><div class="nm">Hit $50k MRR by EOM</div><div class="pc pos">64%</div></div>
-          <div class="bar"><i style="width:64%"></i></div>
-          <div class="ft"><span class="biz">Stratus Labs</span><span>$32k / $50k</span><span style="margin-left:auto">14d left</span></div>
-        </div>
-        <div class="goal-card">
-          <div class="top"><div class="nm">Ship pricing page v2 to production</div><div class="pc pos">80%</div></div>
-          <div class="bar"><i style="width:80%"></i></div>
-          <div class="ft"><span class="biz">Stratus Labs</span><span>4 of 5 steps</span><span style="margin-left:auto">3d left</span></div>
-        </div>
-        <div class="goal-card">
-          <div class="top"><div class="nm">Onboard 3 new Atlas clients</div><div class="pc amb">33%</div></div>
-          <div class="bar"><i class="amb" style="width:33%"></i></div>
-          <div class="ft"><span class="biz">Atlas</span><span>1 of 3 signed</span><span style="margin-left:auto;color:var(--amber)">At risk · 14d left</span></div>
-        </div>
-        <div class="goal-card">
-          <div class="top"><div class="nm">Cut Atlas COGS by 5%</div><div class="pc neg">12%</div></div>
-          <div class="bar"><i class="neg" style="width:12%"></i></div>
-          <div class="ft"><span class="biz">Atlas</span><span>-0.6% so far</span><span style="margin-left:auto;color:var(--red)">Behind · 14d left</span></div>
-        </div>
-        <div class="goal-card">
-          <div class="top"><div class="nm">Publish 4 long-form pieces</div><div class="pc pos">75%</div></div>
-          <div class="bar"><i style="width:75%"></i></div>
-          <div class="ft"><span class="biz">CRES Ventures</span><span>3 of 4 published</span><span style="margin-left:auto">14d left</span></div>
-        </div>
-        <div class="goal-card">
-          <div class="top"><div class="nm">120 deep-work hours</div><div class="pc pos">88%</div></div>
-          <div class="bar"><i style="width:88%"></i></div>
-          <div class="ft"><span class="biz">Personal</span><span>106 / 120h</span><span style="margin-left:auto">14d left</span></div>
-        </div>
-      </div>
+      <div class="col" id="goalsPageList"></div>
     </div>
 
     <!-- ══ WHITEBOARD ══ -->
     <div class="page" id="page-whiteboard">
       <div class="ph">
-        <div class="ps"><b>24 notes</b> · 4 boards · last edit today</div>
+        <div class="ps" id="whiteboardMeta"></div>
         <div class="pa">
           <button class="iconbtn" aria-label="Filter">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
@@ -1711,61 +1592,17 @@
         </div>
       </div>
 
-      <div class="wb-board-chips">
-        <button class="wb-chip active">Strategy <span class="count">12</span></button>
-        <button class="wb-chip">Product <span class="count">7</span></button>
-        <button class="wb-chip">Marketing <span class="count">3</span></button>
-        <button class="wb-chip">Personal <span class="count">2</span></button>
+      <div class="wb-board-chips" id="wbBoardChips">
+        <button class="wb-chip active">All</button>
       </div>
 
-      <div class="wb-masonry">
-        <div class="wb-note c1">
-          <div class="ti">Pricing thesis</div>
-          <div class="bd">SMB at $14 / mo is the unlock. Personal at $11 stays the lure. Annual saves 2mo.</div>
-          <div class="ft">◈ Strategy · today</div>
-        </div>
-        <div class="wb-note c2">
-          <div class="ti">Onboarding fix</div>
-          <div class="bd">Step 3 drops 40% of users. Cut the wizard to 2 steps and add a "skip for now."</div>
-          <div class="ft">◷ 2d ago</div>
-        </div>
-        <div class="wb-note c3">
-          <div class="ti">Renegotiate rent</div>
-          <div class="bd">CRES office escalator hit. Floor below leasing at -18%. Worth the call.</div>
-          <div class="ft">◫ 3d ago</div>
-        </div>
-        <div class="wb-note dark">
-          <div class="ti">AXIS next</div>
-          <div class="bd">Briefings should be audio-first. 60s on the commute. TTS + voice intent.</div>
-          <div class="ft">◐ today</div>
-        </div>
-        <div class="wb-note c4">
-          <div class="ti">Operator stories</div>
-          <div class="bd">5 real operators, 1500w each. Less product, more story. Syndicate first.</div>
-          <div class="ft">▣ 4d ago</div>
-        </div>
-        <div class="wb-note c5">
-          <div class="ti">Q3 themes</div>
-          <div class="bd">Margin, retention, AXIS depth. Drop everything else this quarter.</div>
-          <div class="ft">◎ 5d ago</div>
-        </div>
-        <div class="wb-note c6">
-          <div class="ti">Hire #3</div>
-          <div class="bd">Need an ops generalist. P&amp;L + payroll + vendor mgmt. Senior IC, no manage.</div>
-          <div class="ft">◐ 1w ago</div>
-        </div>
-        <div class="wb-note c1">
-          <div class="ti">Atlas content</div>
-          <div class="bd">Substack first. Own blog later. Test cadence: 1 post/wk for 6 wks.</div>
-          <div class="ft">▣ 1w ago</div>
-        </div>
-      </div>
+      <div class="wb-masonry" id="wbMasonry"></div>
     </div>
 
     <!-- ══ VIDEO CALLS ══ -->
     <div class="page" id="page-videocalls">
       <div class="ph">
-        <div class="ps"><b>12h 04m</b> on calls this week · 4 scheduled</div>
+        <div class="ps" id="videoCallsMeta"></div>
         <button class="iconbtn" aria-label="History">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
         </button>
@@ -1779,38 +1616,15 @@
           <button class="btn btn-g">＋ Schedule</button>
           <button class="btn btn-g" style="flex:0 0 44px;padding:13px 0">⎘</button>
         </div>
-        <div class="vc-room-id">ROOM · <b>warroom.app/c/cres-9k4z</b></div>
+        <div class="vc-room-id" id="vcRoomId"></div>
       </div>
 
       <div class="card" style="padding:0">
         <div class="sec-hdr" style="padding:11px 14px;margin:0;border-bottom:.5px solid var(--border)">
           <div class="sec-title">Upcoming</div>
-          <span class="ps">3 today · 1 tomorrow</span>
+          <span class="ps" id="vcUpcomingMeta"></span>
         </div>
-        <div class="call-row">
-          <div class="ic up">▶</div>
-          <div class="mid">
-            <div class="nm">Investor follow-up · Stratus</div>
-            <div class="sub"><div class="stack-av"><span class="ja" style="background:#ffd9b3">CR</span><span class="ja" style="background:#c9e2ff">JS</span><span class="ja" style="background:#d9f5e3">MK</span></div>3 attendees</div>
-          </div>
-          <div class="when live"><b>14:00</b>in 47m</div>
-        </div>
-        <div class="call-row">
-          <div class="ic">●</div>
-          <div class="mid">
-            <div class="nm">Pricing sync w/ design</div>
-            <div class="sub"><div class="stack-av"><span class="ja" style="background:#ffd9b3">CR</span><span class="ja" style="background:#f5d9ed">LR</span></div>2 attendees</div>
-          </div>
-          <div class="when"><b>16:30</b>today</div>
-        </div>
-        <div class="call-row">
-          <div class="ic">●</div>
-          <div class="mid">
-            <div class="nm">Daily standup · Stratus</div>
-            <div class="sub"><div class="stack-av"><span class="ja" style="background:#ffd9b3">CR</span><span class="ja" style="background:#c9e2ff">JS</span><span class="ja" style="background:#d9f5e3">MK</span><span class="ja" style="background:#f5d9ed">LR</span></div>+4 recurring</div>
-          </div>
-          <div class="when"><b>09:00</b>tomorrow</div>
-        </div>
+        <div id="vcUpcomingList"></div>
       </div>
 
       <div class="card mb14" style="margin-top:12px;padding:0">
@@ -1818,45 +1632,14 @@
           <div class="sec-title">Recent</div>
           <span class="ps">Last 7 days</span>
         </div>
-        <div class="call-row">
-          <div class="ic up">↗</div>
-          <div class="mid">
-            <div class="nm">Q3 P&amp;L review · Atlas</div>
-            <div class="sub">Outgoing · 1h 04m · today 11:30</div>
-          </div>
-          <div class="when"><b>1h 04m</b>2h ago</div>
-        </div>
-        <div class="call-row">
-          <div class="ic in">↘</div>
-          <div class="mid">
-            <div class="nm">Joel Markovich · advisor</div>
-            <div class="sub">Incoming · 38m · yesterday 16:14</div>
-          </div>
-          <div class="when"><b>38m</b>yesterday</div>
-        </div>
-        <div class="call-row">
-          <div class="ic miss">✕</div>
-          <div class="mid">
-            <div class="nm">Beacon Co · intro</div>
-            <div class="sub">Missed · they called back · 2d ago</div>
-          </div>
-          <div class="when"><b>—</b>2d ago</div>
-        </div>
-        <div class="call-row">
-          <div class="ic up">↗</div>
-          <div class="mid">
-            <div class="nm">Pricing kickoff · Stratus</div>
-            <div class="sub">Outgoing · 1h 22m · May 14</div>
-          </div>
-          <div class="when"><b>1h 22m</b>May 14</div>
-        </div>
+        <div id="vcRecentList"></div>
       </div>
     </div>
 
     <!-- ══ PAYROLL ══ -->
     <div class="page" id="page-payroll">
       <div class="ph">
-        <div class="ps"><b>$18,420</b> / mo total · 5 people · 38% of revenue</div>
+        <div class="ps" id="payrollMeta"></div>
         <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="Add person">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
         </button>
@@ -1866,32 +1649,29 @@
         <div class="top">
           <div>
             <div class="lbl">Monthly Payroll</div>
-            <div class="big" id="payrollTotal">$18,420<span class="sup">/mo</span></div>
+            <div class="big" id="payrollTotal"><span class="sup">/mo</span></div>
           </div>
-          <div class="right" id="payrollPct"><div class="v">38%</div><div class="s">of revenue</div></div>
+          <div class="right" id="payrollPct"><div class="v"></div><div class="s">of revenue</div></div>
         </div>
         <div class="pay-stack" id="payStack"></div>
         <div class="pay-legend" id="payLegend"></div>
       </div>
 
       <div class="pnl-grid">
-        <div class="card card-sm"><div class="cl">Full Time</div><div class="cv">2</div><div class="cs">$11,200 / mo</div></div>
-        <div class="card card-sm"><div class="cl">Part Time</div><div class="cv">1</div><div class="cs">$2,800 / mo</div></div>
-        <div class="card card-sm"><div class="cl">Contractor</div><div class="cv">2</div><div class="cs">$4,420 / mo</div></div>
-        <div class="card card-sm"><div class="cl">Open Roles</div><div class="cv">1</div><div class="cs">Ops · hiring</div></div>
+        <div class="card card-sm"><div class="cl">Full Time</div><div class="cv" id="payFt"></div><div class="cs" id="payFtAmt"></div></div>
+        <div class="card card-sm"><div class="cl">Part Time</div><div class="cv" id="payPt"></div><div class="cs" id="payPtAmt"></div></div>
+        <div class="card card-sm"><div class="cl">Contractor</div><div class="cv" id="payCt"></div><div class="cs" id="payCtAmt"></div></div>
+        <div class="card card-sm"><div class="cl">Open Roles</div><div class="cv" id="payOpen"></div><div class="cs" id="payOpenNote"></div></div>
       </div>
 
-      <div class="seg">
+      <div class="seg" id="payrollSeg">
         <button class="active">All</button>
-        <button>Stratus</button>
-        <button>Atlas</button>
-        <button>CRES</button>
       </div>
 
       <div class="card" style="padding:0">
         <div class="sec-hdr" style="padding:11px 14px;margin:0;border-bottom:.5px solid var(--border)">
           <div class="sec-title">Team</div>
-          <span class="ps">5 active · 1 open</span>
+          <span class="ps" id="payTeamMeta"></span>
         </div>
         <div id="payTeam"></div>
       </div>
@@ -1909,7 +1689,7 @@
     <div class="tab" data-page="missions" onclick="goPage('missions')">
       <span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="6" height="14" rx="1.5"/><rect x="14" y="5" width="6" height="9" rx="1.5"/></svg></span>
       <span class="lb">Missions</span>
-      <span class="bdg">4</span>
+      <span class="bdg" id="missionsBadge" style="display:none"></span>
     </div>
     <div class="tab" data-page="tracker" onclick="goPage('tracker')">
       <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 16v-6M12 16V8M16 16v-3M20 16V6"/></svg></span>
@@ -1933,7 +1713,7 @@
       <div class="av">◐</div>
       <div>
         <div class="nm">AXIS</div>
-        <div class="st"><span class="pulse"></span>operator-mode · v5.2</div>
+        <div class="st"><span class="pulse"></span>operator-mode</div>
       </div>
       <button class="axis-sheet-close" onclick="closeSheet('axisSheet')">✕</button>
     </div>
@@ -2024,18 +1804,18 @@
   <div class="drawer-back" id="drawerBack" onclick="closeDrawer()"></div>
   <div class="drawer" id="drawer">
     <div class="drawer-hd">
-      <div class="av" id="drawerAv">CR</div>
+      <div class="av" id="drawerAv"></div>
       <div id="drawerHdInfo">
-        <div class="nm">cRes Operator</div>
-        <div class="em">operator@cresventures.io</div>
+        <div class="nm"></div>
+        <div class="em"></div>
       </div>
     </div>
     <div class="drawer-body">
       <div class="drawer-section">Command</div>
       <div class="drawer-item active" onclick="goPage('dashboard');closeDrawer()"><span class="ic">◈</span>Dashboard</div>
-      <div class="drawer-item" onclick="goPage('missions');closeDrawer()"><span class="ic">◎</span>Mission Board<span class="bdg">14</span></div>
+      <div class="drawer-item" onclick="goPage('missions');closeDrawer()"><span class="ic">◎</span>Mission Board</div>
       <div class="drawer-section">Operations</div>
-      <div class="drawer-item" onclick="goPage('intel');closeDrawer()"><span class="ic">◉</span>Intel Notes<span class="bdg">47</span></div>
+      <div class="drawer-item" onclick="goPage('intel');closeDrawer()"><span class="ic">◉</span>Intel Notes</div>
       <div class="drawer-item" onclick="goPage('tracker');closeDrawer()"><span class="ic">◇</span>P&amp;L Tracker</div>
       <div class="drawer-item" onclick="goPage('goals');closeDrawer()"><span class="ic">◎</span>Goals</div>
       <div class="drawer-item" onclick="goPage('whiteboard');closeDrawer()"><span class="ic">⤢</span>Whiteboard</div>
@@ -2043,8 +1823,8 @@
       <div class="drawer-item" onclick="goPage('timer');closeDrawer()"><span class="ic">◷</span>Focus Timer</div>
       <div class="drawer-item" onclick="goPage('calendar');closeDrawer()"><span class="ic">▦</span>Calendar</div>
       <div class="drawer-section">Finance</div>
-      <div class="drawer-item" onclick="goPage('bills');closeDrawer()"><span class="ic">◫</span>Bills &amp; Expenses<span class="bdg">3</span></div>
-      <div class="drawer-item" onclick="goPage('invoices');closeDrawer()"><span class="ic">△</span>Invoices<span class="bdg">2</span></div>
+      <div class="drawer-item" onclick="goPage('bills');closeDrawer()"><span class="ic">◫</span>Bills &amp; Expenses</div>
+      <div class="drawer-item" onclick="goPage('invoices');closeDrawer()"><span class="ic">△</span>Invoices</div>
       <div class="drawer-item" onclick="goPage('payroll');closeDrawer()"><span class="ic">◐</span>Payroll</div>
       <div class="drawer-section">Collaboration</div>
       <div class="drawer-item" onclick="goPage('videocalls');closeDrawer()"><span class="ic">▣</span>Video Calls</div>
@@ -2053,7 +1833,7 @@
       <div class="drawer-item" onclick="goPage('subscription');closeDrawer()"><span class="ic">$</span>Subscription</div>
       <div class="drawer-item" onclick="goPage('help');closeDrawer()"><span class="ic">?</span>Help &amp; Support</div>
       <div class="drawer-item" onclick="goPage('sync');closeDrawer()"><span class="ic">↻</span>Sync &amp; Backup</div>
-      <div class="drawer-item" onclick="goPage('updates');closeDrawer()"><span class="ic">⟳</span>Updates<span class="bdg" id="drawerVersion">v5.2</span></div>
+      <div class="drawer-item" onclick="goPage('updates');closeDrawer()"><span class="ic">⟳</span>Updates<span class="bdg" id="drawerVersion"></span></div>
     </div>
     <div class="drawer-foot">
       <button class="btn btn-g">☁ Sync</button>
@@ -2069,187 +1849,53 @@
   // ════════════════════════════════════════════════
   const APP_DATA = {
     user: {
-      initials: 'CR',
-      name: 'cRes Operator',
-      email: 'operator@cresventures.io',
-      role: 'Founder · CRES Ventures',
-      founded: 'EST 2024',
+      initials: '',
+      name: '',
+      email: '',
+      role: '',
+      founded: '',
     },
     session: {
       label: '00:00:00',
-      date: 'Sunday · Jun 1',
+      date: '',
     },
-    businesses: [
-      { id: 'stratus', name: 'Stratus Labs',  color: '#6c8fff', active: true },
-      { id: 'atlas',   name: 'Atlas',          color: '#d63a8a' },
-      { id: 'cres',    name: 'CRES Ventures',  color: '#d99500' },
-      { id: 'proj',    name: 'My Project',     color: '#9a9a98' },
-    ],
-    kpis: [
-      { label: 'Revenue YTD',     value: '$52,640', sub: '+14.8% vs LY',  subClass: 'pos' },
-      { label: 'Expenses YTD',    value: '$35,210', sub: '+3.9% vs LY',   subClass: 'neg' },
-      { label: 'Net Profit',      value: '$17,430', sub: '33% margin',    valClass: 'pos' },
-      { label: 'Active Missions', value: '11',      sub: '3 due today' },
-      { label: 'Hours Logged',    value: '6.2h',    sub: 'this session' },
-    ],
-    dashMini: [
-      { label: 'Revenue YTD', value: '$52.6k' },
-      { label: 'Net',         value: '+$17.4k', valClass: 'pos' },
-      { label: 'Missions',    value: '11' },
-    ],
-    schedule: [
-      { time: '10:00', duration: '30m', event: 'Weekly planning',    business: 'Stratus' },
-      { time: '13:00', duration: '1h',  event: 'Q3 kickoff',         business: 'Atlas' },
-      { time: '15:30', duration: '45m', event: 'Investor check-in',  business: 'Stratus' },
-      { time: '17:00', duration: '30m', event: 'Product sync',       business: 'Atlas' },
-    ],
-    axisBriefing: 'Three priorities for today:<br><b>(1)</b> Atlas invoice $1.8k — now 16 days past due. Final reminder before escalating.<br><b>(2)</b> Q3 kickoff at 13:00 — objectives not locked yet.<br><b>(3)</b> Onboarding v2 at 91% — push to close this week.',
-    goals: [
-      { name: 'Ship pricing page v2', pct: 80 },
-      { name: 'Hit $50k MRR',         pct: 64 },
-      { name: 'Onboard 3 new clients',pct: 33, barStyle: 'background:var(--amber)' },
-    ],
-    goalOverallPct: 64,
-    chartData: {
-      dash: [[40,30],[55,32],[48,28],[68,40],[58,38],[80,55],[72,48],[88,52],[78,50],[92,58],[84,60],[100,65]],
-      tracker: [[45,28],[68,32],[40,20],[80,40],[55,28],[88,45],[100,38]],
-    },
-    dashMissions: [
-      { done: false, name: 'Lock Q3 objectives',         biz: 'Atlas',   due: 'Today',  late: false },
-      { done: false, name: 'Finish onboarding wizard v2',biz: 'Stratus', due: '1d late',late: true  },
-      { done: false, name: 'Investor check-in prep',     biz: 'Stratus', due: '15:30',  late: false },
-      { done: true,  name: 'Ship pricing page v2',       biz: 'Stratus', due: '10:04',  late: false },
-    ],
-    transactions: [
-      { type:'rev', name:'Stratus retainer · Jun', sub:'Stratus · Recurring',  amount:'+$2,400' },
-      { type:'exp', name:'Figma org plan',          sub:'Atlas · Tools',        amount:'−$45'    },
-      { type:'rev', name:'Advisory · Nimbus AI',    sub:'CRES · One-off',       amount:'+$600'   },
-      { type:'exp', name:'Contractor — design',     sub:'Stratus · Payroll',    amount:'−$1,650' },
-      { type:'rev', name:'Course payment · cohort 3',sub:'CRES · One-off',      amount:'+$620'   },
-      { type:'exp', name:'AWS · monthly',           sub:'Stratus · Infra',      amount:'−$214'   },
-      { type:'exp', name:'Office space · Jun',      sub:'CRES · Recurring',     amount:'−$231'   },
-    ],
-    trackerPeriodLabel: 'May 25 — May 31',
+    businesses: [],
+    kpis: [],
+    dashMini: [],
+    schedule: [],
+    axisBriefing: '',
+    goals: [],
+    goalOverallPct: 0,
+    chartData: { dash: [], tracker: [] },
+    dashMissions: [],
+    transactions: [],
+    trackerPeriodLabel: '',
     calendar: {
-      currentMonth: 'Jun 2026',
-      startOffset: 1,
-      daysInMonth: 30,
-      prevMonthDays: 31,
-      today: 1,
-      events: {1:['b1','b2','b3','b4'],3:['b1'],5:['b2'],7:['b1','b3'],10:['b2'],12:['b1','b4'],15:['b3'],16:['b2'],20:['b1','b2'],23:['b3'],25:['b4'],28:['b1','b2']},
+      currentMonth: '',
+      startOffset: 0,
+      daysInMonth: 0,
+      prevMonthDays: 0,
+      today: 0,
+      events: {},
     },
-    calendarDayEvents: [
-      { time:'10:00', dur:'30m', name:'Weekly planning',             sub:'Stratus · Recurring',      colorVar:'--blue',   bodyClass:'' },
-      { time:'13:00', dur:'1h',  name:'Q3 kickoff',                  sub:'Atlas · Strategy',          colorVar:'--violet', bodyClass:'b2' },
-      { time:'15:30', dur:'45m', name:'Investor check-in · Stratus', sub:'Stratus · Revenue · Zoom',  colorVar:'--red',    bodyClass:'b3' },
-      { time:'17:00', dur:'30m', name:'Product sync w/ design',      sub:'Atlas · Planning',          colorVar:'--green',  bodyClass:'b4' },
-    ],
-    calendarDayLabel: 'Sunday · Jun 1',
-    missionData: {
-      planned: [
-        {p:'high',b:'Atlas',       t:'Lock Q3 OKRs',d:'3 company objectives + 2 KRs each. Must be finalized before today\'s kickoff at 13:00.',due:'Jun 1',late:'Today',avatar:'CR'},
-        {p:'med', b:'Stratus Labs',t:'Investor follow-up emails',d:'8 outstanding from last week\'s check-in. Group by status: hot/warm/cold.',due:'Jun 4',avatar:'CR'},
-        {p:'low', b:'CRES Ventures',t:'Annual report — collect financials',d:'Need P&L summaries from all 3 ventures. Export from War Room CSV.',due:'Jun 14',avatar:'CR'},
-        {p:'low', b:'Stratus Labs',t:'Refresh competitor intel doc',d:'Linear and Notion both changed pricing in May. Update tracking spreadsheet.',due:'',avatar:'CR'},
-      ],
-      progress: [
-        {p:'high',b:'Stratus Labs',t:'Onboarding wizard v2',d:'Step 3 drop-off fix at 91%. Final QA pass before shipping.',due:'Jun 3',avatar:'CR'},
-        {p:'med', b:'Stratus Labs',t:'Mobile responsive pass',d:'Landing + app dashboard. Minor tablet breakpoints remaining.',due:'Jun 5',avatar:'CR'},
-        {p:'low', b:'CRES Ventures',t:'Tax filings prep — Q1',d:'Waiting on accountant for Atlas numbers. Everything else ready.',due:'Jun 7',avatar:'CR'},
-      ],
-      done: [
-        {p:'high',b:'Stratus Labs',t:'Ship pricing page v2 to production',d:'Annual toggle + SMB card live. Pushed this morning.',due:'Done Jun 1',avatar:'CR',done:1},
-        {p:'high',b:'Atlas',       t:'Q3 P&L review prep',d:'Slides done. Margin slide resolved — rent was the driver.',due:'Done May 31',avatar:'CR',done:1},
-        {p:'med', b:'Atlas',       t:'Customer feedback synthesis',d:'18 calls. Top 5 themes documented.',due:'Done May 29',avatar:'CR',done:1},
-        {p:'med', b:'Stratus Labs',t:'Send pricing draft to investors',d:'Sent May 28. Confirmed delivery to all 12.',due:'Done May 28',avatar:'CR',done:1},
-        {p:'low', b:'CRES Ventures',t:'Update brand guidelines',d:'Logo lockups + color tokens finalized.',due:'Done May 27',avatar:'CR',done:1},
-      ],
-    },
-    intel: [
-      { title:'Linear pricing update — Jun 1', tags:['competitor','pricing'], date:'Jun 1',
-        content:'Linear raised team plan from $8 to $10/seat. Plus plan unchanged at $16. Their push into "project management" territory is real. Worth a direct comparison page on Stratus.' },
-      { title:'Stratus onboarding fix shipped', tags:['stratus','onboarding','shipped'], date:'May 31',
-        content:'Step 3 redesign is live in staging. Early data: completion rate up from 48% to 71% in internal testing. Shipping to production this week after final QA.' },
-      { title:'Atlas marketing — operator stories', tags:['atlas','marketing'], date:'May 28',
-        content:'Long-form testimonial series concept validated. 3 operators confirmed for interviews. Targeting Substack first, then own blog. First piece targeting Jun 15 publish.' },
-      { title:'Q2 retro — speed wins', tags:['retro','learnings'], date:'May 27',
-        content:'Three big Q2 wins all came from shipping fast and iterating publicly. Key loss: over-engineered the payroll module before talking to 3 potential users who wanted something simpler.' },
-    ],
-    bills: [
-      { status:'overdue',  name:'AWS · monthly',           biz:'Stratus', cat:'Infrastructure', amount:'$214',   dueLabel:'3d overdue'  },
-      { status:'due-soon', name:'Office space · Jun rent',  biz:'CRES',    cat:'Real estate',    amount:'$1,650', dueLabel:'Due in 3d'   },
-      { status:'due-soon', name:'Figma · org plan',         biz:'Atlas',   cat:'Tools',          amount:'$45',    dueLabel:'Due in 5d'   },
-      { status:'ok',       name:'Contractor — design',      biz:'Stratus', cat:'Payroll',        amount:'$1,650', dueLabel:'Due in 14d'  },
-      { status:'ok',       name:'Adobe CC · annual',        biz:'Atlas',   cat:'Tools',          amount:'$599',   dueLabel:'Due in 21d'  },
-      { status:'ok',       name:'Linear · team',            biz:'Stratus', cat:'Tools',          amount:'$72',    dueLabel:'Due in 25d'  },
-    ],
-    invoices: [
-      { status:'overdue', clientName:'Quarterly consult · Atlas', invNo:'INV-0141', client:'Atlas Partners', amount:'$1,800', sent:'May 9',  due:'May 16', note:'16d overdue — send final notice', noteColor:'var(--red)' },
-      { status:'pending', clientName:'Stratus retainer · Jun',    invNo:'INV-0147', client:'Stratus Labs',   amount:'$4,200', sent:'Jun 1',  due:'Jun 8',  note:'Net 7' },
-      { status:'pending', clientName:'Workshop · Q2',             invNo:'INV-0143', client:'Beacon Co',      amount:'$1,200', sent:'May 25', due:'Jun 1',  note:'Due today' },
-      { status:'pending', clientName:'Advisory · Jun retainer',   invNo:'INV-0148', client:'Nimbus AI',      amount:'$600',   sent:'Jun 1',  due:'Jun 19', note:'Net 18' },
-      { status:'pending', clientName:'Course payment · cohort 3', invNo:'INV-0144', client:'D. Mehra',       amount:'$620',   sent:'May 28', due:'Jun 11', note:'Net 14' },
-      { status:'draft',   clientName:'Brand audit · scoping',     invNo:'INV-0149', client:'Northwind',      amount:'$2,400', sent:null,     due:null,     note:'Last edit · today 09:22' },
-    ],
-    goalsPage: [
-      { name:'Hit $55k MRR by Jun 30',             pct:71,  pcClass:'pos', barClass:'',    biz:'Stratus Labs',  progress:'$39k / $55k',    timeLeft:'29d left' },
-      { name:'Ship onboarding wizard v2',           pct:91,  pcClass:'pos', barClass:'',    biz:'Stratus Labs',  progress:'final QA pass',  timeLeft:'2d left'  },
-      { name:'Onboard 3 new Atlas clients',         pct:33,  pcClass:'amb', barClass:'amb', biz:'Atlas',         progress:'1 of 3 signed',  timeLeft:'At risk · 29d left', timeColor:'var(--amber)' },
-      { name:'Cut Atlas COGS by 5%',                pct:21,  pcClass:'neg', barClass:'neg', biz:'Atlas',         progress:'-1.1% so far',   timeLeft:'Behind · 29d left', timeColor:'var(--red)' },
-      { name:'Publish 4 long-form pieces',          pct:75,  pcClass:'pos', barClass:'',    biz:'CRES Ventures', progress:'3 of 4 published',timeLeft:'29d left' },
-      { name:'120 deep-work hours',                 pct:94,  pcClass:'pos', barClass:'',    biz:'Personal',      progress:'113 / 120h',     timeLeft:'29d left' },
-    ],
+    calendarDayEvents: [],
+    calendarDayLabel: '',
+    missionData: { planned: [], progress: [], done: [] },
+    intel: [],
+    bills: [],
+    invoices: [],
+    goalsPage: [],
     payroll: {
-      total: '$18,420',
-      revenuePercent: '38%',
-      breakdown: [
-        { label:'Stratus', color:'#6c8fff', width:'48%', amount:'$8.8k' },
-        { label:'Atlas',   color:'#d63a8a', width:'32%', amount:'$5.9k' },
-        { label:'CRES',    color:'#d99500', width:'20%', amount:'$3.7k' },
-      ],
-      people: [
-        { initials:'JS', bgColor:'#c9e2ff', name:'Jordan Singh',   type:'ft', typeName:'Full Time', biz:'Stratus', role:'Engineering Lead',    amount:'$6,200', freq:'monthly'  },
-        { initials:'MK', bgColor:'#d9f5e3', name:'Mira Klein',     type:'ft', typeName:'Full Time', biz:'Atlas',   role:'Strategy & Ops',      amount:'$5,000', freq:'monthly'  },
-        { initials:'LR', bgColor:'#f5d9ed', name:'Lex Reyes',      type:'pt', typeName:'Part Time', biz:'Stratus', role:'Design',              amount:'$2,800', freq:'monthly'  },
-        { initials:'DA', bgColor:'#ffd9b3', name:'Diego Almeida',  type:'ct', typeName:'Contractor',biz:'Stratus', role:'iOS · $85/hr',         amount:'$2,720', freq:'est / mo' },
-        { initials:'PT', bgColor:'#fce5b8', name:'Priya Tan',      type:'ct', typeName:'Contractor',biz:'CRES',    role:'Content · retainer',  amount:'$1,700', freq:'monthly'  },
-      ],
-      openRole: { title:'Ops Generalist · Open', type:'ft', typeName:'Full Time', biz:'CRES', note:'Posted 4d ago', targetAmount:'~$5,500' },
+      total: '',
+      revenuePercent: '',
+      breakdown: [],
+      people: [],
+      openRole: null,
     },
-    changelog: [
-      { date:'Jun 1, 2026',  version:'v5.3', tag:'feat', tagLabel:'Feature', title:'Mobile layouts + live session timer',
-        body:'War Room mobile shell now live. Session timer starts on open. All data views — dashboard, missions, tracker, calendar, intel, finance — fully rendered from structured APP_DATA config. No hardcoded content.',
-        pills:['Mobile','Session','Data Layer'] },
-      { date:'May 20, 2026', version:'v5.2', tag:'new',  tagLabel:'New',     title:'Onboarding sync & cloud backup',
-        body:'Fixed a bug where onboarding data wasn\'t persisting after sign-up. New users now get the full setup wizard, with data synced to the cloud. Email/password accounts now properly connect to cloud sync.',
-        pills:['Onboarding','Cloud Sync'] },
-      { date:'May 14, 2026', version:'v5.1', tag:'fix',  tagLabel:'Fix',     title:'Firebase OAuth & PBKDF2 hardening',
-        body:'Replaced the mock Google sign-in with real Firebase OAuth. Upgraded password storage from btoa Base64 to PBKDF2 (150,000 iterations, SHA-256, per-email salt). Closes a quiet auth gap that shipped in 5.0.',
-        pills:['Security','Auth','OAuth'] },
-      { date:'May 6, 2026',  version:'v5.0', tag:'feat', tagLabel:'Feature', title:'War Room goes live',
-        body:'Full public launch. AXIS AI co-pilot, multi-business P&L, focus timer, payroll, video calls, Supabase cloud sync, team rooms, operator onboarding wizard. Single-file bundle — no install required.',
-        pills:['Launch','AXIS AI','Multi-business'] },
-      { date:'Apr 28, 2026', version:'v4.9', tag:'new',  tagLabel:'New',     title:'Whiteboard + Intel Notes search',
-        body:'Whiteboard now supports color-coded boards. Intel Notes gains full-text search across all entries and tags. AXIS uses both as context for daily briefings.',
-        pills:['Whiteboard','Intel','Search'] },
-      { date:'Apr 14, 2026', version:'v4.8', tag:'fix',  tagLabel:'Fix',     title:'Calendar performance + drag-to-reschedule',
-        body:'Calendar grid is now 3× faster on a 12-month view. Drag-to-reschedule works on touch. Recurring events properly respect timezone changes when traveling.',
-        pills:['Calendar','Perf'] },
-    ],
-    backups: [
-      { icon:'↻', label:'Auto · today',           date:'1 Jun 2026 · 08:00 EST',  size:'2.5 MB' },
-      { icon:'↻', label:'Auto · yesterday',        date:'31 May 2026 · 11:00 EST', size:'2.5 MB' },
-      { icon:'★', label:'Manual · pre-Q3 kickoff', date:'30 May 2026 · 17:42 EST', size:'2.4 MB' },
-      { icon:'↻', label:'Auto · weekly',           date:'25 May 2026 · 03:00 EST', size:'2.4 MB' },
-    ],
-    appVersion: 'v5.3',
-    axisResponses: {
-      briefing:"<b>Daily briefing — Sun Jun 1</b><br><br>Three priorities:<br><b>(1)</b> Atlas invoice $1.8k — 16 days overdue → send final notice now.<br><b>(2)</b> Q3 kickoff at 13:00 — objectives not locked yet.<br><b>(3)</b> Onboarding v2 at 91% — push to close this week.<br><br>Pricing page v2 shipped this morning. Good start.",
-      margin:"<b>Margin analysis — May wrap-up.</b><br><br>Net margin improved to 33% (up from 31% in April). Drivers:<br>• Stratus retainer renewed at same rate<br>• Contractor cost absorbed — first full month<br>• AWS overdue — needs to clear this week<br><br>Watch June: rent escalator kicks in for CRES.",
-      focus:"<b>What you should focus on today:</b><br><br>The Atlas invoice. It's $1.8k, 16 days late. One short email, done in 2 minutes. Then prep the Q3 kickoff — that's the real work for this morning. Onboarding v2 can wait until tomorrow.",
-      bills:"<b>Bills due this week:</b><br><br>• AWS — $214 (Stratus) — <b>3d overdue</b><br>• Office rent — $1,650 (CRES) — due Thu<br>• Figma — $45 (Atlas) — due this week<br><br>Total: <b>$1,909</b>. Clear AWS today.",
-      intel:"<b>Intel summary — last 30 days:</b><br><br>51 entries. Top themes:<br>• Linear + Notion pricing changes (4 entries)<br>• Stratus onboarding improvement (5 entries)<br>• Atlas operator stories concept (3 entries)<br><br>Action: onboarding drop-off fix is now validated in testing. Ship it.",
-    },
+    changelog: [],
+    backups: [],
+    appVersion: '',
+    axisResponses: { briefing: '', margin: '', focus: '', bills: '', intel: '' },
   };
 
   // ════════════════════════════════════════════════
@@ -2419,7 +2065,7 @@
     const sessEl = document.getElementById('moreSess');
     if (sessEl) sessEl.textContent = APP_DATA.session.label;
     const versionEl = document.getElementById('moreVersion');
-    if (versionEl) versionEl.textContent = `${APP_DATA.appVersion} · Sync OK · `;
+    if (versionEl) versionEl.textContent = APP_DATA.appVersion ? `${APP_DATA.appVersion} · Sync OK` : '';
   }
 
   function renderIntel() {
@@ -2628,28 +2274,7 @@
   function closeDrawer(){document.getElementById('drawer').classList.remove('on');document.getElementById('drawerBack').classList.remove('on')}
 
   // ── Mission tabs ──
-  const missionData={
-    planned:[
-      {p:'high',b:'Stratus Labs',t:'Ship pricing page v2 to production',d:'Includes new tier copy, annual toggle, and SMB plan card.',due:'May 20',late:'2d late',avatar:'CR'},
-      {p:'med',b:'Atlas',t:'Q3 OKRs first draft',d:'Lock 3 company-level objectives + 2 KRs each. Review with team Wed.',due:'May 28',avatar:'CR'},
-      {p:'med',b:'Stratus Labs',t:'Investor follow-up emails',d:'12 outstanding. Group by status: hot/warm/cold.',due:'May 22',avatar:'CR'},
-      {p:'low',b:'CRES Ventures',t:'Annual report — collect financials',d:'Need P&L summaries from all 3 ventures.',due:'Jun 5',avatar:'CR'},
-      {p:'low',b:'Stratus Labs',t:'Refresh competitor intel doc',d:'Pricing changed for Notion and Linear.',due:'',avatar:'CR'},
-    ],
-    progress:[
-      {p:'high',b:'Stratus Labs',t:'Onboarding wizard v2',d:'Step 3 has the highest drop-off. Redesigning the value-prop screen.',due:'May 24',avatar:'CR'},
-      {p:'high',b:'Atlas',t:'Q3 P&L review prep',d:'Need slides ready by tomorrow 14:00. Margin slide blocking.',due:'May 18',avatar:'CR'},
-      {p:'med',b:'Stratus Labs',t:'Mobile responsive pass',d:'Landing + app dashboard. 90% done.',due:'May 21',avatar:'CR'},
-      {p:'low',b:'CRES Ventures',t:'Tax filings prep — Q1',d:'Waiting on accountant. Batch all 3 ventures.',due:'Jun 1',avatar:'CR'},
-    ],
-    done:[
-      {p:'high',b:'Stratus Labs',t:'Send pricing draft to investors',d:'Sent May 16. Confirmed delivery.',due:'Done May 16',avatar:'CR',done:1},
-      {p:'med',b:'Atlas',t:'Customer feedback synthesis',d:'18 calls. Top 5 themes pulled.',due:'Done May 15',avatar:'CR',done:1},
-      {p:'med',b:'Stratus Labs',t:'Hire contractor — design',d:'Signed offer. Starts Monday.',due:'Done May 13',avatar:'CR',done:1},
-      {p:'low',b:'CRES Ventures',t:'Update brand guidelines',d:'Logo lockups + color tokens.',due:'Done May 10',avatar:'CR',done:1},
-      {p:'low',b:'Atlas',t:'Refresh testimonial page',d:'New copy + 4 quotes.',due:'Done May 8',avatar:'CR',done:1},
-    ]
-  };
+  const missionData={ planned:[], progress:[], done:[] };
   function setMissionTab(k,el){
     document.querySelectorAll('.km-tab').forEach(t=>t.classList.remove('active'));
     el.classList.add('active');
