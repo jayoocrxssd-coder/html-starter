@@ -1916,6 +1916,154 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .bills-main-tab.active{color:var(--text);border-bottom-color:var(--accent)}
 .bills-main-tab-bar{display:flex;border-bottom:.5px solid var(--border2);margin-bottom:16px}
 
+/* ═══════════════════════════════════════════════════════════
+   MOBILE-ONLY ELEMENTS — hidden on desktop, shown ≤768px
+   All classes from the mobile app injected here.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Default: hide all mobile-only elements on desktop */
+.mobile-only { display: none !important; }
+
+@media (max-width: 768px) {
+
+  /* ── Show mobile-only elements ── */
+  .mobile-only { display: revert !important; }
+
+  /* ── CSS variables used by mobile components ── */
+  :root {
+    --tab-h: 64px;
+  }
+
+  /* ── Hide desktop topbar on mobile; show mobile topbar D instead ── */
+  .topbar { display: none !important; }
+
+  /* ── Mobile topbar row overrides (top-r1 / top-r2) ── */
+  .top-r1 { height: 50px; display: flex; align-items: center; padding: 0 12px; gap: 8px; flex-shrink: 0; }
+  .top-menu { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text2); border-radius: 8px; flex-shrink: 0; }
+  .top-menu:active { background: var(--bg2); }
+  .top-search { flex: 1; height: 38px; background: var(--bg2); border: .5px solid var(--border2); border-radius: 10px; display: flex; align-items: center; gap: 9px; padding: 0 11px; color: var(--text3); font-size: 13px; min-width: 0; cursor: pointer; transition: background .15s, border-color .15s; }
+  .top-search:active { background: var(--bg3); border-color: var(--border2); }
+  .top-search .s-ic { display: flex; flex-shrink: 0; color: var(--text3); }
+  .top-search .s-ph { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 500; }
+  .top-search .s-ph b { font-weight: 700; color: var(--text2); }
+  .top-search .s-kbd { font-family: 'DM Mono', monospace; font-size: 9px; background: var(--surface); border: .5px solid var(--border2); padding: 2px 6px; border-radius: 5px; color: var(--text2); letter-spacing: .04em; flex-shrink: 0; }
+  .top-avatar { width: 38px; height: 38px; border-radius: 50%; background: #ffd9b3; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--text); position: relative; border: .5px solid var(--border2); flex-shrink: 0; cursor: pointer; }
+  .top-avatar .ndot { position: absolute; top: -1px; right: -1px; width: 10px; height: 10px; background: var(--red); border-radius: 50%; border: 2px solid var(--surface); }
+  .top-r2 { height: 46px; display: flex; align-items: center; padding: 0 14px; gap: 10px; border-top: .5px solid var(--border); flex-shrink: 0; }
+  .top-crumb { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--text); min-width: 0; flex: 1; overflow: hidden; }
+  .top-crumb .back { width: 30px; height: 30px; border: .5px solid var(--border2); background: var(--surface); border-radius: 8px; display: none; align-items: center; justify-content: center; color: var(--text2); margin-right: 2px; flex-shrink: 0; }
+  .top-crumb[data-secondary="1"] .back { display: inline-flex; }
+  .top-crumb .parent { color: var(--text3); font-weight: 600; letter-spacing: .14em; }
+  .top-crumb .sep { color: var(--text3); font-weight: 400; }
+  .top-crumb .now { color: var(--text); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .top-biz { display: inline-flex; align-items: center; gap: 6px; padding: 7px 11px; border: .5px solid var(--border2); background: var(--surface); border-radius: 100px; font-size: 11px; font-weight: 700; color: var(--text); flex-shrink: 0; letter-spacing: -.005em; cursor: pointer; }
+  .top-biz .pip { width: 7px; height: 7px; border-radius: 50%; background: #6c8fff; flex-shrink: 0; }
+  .top-biz .ch { font-size: 9px; opacity: .5; flex-shrink: 0; margin-left: 1px; }
+
+  /* ── Mobile tab bar ── */
+  .mob-tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    height: var(--tab-h);
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-top: .5px solid var(--border2);
+    display: flex; align-items: stretch; padding: 0 4px;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 60;
+  }
+  .mob-tab {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3px;
+    color: var(--text3); position: relative; padding-top: 6px;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .mob-tab .ic { font-size: 18px; line-height: 1; height: 22px; display: flex; align-items: center; justify-content: center; }
+  .mob-tab .ic svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .mob-tab .lb { font-size: 9px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .mob-tab.active { color: var(--text); }
+  .mob-tab.active::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 24px; height: 2.5px; background: var(--accent); border-radius: 0 0 3px 3px; }
+  .mob-tab .bdg { position: absolute; top: 5px; right: calc(50% - 18px); min-width: 14px; height: 14px; padding: 0 4px; background: var(--red); color: #fff; border-radius: 100px; font-size: 8px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 1.5px solid #fff; }
+
+  /* ── AXIS FAB ── */
+  .mob-fab {
+    position: fixed; right: 14px; bottom: calc(var(--tab-h) + 14px);
+    width: 54px; height: 54px; border-radius: 50%;
+    background: var(--accent); color: var(--accent-fg);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 14px 28px -10px rgba(0,0,0,.4), 0 0 0 4px rgba(255,255,255,.85);
+    z-index: 55; font-size: 22px; font-weight: 800; cursor: pointer;
+    border: none;
+  }
+  .mob-fab::after { content: ''; position: absolute; top: 4px; right: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--green); border: 2px solid var(--accent); }
+
+  /* ── AXIS bottom sheet ── */
+  .mob-axis-back { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .mob-axis-back.on { opacity: 1; pointer-events: auto; }
+  .mob-axis-sheet { position: fixed; left: 0; right: 0; bottom: 0; height: 88vh; background: #161615; color: #f0f0ee; z-index: 101; border-radius: 20px 20px 0 0; transform: translateY(100%); transition: transform .25s cubic-bezier(.2,.7,.2,1); display: flex; flex-direction: column; overflow: hidden; }
+  .mob-axis-sheet.on { transform: translateY(0); }
+  .mob-axis-handle { height: 5px; width: 36px; border-radius: 100px; background: rgba(255,255,255,.25); margin: 9px auto 0; flex-shrink: 0; }
+  .mob-axis-hd { display: flex; align-items: center; gap: 11px; padding: 11px 18px 14px; border-bottom: .5px solid rgba(255,255,255,.1); }
+  .mob-axis-hd .av { width: 34px; height: 34px; border-radius: 9px; background: #922130; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; }
+  .mob-axis-hd .nm { font-size: 14px; font-weight: 800; letter-spacing: .04em; }
+  .mob-axis-hd .st { font-size: 9px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,.5); display: flex; align-items: center; gap: 5px; margin-top: 1px; }
+  .mob-axis-hd .st .pulse { width: 6px; height: 6px; border-radius: 50%; background: #52c497; animation: mobPulseDot 1.8s infinite; }
+  .mob-axis-close { margin-left: auto; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.06); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.7); cursor: pointer; border: none; }
+  .mob-ax-suggestions { display: flex; gap: 6px; overflow-x: auto; padding: 8px 16px; -webkit-overflow-scrolling: touch; }
+  .mob-ax-suggestions::-webkit-scrollbar { display: none; }
+  .mob-ax-chip { flex-shrink: 0; background: rgba(255,255,255,.07); border: .5px solid rgba(255,255,255,.14); color: rgba(255,255,255,.85); padding: 8px 12px; border-radius: 100px; font-size: 11px; font-weight: 600; white-space: nowrap; min-height: 34px; display: inline-flex; align-items: center; cursor: pointer; border: .5px solid rgba(255,255,255,.14); background: rgba(255,255,255,.07); }
+  .mob-ax-msgs { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
+  .mob-ax-msg { padding: 10px 12px; border-radius: 11px; font-size: 14px; line-height: 1.5; max-width: 88%; word-wrap: break-word; }
+  .mob-ax-msg.user { background: #f0f0ee; color: #0e0e0d; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .mob-ax-msg.ai { background: rgba(255,255,255,.07); border: .5px solid rgba(255,255,255,.1); color: rgba(255,255,255,.92); align-self: flex-start; border-bottom-left-radius: 4px; }
+  .mob-ax-msg.ai b { color: #fff; }
+  .mob-axis-input-row { padding: 11px 14px; padding-bottom: max(11px, env(safe-area-inset-bottom)); border-top: .5px solid rgba(255,255,255,.1); display: flex; gap: 7px; }
+  .mob-axis-input-row input { flex: 1; background: rgba(255,255,255,.06); border: .5px solid rgba(255,255,255,.12); color: #f0f0ee; padding: 12px 14px; border-radius: 11px; font-size: 16px; outline: none; font-family: inherit; }
+  .mob-axis-input-row input::placeholder { color: rgba(255,255,255,.4); }
+  .mob-axis-input-row button { width: 46px; height: 46px; background: #922130; color: #fff; border-radius: 11px; font-size: 20px; flex-shrink: 0; cursor: pointer; border: none; }
+  @keyframes mobPulseDot { 0%,100%{ box-shadow: 0 0 0 0 rgba(37,107,71,.4); } 50%{ box-shadow: 0 0 0 6px rgba(37,107,71,0); } }
+
+  /* ── Biz switcher sheet ── */
+  .mob-biz-back { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 100; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .mob-biz-back.on { opacity: 1; pointer-events: auto; }
+  .mob-biz-sheet { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); z-index: 101; border-radius: 18px 18px 0 0; transform: translateY(100%); transition: transform .25s cubic-bezier(.2,.7,.2,1); max-height: 80vh; display: flex; flex-direction: column; overflow: hidden; border-top: .5px solid var(--border2); }
+  .mob-biz-sheet.on { transform: translateY(0); }
+  .mob-biz-handle { height: 5px; width: 36px; border-radius: 100px; background: var(--bg3); margin: 9px auto 0; flex-shrink: 0; }
+  .mob-biz-hd { padding: 11px 18px 14px; border-bottom: .5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .mob-biz-hd .ti { font-size: 13px; font-weight: 800; letter-spacing: -.01em; }
+  .mob-biz-close { width: 32px; height: 32px; border-radius: 8px; background: var(--bg2); display: flex; align-items: center; justify-content: center; color: var(--text2); cursor: pointer; border: .5px solid var(--border2); }
+  .mob-biz-body { padding: 9px 0; overflow-y: auto; }
+  .mob-biz-opt { padding: 13px 18px; display: flex; align-items: center; gap: 11px; font-size: 14px; font-weight: 600; color: var(--text2); border-left: 3px solid transparent; cursor: pointer; }
+  .mob-biz-opt.active { background: var(--bg2); color: var(--text); border-left-color: var(--accent); }
+  .mob-biz-opt .pip { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .mob-biz-opt .ch { margin-left: auto; font-size: 14px; }
+
+  /* ── Nav drawer ── */
+  .mob-drawer-back { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 80; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .mob-drawer-back.on { opacity: 1; pointer-events: auto; }
+  .mob-drawer { position: fixed; left: 0; top: 0; bottom: 0; width: 300px; background: var(--surface); z-index: 81; transform: translateX(-100%); transition: transform .25s cubic-bezier(.2,.7,.2,1); display: flex; flex-direction: column; border-right: .5px solid var(--border2); }
+  .mob-drawer.on { transform: translateX(0); }
+  .mob-drawer-hd { padding: 18px; display: flex; align-items: center; gap: 11px; border-bottom: .5px solid var(--border2); }
+  .mob-drawer-hd .av { width: 38px; height: 38px; border-radius: 9px; background: #ffd9b3; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; }
+  .mob-drawer-hd .nm { font-size: 14px; font-weight: 800; letter-spacing: -.01em; }
+  .mob-drawer-hd .em { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text3); margin-top: 2px; }
+  .mob-drawer-body { flex: 1; overflow-y: auto; padding: 11px 0; }
+  .mob-drawer-section { padding: 11px 18px 5px; font-size: 8px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--text3); }
+  .mob-drawer-item { padding: 11px 18px; display: flex; align-items: center; gap: 11px; font-size: 13px; color: var(--text2); border-left: 3px solid transparent; font-weight: 600; cursor: pointer; }
+  .mob-drawer-item.active { background: var(--bg2); color: var(--text); border-left-color: var(--accent); }
+  .mob-drawer-item .ic { font-size: 13px; width: 18px; text-align: center; }
+  .mob-drawer-foot { padding: 14px 18px; border-top: .5px solid var(--border); display: flex; gap: 7px; }
+  .mob-drawer-foot button { flex: 1; font-size: 10px; }
+
+  /* ── Add-biz sheet ── */
+  .mob-addbiz-sheet { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); z-index: 101; border-radius: 18px 18px 0 0; transform: translateY(100%); transition: transform .25s cubic-bezier(.2,.7,.2,1); max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; border-top: .5px solid var(--border2); }
+  .mob-addbiz-sheet.on { transform: translateY(0); }
+  .mob-ab-form { padding: 0 18px 18px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+  .mob-ab-pip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .mob-ab-pip { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 11px; font-weight: 800; }
+  .mob-ab-pip.active { border-color: var(--text); transform: scale(1.08); }
+
+}
+
 </style>
 <!-- Google Drive Sync Config -->
 <script>
@@ -2028,6 +2176,36 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
     </button>
     <!-- Mobile hamburger -->
     <button class="mob-menu-btn" onclick="toggleMobileSidebar()" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+  </div>
+</div>
+
+<!-- ═══ MOBILE-ONLY: Topbar Variant D (command bar + breadcrumb) ═══ -->
+<div class="mobile-only" id="mobTopbarD" style="background:var(--surface);border-bottom:.5px solid rgba(0,0,0,.13);display:flex;flex-direction:column;flex-shrink:0;z-index:50;position:relative">
+  <!-- Row 1: hamburger + search + avatar -->
+  <div class="top-r1">
+    <button class="top-menu" onclick="mobOpenDrawer()" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <button class="top-search" onclick="mobOpenAxisSheet()" aria-label="Ask AXIS or jump to anything">
+      <span class="s-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></span>
+      <span class="s-ph">Ask <b>AXIS</b> or jump to…</span>
+      <span class="s-kbd">⌘ K</span>
+    </button>
+    <div class="top-avatar" id="mobTopAvatar" onclick="mobGoPage('more')" aria-label="Profile"><div class="ndot"></div></div>
+  </div>
+  <!-- Row 2: breadcrumb + biz chip -->
+  <div class="top-r2">
+    <div class="top-crumb" id="mobTopCrumb" data-secondary="0">
+      <button class="back" onclick="mobGoPage('more')" aria-label="Back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <span class="parent" id="mobCrumbParent" style="display:none"></span>
+      <span class="sep" id="mobCrumbSep" style="display:none">›</span>
+      <span class="now" id="mobCrumbNow">Dashboard</span>
+    </div>
+    <button id="mobTopBizBtn" class="top-biz" onclick="mobOpenBizSheet()">
+      <span class="pip"></span><span class="ch">⌄</span>
+    </button>
   </div>
 </div>
 
@@ -3315,6 +3493,161 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 
 </div><!-- /content -->
 </div><!-- /body-wrap -->
+
+<!-- ═══ MOBILE-ONLY: Tab Bar ═══ -->
+<div class="mob-tabbar mobile-only" id="mobTabbar">
+  <div class="mob-tab active" data-page="dashboard" onclick="mobGoPage('dashboard')">
+    <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 12L12 4l8 8M6 10v10h12V10"/></svg></span>
+    <span class="lb">Home</span>
+  </div>
+  <div class="mob-tab" data-page="missions" onclick="mobGoPage('missions')">
+    <span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="6" height="14" rx="1.5"/><rect x="14" y="5" width="6" height="9" rx="1.5"/></svg></span>
+    <span class="lb">Missions</span>
+  </div>
+  <div class="mob-tab" data-page="tracker" onclick="mobGoPage('tracker')">
+    <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 16v-6M12 16V8M16 16v-3M20 16V6"/></svg></span>
+    <span class="lb">P&amp;L</span>
+  </div>
+  <div class="mob-tab" data-page="calendar" onclick="mobGoPage('calendar')">
+    <span class="ic"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
+    <span class="lb">Calendar</span>
+  </div>
+  <div class="mob-tab" data-page="more" onclick="mobGoPage('more')">
+    <span class="ic"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg></span>
+    <span class="lb">More</span>
+  </div>
+</div>
+
+<!-- ═══ MOBILE-ONLY: AXIS FAB ═══ -->
+<button class="mob-fab mobile-only" id="mobAxisFab" onclick="mobOpenAxisSheet()" aria-label="Open AXIS">◐</button>
+
+<!-- ═══ MOBILE-ONLY: AXIS Sheet ═══ -->
+<div class="mob-axis-back mobile-only" id="mobAxisSheetBack" onclick="mobCloseAxisSheet()"></div>
+<div class="mob-axis-sheet mobile-only" id="mobAxisSheet">
+  <div class="mob-axis-handle"></div>
+  <div class="mob-axis-hd">
+    <div class="av">◐</div>
+    <div>
+      <div class="nm">AXIS</div>
+      <div class="st"><span class="pulse"></span>operator-mode</div>
+    </div>
+    <button class="mob-axis-close" onclick="mobCloseAxisSheet()">✕</button>
+  </div>
+  <div class="mob-ax-suggestions">
+    <button class="mob-ax-chip" onclick="mobAskAxis('briefing')">📋 Daily briefing</button>
+    <button class="mob-ax-chip" onclick="mobAskAxis('margin')">📉 What's dragging margin?</button>
+    <button class="mob-ax-chip" onclick="mobAskAxis('focus')">🎯 What should I focus on?</button>
+    <button class="mob-ax-chip" onclick="mobAskAxis('bills')">🧾 Bills this week</button>
+    <button class="mob-ax-chip" onclick="mobAskAxis('intel')">🔍 Summarize intel</button>
+  </div>
+  <div class="mob-ax-msgs" id="mobAxisMsgs">
+    <div class="mob-ax-msg ai">
+      <b>Standing by, Operator.</b><br><br>
+      I've read your war room. Pick a suggestion above, or ask me anything about your missions, P&amp;L, calendar, or intel.
+    </div>
+  </div>
+  <form class="mob-axis-input-row" onsubmit="mobSendAxis(event)">
+    <input type="text" id="mobAxisInput" placeholder="Ask AXIS anything..." autocomplete="off">
+    <button type="submit">↑</button>
+  </form>
+</div>
+
+<!-- ═══ MOBILE-ONLY: Biz Switcher Sheet ═══ -->
+<div class="mob-biz-back mobile-only" id="mobBizSheetBack" onclick="mobCloseBizSheet()"></div>
+<div class="mob-biz-sheet mobile-only" id="mobBizSheet">
+  <div class="mob-biz-handle"></div>
+  <div class="mob-biz-hd">
+    <div class="ti">Switch business</div>
+    <button class="mob-biz-close" onclick="mobCloseBizSheet()">✕</button>
+  </div>
+  <div class="mob-biz-body" id="mobBizSheetBody">
+    <!-- populated by mobRenderBizSheet() -->
+  </div>
+</div>
+
+<!-- ═══ MOBILE-ONLY: Add Biz Sheet ═══ -->
+<div class="mob-biz-back mobile-only" id="mobAddBizSheetBack" onclick="mobCloseAddBizSheet()"></div>
+<div class="mob-addbiz-sheet mobile-only" id="mobAddBizSheet">
+  <div class="mob-biz-handle"></div>
+  <div class="mob-biz-hd">
+    <div class="ti">Add a business</div>
+    <button class="mob-biz-close" onclick="mobCloseAddBizSheet()">✕</button>
+  </div>
+  <div class="mob-ab-form">
+    <div style="margin-top:14px">
+      <label style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px">Business name</label>
+      <input type="text" placeholder="e.g. Nimbus AI" style="width:100%;background:var(--bg2);border:.5px solid var(--border2);color:var(--text);padding:11px 12px;border-radius:8px;outline:none;font-family:inherit;font-size:16px">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+      <div>
+        <label style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px">Type</label>
+        <select style="width:100%;background:var(--bg2);border:.5px solid var(--border2);color:var(--text);padding:11px 12px;border-radius:8px;outline:none;font-family:inherit;font-size:16px"><option>SaaS</option><option>Agency</option><option>E-commerce</option><option>Consulting</option><option>Other</option></select>
+      </div>
+      <div>
+        <label style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px">Stage</label>
+        <select style="width:100%;background:var(--bg2);border:.5px solid var(--border2);color:var(--text);padding:11px 12px;border-radius:8px;outline:none;font-family:inherit;font-size:16px"><option>Idea</option><option>Pre-revenue</option><option>Revenue</option><option>Profitable</option></select>
+      </div>
+    </div>
+    <div>
+      <label style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px">Identifier color</label>
+      <div class="mob-ab-pip-row">
+        <div class="mob-ab-pip active" style="background:#6c8fff">•</div>
+        <div class="mob-ab-pip" style="background:#d63a8a">•</div>
+        <div class="mob-ab-pip" style="background:#d99500">•</div>
+        <div class="mob-ab-pip" style="background:#1ea96b">•</div>
+        <div class="mob-ab-pip" style="background:#6c2ad0">•</div>
+        <div class="mob-ab-pip" style="background:#922130">•</div>
+        <div class="mob-ab-pip" style="background:#9a9a98">•</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <button class="btn btn-g" style="flex:1;justify-content:center" onclick="mobCloseAddBizSheet()">Cancel</button>
+      <button class="btn btn-p" style="flex:1.5;justify-content:center" onclick="mobCloseAddBizSheet()">Create business →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MOBILE-ONLY: Nav Drawer ═══ -->
+<div class="mob-drawer-back mobile-only" id="mobDrawerBack" onclick="mobCloseDrawer()"></div>
+<div class="mob-drawer mobile-only" id="mobDrawer">
+  <div class="mob-drawer-hd">
+    <div class="av" id="mobDrawerAv"></div>
+    <div>
+      <div class="nm" id="mobDrawerNm"></div>
+      <div class="em" id="mobDrawerEm"></div>
+    </div>
+  </div>
+  <div class="mob-drawer-body">
+    <div class="mob-drawer-section">Command</div>
+    <div class="mob-drawer-item active" onclick="mobGoPage('dashboard');mobCloseDrawer()"><span class="ic">◈</span>Dashboard</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('missions');mobCloseDrawer()"><span class="ic">◎</span>Mission Board</div>
+    <div class="mob-drawer-section">Operations</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('intel');mobCloseDrawer()"><span class="ic">◉</span>Intel Notes</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('tracker');mobCloseDrawer()"><span class="ic">◇</span>P&amp;L Tracker</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('goals');mobCloseDrawer()"><span class="ic">◎</span>Goals</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('whiteboard');mobCloseDrawer()"><span class="ic">⤢</span>Whiteboard</div>
+    <div class="mob-drawer-section">Schedule</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('timer');mobCloseDrawer()"><span class="ic">◷</span>Focus Timer</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('calendar');mobCloseDrawer()"><span class="ic">▦</span>Calendar</div>
+    <div class="mob-drawer-section">Finance</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('bills');mobCloseDrawer()"><span class="ic">◫</span>Bills &amp; Expenses</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('invoices');mobCloseDrawer()"><span class="ic">△</span>Invoices</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('payroll');mobCloseDrawer()"><span class="ic">◐</span>Payroll</div>
+    <div class="mob-drawer-section">Collaboration</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('videocalls');mobCloseDrawer()"><span class="ic">▣</span>Video Calls</div>
+    <div class="mob-drawer-section">Account</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('more');mobCloseDrawer()"><span class="ic">◐</span>Profile &amp; Settings</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('subscription');mobCloseDrawer()"><span class="ic">$</span>Subscription</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('help');mobCloseDrawer()"><span class="ic">?</span>Help &amp; Support</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('sync');mobCloseDrawer()"><span class="ic">↻</span>Sync &amp; Backup</div>
+    <div class="mob-drawer-item" onclick="mobGoPage('updates');mobCloseDrawer()"><span class="ic">⟳</span>Updates</div>
+  </div>
+  <div class="mob-drawer-foot">
+    <button class="btn btn-g">☁ Sync</button>
+    <button class="btn btn-g">↓ Export</button>
+  </div>
+</div>
+
 </div><!-- /shell -->
 
 <!-- ═══ GOAL CELEBRATION OVERLAY ═══ -->
@@ -14643,5 +14976,343 @@ function _cAlert(msg,cb){_cdlg('alert','Notice',msg,null,'OK',cb||null);}
 function _cConfirm(msg,okLabel,cb){_cdlg('confirm','Confirm',msg,null,okLabel||'Confirm',cb);}
 function _cPrompt(label,def,cb){_cdlg('prompt',label,'',def,'Save',cb);}
 function _cConfirmP(msg,okLabel){return new Promise(function(r){_cConfirm(msg,okLabel,r);});}
+</script>
+
+<!-- ═══ MOBILE LAYER — injected from mobile app ═══ -->
+<script>
+(function(){
+
+  // ── Mobile-only feature guard: only run logic when viewport is mobile ──
+  function isMobile(){ return window.innerWidth <= 768; }
+
+  // ── Page map: mobile page key → desktop showPage() key ──
+  // Mobile pages that match desktop pages are wired directly; others fall through.
+  var MOB_PAGE_MAP = {
+    dashboard: 'dashboard',
+    missions:  'strategy',   // desktop uses 'strategy' for missions/kanban
+    tracker:   'tracker',
+    calendar:  'calendar',
+    more:      'more',
+    timer:     'timer',
+    intel:     'intel',
+    bills:     'bills',
+    invoices:  'invoices',
+    goals:     'goals',
+    whiteboard:'whiteboard',
+    videocalls:'videocalls',
+    payroll:   'payroll',
+    profile:   'profile',
+    subscription:'subscription',
+    help:      'help',
+    sync:      'sync',
+    updates:   'updates',
+  };
+
+  // ── Breadcrumb map (mobile topbar row 2) ──
+  var MOB_CRUMB = {
+    dashboard:    { now:'Dashboard' },
+    missions:     { now:'Mission Board' },
+    tracker:      { now:'P&L Tracker' },
+    calendar:     { now:'Calendar' },
+    more:         { now:'More' },
+    timer:        { now:'Focus Timer', parent:'More' },
+    intel:        { now:'Intel Notes', parent:'More' },
+    bills:        { now:'Bills', parent:'More' },
+    invoices:     { now:'Invoices', parent:'More' },
+    goals:        { now:'Goals', parent:'More' },
+    whiteboard:   { now:'Whiteboard', parent:'More' },
+    videocalls:   { now:'Video Calls', parent:'More' },
+    payroll:      { now:'Payroll', parent:'More' },
+    profile:      { now:'Profile & Settings', parent:'More' },
+    subscription: { now:'Subscription', parent:'More' },
+    help:         { now:'Help & Support', parent:'More' },
+    sync:         { now:'Sync & Backup', parent:'More' },
+    updates:      { now:'Updates', parent:'More' },
+  };
+
+  // ── goPage — mobile navigation ──
+  window.mobGoPage = function(name) {
+    if (!isMobile()) return;
+
+    // Map to desktop page key and call desktop showPage if available
+    var desktopPage = MOB_PAGE_MAP[name] || name;
+    if (typeof showPage === 'function') {
+      showPage(desktopPage);
+    } else {
+      // Fallback: show/hide .page elements by id
+      document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+      var tgt = document.getElementById('page-' + name);
+      if (tgt) tgt.classList.add('active');
+    }
+
+    // Update mobile tab bar active state
+    var tabBar = document.getElementById('mobTabbar');
+    if (tabBar) {
+      var tabs = tabBar.querySelectorAll('.mob-tab');
+      var ROOT_TABS = ['dashboard','missions','tracker','calendar','more'];
+      var activeTab = ROOT_TABS.includes(name) ? name : 'more';
+      tabs.forEach(function(t){
+        t.classList.toggle('active', t.dataset.page === activeTab);
+      });
+    }
+
+    // Update mobile breadcrumb
+    mobSetCrumb(name);
+
+    // Scroll content to top
+    var content = document.querySelector('.content') || document.getElementById('content');
+    if (content) content.scrollTo({ top: 0, behavior: 'instant' });
+  };
+
+  // ── Breadcrumb ──
+  function mobSetCrumb(name) {
+    var crumb = document.getElementById('mobTopCrumb');
+    if (!crumb) return;
+    var c = MOB_CRUMB[name] || { now: name };
+    var nowEl = document.getElementById('mobCrumbNow');
+    var parentEl = document.getElementById('mobCrumbParent');
+    var sepEl = document.getElementById('mobCrumbSep');
+    if (nowEl) nowEl.textContent = c.now;
+    if (parentEl && sepEl) {
+      if (c.parent) {
+        parentEl.textContent = c.parent;
+        parentEl.style.display = '';
+        sepEl.style.display = '';
+        crumb.dataset.secondary = '1';
+      } else {
+        parentEl.style.display = 'none';
+        sepEl.style.display = 'none';
+        crumb.dataset.secondary = '0';
+      }
+    }
+  }
+
+  // ── AXIS Sheet ──
+  window.mobOpenAxisSheet = function() {
+    var sheet = document.getElementById('mobAxisSheet');
+    var back  = document.getElementById('mobAxisSheetBack');
+    if (sheet) sheet.classList.add('on');
+    if (back)  back.classList.add('on');
+    document.body.style.overflow = 'hidden';
+  };
+  window.mobCloseAxisSheet = function() {
+    var sheet = document.getElementById('mobAxisSheet');
+    var back  = document.getElementById('mobAxisSheetBack');
+    if (sheet) sheet.classList.remove('on');
+    if (back)  back.classList.remove('on');
+    document.body.style.overflow = '';
+  };
+
+  // ── Biz Sheet ──
+  window.mobOpenBizSheet = function() {
+    mobRenderBizSheet();
+    var sheet = document.getElementById('mobBizSheet');
+    var back  = document.getElementById('mobBizSheetBack');
+    if (sheet) sheet.classList.add('on');
+    if (back)  back.classList.add('on');
+    document.body.style.overflow = 'hidden';
+  };
+  window.mobCloseBizSheet = function() {
+    var sheet = document.getElementById('mobBizSheet');
+    var back  = document.getElementById('mobBizSheetBack');
+    if (sheet) sheet.classList.remove('on');
+    if (back)  back.classList.remove('on');
+    document.body.style.overflow = '';
+  };
+
+  // ── Add Biz Sheet ──
+  window.mobOpenAddBizSheet = function() {
+    var sheet = document.getElementById('mobAddBizSheet');
+    var back  = document.getElementById('mobAddBizSheetBack');
+    if (sheet) sheet.classList.add('on');
+    if (back)  back.classList.add('on');
+    document.body.style.overflow = 'hidden';
+  };
+  window.mobCloseAddBizSheet = function() {
+    var sheet = document.getElementById('mobAddBizSheet');
+    var back  = document.getElementById('mobAddBizSheetBack');
+    if (sheet) sheet.classList.remove('on');
+    if (back)  back.classList.remove('on');
+    document.body.style.overflow = '';
+  };
+
+  // ── Nav Drawer ──
+  window.mobOpenDrawer = function() {
+    var drawer = document.getElementById('mobDrawer');
+    var back   = document.getElementById('mobDrawerBack');
+    if (drawer) drawer.classList.add('on');
+    if (back)   back.classList.add('on');
+  };
+  window.mobCloseDrawer = function() {
+    var drawer = document.getElementById('mobDrawer');
+    var back   = document.getElementById('mobDrawerBack');
+    if (drawer) drawer.classList.remove('on');
+    if (back)   back.classList.remove('on');
+  };
+
+  // ── AXIS Chat ──
+  var MOB_AXIS_RESPONSES = {
+    briefing: 'Your war room is active. You have missions in progress, upcoming calendar events, and P&L trending positively. Check your key goals — two are nearing the deadline.',
+    margin:   'Top margin drag: payroll as % of revenue is elevated. Review contractor spend and defer non-essential subscriptions this month.',
+    focus:    'Highest-leverage move right now: close your top overdue invoice and unblock the highest-priority mission. Everything else is maintenance.',
+    bills:    'You have bills due this week. Review the Bills & Expenses module for exact amounts and due dates.',
+    intel:    'Recent intel notes cover key strategic decisions and competitor observations. Open Intel Notes for the full summary.',
+  };
+
+  window.mobAskAxis = function(key) {
+    var msgs = document.getElementById('mobAxisMsgs');
+    if (!msgs) return;
+    var labels = { briefing:'Daily briefing', margin:"What's dragging margin?", focus:'What should I focus on?', bills:'Bills this week', intel:'Summarize intel' };
+    var u = document.createElement('div');
+    u.className = 'mob-ax-msg user';
+    u.textContent = labels[key] || key;
+    msgs.appendChild(u);
+    var a = document.createElement('div');
+    a.className = 'mob-ax-msg ai';
+    a.innerHTML = '<span style="opacity:.5">●●●</span>';
+    msgs.appendChild(a);
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(function(){
+      a.innerHTML = MOB_AXIS_RESPONSES[key] || 'Processing…';
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 600);
+  };
+
+  window.mobSendAxis = function(e) {
+    e.preventDefault();
+    var inp = document.getElementById('mobAxisInput');
+    var t = inp.value.trim();
+    if (!t) return;
+    inp.value = '';
+    var msgs = document.getElementById('mobAxisMsgs');
+    if (!msgs) return;
+    var u = document.createElement('div');
+    u.className = 'mob-ax-msg user';
+    u.textContent = t;
+    msgs.appendChild(u);
+    var a = document.createElement('div');
+    a.className = 'mob-ax-msg ai';
+    a.innerHTML = '<span style="opacity:.5">●●●</span>';
+    msgs.appendChild(a);
+    msgs.scrollTop = msgs.scrollHeight;
+    setTimeout(function(){
+      a.innerHTML = "That's a live query — wire AXIS to your actual data inside the full War Room. Try the suggestions above for a demo.";
+      msgs.scrollTop = msgs.scrollHeight;
+    }, 700);
+  };
+
+  // ── Business switcher: render from desktop state ──
+  function mobRenderBizSheet() {
+    var body = document.getElementById('mobBizSheetBody');
+    if (!body) return;
+
+    // Try to pull businesses from desktop state object (S or window.S)
+    var bizList = [];
+    try {
+      var state = (typeof S !== 'undefined' && S) || (window.S);
+      if (state && state.businesses && Array.isArray(state.businesses)) {
+        bizList = state.businesses;
+      }
+    } catch(e){}
+
+    if (bizList.length === 0) {
+      body.innerHTML = '<div style="padding:18px;font-size:13px;color:var(--text3)">No businesses found.</div>';
+      return;
+    }
+
+    body.innerHTML = bizList.map(function(b) {
+      var isActive = b.active || false;
+      return '<div class="mob-biz-opt' + (isActive ? ' active' : '') + '" onclick="mobSelectBiz(\'' + (b.id||b.name) + '\')">'
+        + '<div class="pip" style="background:' + (b.color||'#6c8fff') + '"></div>'
+        + (b.name || 'Unnamed')
+        + (isActive ? '<div class="ch">✓</div>' : '')
+        + '</div>';
+    }).join('')
+    + '<div style="padding:14px 18px"><button class="btn btn-g" style="width:100%;justify-content:center" onclick="mobCloseBizSheet();mobOpenAddBizSheet()">+ Add Business</button></div>';
+  }
+
+  window.mobSelectBiz = function(idOrName) {
+    // Delegate to desktop switchBusiness if available
+    try {
+      var state = (typeof S !== 'undefined' && S) || window.S;
+      if (state && state.businesses) {
+        state.businesses.forEach(function(b){ b.active = (b.id === idOrName || b.name === idOrName); });
+        if (typeof save === 'function') save();
+        if (typeof renderAll === 'function') renderAll();
+        else if (typeof bootApp === 'function') {}
+      }
+    } catch(e){}
+    mobCloseBizSheet();
+    mobRenderTopBiz();
+  };
+
+  // ── Topbar biz chip ──
+  function mobRenderTopBiz() {
+    var btn = document.getElementById('mobTopBizBtn');
+    if (!btn) return;
+    try {
+      var state = (typeof S !== 'undefined' && S) || window.S;
+      if (state && state.businesses) {
+        var active = state.businesses.find(function(b){ return b.active; }) || state.businesses[0];
+        if (active) {
+          btn.innerHTML = '<span class="pip" style="background:' + (active.color||'#6c8fff') + '"></span>'
+            + (active.name||'Business')
+            + '<span class="ch">⌄</span>';
+        }
+      }
+    } catch(e){}
+  }
+
+  // ── Session timer (mirrors desktop but updates mobile display) ──
+  // The desktop already manages timerRunning / timerSeconds — we just
+  // mirror the display into the mobile topbar session slot if it exists.
+  function mobSyncTimer() {
+    var sess = document.getElementById('mobSessionTime');
+    if (!sess) return;
+    try {
+      var sec = (typeof timerSeconds !== 'undefined') ? timerSeconds : 0;
+      var h = Math.floor(sec / 3600);
+      var m = Math.floor((sec % 3600) / 60);
+      var s = sec % 60;
+      sess.textContent = [h,m,s].map(function(n){ return String(n).padStart(2,'0'); }).join(':');
+    } catch(e){}
+  }
+  setInterval(mobSyncTimer, 1000);
+
+  // ── Drawer user info: sync from desktop state ──
+  function mobRenderDrawer() {
+    try {
+      var state = (typeof S !== 'undefined' && S) || window.S;
+      if (!state) return;
+      var avEl = document.getElementById('mobDrawerAv');
+      var nmEl = document.getElementById('mobDrawerNm');
+      var emEl = document.getElementById('mobDrawerEm');
+      if (avEl && state.userInitials) avEl.textContent = state.userInitials;
+      if (nmEl && state.userName)     nmEl.textContent = state.userName;
+      if (emEl && state.userEmail)    emEl.textContent = state.userEmail;
+    } catch(e){}
+  }
+
+  // ── Init: wire up mobile topbar if desktop topbar not already mobile-friendly ──
+  document.addEventListener('DOMContentLoaded', function() {
+    if (!isMobile()) return;
+
+    mobRenderDrawer();
+    mobRenderTopBiz();
+
+    // Wire the mobile topbar row-2 elements if they exist
+    var bizBtn = document.getElementById('mobTopBizBtn');
+    if (bizBtn) bizBtn.addEventListener('click', mobOpenBizSheet);
+  });
+
+  // Re-sync on resize (e.g. desktop browser being narrowed)
+  window.addEventListener('resize', function(){
+    if (isMobile()) {
+      mobRenderDrawer();
+      mobRenderTopBiz();
+    }
+  });
+
+})();
 </script>
 </body></html>
