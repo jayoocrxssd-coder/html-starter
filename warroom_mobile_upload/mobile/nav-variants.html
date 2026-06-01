@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover">
+<title>WAR ROOM — Top Nav Variants</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#f4f4f2;--bg2:#ececea;--bg3:#e2e2e0;--surface:#fff;
+    --border:rgba(0,0,0,.07);--border2:rgba(0,0,0,.13);
+    --text:#0e0e0d;--text2:#525250;--text3:#9a9a98;
+    --accent:#0e0e0d;--accent-fg:#f4f4f2;
+    --green:#256b47;--red:#922130;--green-bg:#e8f3ec;--red-bg:#fbebec;
+    --blue:#1a4a8a;--amber:#7a4e00;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
+  button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer;font-size:inherit}
+  .mono{font-family:'DM Mono',monospace}
+
+  .shell{display:flex;flex-direction:column;height:100%}
+
+  /* ── Shared chrome ── */
+  .iconbtn{width:38px;height:38px;border:.5px solid var(--border2);border-radius:9px;background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text2);flex-shrink:0;position:relative}
+  .iconbtn .badge{position:absolute;top:-3px;right:-3px;min-width:14px;height:14px;padding:0 4px;background:var(--red);color:#fff;border-radius:100px;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--surface)}
+  .avatar{width:38px;height:38px;border-radius:50%;background:#ffd9b3;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--text);flex-shrink:0;position:relative;border:.5px solid var(--border2)}
+  .avatar .ndot{position:absolute;top:-1px;right:-1px;width:10px;height:10px;background:var(--red);border-radius:50%;border:2px solid var(--surface)}
+
+  .biz-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border:.5px solid var(--border2);background:var(--surface);border-radius:100px;font-size:11px;font-weight:700;color:var(--text);letter-spacing:-.005em}
+  .biz-chip .pip{width:7px;height:7px;border-radius:50%;background:#6c8fff}
+  .biz-chip .ch{font-size:9px;opacity:.55;margin-left:1px}
+
+  .ic-svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+  /* ── Content area underneath (shared snippet) ── */
+  .content{flex:1;overflow-y:auto;padding:16px 16px 30px;background:var(--bg)}
+  .kpi-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin:0 -16px 14px;padding-left:16px;padding-right:16px;scroll-snap-type:x mandatory}
+  .kpi-strip::-webkit-scrollbar{display:none}
+  .kpi{flex:0 0 140px;background:var(--surface);border:.5px solid var(--border2);border-radius:10px;padding:11px 13px;scroll-snap-align:start}
+  .kpi .cl{font-size:8px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+  .kpi .cv{font-size:18px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .kpi .cs{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:4px}
+  .kpi .cv.pos{color:var(--green)}.kpi .cv.neg{color:var(--red)}
+
+  .card{background:var(--surface);border:.5px solid var(--border2);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+  .card .sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .card .sec-title{font-size:11px;font-weight:800;color:var(--text);letter-spacing:.02em}
+  .card .ps{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3)}
+  .mini-mission{display:flex;align-items:center;gap:9px;font-size:13px;padding:8px 0;border-bottom:.5px solid var(--border)}
+  .mini-mission:last-child{border-bottom:none}
+  .mini-mission .ck{width:17px;height:17px;border:1.3px solid var(--text2);border-radius:5px;flex-shrink:0}
+  .mini-mission.done .ck{background:var(--green);border-color:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px}
+  .mini-mission.done .nm{text-decoration:line-through;color:var(--text3)}
+  .mini-mission .nm{flex:1}
+  .mini-mission .biz{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);padding:2px 7px;background:var(--bg2);border-radius:100px}
+  .mini-mission .due{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3)}
+  .mini-mission .due.late{color:var(--red)}
+
+  .variant-tag{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:rgba(14,14,13,.92);color:#fff;font-size:8px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;padding:4px 11px;border-radius:100px;z-index:200;backdrop-filter:blur(8px)}
+
+  /* ───────────────────────── VARIANT A: TWO-ROW STRUCTURED ───────────────────────── */
+  .a-topbar{background:var(--surface);border-bottom:.5px solid var(--border2);flex-shrink:0;z-index:50}
+  .a-row1{height:50px;display:flex;align-items:center;padding:0 14px;gap:10px}
+  .a-logo{width:30px;height:30px;background:var(--accent);color:var(--accent-fg);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+  .a-biz{flex:1;display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border:.5px solid var(--border2);background:var(--bg);border-radius:100px;font-size:12px;font-weight:700;color:var(--text);min-width:0;max-width:fit-content}
+  .a-biz .pip{width:7px;height:7px;border-radius:50%;background:#6c8fff;flex-shrink:0}
+  .a-biz .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.005em}
+  .a-biz .ch{font-size:9px;opacity:.5;flex-shrink:0}
+  .a-spacer{flex:1}
+  .a-row2{padding:12px 18px 16px;display:flex;align-items:flex-end;justify-content:space-between;gap:14px}
+  .a-row2 .ti{font-size:26px;font-weight:800;letter-spacing:-.025em;line-height:1.05;color:var(--text)}
+  .a-row2 .sb{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:3px;letter-spacing:.04em}
+  .a-row2 .pa{display:flex;gap:6px;align-items:center;padding-bottom:3px}
+  .a-row2 .pa .chip{font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--text2);padding:6px 10px;background:var(--bg2);border-radius:100px;text-transform:uppercase;border:.5px solid var(--border2)}
+  .a-row2 .pa .chip.on{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+
+  /* ───────────────────────── VARIANT B: BRAND-LED, PILL TITLE ───────────────────────── */
+  .b-topbar{background:rgba(244,244,242,.92);backdrop-filter:blur(14px);border-bottom:.5px solid var(--border2);flex-shrink:0;z-index:50}
+  .b-row{height:54px;display:flex;align-items:center;padding:0 14px;gap:10px}
+  .b-brand{display:flex;align-items:center;gap:9px}
+  .b-brand .mk{width:30px;height:30px;background:var(--accent);color:var(--accent-fg);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+  .b-brand .nm{font-size:11px;font-weight:800;letter-spacing:.18em}
+  .b-spacer{flex:1}
+  .b-search{width:38px;height:38px;border:.5px solid var(--border2);border-radius:9px;background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text2)}
+  .b-title-row{padding:14px 18px 4px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .b-title-row .ti{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1.02}
+  .b-title-row .ti .em{color:var(--text3);font-weight:600}
+  .b-title-row .biz-chip{flex-shrink:0}
+  .b-sub-row{padding:0 18px 16px;font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:.04em;display:flex;align-items:center;gap:9px}
+  .b-sub-row .ses{display:inline-flex;align-items:center;gap:5px;color:var(--green)}
+  .b-sub-row .ses .pulse{width:5px;height:5px;border-radius:50%;background:var(--green)}
+
+  /* ───────────────────────── VARIANT C: AVATAR-LED GREETING ───────────────────────── */
+  .c-topbar{background:var(--surface);border-bottom:.5px solid var(--border2);flex-shrink:0;z-index:50}
+  .c-row{height:64px;display:flex;align-items:center;padding:10px 14px;gap:10px}
+  .c-greet{flex:1;display:flex;flex-direction:column;min-width:0;line-height:1.15}
+  .c-greet .lo{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:.06em}
+  .c-greet .hi{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.015em}
+  .c-meta-row{padding:0 14px 12px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+  .c-meta-row .biz-chip{padding:7px 11px;font-size:11px}
+  .c-quick{display:flex;gap:6px}
+  .c-quick .qc{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--text2);padding:6px 10px;background:var(--bg2);border:.5px solid var(--border2);border-radius:100px;text-transform:uppercase}
+  .c-quick .qc.live{color:var(--green);background:var(--green-bg);border-color:transparent}
+  .c-quick .qc.live::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green)}
+
+  /* ───────────────────────── VARIANT D: COMMAND BAR ───────────────────────── */
+  .d-topbar{background:var(--surface);border-bottom:.5px solid var(--border2);flex-shrink:0;z-index:50}
+  .d-row1{height:48px;display:flex;align-items:center;padding:0 12px;gap:8px}
+  .d-menu{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--text2)}
+  .d-search{flex:1;height:38px;background:var(--bg2);border:.5px solid var(--border2);border-radius:10px;display:flex;align-items:center;gap:9px;padding:0 12px;color:var(--text3);font-size:13px}
+  .d-search .ic{display:flex}
+  .d-search .ph{flex:1}
+  .d-search .kbd{font-family:'DM Mono',monospace;font-size:9px;background:var(--surface);border:.5px solid var(--border2);padding:2px 6px;border-radius:5px;color:var(--text2);letter-spacing:.04em}
+  .d-context{padding:9px 16px 12px;display:flex;align-items:center;gap:10px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;border-top:.5px solid var(--border)}
+  .d-context .crumb{font-weight:800;color:var(--text);letter-spacing:.14em}
+  .d-context .biz-chip{margin-left:auto;font-size:10px;padding:5px 10px}
+
+  /* tiny chart bars for snippet */
+  .bar-wrap{height:80px;display:flex;align-items:flex-end;gap:3px}
+  .bar-wrap .pair{flex:1;display:flex;align-items:flex-end;gap:2px;height:100%}
+  .bar-wrap .pair .rev{flex:1;background:var(--green);border-radius:2px 2px 0 0;opacity:.85}
+  .bar-wrap .pair .exp{flex:1;background:var(--red);border-radius:2px 2px 0 0;opacity:.55}
+</style>
+</head>
+<body>
+
+<div class="shell" id="shell"></div>
+
+<script>
+const VARIANTS = {
+  // ────────── VARIANT A ──────────
+  a: `
+    <div class="variant-tag">A · Two-row · Structure first</div>
+    <div class="a-topbar">
+      <div class="a-row1">
+        <div class="a-logo">W</div>
+        <button class="a-biz">
+          <span class="pip"></span><span class="nm">Stratus Labs</span><span class="ch">⌄</span>
+        </button>
+        <span class="a-spacer"></span>
+        <button class="iconbtn" aria-label="AXIS">
+          <svg class="ic-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span class="badge">3</span>
+        </button>
+        <button class="iconbtn" aria-label="Menu">
+          <svg class="ic-svg" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+      <div class="a-row2">
+        <div>
+          <div class="ti">Dashboard</div>
+          <div class="sb">SAT · MAY 17 · SESSION 02:14:33</div>
+        </div>
+        <div class="pa">
+          <span class="chip on">Today</span>
+          <span class="chip">Wk</span>
+          <span class="chip">Mo</span>
+        </div>
+      </div>
+    </div>
+  `,
+  // ────────── VARIANT B ──────────
+  b: `
+    <div class="variant-tag">B · Brand-led · Pill title</div>
+    <div class="b-topbar">
+      <div class="b-row">
+        <div class="b-brand"><span class="mk">W</span><span class="nm">WAR ROOM</span></div>
+        <span class="b-spacer"></span>
+        <button class="b-search" aria-label="Search">
+          <svg class="ic-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+        </button>
+        <button class="iconbtn" aria-label="AXIS">
+          <svg class="ic-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span class="badge">3</span>
+        </button>
+        <div class="avatar">CR<div class="ndot"></div></div>
+      </div>
+      <div class="b-title-row">
+        <div class="ti">Dashboard <span class="em"></span></div>
+        <button class="biz-chip"><span class="pip"></span>Stratus<span class="ch">⌄</span></button>
+      </div>
+      <div class="b-sub-row">
+        <span>SAT · MAY 17</span>
+        <span style="opacity:.4">·</span>
+        <span class="ses"><span class="pulse"></span>SESSION 02:14:33</span>
+      </div>
+    </div>
+  `,
+  // ────────── VARIANT C ──────────
+  c: `
+    <div class="variant-tag">C · Avatar-led · Greeting</div>
+    <div class="c-topbar">
+      <div class="c-row">
+        <div class="avatar" style="background:#ffd9b3">CR<div class="ndot"></div></div>
+        <div class="c-greet">
+          <span class="lo">SATURDAY · MAY 17</span>
+          <span class="hi">Good afternoon, cRes.</span>
+        </div>
+        <button class="iconbtn" aria-label="AXIS">
+          <svg class="ic-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span class="badge">3</span>
+        </button>
+        <button class="iconbtn" aria-label="Menu">
+          <svg class="ic-svg" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+      <div class="c-meta-row">
+        <button class="biz-chip"><span class="pip"></span>Stratus Labs<span class="ch">⌄</span></button>
+        <div class="c-quick">
+          <span class="qc live">SESSION 02:14</span>
+          <span class="qc">$48.2K YTD</span>
+        </div>
+      </div>
+    </div>
+  `,
+  // ────────── VARIANT D ──────────
+  d: `
+    <div class="variant-tag">D · Command bar · Search first</div>
+    <div class="d-topbar">
+      <div class="d-row1">
+        <button class="d-menu" aria-label="Menu">
+          <svg class="ic-svg" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <button class="d-search">
+          <span class="ic"><svg class="ic-svg" viewBox="0 0 24 24" style="width:15px;height:15px"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></span>
+          <span class="ph">Ask AXIS or jump to anything…</span>
+          <span class="kbd">⌘ K</span>
+        </button>
+        <div class="avatar">CR<div class="ndot"></div></div>
+      </div>
+      <div class="d-context">
+        <span class="crumb">DASHBOARD</span>
+        <button class="biz-chip"><span class="pip"></span>Stratus Labs<span class="ch">⌄</span></button>
+      </div>
+    </div>
+  `,
+};
+
+const CONTENT = `
+  <div class="content">
+    <div class="kpi-strip">
+      <div class="kpi"><div class="cl">Revenue YTD</div><div class="cv">$48,240</div><div class="cs">+12.4% vs LY</div></div>
+      <div class="kpi"><div class="cl">Expenses YTD</div><div class="cv">$33,440</div><div class="cs">+4.1% vs LY</div></div>
+      <div class="kpi"><div class="cl">Net Profit</div><div class="cv pos">$14,800</div><div class="cs">31% margin</div></div>
+      <div class="kpi"><div class="cl">Missions</div><div class="cv">14</div><div class="cs">4 due today</div></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-hdr"><div class="sec-title">Revenue vs Expenses</div><span class="ps">Last 12 mo</span></div>
+      <div class="bar-wrap" id="bars"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-hdr"><div class="sec-title">Active Missions</div><span class="ps">4 today</span></div>
+      <div class="mini-mission"><div class="ck"></div><div class="nm">Ship onboarding copy</div><div class="biz">Stratus</div><div class="due">Today</div></div>
+      <div class="mini-mission"><div class="ck"></div><div class="nm">Review Q3 P&amp;L deck</div><div class="biz">Atlas</div><div class="due late">2d late</div></div>
+      <div class="mini-mission"><div class="ck"></div><div class="nm">Call w/ Stratus investors</div><div class="biz">Stratus</div><div class="due">14:00</div></div>
+      <div class="mini-mission done"><div class="ck">✓</div><div class="nm">Send pricing draft</div><div class="biz">Atlas</div><div class="due">9:14</div></div>
+    </div>
+  </div>
+`;
+
+function render(){
+  const which = (location.hash||'#a').slice(1).toLowerCase();
+  const v = VARIANTS[which]||VARIANTS.a;
+  document.getElementById('shell').innerHTML = v + CONTENT;
+  // draw bars
+  const wrap = document.getElementById('bars');
+  if(wrap){
+    const data = [[40,30],[55,32],[48,28],[68,40],[58,38],[80,55],[72,48],[88,52],[78,50],[92,58],[84,60],[100,65]];
+    wrap.innerHTML = data.map(([r,e])=>`<div class="pair"><div class="rev" style="height:${r}%"></div><div class="exp" style="height:${e}%"></div></div>`).join('');
+  }
+}
+window.addEventListener('hashchange', render);
+render();
+</script>
+</body>
+</html>

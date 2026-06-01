@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover">
+<title>WAR ROOM — Mobile Landing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#f4f4f2;--bg2:#ececea;--bg3:#e2e2e0;--surface:#ffffff;
+    --ink:#0e0e0d;--ink2:#525250;--ink3:#9a9a98;
+    --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.14);
+    --red:#d83a26;--red-bg:#fbebec;
+    --green:#1ea96b;--green-bg:#e8f3ec;
+    --amber:#d99500;--amber-bg:#faeeda;
+    --blue:#1a4a8a;--blue-bg:#e8eef8;
+    --violet:#6c2ad0;--violet-bg:#ede2fb;
+    --pink:#d63a8a;--pink-bg:#fbe5f0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Syne',sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:inherit}
+  .mono{font-family:'DM Mono',monospace}
+  ::selection{background:var(--ink);color:var(--bg)}
+
+  /* ── Topbar (fixed, always visible) ── */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(244,244,242,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:.5px solid var(--border2);
+    padding:12px 18px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .brand{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:800;letter-spacing:.2em}
+  .brand-mark{width:24px;height:24px;background:var(--ink);color:var(--bg);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px}
+  .top-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .top-time{font-family:'DM Mono',monospace;font-size:10px;color:var(--ink2);padding:6px 9px;background:var(--surface);border:.5px solid var(--border2);border-radius:7px;letter-spacing:.04em}
+  .hamburger{width:36px;height:36px;border:.5px solid var(--border2);border-radius:8px;background:var(--surface);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+  .hamburger span{display:block;width:14px;height:1.2px;background:var(--ink)}
+
+  /* ── Drawer ── */
+  .drawer-back{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
+  .drawer-back.on{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:280px;background:var(--bg);z-index:201;transform:translateX(100%);transition:transform .25s cubic-bezier(.2,.7,.2,1);padding:20px;display:flex;flex-direction:column;gap:18px;border-left:.5px solid var(--border2)}
+  .drawer.on{transform:translateX(0)}
+  .drawer-hd{display:flex;justify-content:space-between;align-items:center}
+  .drawer-close{width:32px;height:32px;border:.5px solid var(--border2);border-radius:8px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:14px}
+  .drawer-nav{display:flex;flex-direction:column;margin-top:6px}
+  .drawer-nav a{padding:14px 4px;border-bottom:.5px solid var(--border);font-size:18px;font-weight:700;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:center}
+  .drawer-nav a span.k{font-size:10px;color:var(--ink3);font-family:'DM Mono',monospace}
+  .drawer .btn-row{display:flex;flex-direction:column;gap:9px;margin-top:auto}
+  .btn-ink{background:var(--ink);color:var(--bg);padding:14px;border-radius:10px;font-weight:700;font-size:12px;letter-spacing:.09em;text-transform:uppercase;text-align:center}
+  .btn-ghost{background:transparent;color:var(--ink);border:.5px solid var(--border2);padding:14px;border-radius:10px;font-weight:700;font-size:12px;letter-spacing:.09em;text-transform:uppercase;text-align:center}
+
+  /* ── HERO ── */
+  .hero{padding:24px 18px 6px;position:relative}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:var(--surface);border:.5px solid var(--border2);padding:6px 11px;border-radius:100px;margin-bottom:18px}
+  .eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--red)}
+  .hero h1{font-size:44px;font-weight:800;line-height:.95;letter-spacing:-.035em;margin-bottom:18px}
+  .hero h1 .tag{background:var(--ink);color:var(--bg);padding:0 9px;display:inline-block;border-radius:8px;transform:rotate(-2deg)}
+  .hero h1 em{font-style:normal;color:var(--red)}
+  .hero-sub{font-size:15px;color:var(--ink2);line-height:1.5;margin-bottom:22px}
+  .hero-sub b{color:var(--ink);font-weight:700}
+
+  /* signup */
+  .signup{display:flex;flex-direction:column;gap:8px;padding:8px;background:var(--surface);border:.5px solid var(--border2);border-radius:14px;box-shadow:0 12px 32px -20px rgba(0,0,0,.25)}
+  .signup input{padding:14px;font-size:16px;background:transparent;border:none;outline:none;color:var(--ink);width:100%}
+  .signup input::placeholder{color:var(--ink3)}
+  .signup .go{padding:14px 18px;background:var(--ink);color:var(--bg);border-radius:10px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:8px}
+  .signup-meta{margin-top:12px;font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .signup-meta .ok{color:var(--green)}
+  .ja-stack{display:flex;align-items:center}
+  .ja{width:20px;height:20px;border-radius:50%;background:var(--bg3);border:1.5px solid var(--surface);margin-left:-6px;display:inline-flex;align-items:center;justify-content:center;font-size:8px;font-weight:800}
+  .ja:first-child{margin-left:0}
+  .ja-1{background:#ffd9b3}.ja-2{background:#c9e2ff}.ja-3{background:#d9f5e3}.ja-4{background:#f5d9ed}
+
+  /* ── Status preview card ── */
+  .status-card{margin:28px 0 0;background:var(--surface);border:.5px solid var(--border2);border-radius:16px;overflow:hidden;box-shadow:0 24px 50px -28px rgba(0,0,0,.3)}
+  .stat-bar{height:28px;background:var(--bg2);border-bottom:.5px solid var(--border2);display:flex;align-items:center;padding:0 10px;gap:5px;font-family:'DM Mono',monospace;font-size:9px;color:var(--ink3)}
+  .stat-bar .traf{display:flex;gap:4px;margin-right:6px}
+  .stat-bar .traf i{width:8px;height:8px;border-radius:50%}
+  .stat-bar .traf i:nth-child(1){background:#ff5f57}.stat-bar .traf i:nth-child(2){background:#febc2e}.stat-bar .traf i:nth-child(3){background:#28c840}
+  .stat-bar .url{margin-left:auto}
+  .stat-body{padding:14px}
+  .stat-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+  .stat-head h2{font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+  .stat-head .ps{font-size:9px;font-family:'DM Mono',monospace;color:var(--ink3);margin-top:3px}
+  .stat-pill{display:inline-flex;align-items:center;gap:5px;font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;border-radius:100px;border:.5px solid var(--border2);background:var(--bg)}
+  .stat-pill .pulse{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulseDot 1.8s infinite}
+  @keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(30,169,107,.55)}70%{box-shadow:0 0 0 6px rgba(30,169,107,0)}100%{box-shadow:0 0 0 0 rgba(30,169,107,0)}}
+  .st-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+  .st-cell{background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:8px 9px}
+  .st-cell .cl{font-size:7px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+  .st-cell .cv{font-size:15px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+  .st-cell .cs{font-size:8px;font-family:'DM Mono',monospace;margin-top:3px}
+  .st-cell .cs.pos{color:var(--green)}.st-cell .cs.neg{color:var(--red)}
+  .mini-row{display:flex;gap:8px;margin-bottom:10px}
+  .mini-block{background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:10px;flex:1}
+  .mini-block .bpl{font-size:7px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+  .mini-block .bv{font-size:13px;font-weight:800;line-height:1}
+  .bar-row{display:flex;align-items:flex-end;gap:2px;height:30px;margin-top:6px}
+  .bar-row .b{flex:1;background:var(--ink);border-radius:2px 2px 0 0;opacity:.85}
+  .stat-foot{display:flex;align-items:center;gap:8px;padding-top:10px;border-top:.5px solid var(--border);font-size:9px;color:var(--ink3);font-family:'DM Mono',monospace}
+  .stat-foot .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulseDot 1.8s infinite}
+
+  /* ── Marquee ── */
+  .marquee{margin-top:24px;background:var(--ink);color:var(--bg);overflow:hidden;border-top:.5px solid var(--border2);border-bottom:.5px solid var(--border2)}
+  .marq-track{display:flex;gap:36px;padding:12px 0;white-space:nowrap;animation:marq 24s linear infinite;width:max-content}
+  .marq-item{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px}
+  .marq-item .sep{color:var(--red);font-size:8px}
+  @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* ── Sections ── */
+  section{padding:48px 18px}
+  .sec-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink2);margin-bottom:14px}
+  .sec-eyebrow .lin{width:22px;height:.5px;background:var(--ink2)}
+  .sec-title{font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:1.02;text-wrap:balance}
+  .sec-title em{font-style:normal;color:var(--red)}
+  .sec-sub{margin-top:14px;font-size:15px;color:var(--ink2);line-height:1.5}
+  .sec-head{margin-bottom:28px}
+
+  /* ── Bento ── */
+  .bento{display:flex;flex-direction:column;gap:10px}
+  .mod{background:var(--surface);border:.5px solid var(--border2);border-radius:14px;padding:16px;display:flex;flex-direction:column}
+  .mod-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .mod-glyph{width:30px;height:30px;border-radius:7px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:14px}
+  .mod-num{margin-left:auto;font-family:'DM Mono',monospace;font-size:9px;color:var(--ink3)}
+  .mod-title{font-size:16px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
+  .mod-desc{font-size:12px;color:var(--ink2);line-height:1.45;margin-bottom:12px}
+  .mod-body{margin-top:auto}
+  .mod-mission .mod-glyph{background:var(--red-bg);color:var(--red)}
+  .mod-goals .mod-glyph{background:var(--blue-bg);color:var(--blue)}
+  .mod-tracker .mod-glyph{background:var(--green-bg);color:var(--green)}
+  .mod-focus .mod-glyph{background:var(--violet-bg);color:var(--violet)}
+  .mod-intel .mod-glyph{background:var(--amber-bg);color:var(--amber)}
+  .mod-cal .mod-glyph{background:var(--pink-bg);color:var(--pink)}
+  .mod-bills .mod-glyph{background:var(--blue-bg);color:var(--blue)}
+  .mod-jarvis{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .mod-jarvis .mod-glyph{background:var(--bg);color:var(--ink)}
+  .mod-jarvis .mod-desc{color:rgba(255,255,255,.65)}
+  .mod-jarvis .mod-num{color:rgba(255,255,255,.45)}
+
+  .mini-mission{display:flex;align-items:center;gap:8px;font-size:11px;padding:6px 0;border-bottom:.5px solid var(--border)}
+  .mini-mission:last-child{border-bottom:none}
+  .mini-mission .ck{width:14px;height:14px;border:1.2px solid var(--ink2);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px}
+  .mini-mission.done .ck{background:var(--green);border-color:var(--green);color:#fff}
+  .mini-mission.done span{text-decoration:line-through;color:var(--ink3)}
+  .mini-mission .mt{margin-left:auto;font-size:8px;font-family:'DM Mono',monospace;color:var(--ink3)}
+
+  .mod-tracker .mod-body{display:flex;align-items:flex-end;gap:3px;height:50px}
+  .mod-tracker .b{flex:1;background:var(--green);border-radius:2px 2px 0 0;opacity:.55}
+  .mod-tracker .b.hi{opacity:1}
+
+  .timer-display{font-family:'DM Mono',monospace;font-size:28px;font-weight:500;letter-spacing:.04em;color:var(--violet)}
+  .timer-display .ms{font-size:16px;opacity:.5}
+
+  .ring-wrap{position:relative;width:54px;height:54px}
+  .ring-wrap .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800}
+
+  .mini-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .mini-cal div{aspect-ratio:1;background:var(--bg2);border-radius:3px;font-size:7px;display:flex;align-items:center;justify-content:center;color:var(--ink3);font-family:'DM Mono',monospace}
+  .mini-cal div.has{background:var(--pink-bg);color:var(--pink);font-weight:700}
+  .mini-cal div.today{background:var(--pink);color:#fff;font-weight:800}
+
+  .jarvis-msg{background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.1);padding:8px 10px;border-radius:8px;font-size:11px;margin-bottom:5px;color:rgba(255,255,255,.85)}
+  .jarvis-msg.user{background:var(--red);border-color:var(--red);color:#fff;max-width:80%;margin-left:auto}
+  .jarvis-cursor{display:inline-block;width:6px;height:11px;background:var(--red);margin-left:3px;animation:blink 1s steps(1) infinite;vertical-align:middle}
+  @keyframes blink{50%{opacity:0}}
+
+  /* ── Stats ── */
+  .stats-section{background:var(--ink);color:var(--bg)}
+  .stats-section .sec-eyebrow{color:rgba(255,255,255,.65)}
+  .stats-section .sec-eyebrow .lin{background:rgba(255,255,255,.65)}
+  .stats-section .sec-title{color:var(--bg)}
+  .stats-grid{display:flex;flex-direction:column;border-top:.5px solid rgba(255,255,255,.18);margin-top:28px}
+  .stat{padding:22px 4px;border-bottom:.5px solid rgba(255,255,255,.18);display:flex;justify-content:space-between;align-items:flex-end;gap:14px}
+  .stat .sv{font-size:48px;font-weight:800;letter-spacing:-.04em;line-height:.95;font-variant-numeric:tabular-nums}
+  .stat .sv .unit{font-size:22px;color:var(--red)}
+  .stat .right{text-align:right}
+  .stat .sl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:4px}
+  .stat .sd{font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.45)}
+
+  /* ── AXIS Live ── */
+  .jarvis-stage{background:var(--ink);color:var(--bg);border-radius:16px;padding:22px 18px;position:relative;overflow:hidden}
+  .jarvis-stage::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(216,58,38,.18) 0%,transparent 50%),radial-gradient(circle at 100% 100%,rgba(30,169,107,.12) 0%,transparent 50%);pointer-events:none}
+  .jarvis-stage h3{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin-bottom:12px;position:relative}
+  .jarvis-stage .jdesc{color:rgba(255,255,255,.65);font-size:13px;line-height:1.5;margin-bottom:18px;position:relative}
+  .prompt-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;position:relative}
+  .pchip{font-size:10px;font-weight:600;padding:8px 11px;border-radius:100px;border:.5px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);min-height:34px;display:inline-flex;align-items:center}
+  .jarvis-chat{background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.1);border-radius:12px;display:flex;flex-direction:column;position:relative}
+  .jarvis-chat-head{padding:11px 14px;border-bottom:.5px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:8px;font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.6);letter-spacing:.06em}
+  .jarvis-chat-head .who{font-size:11px;font-weight:800;color:var(--bg);font-family:'Syne',sans-serif;letter-spacing:.04em}
+  .jarvis-chat-head .status{margin-left:auto;display:flex;align-items:center;gap:5px}
+  .jarvis-chat-head .status .d{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulseDot 1.8s infinite}
+  .jarvis-chat-body{padding:14px;display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .jmsg{max-width:86%;padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.5;word-wrap:break-word;white-space:pre-wrap}
+  .jmsg.user{background:var(--bg);color:var(--ink);align-self:flex-end;border-bottom-right-radius:4px}
+  .jmsg.ai{background:rgba(255,255,255,.07);border:.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.92);align-self:flex-start;border-bottom-left-radius:4px}
+  .jmsg.ai b{color:#fff}
+  .jarvis-chat-input{padding:10px;border-top:.5px solid rgba(255,255,255,.1);display:flex;gap:6px}
+  .jarvis-chat-input input{flex:1;background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.12);color:var(--bg);padding:11px 12px;border-radius:9px;font-size:16px;outline:none;font-family:inherit}
+  .jarvis-chat-input input::placeholder{color:rgba(255,255,255,.4)}
+  .jarvis-chat-input button{background:var(--red);color:#fff;padding:0 14px;border-radius:9px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;min-width:44px}
+
+  /* ── Compare ── */
+  .compare-grid{display:flex;flex-direction:column;gap:10px;margin-top:24px}
+  .compare-card{border:.5px solid var(--border2);border-radius:14px;padding:20px;background:var(--surface)}
+  .compare-card.bad{background:var(--bg2)}
+  .compare-card .ch{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+  .compare-card.good .ch{color:var(--green)}
+  .compare-card.bad .ch{color:var(--red)}
+  .compare-card h4{font-size:18px;font-weight:800;margin-bottom:14px;letter-spacing:-.01em}
+  .compare-card ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .compare-card li{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--ink2);line-height:1.45}
+  .compare-card li::before{content:'';flex-shrink:0;width:16px;height:16px;border-radius:5px;margin-top:1px;background-image:linear-gradient(45deg,transparent 45%,var(--red) 45%,var(--red) 55%,transparent 55%),linear-gradient(-45deg,transparent 45%,var(--red) 45%,var(--red) 55%,transparent 55%);background-color:var(--red-bg)}
+  .compare-card.good li::before{background:linear-gradient(45deg,transparent 45%,var(--green) 45%,var(--green) 75%,transparent 75%),linear-gradient(-45deg,transparent 45%,var(--green) 45%,var(--green) 55%,transparent 55%),var(--green-bg)}
+
+  /* ── Pricing ── */
+  .pricing-toggle{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:24px;font-size:11px;font-weight:700;color:var(--ink2);flex-wrap:wrap}
+  .pricing-toggle .save{display:inline-flex;align-items:center;background:rgba(30,169,107,.12);color:var(--green);font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:100px;margin-left:4px}
+  .toggle-btn{position:relative;width:40px;height:22px;border-radius:100px;background:var(--bg3);border:.5px solid var(--border2)}
+  .toggle-btn.an{background:var(--ink)}
+  .toggle-btn::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:transform .2s}
+  .toggle-btn.an::after{transform:translateX(18px)}
+  .pricing-grid{display:flex;flex-direction:column;gap:14px}
+  .pricing-card{background:var(--surface);border:.5px solid var(--border2);border-radius:16px;padding:24px 20px 20px;position:relative;display:flex;flex-direction:column}
+  .pricing-card.featured{border-color:var(--ink);background:var(--ink);color:var(--bg)}
+  .pricing-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:3px 11px;border-radius:100px;white-space:nowrap}
+  .pricing-tier{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px;color:var(--ink3)}
+  .pricing-card.featured .pricing-tier{color:rgba(255,255,255,.55)}
+  .pricing-price{font-size:38px;font-weight:800;letter-spacing:-.04em;line-height:1;margin-bottom:4px}
+  .pricing-card.featured .pricing-price{color:var(--bg)}
+  .pricing-price sup{font-size:18px;font-weight:700;vertical-align:super}
+  .pricing-price .per{font-size:13px;font-weight:600;opacity:.5}
+  .pricing-annual{font-size:10px;font-family:'DM Mono',monospace;color:var(--green);margin-bottom:6px;min-height:16px}
+  .pricing-card.featured .pricing-annual{color:#6ee7b7}
+  .pricing-desc{font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:18px}
+  .pricing-card.featured .pricing-desc{color:rgba(255,255,255,.6)}
+  .pricing-divider{height:.5px;background:var(--border2);margin-bottom:16px}
+  .pricing-card.featured .pricing-divider{background:rgba(255,255,255,.15)}
+  .pricing-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:18px}
+  .pricing-features li{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--ink2);line-height:1.4}
+  .pricing-card.featured .pricing-features li{color:rgba(255,255,255,.75)}
+  .pf-check{flex-shrink:0;margin-top:1px;width:14px;height:14px;border-radius:50%;background:rgba(30,169,107,.15);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:9px;font-weight:800}
+  .pricing-card.featured .pf-check{background:rgba(255,255,255,.15);color:#fff}
+  .pf-x{flex-shrink:0;margin-top:1px;width:14px;height:14px;border-radius:50%;background:rgba(220,38,38,.1);display:flex;align-items:center;justify-content:center;color:var(--red);font-size:9px;font-weight:800}
+  .pricing-features li.dim{opacity:.45}
+  .pricing-cta{display:block;width:100%;text-align:center;padding:14px;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;border:.5px solid var(--ink);background:var(--ink);color:var(--bg)}
+  .pricing-card.featured .pricing-cta{background:var(--bg);color:var(--ink);border-color:var(--bg)}
+  .pricing-cta.ghost{background:transparent;color:var(--ink);border-color:var(--border2)}
+
+  /* ── Changelog ── */
+  .cl-entry{padding:20px 0;border-top:.5px solid var(--border2)}
+  .cl-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .cl-meta .date{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);font-family:'DM Mono',monospace}
+  .cl-tag{font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px}
+  .cl-tag.new{background:var(--green-bg);color:var(--green)}
+  .cl-tag.fix{background:rgba(59,130,246,.08);color:#3b82f6}
+  .cl-tag.feat{background:rgba(168,85,247,.08);color:#a855f7}
+  .cl-title{font-size:14px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+  .cl-body{font-size:12px;color:var(--ink2);line-height:1.6;margin-bottom:10px}
+  .cl-tags{display:flex;flex-wrap:wrap;gap:5px}
+  .cl-pill{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:var(--bg3);color:var(--ink3)}
+
+  /* ── CTA ── */
+  .cta-stage{background:var(--surface);border:.5px solid var(--border2);border-radius:18px;padding:32px 20px;text-align:center;position:relative;overflow:hidden}
+  .cta-stage h2{font-size:34px;font-weight:800;letter-spacing:-.035em;line-height:.95;margin-bottom:14px}
+  .cta-stage h2 em{color:var(--red);font-style:normal}
+  .cta-stage p{font-size:14px;color:var(--ink2);margin-bottom:22px}
+  .perks{display:flex;flex-direction:column;gap:9px;margin-top:18px;font-size:11px;font-family:'DM Mono',monospace;color:var(--ink3);align-items:flex-start;text-align:left}
+  .perks span{display:inline-flex;align-items:center;gap:7px}
+  .perks .ck{color:var(--green);font-weight:700}
+
+  /* ── Footer ── */
+  footer{border-top:.5px solid var(--border2);padding:24px 18px 32px}
+  .foot-row{display:flex;flex-direction:column;gap:14px;font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3);letter-spacing:.04em}
+  .foot-links{display:flex;flex-wrap:wrap;gap:14px;padding:6px 0}
+  .foot-status{display:flex;align-items:center;gap:5px}
+  .foot-status .ok{color:var(--green)}
+
+  /* ── Sticky bottom CTA bar ── */
+  .sticky-cta{position:fixed;bottom:0;left:0;right:0;z-index:90;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:.5px solid var(--border2);padding:10px 14px;display:flex;gap:9px;align-items:center}
+  .sticky-cta .ti{flex:1;font-size:11px;line-height:1.3}
+  .sticky-cta .ti b{display:block;font-size:13px;font-weight:800;letter-spacing:-.01em}
+  .sticky-cta .ti em{font-style:normal;color:var(--ink3);font-family:'DM Mono',monospace;font-size:9px}
+  .sticky-cta .go{padding:12px 16px;background:var(--ink);color:var(--bg);border-radius:9px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;min-height:44px;display:inline-flex;align-items:center;gap:6px}
+  body{padding-top:64px;padding-bottom:74px}
+
+  /* glyph decorations */
+  .glyph{position:absolute;font-size:18px;color:var(--ink3);pointer-events:none;opacity:.4}
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<div class="topbar">
+  <div class="brand"><span class="brand-mark">W</span>WAR ROOM</div>
+  <div class="top-right">
+    <div class="top-time" id="topTime">01:09:24 · EST</div>
+    <button class="hamburger" onclick="toggleDrawer(true)" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</div>
+
+<!-- ── DRAWER ── -->
+<div class="drawer-back" id="drawerBack" onclick="toggleDrawer(false)"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-hd">
+    <div class="brand"><span class="brand-mark">W</span>WAR ROOM</div>
+    <button class="drawer-close" onclick="toggleDrawer(false)">✕</button>
+  </div>
+  <nav class="drawer-nav">
+    <a href="#features" onclick="toggleDrawer(false)">Features <span class="k">01</span></a>
+    <a href="#axis" onclick="toggleDrawer(false)">AXIS <span class="k">02</span></a>
+    <a href="#compare" onclick="toggleDrawer(false)">Compare <span class="k">03</span></a>
+    <a href="#pricing" onclick="toggleDrawer(false)">Pricing <span class="k">04</span></a>
+    <a href="#changelog" onclick="toggleDrawer(false)">Changelog <span class="k">05</span></a>
+  </nav>
+  <div class="btn-row">
+    <button class="btn-ghost">Sign In</button>
+    <button class="btn-ink">Reserve Access →</button>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="eyebrow"><span class="dot"></span>BETA · CLOSED ACCESS</div>
+  <h1>Your <span class="tag">war room</span>.<br>One <em>command</em>&nbsp;center.</h1>
+  <p class="hero-sub">A single command center for every business you run. Missions, P&amp;L, focus timer, intel notes, calendar, bills — and <b>AXIS</b>, your AI co-pilot.</p>
+
+  <form class="signup" onsubmit="event.preventDefault()">
+    <input type="email" placeholder="operator@yourdomain.com" autocomplete="email">
+    <button type="submit" class="go">Reserve Access <span>→</span></button>
+  </form>
+  <div class="signup-meta">
+    <div class="ja-stack"><span class="ja ja-1">A</span><span class="ja ja-2">M</span><span class="ja ja-3">J</span><span class="ja ja-4">K</span></div>
+    <span><span class="ok">●</span> <b style="color:var(--ink)" id="joinerCount">2,147</b> operators on the list</span>
+    <span>✓ No credit card</span>
+  </div>
+
+  <!-- preview card -->
+  <div class="status-card">
+    <div class="stat-bar">
+      <div class="traf"><i></i><i></i><i></i></div>
+      <span>WAR ROOM</span>
+      <span class="url">warroom.app/dashboard</span>
+    </div>
+    <div class="stat-body">
+      <div class="stat-head">
+        <div>
+          <h2>Good afternoon, Operator.</h2>
+          <div class="ps">SAT · MAY 17 · DAY 248</div>
+        </div>
+        <div class="stat-pill"><span class="pulse"></span>LIVE</div>
+      </div>
+      <div class="st-grid">
+        <div class="st-cell"><div class="cl">Rev YTD</div><div class="cv">$<span id="liveRev">3,420</span></div><div class="cs pos">+12.4%</div></div>
+        <div class="st-cell"><div class="cl">Missions</div><div class="cv">14</div><div class="cs">4 due today</div></div>
+        <div class="st-cell"><div class="cl">Focus</div><div class="cv mono" id="liveFocus">02:14:33</div><div class="cs pos">+0:38 wk</div></div>
+      </div>
+      <div class="mini-row">
+        <div class="mini-block">
+          <div class="bpl">This week</div>
+          <div class="bv">$1,240</div>
+          <div class="bar-row" id="weekBars"></div>
+        </div>
+        <div class="mini-block">
+          <div class="bpl">Today's missions</div>
+          <div class="mini-mission done"><div class="ck">✓</div><span>Ship onboarding copy</span><div class="mt">9:14</div></div>
+          <div class="mini-mission done"><div class="ck">✓</div><span>Review Q2 P&amp;L</span><div class="mt">11:02</div></div>
+          <div class="mini-mission"><div class="ck"></div><span>Call w/ Stratus team</span><div class="mt">14:00</div></div>
+        </div>
+      </div>
+      <div class="stat-foot"><span class="pulse"></span>AXIS · synced · 4 modules updated · <span style="color:var(--green)">●</span> all systems go</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee">
+  <div class="marq-track" id="marqTrack">
+    <span class="marq-item">◈ Missions <span class="sep">/</span></span>
+    <span class="marq-item">◇ P&amp;L Tracker <span class="sep">/</span></span>
+    <span class="marq-item">◷ Focus Timer <span class="sep">/</span></span>
+    <span class="marq-item">▦ Calendar <span class="sep">/</span></span>
+    <span class="marq-item">◉ Intel Notes <span class="sep">/</span></span>
+    <span class="marq-item">◫ Bills <span class="sep">/</span></span>
+    <span class="marq-item">◐ AXIS AI <span class="sep">/</span></span>
+    <span class="marq-item">◈ Missions <span class="sep">/</span></span>
+    <span class="marq-item">◇ P&amp;L Tracker <span class="sep">/</span></span>
+    <span class="marq-item">◷ Focus Timer <span class="sep">/</span></span>
+    <span class="marq-item">▦ Calendar <span class="sep">/</span></span>
+    <span class="marq-item">◉ Intel Notes <span class="sep">/</span></span>
+    <span class="marq-item">◫ Bills <span class="sep">/</span></span>
+    <span class="marq-item">◐ AXIS AI <span class="sep">/</span></span>
+  </div>
+</div>
+
+<!-- ── FEATURES / BENTO ── -->
+<section id="features">
+  <div class="sec-head">
+    <div class="sec-eyebrow"><span class="lin"></span>Ten modules. One brain.</div>
+    <h2 class="sec-title">Everything you run, on <em>one surface</em>.</h2>
+    <p class="sec-sub">Native modules — not embeds, not iframes. All wired into AXIS.</p>
+  </div>
+
+  <div class="bento">
+    <div class="mod mod-mission">
+      <div class="mod-head"><div class="mod-glyph">◈</div><div class="mod-num">01</div></div>
+      <div class="mod-title">Mission Board</div>
+      <p class="mod-desc">Kanban for every venture. Missions linked to P&amp;L, calendar, and intel.</p>
+      <div class="mod-body">
+        <div class="mini-mission done"><div class="ck">✓</div><span>Onboard 3 new clients</span><div class="mt">DONE</div></div>
+        <div class="mini-mission"><div class="ck"></div><span>Ship pricing page v2</span><div class="mt">WIP</div></div>
+        <div class="mini-mission"><div class="ck"></div><span>Q3 OKRs draft</span><div class="mt">QUEUE</div></div>
+      </div>
+    </div>
+
+    <div class="mod mod-goals">
+      <div class="mod-head"><div class="mod-glyph">◉</div><div class="mod-num">02</div></div>
+      <div class="mod-title">Monthly Goals</div>
+      <p class="mod-desc">Lock in your targets. Track progress in a single ring.</p>
+      <div class="mod-body" style="display:flex;align-items:center;gap:14px">
+        <div class="ring-wrap">
+          <svg width="54" height="54" viewBox="0 0 54 54">
+            <circle cx="27" cy="27" r="22" fill="none" stroke="var(--bg2)" stroke-width="6"/>
+            <circle cx="27" cy="27" r="22" fill="none" stroke="var(--blue)" stroke-width="6" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="42" transform="rotate(-90 27 27)"/>
+          </svg>
+          <div class="pct">70%</div>
+        </div>
+        <div style="font-size:11px;color:var(--ink2);line-height:1.4">
+          <b style="color:var(--ink)">7 of 10</b> monthly goals on track. 2 at risk, 1 behind.
+        </div>
+      </div>
+    </div>
+
+    <div class="mod mod-tracker">
+      <div class="mod-head"><div class="mod-glyph">◇</div><div class="mod-num">03</div></div>
+      <div class="mod-title">P&amp;L Tracker</div>
+      <p class="mod-desc">Multi-business revenue, expenses, margin. CSV export, EOM-ready.</p>
+      <div class="mod-body" id="trackerBars"></div>
+    </div>
+
+    <div class="mod mod-focus">
+      <div class="mod-head"><div class="mod-glyph">◷</div><div class="mod-num">04</div></div>
+      <div class="mod-title">Focus Timer</div>
+      <p class="mod-desc">Track every deep-work block. Per-business session log.</p>
+      <div class="mod-body" style="text-align:left">
+        <div class="timer-display"><span id="fmodMin">24</span>:<span id="fmodSec">38</span><span class="ms">/25:00</span></div>
+        <div style="font-size:10px;color:var(--ink3);font-family:'DM Mono',monospace;margin-top:6px">DEEP WORK · STRATUS LABS</div>
+      </div>
+    </div>
+
+    <div class="mod mod-intel">
+      <div class="mod-head"><div class="mod-glyph">◉</div><div class="mod-num">05</div></div>
+      <div class="mod-title">Intel Notes</div>
+      <p class="mod-desc">Research, ideas, observations — tagged, searchable, AXIS-aware.</p>
+      <div class="mod-body" style="display:flex;flex-wrap:wrap;gap:5px">
+        <span style="font-size:9px;padding:3px 8px;background:var(--bg2);border-radius:100px;font-family:'DM Mono',monospace;color:var(--ink2)">competitor</span>
+        <span style="font-size:9px;padding:3px 8px;background:var(--bg2);border-radius:100px;font-family:'DM Mono',monospace;color:var(--ink2)">pricing</span>
+        <span style="font-size:9px;padding:3px 8px;background:var(--bg2);border-radius:100px;font-family:'DM Mono',monospace;color:var(--ink2)">churn</span>
+        <span style="font-size:9px;padding:3px 8px;background:var(--bg2);border-radius:100px;font-family:'DM Mono',monospace;color:var(--ink2)">+ 47 more</span>
+      </div>
+    </div>
+
+    <div class="mod mod-cal">
+      <div class="mod-head"><div class="mod-glyph">▦</div><div class="mod-num">06</div></div>
+      <div class="mod-title">Calendar</div>
+      <p class="mod-desc">Cross-venture scheduling. Drag to reschedule. Color-coded by business.</p>
+      <div class="mod-body mini-cal" id="miniCal"></div>
+    </div>
+
+    <div class="mod mod-bills">
+      <div class="mod-head"><div class="mod-glyph">◫</div><div class="mod-num">07</div></div>
+      <div class="mod-title">Bills &amp; Expenses</div>
+      <p class="mod-desc">Recurring, one-off, and forecast view. Catch every leak.</p>
+      <div class="mod-body" style="display:flex;align-items:center;gap:12px">
+        <svg width="54" height="54" viewBox="0 0 54 54">
+          <circle cx="27" cy="27" r="22" fill="none" stroke="var(--bg2)" stroke-width="6"/>
+          <circle cx="27" cy="27" r="22" fill="none" stroke="var(--red)" stroke-width="6" stroke-dasharray="138" stroke-dashoffset="55" transform="rotate(-90 27 27)"/>
+        </svg>
+        <div>
+          <div style="font-size:18px;font-weight:800;letter-spacing:-.02em">$4,820<span style="color:var(--ink3);font-size:11px;font-weight:500"> / mo</span></div>
+          <div style="font-size:10px;color:var(--red);font-family:'DM Mono',monospace;margin-top:3px">3 due this week</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mod mod-jarvis">
+      <div class="mod-head"><div class="mod-glyph">◐</div><div class="mod-num">08</div></div>
+      <div class="mod-title">AXIS · AI Co-pilot</div>
+      <p class="mod-desc">Knows your missions, P&amp;L, and calendar. Briefs you in 60s every morning.</p>
+      <div class="mod-body">
+        <div class="jarvis-msg user">What should I focus on today?</div>
+        <div class="jarvis-msg">Three priorities, Operator: <b>(1)</b> Stratus invoice $4.2k past 11d. <b>(2)</b> Q3 review at 14:00. <b>(3)</b> Margin drag at Atlas — review<span class="jarvis-cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AXIS LIVE ── -->
+<section id="axis" style="background:var(--bg2)">
+  <div class="sec-head">
+    <div class="sec-eyebrow"><span class="lin"></span>AXIS · AI Co-pilot</div>
+    <h2 class="sec-title">Your <em>command intelligence</em>, on call.</h2>
+    <p class="sec-sub">Tap a question. AXIS pulls from your live P&amp;L, missions, and calendar.</p>
+  </div>
+
+  <div class="jarvis-stage">
+    <h3>Try AXIS, live.</h3>
+    <p class="jdesc">Pick a question to see how it thinks.</p>
+    <div class="prompt-list">
+      <button class="pchip" onclick="askFAQ('whats-different')">What makes WAR ROOM different?</button>
+      <button class="pchip" onclick="askFAQ('is-private')">Is my data private?</button>
+      <button class="pchip" onclick="askFAQ('how-axis-works')">How does AXIS know my business?</button>
+      <button class="pchip" onclick="askFAQ('what-does-it-cost')">What does it cost?</button>
+      <button class="pchip" onclick="askFAQ('mobile')">Does it work on mobile?</button>
+    </div>
+
+    <div class="jarvis-chat">
+      <div class="jarvis-chat-head">
+        <span class="who">AXIS</span>
+        <span>· v5.2 · operator-mode</span>
+        <div class="status"><div class="d"></div>ONLINE</div>
+      </div>
+      <div class="jarvis-chat-body" id="axisBody">
+        <div class="jmsg ai">Standing by, Operator. Pick a question above or type one below.</div>
+      </div>
+      <form class="jarvis-chat-input" onsubmit="submitAxis(event)">
+        <input type="text" id="axisInput" placeholder="Ask AXIS anything...">
+        <button type="submit">↑</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMPARE ── -->
+<section id="compare">
+  <div class="sec-head">
+    <div class="sec-eyebrow"><span class="lin"></span>Why operators switch</div>
+    <h2 class="sec-title">The way you run things <em>right now</em> is the problem.</h2>
+  </div>
+  <div class="compare-grid">
+    <div class="compare-card bad">
+      <div class="ch">◌ Operator stack today</div>
+      <h4>17 tabs, 4 apps, zero clarity.</h4>
+      <ul>
+        <li>Notion for missions, Sheets for P&amp;L, Notes for ideas</li>
+        <li>Five tools that don't talk — none of them know your business</li>
+        <li>Every Monday: 90 min of "where am I?" before you start</li>
+        <li>ChatGPT, but you copy-paste context for 10 min first</li>
+        <li>You stop tracking the moment a quarter gets busy</li>
+      </ul>
+    </div>
+    <div class="compare-card good">
+      <div class="ch">◆ With WAR ROOM</div>
+      <h4>One surface. Ten modules. One brain.</h4>
+      <ul>
+        <li>Missions, P&amp;L, calendar, bills, notes — all native, interlinked</li>
+        <li>AXIS reads everything. Briefs you in 60s every morning</li>
+        <li>One ⌘K command runs the entire app</li>
+        <li>Multi-business by default. Switch contexts without losing focus</li>
+        <li>Local-first, cloud-synced. Your data is yours.</li>
+        <li>Built-in video calls — no Zoom subscription</li>
+        <li>Payroll tracker — headcount + cost always visible</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<section class="stats-section">
+  <div class="sec-head">
+    <div class="sec-eyebrow"><span class="lin"></span>By the numbers</div>
+    <h2 class="sec-title">Built by operators for operators.</h2>
+  </div>
+  <div class="stats-grid">
+    <div class="stat"><div class="sv">10<span class="unit">×</span></div><div class="right"><div class="sl">Native modules</div><div class="sd">no embeds, no iframes</div></div></div>
+    <div class="stat"><div class="sv">60<span class="unit">s</span></div><div class="right"><div class="sl">Daily briefing</div><div class="sd">AXIS reads everything</div></div></div>
+    <div class="stat"><div class="sv">1</div><div class="right"><div class="sl">File. Local-first.</div><div class="sd">your data, your machine</div></div></div>
+    <div class="stat" style="border-bottom:none"><div class="sv">∞</div><div class="right"><div class="sl">Businesses tracked</div><div class="sd">multi-venture by default</div></div></div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <div class="sec-head">
+    <div class="sec-eyebrow"><span class="lin"></span>Pricing</div>
+    <h2 class="sec-title">Founder pricing, <em>locked in</em>.</h2>
+    <p class="sec-sub">Beta is free. Pick your tier — upgrade when you're ready.</p>
+  </div>
+
+  <div class="pricing-toggle">
+    <span style="color:var(--ink)">Monthly</span>
+    <button class="toggle-btn" id="billToggle" onclick="this.classList.toggle('an')" aria-label="Annual"></button>
+    <span>Annual <span class="save">2 months free</span></span>
+  </div>
+
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Personal</div>
+      <div class="pricing-price"><sup>$</sup>11<span class="per"> / mo</span></div>
+      <div class="pricing-annual">&nbsp;</div>
+      <div class="pricing-desc">Built for the solo operator. Full War Room, zero noise.</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li><span class="pf-check">✓</span>Full War Room dashboard</li>
+        <li><span class="pf-check">✓</span>P&amp;L tracker + CSV export</li>
+        <li><span class="pf-check">✓</span>Mission board + whiteboard</li>
+        <li><span class="pf-check">✓</span>Calendar + AXIS daily briefing</li>
+        <li><span class="pf-check">✓</span>1 workspace / user</li>
+        <li class="dim"><span class="pf-x">✕</span>Team accounts</li>
+      </ul>
+      <button class="pricing-cta">Get Started →</button>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Most Popular</div>
+      <div class="pricing-tier">Small Business</div>
+      <div class="pricing-price"><sup>$</sup>14<span class="per"> / mo</span></div>
+      <div class="pricing-annual">&nbsp;</div>
+      <div class="pricing-desc">Command your crew. One room, one mission.</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li><span class="pf-check">✓</span>Everything in Personal</li>
+        <li><span class="pf-check">✓</span><strong>3 team seats included</strong></li>
+        <li><span class="pf-check">✓</span>Shared mission board + calendar</li>
+        <li><span class="pf-check">✓</span>Team task assignment</li>
+        <li><span class="pf-check">✓</span>Business P&amp;L (owner-controlled)</li>
+        <li><span class="pf-check">✓</span>Private layers per member</li>
+      </ul>
+      <button class="pricing-cta">Coming Soon</button>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-tier">Enterprise</div>
+      <div class="pricing-price" style="font-size:28px">Custom</div>
+      <div class="pricing-annual">&nbsp;</div>
+      <div class="pricing-desc">We build it around you. Direct line to CRES.</div>
+      <div class="pricing-divider"></div>
+      <ul class="pricing-features">
+        <li><span class="pf-check">✓</span>Everything in Small Business</li>
+        <li><span class="pf-check">✓</span>White-label / custom branding</li>
+        <li><span class="pf-check">✓</span>Unlimited team seats</li>
+        <li><span class="pf-check">✓</span>Dedicated onboarding</li>
+        <li><span class="pf-check">✓</span>Direct line to CRES Ventures</li>
+      </ul>
+      <a class="pricing-cta ghost" href="#">Contact Us →</a>
+    </div>
+  </div>
+
+  <p style="text-align:center;font-size:9px;font-family:'DM Mono',monospace;color:var(--ink3);margin-top:22px;letter-spacing:.04em;line-height:1.6">
+    Beta access is free<br>Personal saves $32/yr · SMB saves $48/yr<br>Founder pricing locks in at launch.
+  </p>
+</section>
+
+<!-- ── CHANGELOG ── -->
+<section id="changelog" style="background:var(--bg2)">
+  <div class="sec-head">
+    <div class="sec-eyebrow"><span class="lin"></span>Updates</div>
+    <h2 class="sec-title">What's new in War Room.</h2>
+    <p class="sec-sub">Every build, shipped live. No changelog theater.</p>
+  </div>
+  <div class="cl-feed">
+    <div class="cl-entry">
+      <div class="cl-meta">
+        <div class="date">May 20 2026</div>
+        <span class="cl-tag new">New</span>
+      </div>
+      <div class="cl-title">v5.2 — Onboarding sync &amp; Blog</div>
+      <p class="cl-body">Fixed a bug where onboarding data wasn't persisting after sign-up. New users now get the full setup wizard, with data synced to the cloud. Email/password accounts now properly connect to cloud sync.</p>
+      <div class="cl-tags"><span class="cl-pill">Onboarding</span><span class="cl-pill">Cloud Sync</span><span class="cl-pill">Auth</span></div>
+    </div>
+    <div class="cl-entry">
+      <div class="cl-meta">
+        <div class="date">May 20 2026</div>
+        <span class="cl-tag fix">Fix</span>
+      </div>
+      <div class="cl-title">v5.1 — Firebase OAuth &amp; PBKDF2</div>
+      <p class="cl-body">Replaced the mock Google sign-in with real Firebase OAuth. Upgraded password storage from btoa Base64 to PBKDF2 (150,000 iterations, SHA-256, per-email salt).</p>
+      <div class="cl-tags"><span class="cl-pill">Security</span><span class="cl-pill">Google Auth</span><span class="cl-pill">Bundler</span></div>
+    </div>
+    <div class="cl-entry">
+      <div class="cl-meta">
+        <div class="date">May 2026</div>
+        <span class="cl-tag feat">Feature</span>
+      </div>
+      <div class="cl-title">v5.0 — War Room goes live</div>
+      <p class="cl-body">Full public launch. AXIS AI co-pilot, multi-business P&amp;L, focus timer, payroll, video calls, Supabase cloud sync, team rooms, operator onboarding wizard. Single-file bundle — no install required.</p>
+      <div class="cl-tags"><span class="cl-pill">Launch</span><span class="cl-pill">AXIS AI</span><span class="cl-pill">Multi-business</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section style="padding-top:32px">
+  <div class="cta-stage">
+    <div style="font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:12px">◆ Beta · Closed Access</div>
+    <h2>Step into your<br><em>war room</em>.</h2>
+    <p>Drop your email. We'll send a beta key to the next 50 operators on the list.</p>
+    <form class="signup" onsubmit="event.preventDefault()" style="margin-top:14px">
+      <input type="email" placeholder="operator@yourdomain.com">
+      <button type="submit" class="go">Reserve Access →</button>
+    </form>
+    <div class="perks">
+      <span><span class="ck">✓</span> No credit card required</span>
+      <span><span class="ck">✓</span> Free during beta</span>
+      <span><span class="ck">✓</span> Founder pricing locked in</span>
+      <span><span class="ck">✓</span> Cancel anytime</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="foot-row">
+    <div>© 2026 War Room · A CRES Ventures product</div>
+    <div class="foot-links">
+      <a href="#features">Features</a>
+      <a href="#axis">AXIS</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#changelog">Changelog</a>
+      <a href="#">Privacy</a>
+    </div>
+    <div class="foot-status">v5.2 · Sync OK · <span class="ok">● ONLINE</span></div>
+  </div>
+</footer>
+
+<!-- ── STICKY CTA ── -->
+<div class="sticky-cta">
+  <div class="ti">
+    <b>Reserve your spot</b>
+    <em>2,147 operators · Free in beta</em>
+  </div>
+  <button class="go" onclick="window.scrollTo({top:0,behavior:'smooth'})">Get Access →</button>
+</div>
+
+<script>
+  function pad(n){return String(n).padStart(2,'0')}
+  function tick(){
+    const now=new Date();
+    const t=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
+    const el=document.getElementById('topTime');if(el)el.textContent=t+' · EST';
+  }
+  setInterval(tick,1000);tick();
+
+  let focusH=2,focusM=14,focusS=33;
+  setInterval(()=>{
+    focusS++;if(focusS>=60){focusS=0;focusM++}if(focusM>=60){focusM=0;focusH++}
+    const el=document.getElementById('liveFocus');if(el)el.textContent=pad(focusH)+':'+pad(focusM)+':'+pad(focusS);
+  },1000);
+
+  let modSec=0;
+  setInterval(()=>{
+    modSec++;let total=25*60-modSec;if(total<0){modSec=0;total=25*60}
+    const m=Math.floor(total/60),s=total%60;
+    const mE=document.getElementById('fmodMin'),sE=document.getElementById('fmodSec');
+    if(mE)mE.textContent=pad(m);if(sE)sE.textContent=pad(s);
+  },1000);
+
+  let rev=3420;
+  setInterval(()=>{rev+=Math.floor(Math.random()*8)+1;const el=document.getElementById('liveRev');if(el)el.textContent=rev.toLocaleString()},3500);
+
+  // bars
+  (function(){
+    const wb=document.getElementById('weekBars');if(!wb)return;
+    [0.46,0.58,0.42,0.78,0.64,0.92,0.5].forEach((h,i)=>{const b=document.createElement('div');b.className='b';b.style.height=(h*100)+'%';if(i===5)b.style.background='var(--red)';wb.appendChild(b)});
+  })();
+  (function(){
+    const tb=document.getElementById('trackerBars');if(!tb)return;
+    [0.32,0.48,0.4,0.6,0.55,0.72,0.65,0.85,0.78,0.92,0.84,1].forEach((h,i,a)=>{const b=document.createElement('div');b.className='b';if(i>=a.length-3)b.classList.add('hi');b.style.height=(h*100)+'%';tb.appendChild(b)});
+  })();
+  // mini cal
+  (function(){
+    const mc=document.getElementById('miniCal');if(!mc)return;
+    const events=[3,5,8,12,15,18,22,25,27],today=15;
+    for(let i=1;i<=28;i++){const d=document.createElement('div');d.textContent=i;if(events.includes(i))d.classList.add('has');if(i===today)d.classList.add('today');mc.appendChild(d)}
+  })();
+
+  // drawer
+  function toggleDrawer(open){
+    document.getElementById('drawer').classList.toggle('on',open);
+    document.getElementById('drawerBack').classList.toggle('on',open);
+  }
+
+  // AXIS faq stub
+  const FAQ={
+    'whats-different':"**Good question.** Notion is a blank canvas. Sheets is a spreadsheet. None of them know you run three businesses, track payroll, and have $4.2k in receivables. WAR ROOM is purpose-built for the multi-business operator. **AXIS pulls from all of it at once.**",
+    'is-private':"**Local-first. Always.** Your data lives in your browser by default. No accounts. No servers. Cloud sync is **opt-in** — you pick the destination. You hold the keys.",
+    'how-axis-works':"**AXIS is context-aware, not generic.** It indexes your P&L, missions, calendar, intel, bills, payroll. Ask 'what's dragging my margin at Stratus?' — it has your actual numbers.",
+    'what-does-it-cost':"**Free during beta. Founder pricing after.** No card to reserve. Lock in founder pricing — it will never increase for you.",
+    'mobile':"**Fully responsive.** Single-column command center on small screens. Touch-friendly. Focus timer, mission board, daily debrief work especially well here."
+  };
+  function md(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\n/g,'<br>')}
+  function askFAQ(k){
+    const body=document.getElementById('axisBody');
+    const labels={'whats-different':'What makes WAR ROOM different?','is-private':'Is my data private?','how-axis-works':'How does AXIS know my business?','what-does-it-cost':'What does it cost?','mobile':'Does it work on mobile?'};
+    const u=document.createElement('div');u.className='jmsg user';u.textContent=labels[k];body.appendChild(u);
+    const a=document.createElement('div');a.className='jmsg ai';a.innerHTML='<span style="opacity:.5">●●●</span>';body.appendChild(a);
+    body.scrollTop=body.scrollHeight;
+    setTimeout(()=>{a.innerHTML=md(FAQ[k]);body.scrollTop=body.scrollHeight},600);
+  }
+  function submitAxis(e){e.preventDefault();const i=document.getElementById('axisInput');const t=i.value.trim();if(!t)return;i.value='';
+    const body=document.getElementById('axisBody');
+    const u=document.createElement('div');u.className='jmsg user';u.textContent=t;body.appendChild(u);
+    const a=document.createElement('div');a.className='jmsg ai';a.innerHTML='<span style="opacity:.5">●●●</span>';body.appendChild(a);
+    body.scrollTop=body.scrollHeight;
+    setTimeout(()=>{a.innerHTML=md("**That's a live AXIS query — only available inside the full War Room.**\nTap one of the questions above to see how AXIS thinks. Reserve access to wire AXIS to your actual data.");body.scrollTop=body.scrollHeight},700);
+  }
+
+  // smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
+    const tgt=document.querySelector(a.getAttribute('href'));if(tgt){e.preventDefault();tgt.scrollIntoView({behavior:'smooth',block:'start'})}
+  }));
+</script>
+</body>
+</html>

@@ -1,0 +1,2540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, viewport-fit=cover">
+<title>WAR ROOM — Mobile App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --bg:#f4f4f2;--bg2:#ececea;--bg3:#e2e2e0;--surface:#fff;--surface2:#fafaf9;
+    --border:rgba(0,0,0,.07);--border2:rgba(0,0,0,.13);
+    --text:#0e0e0d;--text2:#525250;--text3:#9a9a98;
+    --accent:#0e0e0d;--accent-fg:#f4f4f2;
+    --green:#256b47;--red:#922130;--green-bg:#e8f3ec;--red-bg:#fbebec;
+    --amber:#7a4e00;--amber-bg:#faeeda;--blue:#1a4a8a;--blue-bg:#e8eef8;
+    --violet:#6c2ad0;--violet-bg:#ede2fb;--pink:#d63a8a;--pink-bg:#fbe5f0;
+    --r:10px;--rs:6px;
+    --tab-h:64px;--top-h:96px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;overflow:hidden;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+  button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer;font-size:inherit}
+  input,select,textarea{font-family:inherit;font-size:16px}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--accent);color:var(--accent-fg)}
+
+  .shell{display:flex;flex-direction:column;height:100vh;height:100dvh}
+
+  /* ── TOPBAR (Variant D: command bar + breadcrumb) ── */
+  .topbar{height:var(--top-h);background:var(--surface);border-bottom:.5px solid var(--border2);display:flex;flex-direction:column;flex-shrink:0;z-index:50;position:relative}
+  .topbar.running .top-r1 .avatar{box-shadow:0 0 0 2px var(--green-bg)}
+
+  /* row 1 — command bar */
+  .top-r1{height:50px;display:flex;align-items:center;padding:0 12px;gap:8px;flex-shrink:0}
+  .top-menu{width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--text2);border-radius:8px;flex-shrink:0}
+  .top-menu:active{background:var(--bg2)}
+  .top-search{flex:1;height:38px;background:var(--bg2);border:.5px solid var(--border2);border-radius:10px;display:flex;align-items:center;gap:9px;padding:0 11px;color:var(--text3);font-size:13px;min-width:0;cursor:pointer;transition:background .15s,border-color .15s}
+  .top-search:active{background:var(--bg3);border-color:var(--border2)}
+  .top-search .s-ic{display:flex;flex-shrink:0;color:var(--text3)}
+  .top-search .s-ph{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+  .top-search .s-ph b{font-weight:700;color:var(--text2)}
+  .top-search .s-kbd{font-family:'DM Mono',monospace;font-size:9px;background:var(--surface);border:.5px solid var(--border2);padding:2px 6px;border-radius:5px;color:var(--text2);letter-spacing:.04em;flex-shrink:0}
+  .top-avatar{width:38px;height:38px;border-radius:50%;background:#ffd9b3;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--text);position:relative;border:.5px solid var(--border2);flex-shrink:0;cursor:pointer}
+  .top-avatar .ndot{position:absolute;top:-1px;right:-1px;width:10px;height:10px;background:var(--red);border-radius:50%;border:2px solid var(--surface)}
+
+  /* row 2 — breadcrumb + biz chip */
+  .top-r2{height:46px;display:flex;align-items:center;padding:0 14px;gap:10px;border-top:.5px solid var(--border);flex-shrink:0}
+  .top-crumb{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text);min-width:0;flex:1;overflow:hidden}
+  .top-crumb .back{width:30px;height:30px;border:.5px solid var(--border2);background:var(--surface);border-radius:8px;display:none;align-items:center;justify-content:center;color:var(--text2);margin-right:2px;flex-shrink:0}
+  .top-crumb[data-secondary="1"] .back{display:inline-flex}
+  .top-crumb .parent{color:var(--text3);font-weight:600;letter-spacing:.14em}
+  .top-crumb .sep{color:var(--text3);font-weight:400}
+  .top-crumb .now{color:var(--text);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .top-biz{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border:.5px solid var(--border2);background:var(--surface);border-radius:100px;font-size:11px;font-weight:700;color:var(--text);flex-shrink:0;letter-spacing:-.005em;cursor:pointer}
+  .top-biz .pip{width:7px;height:7px;border-radius:50%;background:#6c8fff;flex-shrink:0}
+  .top-biz .ch{font-size:9px;opacity:.5;flex-shrink:0;margin-left:1px}
+
+  /* shared icon button (kept for inline page actions) */
+  .iconbtn{width:38px;height:38px;border:.5px solid var(--border2);border-radius:9px;background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text2);flex-shrink:0;position:relative}
+  .iconbtn .badge{position:absolute;top:-3px;right:-3px;min-width:14px;height:14px;padding:0 4px;background:var(--red);color:#fff;border-radius:100px;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--surface)}
+
+  /* ── CONTENT AREA ── */
+  .content{flex:1;overflow-y:auto;overflow-x:hidden;padding:18px 16px calc(var(--tab-h) + 22px);background:var(--bg);-webkit-overflow-scrolling:touch}
+  .page{display:none;animation:fadeIn .2s ease}
+  .page.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* page tools (slim, since the breadcrumb owns page identity) */
+  .ph{margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:36px}
+  .ph .ps{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);line-height:1.4;flex:1;min-width:0}
+  .ph .ps b{color:var(--text);font-weight:700}
+  .pa{display:flex;gap:6px;align-items:center;flex-shrink:0}
+  .pa .iconbtn{width:36px;height:36px}
+
+  /* common */
+  .card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:14px 16px}
+  .card-sm{padding:11px 13px}
+  .cl{font-size:8px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+  .cv{font-size:22px;font-weight:800;color:var(--text);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .cv.pos{color:var(--green)}.cv.neg{color:var(--red)}
+  .cs{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:5px}
+  .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+  .sec-title{font-size:11px;font-weight:800;color:var(--text);letter-spacing:.02em}
+  .bpl{font-size:8px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+  .btn{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;padding:9px 13px;border-radius:8px;display:inline-flex;align-items:center;gap:5px;min-height:36px;justify-content:center}
+  .btn-p{background:var(--accent);color:var(--accent-fg)}
+  .btn-g{background:var(--bg2);color:var(--text);border:.5px solid var(--border2)}
+  .btn-sm{padding:6px 10px;font-size:10px;min-height:30px}
+  .btn.full{width:100%}
+  .chip{display:inline-flex;align-items:center;gap:5px;border:.5px solid var(--border2);background:var(--bg2);color:var(--text2);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:100px;white-space:nowrap}
+  .chip.on{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+
+  /* ─────────── DASHBOARD ─────────── */
+  .kpi-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin:0 -16px 14px;padding-left:16px;padding-right:16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .kpi-strip::-webkit-scrollbar{display:none}
+  .kpi{flex:0 0 138px;background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:11px 13px;scroll-snap-align:start}
+  .kpi .cl{margin-bottom:5px}
+  .kpi .cv{font-size:18px}
+  .kpi .cs{margin-top:4px;font-size:9px}
+
+  .greet{margin-bottom:18px}
+  .greet .pt{font-size:24px}
+  .greet .ps{font-size:11px}
+
+  .schedule-strip{margin-bottom:14px}
+  .sched-row{display:flex;gap:8px;overflow-x:auto;margin:0 -16px;padding:2px 16px;-webkit-overflow-scrolling:touch}
+  .sched-row::-webkit-scrollbar{display:none}
+  .sched-pill{flex:0 0 auto;background:var(--surface);border:.5px solid var(--border2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:120px}
+  .sched-pill .t{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3)}
+  .sched-pill .e{font-size:12px;font-weight:700;color:var(--text)}
+  .sched-pill .b{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:4px}
+  .sched-pill .b::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--blue)}
+
+  .dash-cards{display:flex;flex-direction:column;gap:12px}
+  .bp{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);overflow:hidden}
+  .bph{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:.5px solid var(--border)}
+  .bpb{padding:10px 14px;display:flex;flex-direction:column;gap:7px}
+  .goal-row{display:flex;align-items:center;gap:9px;font-size:12px;padding:5px 0}
+  .goal-row .nm{flex:1}
+  .goal-row .bar{width:80px;height:5px;background:var(--bg2);border-radius:100px;overflow:hidden}
+  .goal-row .bar i{display:block;height:100%;background:var(--accent);border-radius:100px}
+  .goal-row .pct{font-size:10px;font-family:'DM Mono',monospace;color:var(--text2);width:32px;text-align:right}
+  .prog-track{height:5px;background:var(--bg2);border-radius:100px;margin:8px 14px 12px;overflow:hidden}
+  .prog-fill{height:100%;background:var(--accent);border-radius:100px}
+
+  /* AXIS panel */
+  .ai-panel{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+  .ai-hdr{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;border-bottom:.5px solid var(--border)}
+  .ai-badge{display:flex;align-items:center;gap:7px;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text2)}
+  .ai-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulseDot 1.8s infinite}
+  @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(37,107,71,.4)}50%{box-shadow:0 0 0 6px rgba(37,107,71,0)}}
+  .ai-chat-messages{padding:14px;display:flex;flex-direction:column;gap:8px;min-height:200px;max-height:260px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .ai-empty{text-align:center;padding:30px 14px;color:var(--text3)}
+  .ai-empty-icon{font-size:26px;margin-bottom:10px}
+  .ai-empty-text{font-size:11px;line-height:1.6;font-family:'DM Mono',monospace}
+  .ai-msg{padding:9px 11px;border-radius:9px;font-size:13px;line-height:1.5;max-width:88%}
+  .ai-msg.user{background:var(--accent);color:var(--accent-fg);align-self:flex-end;border-bottom-right-radius:3px}
+  .ai-msg.ai{background:var(--bg2);color:var(--text);align-self:flex-start;border-bottom-left-radius:3px}
+  .ai-msg.ai b{font-weight:700}
+  .ai-chat-input-row{padding:9px;border-top:.5px solid var(--border);display:flex;gap:6px}
+  .ai-chat-input{flex:1;background:var(--bg2);border:.5px solid var(--border2);color:var(--text);padding:11px 12px;border-radius:9px;outline:none;font-family:inherit;font-size:16px}
+  .ai-chat-send{width:42px;background:var(--accent);color:var(--accent-fg);border-radius:9px;font-size:18px}
+
+  /* Chart */
+  .bar-wrap{height:120px;display:flex;align-items:flex-end;gap:4px;padding:6px 0}
+  .bar-wrap .pair{flex:1;display:flex;align-items:flex-end;gap:2px;height:100%}
+  .bar-wrap .pair .rev{flex:1;background:var(--green);border-radius:2px 2px 0 0;opacity:.85}
+  .bar-wrap .pair .exp{flex:1;background:var(--red);border-radius:2px 2px 0 0;opacity:.55}
+  .bar-legend{display:flex;gap:14px;align-items:center;font-size:9px;color:var(--text3);margin-top:6px}
+  .bar-legend .sw{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:4px;vertical-align:middle}
+
+  /* Timer card */
+  .timer-card{text-align:center;padding:18px 16px}
+  .timer-card .cl{margin-bottom:5px}
+  .timer-card .big{font-size:34px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:.04em;color:var(--text);line-height:1;margin:6px 0}
+  .timer-card .stat-txt{font-size:9px;color:var(--text3);margin-bottom:11px;font-family:'DM Mono',monospace}
+  .timer-card .ctrls{display:flex;gap:7px;justify-content:center}
+
+  /* Mission item */
+  .mission-row{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:.5px solid var(--border);font-size:13px}
+  .mission-row:last-child{border-bottom:none}
+  .mission-row .ck{width:18px;height:18px;border:1.3px solid var(--text2);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+  .mission-row.done .ck{background:var(--green);border-color:var(--green);color:#fff}
+  .mission-row.done .nm{text-decoration:line-through;color:var(--text3)}
+  .mission-row .nm{flex:1}
+  .mission-row .biz{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);padding:2px 7px;background:var(--bg2);border-radius:100px}
+  .mission-row .due{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3)}
+  .mission-row .due.late{color:var(--red)}
+
+  /* ─────────── MISSION BOARD (Kanban) ─────────── */
+  .km-tabs{display:flex;background:var(--bg2);border:.5px solid var(--border2);border-radius:100px;padding:3px;margin-bottom:14px;position:sticky;top:0;z-index:5}
+  .km-tab{flex:1;padding:9px 6px;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--text2);border-radius:100px;display:flex;align-items:center;justify-content:center;gap:5px}
+  .km-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .km-tab .count{background:var(--bg2);color:var(--text3);font-size:9px;font-family:'DM Mono',monospace;padding:1px 6px;border-radius:100px;font-weight:600}
+  .km-tab.active .count{background:var(--accent);color:var(--accent-fg)}
+  .km-list{display:flex;flex-direction:column;gap:9px}
+  .task-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:13px 14px;display:flex;flex-direction:column;gap:8px}
+  .task-card .meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .task-card .pri{font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:100px}
+  .pri.high{background:var(--red-bg);color:var(--red)}
+  .pri.med{background:var(--amber-bg);color:var(--amber)}
+  .pri.low{background:var(--bg2);color:var(--text3)}
+  .task-card .biz{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3)}
+  .task-card .ttl{font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+  .task-card .ds{font-size:11px;color:var(--text2);line-height:1.4}
+  .task-card .ft{display:flex;align-items:center;gap:8px;padding-top:6px;border-top:.5px solid var(--border);font-size:9px;font-family:'DM Mono',monospace;color:var(--text3)}
+  .task-card .ft .late{color:var(--red)}
+  .task-card .ft .avatar{margin-left:auto;width:20px;height:20px;border-radius:50%;background:#ffd9b3;font-size:8px;font-weight:800;color:var(--text);display:inline-flex;align-items:center;justify-content:center}
+  .add-task{padding:14px;border:1.2px dashed var(--border2);border-radius:var(--r);color:var(--text3);font-size:11px;font-weight:700;letter-spacing:.06em;text-align:center;background:transparent}
+
+  /* ─────────── P&L TRACKER ─────────── */
+  .seg{display:flex;background:var(--bg2);border:.5px solid var(--border2);border-radius:100px;padding:3px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .seg::-webkit-scrollbar{display:none}
+  .seg button{padding:8px 14px;font-size:11px;font-weight:700;color:var(--text2);border-radius:100px;white-space:nowrap;flex-shrink:0}
+  .seg button.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .pnl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .pnl-grid .card-sm{padding:11px 12px}
+  .pnl-grid .cv{font-size:18px}
+
+  .txn-list{display:flex;flex-direction:column;gap:0;background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);overflow:hidden}
+  .txn-hd{padding:11px 14px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .txn-row{padding:11px 14px;border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:10px}
+  .txn-row:last-child{border-bottom:none}
+  .txn-row .ic{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .txn-row .ic.rev{background:var(--green-bg);color:var(--green)}
+  .txn-row .ic.exp{background:var(--red-bg);color:var(--red)}
+  .txn-row .mid{flex:1;min-width:0}
+  .txn-row .nm{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .txn-row .sub{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:2px;display:flex;gap:6px;align-items:center}
+  .txn-row .amt{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+  .txn-row .amt.rev{color:var(--green)}
+  .txn-row .amt.exp{color:var(--red)}
+
+  /* ─────────── CALENDAR ─────────── */
+  .cal-wrap{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+  .cal-hdr{padding:11px 14px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:6px}
+  .cal-nav-btn{width:32px;height:32px;border:.5px solid var(--border2);border-radius:8px;background:var(--bg2);font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text2);padding-bottom:2px}
+  .cal-month{font-size:14px;font-weight:800;letter-spacing:-.01em;flex:1;text-align:center}
+  .cal-today{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);padding:6px 11px;border:.5px solid var(--border2);border-radius:100px;background:transparent}
+  .cal-week-hdr{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:.5px solid var(--border);padding:8px 0}
+  .cal-week-hdr div{text-align:center;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);letter-spacing:.06em}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+  .cal-day{aspect-ratio:1;border-right:.5px solid var(--border);border-bottom:.5px solid var(--border);padding:5px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;position:relative;min-height:46px}
+  .cal-day:nth-child(7n){border-right:none}
+  .cal-day .n{font-size:11px;font-weight:600;color:var(--text2);font-variant-numeric:tabular-nums}
+  .cal-day.other .n{color:var(--text3);opacity:.45}
+  .cal-day.today{background:var(--bg2)}
+  .cal-day.today .n{background:var(--accent);color:var(--accent-fg);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px}
+  .cal-day.sel{box-shadow:inset 0 0 0 2px var(--accent)}
+  .cal-evt{font-size:0;height:4px;width:4px;border-radius:50%}
+  .cal-evt-row{display:flex;gap:2px;margin-top:auto;flex-wrap:wrap}
+  .cal-evt.b1{background:var(--blue)}.cal-evt.b2{background:var(--violet)}.cal-evt.b3{background:var(--red)}.cal-evt.b4{background:var(--green)}
+
+  .day-events{margin-top:0}
+  .evt-card{display:flex;gap:11px;padding:12px 0;border-bottom:.5px solid var(--border)}
+  .evt-card:last-child{border-bottom:none}
+  .evt-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);min-width:56px;display:flex;flex-direction:column;gap:1px}
+  .evt-time b{color:var(--text);font-weight:700;font-size:12px}
+  .evt-time .dur{font-size:9px;color:var(--text3)}
+  .evt-body{flex:1;border-left:3px solid var(--blue);padding-left:11px}
+  .evt-body.b2{border-color:var(--violet)}.evt-body.b3{border-color:var(--red)}.evt-body.b4{border-color:var(--green)}
+  .evt-body .nm{font-size:13px;font-weight:700;color:var(--text)}
+  .evt-body .sub{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+
+  /* ─────────── BILLS ─────────── */
+  .bills-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .bill-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:13px;display:flex;flex-direction:column;gap:7px;cursor:pointer;border-left:3px solid var(--border2)}
+  .bill-card.due-soon{border-left-color:var(--amber)}
+  .bill-card.overdue{border-left-color:var(--red)}
+  .bill-card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .bill-card .nm{font-size:13px;font-weight:700;color:var(--text)}
+  .bill-card .amt{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+  .bill-card .meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3)}
+  .bill-card .due{padding:2px 7px;border-radius:100px;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .bill-card.overdue .due{background:var(--red-bg);color:var(--red)}
+  .bill-card.due-soon .due{background:var(--amber-bg);color:var(--amber)}
+  .bill-card.ok .due{background:var(--green-bg);color:var(--green)}
+
+  /* ─────────── FOCUS TIMER PAGE ─────────── */
+  .big-timer-card{background:var(--surface);border:.5px solid var(--border2);border-radius:14px;padding:30px 22px;text-align:center}
+  .big-timer-card .lbl{font-size:8px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+  .big-timer-card .timer-big{font-size:54px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:.02em;color:var(--text);line-height:1}
+  .big-timer-card .stxt{font-size:10px;color:var(--text3);margin:12px 0 22px;font-family:'DM Mono',monospace}
+  .big-timer-card .ctrls{display:flex;gap:9px;justify-content:center}
+  .big-timer-card .ctrls .btn{flex:1;padding:14px;font-size:11px}
+  .big-timer-card .sess-form{margin-top:24px;padding-top:18px;border-top:.5px solid var(--border2);text-align:left;display:flex;flex-direction:column;gap:10px}
+  label{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px}
+  input[type=text],input[type=email],input[type=time],input[type=date],select,textarea{width:100%;background:var(--bg2);border:.5px solid var(--border2);color:var(--text);padding:11px 12px;border-radius:8px;outline:none;font-family:inherit;font-size:16px}
+
+  .alarm-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:16px;margin-top:12px}
+  .alarm-time{text-align:center;margin-bottom:14px}
+  .alarm-time .clk{font-size:34px;font-weight:700;font-family:'DM Mono',monospace;color:var(--text);line-height:1}
+  .alarm-time .lab{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.1em;margin-bottom:4px}
+  .alarm-list{display:flex;flex-direction:column;gap:7px;margin-top:14px}
+  .alarm-item{background:var(--bg2);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+  .alarm-item .t{font-family:'DM Mono',monospace;font-weight:700;color:var(--text)}
+
+  /* ─────────── INTEL NOTES ─────────── */
+  .note-search{display:flex;gap:8px;margin-bottom:12px}
+  .note-search input{flex:1}
+  .note-grid{display:flex;flex-direction:column;gap:9px}
+  .note-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:14px;cursor:pointer}
+  .note-card .nm{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3}
+  .note-card .ds{font-size:11px;color:var(--text2);line-height:1.5;-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+  .note-card .ft{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);flex-wrap:wrap}
+  .note-card .tag{padding:2px 7px;border-radius:100px;background:var(--bg2);font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2)}
+
+  /* ─────────── PROFILE & MORE ─────────── */
+  .profile-hd{display:flex;align-items:center;gap:13px;background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:16px;margin-bottom:14px}
+  .profile-hd .av{width:54px;height:54px;border-radius:50%;background:#ffd9b3;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:var(--text)}
+  .profile-hd .nm{font-size:16px;font-weight:800;letter-spacing:-.01em;line-height:1.2}
+  .profile-hd .em{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px}
+  .menu-list{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+  .menu-row{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:.5px solid var(--border);font-size:14px;color:var(--text);cursor:pointer}
+  .menu-row:last-child{border-bottom:none}
+  .menu-row .ic{width:26px;height:26px;border-radius:7px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--text2);flex-shrink:0}
+  .menu-row .ar{margin-left:auto;color:var(--text3);font-size:14px}
+  .menu-row .bdg{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:2px 7px;border-radius:100px;font-family:'DM Mono',monospace}
+  .menu-section{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin:18px 4px 8px}
+
+  /* ─────────── BOTTOM TAB BAR ─────────── */
+  .tabbar{position:fixed;left:0;right:0;bottom:0;height:var(--tab-h);background:rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:.5px solid var(--border2);display:flex;align-items:stretch;padding:0 4px;padding-bottom:env(safe-area-inset-bottom);z-index:60}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text3);position:relative;padding-top:6px}
+  .tab .ic{font-size:18px;line-height:1;height:22px;display:flex;align-items:center;justify-content:center}
+  .tab .ic svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .tab .lb{font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .tab.active{color:var(--text)}
+  .tab.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:24px;height:2.5px;background:var(--accent);border-radius:0 0 3px 3px}
+  .tab .bdg{position:absolute;top:5px;right:calc(50% - 18px);min-width:14px;height:14px;padding:0 4px;background:var(--red);color:#fff;border-radius:100px;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;border:1.5px solid #fff}
+
+  /* AXIS FAB */
+  .fab{position:fixed;right:14px;bottom:calc(var(--tab-h) + 14px);width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:flex;align-items:center;justify-content:center;box-shadow:0 14px 28px -10px rgba(0,0,0,.4),0 0 0 4px rgba(255,255,255,.85);z-index:55;font-size:22px;font-weight:800}
+  .fab::after{content:'';position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;background:var(--green);border:2px solid var(--accent)}
+
+  /* AXIS bottom sheet */
+  .axis-sheet-back{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;opacity:0;pointer-events:none;transition:opacity .2s}
+  .axis-sheet-back.on{opacity:1;pointer-events:auto}
+  .axis-sheet{position:fixed;left:0;right:0;bottom:0;height:88vh;background:#161615;color:#f0f0ee;z-index:101;border-radius:20px 20px 0 0;transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column;overflow:hidden}
+  .axis-sheet.on{transform:translateY(0)}
+  .axis-sheet-handle{height:5px;width:36px;border-radius:100px;background:rgba(255,255,255,.25);margin:9px auto 0;flex-shrink:0}
+  .axis-sheet-hd{display:flex;align-items:center;gap:11px;padding:11px 18px 14px;border-bottom:.5px solid rgba(255,255,255,.1)}
+  .axis-sheet-hd .av{width:34px;height:34px;border-radius:9px;background:#922130;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+  .axis-sheet-hd .nm{font-size:14px;font-weight:800;letter-spacing:.04em}
+  .axis-sheet-hd .st{font-size:9px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:5px;margin-top:1px}
+  .axis-sheet-hd .st .pulse{width:6px;height:6px;border-radius:50%;background:#52c497;animation:pulseDot 1.8s infinite}
+  .axis-sheet-close{margin-left:auto;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7)}
+  .axis-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .ax-suggestion-row{display:flex;gap:6px;overflow-x:auto;padding:0 16px 8px;margin:0 -16px;-webkit-overflow-scrolling:touch}
+  .ax-suggestion-row::-webkit-scrollbar{display:none}
+  .ax-chip{flex-shrink:0;background:rgba(255,255,255,.07);border:.5px solid rgba(255,255,255,.14);color:rgba(255,255,255,.85);padding:8px 12px;border-radius:100px;font-size:11px;font-weight:600;white-space:nowrap;min-height:34px;display:inline-flex;align-items:center}
+  .ax-msg{padding:10px 12px;border-radius:11px;font-size:14px;line-height:1.5;max-width:88%;word-wrap:break-word}
+  .ax-msg.user{background:#f0f0ee;color:#0e0e0d;align-self:flex-end;border-bottom-right-radius:4px}
+  .ax-msg.ai{background:rgba(255,255,255,.07);border:.5px solid rgba(255,255,255,.1);color:rgba(255,255,255,.92);align-self:flex-start;border-bottom-left-radius:4px}
+  .ax-msg.ai b{color:#fff}
+  .axis-sheet-input{padding:11px 14px;padding-bottom:max(11px,env(safe-area-inset-bottom));border-top:.5px solid rgba(255,255,255,.1);display:flex;gap:7px}
+  .axis-sheet-input input{flex:1;background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.12);color:#f0f0ee;padding:12px 14px;border-radius:11px;font-size:16px;outline:none;font-family:inherit}
+  .axis-sheet-input input::placeholder{color:rgba(255,255,255,.4)}
+  .axis-sheet-input button{width:46px;height:46px;background:#922130;color:#fff;border-radius:11px;font-size:20px;flex-shrink:0}
+
+  /* Drawer for more nav */
+  .drawer-back{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:80;opacity:0;pointer-events:none;transition:opacity .2s}
+  .drawer-back.on{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;left:0;top:0;bottom:0;width:300px;background:var(--surface);z-index:81;transform:translateX(-100%);transition:transform .25s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column;border-right:.5px solid var(--border2)}
+  .drawer.on{transform:translateX(0)}
+  .drawer-hd{padding:18px;display:flex;align-items:center;gap:11px;border-bottom:.5px solid var(--border2)}
+  .drawer-hd .av{width:38px;height:38px;border-radius:9px;background:#ffd9b3;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+  .drawer-hd .nm{font-size:14px;font-weight:800;letter-spacing:-.01em}
+  .drawer-hd .em{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px}
+  .drawer-body{flex:1;overflow-y:auto;padding:11px 0}
+  .drawer-section{padding:11px 18px 5px;font-size:8px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+  .drawer-item{padding:11px 18px;display:flex;align-items:center;gap:11px;font-size:13px;color:var(--text2);border-left:3px solid transparent;font-weight:600}
+  .drawer-item.active{background:var(--bg2);color:var(--text);border-left-color:var(--accent)}
+  .drawer-item .ic{font-size:13px;width:18px;text-align:center}
+  .drawer-item .bdg{margin-left:auto;background:var(--bg2);color:var(--text3);font-size:8px;font-family:'DM Mono',monospace;padding:1px 6px;border-radius:100px}
+  .drawer-foot{padding:14px 18px;border-top:.5px solid var(--border);display:flex;gap:7px}
+  .drawer-foot button{flex:1;font-size:10px}
+
+  /* Biz switcher sheet */
+  .biz-sheet{position:fixed;left:0;right:0;bottom:0;background:var(--surface);z-index:101;border-radius:18px 18px 0 0;transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.7,.2,1);max-height:80vh;display:flex;flex-direction:column;overflow:hidden;border-top:.5px solid var(--border2)}
+  .biz-sheet.on{transform:translateY(0)}
+  .biz-sheet-handle{height:5px;width:36px;border-radius:100px;background:var(--bg3);margin:9px auto 0;flex-shrink:0}
+  .biz-sheet-hd{padding:11px 18px 14px;border-bottom:.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .biz-sheet-hd .ti{font-size:13px;font-weight:800;letter-spacing:-.01em}
+  .biz-sheet-body{padding:9px 0;overflow-y:auto}
+  .biz-opt{padding:13px 18px;display:flex;align-items:center;gap:11px;font-size:14px;font-weight:600;color:var(--text2);border-left:3px solid transparent}
+  .biz-opt.active{background:var(--bg2);color:var(--text);border-left-color:var(--accent)}
+  .biz-opt .pip{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .biz-opt .ch{margin-left:auto;font-size:14px}
+
+  /* greeting card on dash */
+  .greet-card{background:var(--surface);border:.5px solid var(--border2);border-radius:12px;padding:16px;margin-bottom:14px}
+  .greet-card .pt{font-size:22px}
+  .greet-card .ps{margin-top:4px}
+  .greet-card .row{display:flex;gap:10px;margin-top:11px}
+  .greet-card .row .mini{flex:1;background:var(--bg2);border-radius:8px;padding:9px 10px}
+  .greet-card .row .mini .lb{font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text3)}
+  .greet-card .row .mini .vl{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;margin-top:3px}
+  .greet-card .row .mini .vl.pos{color:var(--green)}
+  .greet-card .row .mini .vl.neg{color:var(--red)}
+
+  /* empty + utility */
+  .empty{text-align:center;padding:28px 14px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);line-height:1.7}
+  .empty .ic{font-size:26px;margin-bottom:10px;color:var(--text3)}
+
+  /* utility helpers */
+  .row{display:flex;gap:10px}
+  .col{display:flex;flex-direction:column;gap:10px}
+  .mb12{margin-bottom:12px}
+  .mb14{margin-bottom:14px}
+  .pos{color:var(--green)}.neg{color:var(--red)}
+  .stretch{flex:1}
+
+  /* ─────────── INVOICES ─────────── */
+  .inv-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:13px 14px;display:flex;flex-direction:column;gap:9px;border-left:3px solid var(--border2)}
+  .inv-card.paid{border-left-color:var(--green)}
+  .inv-card.overdue{border-left-color:var(--red)}
+  .inv-card.pending{border-left-color:var(--amber)}
+  .inv-card.draft{border-left-color:var(--text3)}
+  .inv-card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .inv-card .cl-name{font-size:14px;font-weight:800;letter-spacing:-.01em;line-height:1.2}
+  .inv-card .inv-no{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:3px;letter-spacing:.04em}
+  .inv-card .amt{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em;text-align:right}
+  .inv-card .ft{display:flex;align-items:center;gap:7px;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);flex-wrap:wrap;padding-top:8px;border-top:.5px solid var(--border)}
+  .inv-status{font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:100px}
+  .inv-status.paid{background:var(--green-bg);color:var(--green)}
+  .inv-status.overdue{background:var(--red-bg);color:var(--red)}
+  .inv-status.pending{background:var(--amber-bg);color:var(--amber)}
+  .inv-status.draft{background:var(--bg2);color:var(--text3)}
+
+  /* ─────────── GOALS ─────────── */
+  .goal-hero{background:var(--surface);border:.5px solid var(--border2);border-radius:14px;padding:18px 16px;margin-bottom:14px;display:flex;align-items:center;gap:18px}
+  .goal-ring{position:relative;width:78px;height:78px;flex-shrink:0}
+  .goal-ring .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .goal-hero .meta{flex:1;display:flex;flex-direction:column;gap:6px}
+  .goal-hero .lbl{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text3)}
+  .goal-hero .ti{font-size:18px;font-weight:800;letter-spacing:-.015em;line-height:1.1}
+  .goal-hero .breakdown{display:flex;gap:10px;margin-top:4px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text2)}
+  .goal-hero .breakdown .pip{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
+
+  .goal-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:13px 14px;display:flex;flex-direction:column;gap:9px}
+  .goal-card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .goal-card .nm{font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+  .goal-card .pc{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;flex-shrink:0}
+  .goal-card .pc.pos{color:var(--green)}
+  .goal-card .pc.amb{color:var(--amber)}
+  .goal-card .pc.neg{color:var(--red)}
+  .goal-card .bar{height:6px;background:var(--bg2);border-radius:100px;overflow:hidden}
+  .goal-card .bar i{display:block;height:100%;background:var(--accent);border-radius:100px}
+  .goal-card .bar i.amb{background:var(--amber)}
+  .goal-card .bar i.neg{background:var(--red)}
+  .goal-card .ft{display:flex;align-items:center;gap:8px;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);flex-wrap:wrap}
+  .goal-card .ft .biz{padding:2px 7px;background:var(--bg2);border-radius:100px}
+
+  /* ─────────── WHITEBOARD ─────────── */
+  .wb-board-chips{display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -16px 14px;padding:0 16px 4px;scroll-snap-type:x mandatory}
+  .wb-board-chips::-webkit-scrollbar{display:none}
+  .wb-chip{flex-shrink:0;padding:8px 13px;background:var(--surface);border:.5px solid var(--border2);border-radius:100px;font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.02em;white-space:nowrap;scroll-snap-align:start;display:inline-flex;align-items:center;gap:6px}
+  .wb-chip .count{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);background:var(--bg2);padding:1px 5px;border-radius:100px}
+  .wb-chip.active{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+  .wb-chip.active .count{background:rgba(255,255,255,.18);color:var(--accent-fg)}
+  .wb-masonry{column-count:2;column-gap:9px}
+  .wb-note{break-inside:avoid;margin-bottom:9px;padding:13px 12px;border-radius:9px;font-size:12px;line-height:1.45;color:var(--text);display:flex;flex-direction:column;gap:7px;box-shadow:0 2px 6px rgba(0,0,0,.05)}
+  .wb-note .ti{font-size:13px;font-weight:800;letter-spacing:-.01em;line-height:1.25}
+  .wb-note .bd{font-size:11px;color:var(--text2);line-height:1.5}
+  .wb-note .ft{display:flex;align-items:center;gap:6px;font-size:8px;font-family:'DM Mono',monospace;color:var(--text2);opacity:.7}
+  .wb-note.c1{background:#fff5b8}
+  .wb-note.c2{background:#c9e6ff}
+  .wb-note.c3{background:#ffd1c0}
+  .wb-note.c4{background:#d9f5d4}
+  .wb-note.c5{background:#f0d9ff}
+  .wb-note.c6{background:#fce5b8}
+  .wb-note.dark{background:#1a1a18;color:#f0eee9}
+  .wb-note.dark .bd{color:rgba(255,255,255,.7)}
+  .wb-note.dark .ft{color:rgba(255,255,255,.5)}
+
+  /* ─────────── VIDEO CALLS ─────────── */
+  .vc-hero{background:#0e0e0d;color:#f0eee9;border-radius:14px;padding:20px 16px;margin-bottom:14px;position:relative;overflow:hidden}
+  .vc-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 10% 20%,rgba(108,143,255,.16) 0%,transparent 60%),radial-gradient(circle at 90% 90%,rgba(214,58,138,.12) 0%,transparent 55%);pointer-events:none}
+  .vc-hero .vc-lbl{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:8px;position:relative;display:flex;align-items:center;gap:7px}
+  .vc-hero .vc-lbl .pulse{width:6px;height:6px;border-radius:50%;background:#52c497;animation:pulseDot 1.8s infinite}
+  .vc-hero .vc-ti{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:14px;position:relative}
+  .vc-hero .vc-row{display:flex;gap:8px;position:relative}
+  .vc-hero .vc-row .btn{flex:1;font-size:11px;padding:13px}
+  .vc-hero .vc-row .btn-p{background:#922130;color:#fff}
+  .vc-hero .vc-row .btn-g{background:rgba(255,255,255,.08);color:#f0eee9;border:.5px solid rgba(255,255,255,.18)}
+  .vc-room-id{margin-top:11px;display:flex;align-items:center;gap:7px;font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.55);position:relative}
+  .vc-room-id b{color:#fff;letter-spacing:.04em}
+
+  .call-row{display:flex;align-items:center;gap:11px;padding:11px 14px;border-bottom:.5px solid var(--border)}
+  .call-row:last-child{border-bottom:none}
+  .call-row .ic{width:36px;height:36px;border-radius:9px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;color:var(--text2)}
+  .call-row .ic.up{background:var(--green-bg);color:var(--green)}
+  .call-row .ic.miss{background:var(--red-bg);color:var(--red)}
+  .call-row .ic.in{background:var(--blue-bg);color:var(--blue)}
+  .call-row .mid{flex:1;min-width:0}
+  .call-row .nm{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .call-row .sub{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .call-row .when{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);text-align:right;flex-shrink:0}
+  .call-row .when b{display:block;color:var(--text2);font-weight:700;font-size:11px;margin-bottom:1px}
+  .call-row .when.live{color:var(--green)}
+  .stack-av{display:flex;align-items:center}
+  .stack-av .ja{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--surface);font-size:8px;font-weight:800;color:var(--text);display:inline-flex;align-items:center;justify-content:center;margin-left:-5px}
+  .stack-av .ja:first-child{margin-left:0}
+
+  /* ─────────── PAYROLL ─────────── */
+  .pay-summary{background:var(--surface);border:.5px solid var(--border2);border-radius:14px;padding:16px;margin-bottom:14px}
+  .pay-summary .top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:14px}
+  .pay-summary .lbl{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+  .pay-summary .big{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+  .pay-summary .big .sup{font-size:14px;color:var(--text3);font-weight:600;margin-left:5px}
+  .pay-summary .right{text-align:right}
+  .pay-summary .right .v{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}
+  .pay-summary .right .s{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px}
+  .pay-stack{height:9px;display:flex;border-radius:100px;overflow:hidden;margin-bottom:11px;background:var(--bg2)}
+  .pay-stack .seg-bar{height:100%}
+  .pay-legend{display:flex;flex-wrap:wrap;gap:10px;font-size:9px;font-family:'DM Mono',monospace;color:var(--text2)}
+  .pay-legend span{display:inline-flex;align-items:center;gap:5px}
+  .pay-legend .pip{width:7px;height:7px;border-radius:2px;display:inline-block}
+
+  .pay-row{display:flex;align-items:center;gap:11px;padding:12px 14px;border-bottom:.5px solid var(--border)}
+  .pay-row:last-child{border-bottom:none}
+  .pay-row .av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:var(--text);flex-shrink:0}
+  .pay-row .mid{flex:1;min-width:0}
+  .pay-row .nm{font-size:13px;font-weight:700;color:var(--text);line-height:1.2}
+  .pay-row .sub{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .pay-row .sub .biz{padding:2px 7px;background:var(--bg2);border-radius:100px}
+  .pay-row .right{text-align:right;flex-shrink:0}
+  .pay-row .right .amt{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+  .pay-row .right .freq{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px}
+  .pay-type{font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:100px}
+  .pay-type.ft{background:var(--green-bg);color:var(--green)}
+  .pay-type.pt{background:var(--blue-bg);color:var(--blue)}
+  .pay-type.ct{background:var(--amber-bg);color:var(--amber)}
+
+  /* ─────────── ENHANCED PROFILE HUB (More) ─────────── */
+  .profile-hero{background:#0e0e0d;color:#f0eee9;border-radius:14px;padding:18px 16px 16px;margin-bottom:14px;position:relative;overflow:hidden}
+  .profile-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(108,143,255,.18) 0%,transparent 55%),radial-gradient(circle at 100% 100%,rgba(214,58,138,.12) 0%,transparent 55%);pointer-events:none}
+  .profile-hero .top{display:flex;align-items:flex-start;gap:13px;position:relative;margin-bottom:14px}
+  .profile-hero .av{width:54px;height:54px;border-radius:50%;background:#ffd9b3;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#0e0e0d;flex-shrink:0;border:2px solid #f0eee9}
+  .profile-hero .av .live{position:absolute;bottom:-1px;right:-1px;width:13px;height:13px;border-radius:50%;background:#52c497;border:2px solid #0e0e0d;animation:pulseDot 1.8s infinite}
+  .profile-hero .av-wrap{position:relative}
+  .profile-hero .pid{flex:1;min-width:0}
+  .profile-hero .nm{font-size:18px;font-weight:800;letter-spacing:-.015em;line-height:1.15}
+  .profile-hero .ro{font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.55);margin-top:3px;letter-spacing:.06em}
+  .profile-hero .ed{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);flex-shrink:0}
+  .profile-hero .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;position:relative}
+  .profile-hero .st{background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.1);border-radius:9px;padding:9px 10px}
+  .profile-hero .st .lb{font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px}
+  .profile-hero .st .vl{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.01em;line-height:1}
+  .profile-hero .st .vl.pos{color:#6ee7b7}
+  .profile-hero .st .vl.mono{font-family:'DM Mono',monospace;font-weight:500;letter-spacing:.02em}
+
+  .qa-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+  .qa{background:var(--surface);border:.5px solid var(--border2);border-radius:11px;padding:11px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer}
+  .qa .ic{width:30px;height:30px;border-radius:8px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text)}
+  .qa .lb{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}
+  .qa.danger .ic{background:var(--red-bg);color:var(--red)}
+  .qa.danger .lb{color:var(--red)}
+
+  .activity-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+  .act-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:.5px solid var(--border);font-size:12px}
+  .act-row:last-child{border-bottom:none}
+  .act-row .ic{width:26px;height:26px;border-radius:7px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;color:var(--text2)}
+  .act-row .ic.gr{background:var(--green-bg);color:var(--green)}
+  .act-row .ic.am{background:var(--amber-bg);color:var(--amber)}
+  .act-row .ic.bl{background:var(--blue-bg);color:var(--blue)}
+  .act-row .ic.rd{background:var(--red-bg);color:var(--red)}
+  .act-row .tx{flex:1;line-height:1.4;color:var(--text)}
+  .act-row .tx b{font-weight:700}
+  .act-row .ts{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);flex-shrink:0;white-space:nowrap}
+
+  /* ─────────── PROFILE & SETTINGS ─────────── */
+  .form-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+  .form-card .ft{font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .form-card .ft .ix{width:22px;height:22px;border-radius:6px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text2)}
+  .form-row{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
+  .form-row:last-child{margin-bottom:0}
+  .form-row .hint{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:3px}
+  .form-grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+  .avatar-pick{display:flex;align-items:center;gap:14px;padding:6px 0 12px;border-bottom:.5px solid var(--border);margin-bottom:14px}
+  .avatar-pick .av-big{width:64px;height:64px;border-radius:50%;background:#ffd9b3;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:var(--text)}
+  .avatar-pick .meta{flex:1}
+  .avatar-pick .meta .ti{font-size:13px;font-weight:800;letter-spacing:-.01em}
+  .avatar-pick .meta .sb{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:3px}
+  .avatar-pick .ac{display:flex;gap:6px;margin-top:7px}
+  .avatar-pick .ac .btn-sm{padding:5px 9px;font-size:9px;letter-spacing:.06em}
+
+  /* Toggle (iOS-style switch) */
+  .toggle{position:relative;width:42px;height:24px;border-radius:100px;background:var(--bg3);border:.5px solid var(--border2);flex-shrink:0;cursor:pointer;transition:background .18s}
+  .toggle.on{background:var(--green);border-color:var(--green)}
+  .toggle::after{content:'';position:absolute;top:1.5px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .18s;box-shadow:0 1px 2px rgba(0,0,0,.18)}
+  .toggle.on::after{transform:translateX(18px)}
+  .tg-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:.5px solid var(--border);font-size:13px}
+  .tg-row:last-child{border-bottom:none}
+  .tg-row .mid{flex:1;min-width:0;line-height:1.3}
+  .tg-row .mid .lb{font-weight:700;color:var(--text)}
+  .tg-row .mid .sb{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:3px}
+
+  /* Theme picker */
+  .theme-row{display:flex;gap:8px;margin-top:6px}
+  .theme-pick{flex:1;border:.5px solid var(--border2);border-radius:9px;padding:11px 10px;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);background:var(--surface);cursor:pointer}
+  .theme-pick.active{border-color:var(--text);box-shadow:0 0 0 2px var(--bg2)}
+  .theme-pick .sw{width:44px;height:28px;border-radius:6px;border:.5px solid var(--border2);position:relative;overflow:hidden}
+  .theme-pick.light .sw{background:#f4f4f2}
+  .theme-pick.light .sw::after{content:'';position:absolute;top:6px;left:6px;right:6px;height:3px;background:#0e0e0d;border-radius:1px}
+  .theme-pick.light .sw::before{content:'';position:absolute;top:13px;left:6px;width:18px;height:3px;background:rgba(0,0,0,.3);border-radius:1px}
+  .theme-pick.dark .sw{background:#1a1a18}
+  .theme-pick.dark .sw::after{content:'';position:absolute;top:6px;left:6px;right:6px;height:3px;background:#fff;border-radius:1px}
+  .theme-pick.dark .sw::before{content:'';position:absolute;top:13px;left:6px;width:18px;height:3px;background:rgba(255,255,255,.3);border-radius:1px}
+  .theme-pick.auto .sw{background:linear-gradient(90deg,#f4f4f2 50%,#1a1a18 50%)}
+
+  /* Connected accounts */
+  .conn-row{display:flex;align-items:center;gap:11px;padding:11px 14px;border-bottom:.5px solid var(--border);font-size:13px}
+  .conn-row:last-child{border-bottom:none}
+  .conn-row .ic{width:32px;height:32px;border-radius:9px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
+  .conn-row .mid{flex:1;min-width:0}
+  .conn-row .mid .nm{font-size:13px;font-weight:700}
+  .conn-row .mid .em{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px}
+  .conn-row .ac{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:6px 11px;border-radius:7px;background:var(--bg2);color:var(--text2);border:.5px solid var(--border2)}
+  .conn-row .ac.live{background:var(--green-bg);color:var(--green);border-color:transparent}
+
+  /* ─────────── SUBSCRIPTION ─────────── */
+  .sub-hero{background:#0e0e0d;color:#f0eee9;border-radius:14px;padding:18px 16px;margin-bottom:14px;position:relative;overflow:hidden}
+  .sub-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(254,188,46,.16) 0%,transparent 55%);pointer-events:none}
+  .sub-hero .lbl{font-size:9px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:8px;position:relative}
+  .sub-hero .pl{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1;margin-bottom:6px;position:relative}
+  .sub-hero .pr{font-size:14px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:14px;font-variant-numeric:tabular-nums;position:relative}
+  .sub-hero .pr b{color:#fff;font-weight:800;font-size:18px;margin-right:4px}
+  .sub-hero .row{display:flex;gap:7px;position:relative}
+  .sub-hero .row .btn{flex:1;font-size:10px}
+  .sub-hero .row .btn-p{background:#f0eee9;color:#0e0e0d}
+  .sub-hero .row .btn-g{background:rgba(255,255,255,.08);color:#f0eee9;border:.5px solid rgba(255,255,255,.18)}
+  .sub-hero .meta-row{display:flex;align-items:center;gap:11px;margin-top:13px;padding-top:13px;border-top:.5px solid rgba(255,255,255,.1);font-size:10px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.55);flex-wrap:wrap;position:relative}
+  .sub-hero .meta-row span b{color:#fff;font-weight:700}
+
+  .usage-row{padding:13px 14px;border-bottom:.5px solid var(--border)}
+  .usage-row:last-child{border-bottom:none}
+  .usage-row .lbl{display:flex;justify-content:space-between;align-items:baseline;font-size:11px;font-weight:700;color:var(--text);margin-bottom:6px}
+  .usage-row .lbl .v{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);font-weight:600}
+  .usage-row .lbl .v b{color:var(--text);font-weight:800}
+  .usage-row .bar{height:6px;background:var(--bg2);border-radius:100px;overflow:hidden}
+  .usage-row .bar i{display:block;height:100%;background:var(--accent);border-radius:100px}
+  .usage-row .bar i.am{background:var(--amber)}
+  .usage-row .bar i.gr{background:var(--green)}
+
+  .plan-card{background:var(--surface);border:.5px solid var(--border2);border-radius:12px;padding:14px 15px;display:flex;flex-direction:column;gap:9px;position:relative}
+  .plan-card.current{border-color:var(--text);box-shadow:0 0 0 2px var(--bg2)}
+  .plan-card .top{display:flex;align-items:flex-start;justify-content:space-between;gap:9px}
+  .plan-card .tier{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--text3)}
+  .plan-card .pr{font-size:22px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+  .plan-card .pr sup{font-size:13px;vertical-align:super}
+  .plan-card .pr .per{font-size:11px;color:var(--text3);font-weight:600;margin-left:2px}
+  .plan-card .ds{font-size:11px;color:var(--text2);line-height:1.4}
+  .plan-card .ft-list{display:flex;flex-direction:column;gap:5px;font-size:11px;color:var(--text2)}
+  .plan-card .ft-list li{display:flex;align-items:flex-start;gap:7px;list-style:none}
+  .plan-card .ft-list li::before{content:'✓';color:var(--green);font-weight:800;font-size:11px;flex-shrink:0}
+  .plan-card .cb{align-self:stretch;padding:10px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:8px;background:var(--bg2);color:var(--text2);border:.5px solid var(--border2);text-align:center}
+  .plan-card.current .cb{background:var(--green-bg);color:var(--green);border-color:transparent}
+  .plan-card .now-pill{position:absolute;top:-7px;right:14px;background:var(--green);color:#fff;font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:100px}
+
+  .bill-his-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:.5px solid var(--border)}
+  .bill-his-row:last-child{border-bottom:none}
+  .bill-his-row .ic{width:28px;height:28px;border-radius:7px;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+  .bill-his-row .mid{flex:1;min-width:0}
+  .bill-his-row .nm{font-size:12px;font-weight:700;color:var(--text)}
+  .bill-his-row .sub{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px}
+  .bill-his-row .amt{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text)}
+
+  /* ─────────── HELP & SUPPORT ─────────── */
+  .help-quad{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+  .help-tile{background:var(--surface);border:.5px solid var(--border2);border-radius:11px;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;min-height:96px}
+  .help-tile .ic{width:32px;height:32px;border-radius:8px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text2)}
+  .help-tile .ti{font-size:12px;font-weight:800;letter-spacing:-.01em;line-height:1.2}
+  .help-tile .ds{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;line-height:1.45;margin-top:auto}
+
+  .faq-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);overflow:hidden;margin-bottom:14px}
+  .faq-row{padding:13px 14px;border-bottom:.5px solid var(--border);display:flex;flex-direction:column;gap:5px;cursor:pointer}
+  .faq-row:last-child{border-bottom:none}
+  .faq-row .q{font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:8px;line-height:1.3}
+  .faq-row .q .ch{font-size:13px;color:var(--text3);transform:rotate(0);transition:transform .15s}
+  .faq-row.open .q .ch{transform:rotate(180deg)}
+  .faq-row .a{font-size:12px;color:var(--text2);line-height:1.55;display:none;margin-top:6px}
+  .faq-row.open .a{display:block}
+
+  .stat-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:.5px solid var(--border);font-size:12px}
+  .stat-row:last-child{border-bottom:none}
+  .stat-row .pip{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulseDot 1.8s infinite}
+  .stat-row .pip.am{background:var(--amber);animation:none}
+  .stat-row .pip.rd{background:var(--red);animation:none}
+  .stat-row .nm{flex:1;font-weight:700;color:var(--text)}
+  .stat-row .vl{font-size:10px;font-family:'DM Mono',monospace;color:var(--text2)}
+
+  /* ─────────── SYNC & BACKUP ─────────── */
+  .sync-hero{background:var(--surface);border:.5px solid var(--border2);border-radius:14px;padding:18px 16px;margin-bottom:14px;text-align:center;position:relative}
+  .sync-hero .ring{width:78px;height:78px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:30px;color:var(--green);position:relative}
+  .sync-hero .ring::after{content:'';position:absolute;inset:-6px;border:1.5px solid var(--green);border-radius:50%;opacity:.3;animation:pulseDot 2s infinite}
+  .sync-hero .ti{font-size:18px;font-weight:800;letter-spacing:-.015em}
+  .sync-hero .sb{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:5px;letter-spacing:.04em}
+  .sync-hero .row{display:flex;gap:8px;margin-top:14px}
+  .sync-hero .row .btn{flex:1}
+
+  .device-row{display:flex;align-items:center;gap:11px;padding:12px 14px;border-bottom:.5px solid var(--border)}
+  .device-row:last-child{border-bottom:none}
+  .device-row .ic{width:34px;height:34px;border-radius:9px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:var(--text2)}
+  .device-row .ic.now{background:var(--accent);color:var(--accent-fg)}
+  .device-row .mid{flex:1;min-width:0}
+  .device-row .nm{font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px}
+  .device-row .nm .me{font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:var(--accent);color:var(--accent-fg);padding:2px 6px;border-radius:100px}
+  .device-row .sub{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px}
+  .device-row .ac{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);flex-shrink:0}
+  .device-row .ac.live{color:var(--green)}
+  .device-row .ac.live::before{content:'●';margin-right:4px}
+
+  .backup-row{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:.5px solid var(--border);font-size:12px}
+  .backup-row:last-child{border-bottom:none}
+  .backup-row .ic{width:26px;height:26px;border-radius:7px;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px}
+  .backup-row .mid{flex:1;min-width:0;line-height:1.3}
+  .backup-row .nm{font-size:12px;font-weight:700;color:var(--text)}
+  .backup-row .sub{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px}
+  .backup-row .sz{font-size:10px;font-family:'DM Mono',monospace;color:var(--text2);text-align:right;flex-shrink:0}
+  .backup-row .rb{font-size:9px;font-weight:700;letter-spacing:.06em;color:var(--text2);padding:5px 9px;border:.5px solid var(--border2);background:var(--bg2);border-radius:7px;flex-shrink:0}
+
+  .export-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .export-btn{background:var(--surface);border:.5px solid var(--border2);border-radius:9px;padding:13px 11px;display:flex;align-items:center;gap:10px;cursor:pointer}
+  .export-btn .ic{width:30px;height:30px;border-radius:7px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--text2);flex-shrink:0}
+  .export-btn .mid{flex:1;min-width:0;text-align:left}
+  .export-btn .nm{font-size:12px;font-weight:700;color:var(--text);line-height:1.2}
+  .export-btn .sb{font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px}
+
+  /* ─────────── UPDATES / CHANGELOG ─────────── */
+  .ver-hero{background:#0e0e0d;color:#f0eee9;border-radius:14px;padding:18px 16px;margin-bottom:14px;position:relative;overflow:hidden;display:flex;align-items:center;gap:14px}
+  .ver-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 100%,rgba(82,196,151,.18) 0%,transparent 60%);pointer-events:none}
+  .ver-hero .vbox{width:54px;height:54px;border-radius:11px;background:rgba(255,255,255,.08);border:.5px solid rgba(255,255,255,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+  .ver-hero .vbox .lb{font-size:7px;font-weight:800;letter-spacing:.14em;color:rgba(255,255,255,.55)}
+  .ver-hero .vbox .num{font-size:18px;font-weight:800;font-family:'DM Mono',monospace;color:#fff;line-height:1}
+  .ver-hero .mid{flex:1;min-width:0;position:relative}
+  .ver-hero .ti{font-size:14px;font-weight:800;letter-spacing:-.01em;display:flex;align-items:center;gap:7px}
+  .ver-hero .ti .ok{font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;background:#52c497;color:#0e0e0d;padding:2px 7px;border-radius:100px}
+  .ver-hero .sb{font-size:11px;color:rgba(255,255,255,.65);margin-top:5px;font-family:'DM Mono',monospace}
+
+  .cl-entry-card{background:var(--surface);border:.5px solid var(--border2);border-radius:var(--r);padding:14px 15px;margin-bottom:9px}
+  .cl-entry-card .meta{display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap}
+  .cl-entry-card .date{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace}
+  .cl-entry-card .ver{font-size:9px;font-family:'DM Mono',monospace;color:var(--text2);font-weight:700;padding:2px 7px;background:var(--bg2);border-radius:100px}
+  .cl-entry-card .tg{font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px}
+  .cl-entry-card .tg.new{background:var(--green-bg);color:var(--green)}
+  .cl-entry-card .tg.fix{background:var(--blue-bg);color:var(--blue)}
+  .cl-entry-card .tg.feat{background:var(--violet-bg);color:var(--violet)}
+  .cl-entry-card .ti{font-size:14px;font-weight:800;letter-spacing:-.01em;line-height:1.25;margin-bottom:5px}
+  .cl-entry-card .bd{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:9px}
+  .cl-entry-card .tags{display:flex;flex-wrap:wrap;gap:5px}
+  .cl-entry-card .pill{font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:var(--bg2);color:var(--text2)}
+
+  /* Add Biz sheet form */
+  .ab-form{padding:0 18px 18px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
+  .ab-pip-row{display:flex;gap:8px;flex-wrap:wrap}
+  .ab-pip{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800}
+  .ab-pip.active{border-color:var(--text);transform:scale(1.08)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ── TOPBAR (Variant D: command bar + breadcrumb) ── -->
+  <div class="topbar" id="topbar">
+    <div class="top-r1">
+      <button class="top-menu" onclick="openDrawer()" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <button class="top-search" onclick="openSheet('axisSheet')" aria-label="Ask AXIS or jump to anything">
+        <span class="s-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg></span>
+        <span class="s-ph">Ask <b>AXIS</b> or jump to…</span>
+        <span class="s-kbd">⌘ K</span>
+      </button>
+      <div class="top-avatar" onclick="goPage('more')" aria-label="Profile">CR<div class="ndot"></div></div>
+    </div>
+    <div class="top-r2">
+      <div class="top-crumb" id="topCrumb" data-secondary="0">
+        <button class="back" onclick="goPage('more')" aria-label="Back">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+        </button>
+        <span class="parent" id="crumbParent" style="display:none"></span>
+        <span class="sep" id="crumbSep" style="display:none">›</span>
+        <span class="now" id="crumbNow">Dashboard</span>
+      </div>
+      <button class="top-biz" onclick="openSheet('bizSheet')">
+        <span class="pip"></span>Stratus Labs<span class="ch">⌄</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── CONTENT ── -->
+  <div class="content" id="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="greet-card">
+        <div class="pt" id="dashGreeting">Good afternoon, cRes.</div>
+        <div class="ps" id="dashDate">Saturday · May 17 · Session 02:14:33</div>
+        <div class="row">
+          <div class="mini"><div class="lb">Revenue YTD</div><div class="vl">$48.2k</div></div>
+          <div class="mini"><div class="lb">Net</div><div class="vl pos">+$14.8k</div></div>
+          <div class="mini"><div class="lb">Missions</div><div class="vl">14</div></div>
+        </div>
+      </div>
+
+      <div class="kpi-strip">
+        <div class="kpi"><div class="cl">Revenue YTD</div><div class="cv">$48,240</div><div class="cs pos">+12.4% vs LY</div></div>
+        <div class="kpi"><div class="cl">Expenses YTD</div><div class="cv">$33,440</div><div class="cs neg">+4.1% vs LY</div></div>
+        <div class="kpi"><div class="cl">Net Profit</div><div class="cv pos">$14,800</div><div class="cs">31% margin</div></div>
+        <div class="kpi"><div class="cl">Active Missions</div><div class="cv">14</div><div class="cs">4 due today</div></div>
+        <div class="kpi"><div class="cl">Hours Logged</div><div class="cv">42.6h</div><div class="cs">12 sessions</div></div>
+      </div>
+
+      <div class="schedule-strip">
+        <div class="sec-hdr"><div class="sec-title">Today's Schedule</div><button class="btn btn-g btn-sm" onclick="goPage('calendar')">Open →</button></div>
+        <div class="sched-row">
+          <div class="sched-pill"><div class="t">09:00 · 30m</div><div class="e">Daily standup</div><div class="b">Stratus</div></div>
+          <div class="sched-pill"><div class="t">11:30 · 1h</div><div class="e">Q3 review</div><div class="b">Atlas</div></div>
+          <div class="sched-pill"><div class="t">14:00 · 45m</div><div class="e">Investor call</div><div class="b">Stratus</div></div>
+          <div class="sched-pill"><div class="t">16:30 · 30m</div><div class="e">Pricing sync</div><div class="b">Atlas</div></div>
+        </div>
+      </div>
+
+      <div class="dash-cards">
+        <!-- AXIS briefing card -->
+        <div class="ai-panel">
+          <div class="ai-hdr">
+            <div class="ai-badge"><div class="ai-dot"></div>AXIS · BRIEFING</div>
+            <button class="btn btn-g btn-sm" onclick="openSheet('axisSheet')">Open ↗</button>
+          </div>
+          <div class="ai-chat-messages">
+            <div class="ai-msg ai">
+              <b>Standing by, Operator.</b><br><br>
+              Three priorities for today:<br>
+              <b>(1)</b> Stratus invoice $4.2k <b>11 days past due</b>. Send reminder.<br>
+              <b>(2)</b> Q3 review at 14:00 — agenda not finalized.<br>
+              <b>(3)</b> Margin drag at Atlas: COGS up 8% MoM. Worth a look.
+            </div>
+          </div>
+          <div class="ai-chat-input-row">
+            <input class="ai-chat-input" placeholder="Ask AXIS anything..." onfocus="openSheet('axisSheet')">
+            <button class="ai-chat-send">↑</button>
+          </div>
+        </div>
+
+        <!-- Goals -->
+        <div class="bp">
+          <div class="bph">
+            <div class="bpl">◈ MONTHLY GOALS</div>
+            <button class="btn btn-g btn-sm" onclick="goPage('goals')">Open →</button>
+          </div>
+          <div class="bpb">
+            <div class="goal-row"><div class="nm">Ship pricing page v2</div><div class="bar"><i style="width:80%"></i></div><div class="pct">80%</div></div>
+            <div class="goal-row"><div class="nm">Hit $50k MRR</div><div class="bar"><i style="width:64%"></i></div><div class="pct">64%</div></div>
+            <div class="goal-row"><div class="nm">Onboard 3 new clients</div><div class="bar"><i style="width:33%;background:var(--amber)"></i></div><div class="pct">33%</div></div>
+          </div>
+          <div class="prog-track"><div class="prog-fill" style="width:59%"></div></div>
+        </div>
+
+        <!-- P&L Chart -->
+        <div class="card">
+          <div class="sec-hdr">
+            <div class="sec-title">Revenue vs Expenses</div>
+            <select style="font-size:10px;padding:5px 8px;background:var(--bg2);border:.5px solid var(--border2);border-radius:6px;font-family:inherit;width:auto"><option>All Biz</option></select>
+          </div>
+          <div class="bar-wrap" id="dashChart"></div>
+          <div class="bar-legend">
+            <span><span class="sw" style="background:var(--green)"></span>Revenue</span>
+            <span><span class="sw" style="background:var(--red);opacity:.55"></span>Expenses</span>
+            <span style="margin-left:auto;font-family:'DM Mono',monospace">Last 12 mo</span>
+          </div>
+        </div>
+
+        <!-- Focus Timer mini -->
+        <div class="card timer-card">
+          <div class="cl">Focus Timer</div>
+          <div class="big" id="dashTimer">00:00:00</div>
+          <div class="stat-txt">Session paused</div>
+          <div class="ctrls">
+            <button class="btn btn-p" onclick="toggleTimer()">Start</button>
+            <button class="btn btn-g" onclick="resetTimer()">Reset</button>
+          </div>
+        </div>
+
+        <!-- Active missions -->
+        <div class="card">
+          <div class="sec-hdr"><div class="sec-title">Active Missions</div><button class="btn btn-g btn-sm" onclick="goPage('missions')">All →</button></div>
+          <div class="mission-row"><div class="ck"></div><div class="nm">Ship onboarding copy</div><div class="biz">Stratus</div><div class="due">Today</div></div>
+          <div class="mission-row"><div class="ck"></div><div class="nm">Review Q3 P&amp;L deck</div><div class="biz">Atlas</div><div class="due late">2d late</div></div>
+          <div class="mission-row"><div class="ck"></div><div class="nm">Call w/ Stratus investors</div><div class="biz">Stratus</div><div class="due">14:00</div></div>
+          <div class="mission-row done"><div class="ck">✓</div><div class="nm">Send pricing draft</div><div class="biz">Atlas</div><div class="due">9:14</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MISSION BOARD ══ -->
+    <div class="page" id="page-missions">
+      <div class="ph">
+        <div class="ps"><b>14 missions</b> across 3 ventures · 4 due today</div>
+        <div class="pa">
+          <button class="iconbtn" aria-label="Filter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+          </button>
+          <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="New Mission">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="km-tabs">
+        <button class="km-tab active" onclick="setMissionTab('planned',this)">Planned <span class="count">5</span></button>
+        <button class="km-tab" onclick="setMissionTab('progress',this)">In Progress <span class="count">4</span></button>
+        <button class="km-tab" onclick="setMissionTab('done',this)">Done <span class="count">5</span></button>
+      </div>
+
+      <div class="km-list" id="missionList">
+        <div class="task-card">
+          <div class="meta"><span class="pri high">High</span><span class="biz">Stratus Labs</span></div>
+          <div class="ttl">Ship pricing page v2 to production</div>
+          <div class="ds">Includes new tier copy, annual toggle, and SMB plan card. Already in staging.</div>
+          <div class="ft">
+            <span>Due May 20</span>
+            <span class="late">· 2d late</span>
+            <span class="avatar">CR</span>
+          </div>
+        </div>
+        <div class="task-card">
+          <div class="meta"><span class="pri med">Med</span><span class="biz">Atlas</span></div>
+          <div class="ttl">Q3 OKRs first draft</div>
+          <div class="ds">Lock 3 company-level objectives + 2 KRs each. Review with team Wed.</div>
+          <div class="ft"><span>Due May 28</span><span class="avatar">CR</span></div>
+        </div>
+        <div class="task-card">
+          <div class="meta"><span class="pri med">Med</span><span class="biz">Stratus Labs</span></div>
+          <div class="ttl">Investor follow-up emails</div>
+          <div class="ds">12 outstanding. Group by status: hot/warm/cold. Personalize hot ones.</div>
+          <div class="ft"><span>Due May 22</span><span class="avatar">CR</span></div>
+        </div>
+        <div class="task-card">
+          <div class="meta"><span class="pri low">Low</span><span class="biz">CRES Ventures</span></div>
+          <div class="ttl">Annual report — collect financials</div>
+          <div class="ds">Need P&amp;L summaries from all 3 ventures. Export from War Room CSV.</div>
+          <div class="ft"><span>Due Jun 5</span><span class="avatar">CR</span></div>
+        </div>
+        <div class="task-card">
+          <div class="meta"><span class="pri low">Low</span><span class="biz">Stratus Labs</span></div>
+          <div class="ttl">Refresh competitor intel doc</div>
+          <div class="ds">Pricing changed for Notion and Linear last week. Update spreadsheet.</div>
+          <div class="ft"><span>No due date</span><span class="avatar">CR</span></div>
+        </div>
+        <button class="add-task">+ Add Mission</button>
+      </div>
+    </div>
+
+    <!-- ══ P&L TRACKER ══ -->
+    <div class="page" id="page-tracker">
+      <div class="ph">
+        <div class="ps">Weekly · Monthly · Annual · <b>+18% wk/wk</b></div>
+        <div class="pa">
+          <button class="iconbtn" aria-label="Export">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          </button>
+          <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="New Entry">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="seg">
+        <button class="active">This Week</button>
+        <button>This Month</button>
+        <button>This Year</button>
+        <button>All Time</button>
+      </div>
+
+      <div class="pnl-grid">
+        <div class="card card-sm"><div class="cl">Revenue</div><div class="cv pos">$4,820</div><div class="cs">+18% wk/wk</div></div>
+        <div class="card card-sm"><div class="cl">Expenses</div><div class="cv neg">$2,140</div><div class="cs">-4% wk/wk</div></div>
+        <div class="card card-sm"><div class="cl">Net</div><div class="cv pos">$2,680</div><div class="cs">56% margin</div></div>
+        <div class="card card-sm"><div class="cl">Entries</div><div class="cv">23</div><div class="cs">12 rev · 11 exp</div></div>
+      </div>
+
+      <div class="card mb14" style="padding:14px">
+        <div class="sec-hdr"><div class="sec-title">Last 7 Days</div></div>
+        <div class="bar-wrap" id="trkChart"></div>
+        <div class="bar-legend"><span><span class="sw" style="background:var(--green)"></span>Revenue</span><span><span class="sw" style="background:var(--red);opacity:.55"></span>Expenses</span></div>
+      </div>
+
+      <div class="txn-list">
+        <div class="txn-hd"><div class="sec-title">Transactions</div><span class="ps">May 11 — May 17</span></div>
+        <div class="txn-row"><div class="ic rev">↑</div><div class="mid"><div class="nm">Stratus retainer · May</div><div class="sub">Stratus · Recurring</div></div><div class="amt rev">+$2,400</div></div>
+        <div class="txn-row"><div class="ic exp">↓</div><div class="mid"><div class="nm">Figma org plan</div><div class="sub">Atlas · Tools</div></div><div class="amt exp">−$45</div></div>
+        <div class="txn-row"><div class="ic rev">↑</div><div class="mid"><div class="nm">Consulting · Atlas</div><div class="sub">Atlas · One-off</div></div><div class="amt rev">+$1,800</div></div>
+        <div class="txn-row"><div class="ic exp">↓</div><div class="mid"><div class="nm">Contractor — design</div><div class="sub">Stratus · Payroll</div></div><div class="amt exp">−$1,650</div></div>
+        <div class="txn-row"><div class="ic rev">↑</div><div class="mid"><div class="nm">Course payment</div><div class="sub">CRES · One-off</div></div><div class="amt rev">+$620</div></div>
+        <div class="txn-row"><div class="ic exp">↓</div><div class="mid"><div class="nm">AWS · monthly</div><div class="sub">Stratus · Infra</div></div><div class="amt exp">−$214</div></div>
+        <div class="txn-row"><div class="ic exp">↓</div><div class="mid"><div class="nm">Office space · May</div><div class="sub">CRES · Recurring</div></div><div class="amt exp">−$231</div></div>
+      </div>
+    </div>
+
+    <!-- ══ CALENDAR ══ -->
+    <div class="page" id="page-calendar">
+      <div class="ph">
+        <div class="ps">May 2026 · <b>4 events today</b></div>
+        <div class="pa">
+          <button class="iconbtn" aria-label="Filter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+          </button>
+          <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="New Event">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="cal-wrap">
+        <div class="cal-hdr">
+          <button class="cal-nav-btn">‹</button>
+          <div class="cal-month">May 2026</div>
+          <button class="cal-nav-btn">›</button>
+          <button class="cal-today">Today</button>
+        </div>
+        <div class="cal-week-hdr">
+          <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+
+      <div class="card">
+        <div class="sec-hdr">
+          <div class="sec-title">Saturday · May 17</div>
+          <button class="btn btn-p btn-sm">+ Add</button>
+        </div>
+        <div class="day-events">
+          <div class="evt-card">
+            <div class="evt-time"><b>09:00</b><span class="dur">30m</span></div>
+            <div class="evt-body"><div class="nm">Daily standup</div><div class="sub"><span style="color:var(--blue)">●</span> Stratus · Recurring</div></div>
+          </div>
+          <div class="evt-card">
+            <div class="evt-time"><b>11:30</b><span class="dur">1h</span></div>
+            <div class="evt-body b2"><div class="nm">Q3 P&amp;L review</div><div class="sub"><span style="color:var(--violet)">●</span> Atlas · Strategy</div></div>
+          </div>
+          <div class="evt-card">
+            <div class="evt-time"><b>14:00</b><span class="dur">45m</span></div>
+            <div class="evt-body b3"><div class="nm">Investor follow-up · Stratus</div><div class="sub"><span style="color:var(--red)">●</span> Stratus · Revenue · Zoom</div></div>
+          </div>
+          <div class="evt-card">
+            <div class="evt-time"><b>16:30</b><span class="dur">30m</span></div>
+            <div class="evt-body b4"><div class="nm">Pricing sync w/ design</div><div class="sub"><span style="color:var(--green)">●</span> Atlas · Planning</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ MORE ══ (Profile hub) -->
+    <div class="page" id="page-more">
+      <div class="ph"><div class="ps">Profile · Every module · Settings · Account</div></div>
+
+      <!-- Profile hero -->
+      <div class="profile-hero">
+        <div class="top">
+          <div class="av-wrap">
+            <div class="av">CR<span class="live"></span></div>
+          </div>
+          <div class="pid">
+            <div class="nm">cRes Operator</div>
+            <div class="ro">FOUNDER · CRES VENTURES · EST 2024</div>
+          </div>
+          <button class="ed" onclick="goPage('profile')" aria-label="Edit profile">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5l4 4L7 21H3v-4z"/></svg>
+          </button>
+        </div>
+        <div class="stats">
+          <div class="st"><div class="lb">Session</div><div class="vl mono">02:14:33</div></div>
+          <div class="st"><div class="lb">Week</div><div class="vl">42.6h</div></div>
+          <div class="st"><div class="lb">Net YTD</div><div class="vl pos">+$14.8k</div></div>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="qa-row">
+        <button class="qa" onclick="openSheet('axisSheet')">
+          <div class="ic">◐</div>
+          <div class="lb">AXIS</div>
+        </button>
+        <button class="qa" onclick="openSheet('bizSheet')">
+          <div class="ic">▦</div>
+          <div class="lb">Switch</div>
+        </button>
+        <button class="qa" onclick="goPage('profile')">
+          <div class="ic">⚙</div>
+          <div class="lb">Settings</div>
+        </button>
+        <button class="qa danger" onclick="alert('Signed out')">
+          <div class="ic">↗</div>
+          <div class="lb">Sign out</div>
+        </button>
+      </div>
+
+      <!-- Activity -->
+      <div class="menu-section" style="margin-top:6px">Recent activity</div>
+      <div class="activity-card">
+        <div class="act-row">
+          <div class="ic gr">✓</div>
+          <div class="tx"><b>Send pricing draft</b> marked done · Atlas</div>
+          <div class="ts">9m ago</div>
+        </div>
+        <div class="act-row">
+          <div class="ic bl">↑</div>
+          <div class="tx">Invoice <b>INV-0143</b> sent to Beacon Co · $1,200</div>
+          <div class="ts">1h ago</div>
+        </div>
+        <div class="act-row">
+          <div class="ic am">◐</div>
+          <div class="tx">AXIS flagged margin drag · Atlas COGS +8%</div>
+          <div class="ts">3h ago</div>
+        </div>
+        <div class="act-row">
+          <div class="ic rd">!</div>
+          <div class="tx"><b>AWS bill</b> $214 is 11 days overdue · Stratus</div>
+          <div class="ts">today</div>
+        </div>
+      </div>
+
+      <div class="menu-section">Modules</div>
+      <div class="menu-list">
+        <div class="menu-row" onclick="goPage('timer')"><div class="ic">◷</div>Focus Timer<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('intel')"><div class="ic">◉</div>Intel Notes<div class="bdg">47</div><div class="ar" style="margin-left:8px">›</div></div>
+        <div class="menu-row" onclick="goPage('bills')"><div class="ic">◫</div>Bills &amp; Expenses<div class="bdg">3</div><div class="ar" style="margin-left:8px">›</div></div>
+        <div class="menu-row" onclick="goPage('invoices')"><div class="ic">△</div>Invoices<div class="bdg">2</div><div class="ar" style="margin-left:8px">›</div></div>
+        <div class="menu-row" onclick="goPage('goals')"><div class="ic">◎</div>Goals<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('whiteboard')"><div class="ic">⤢</div>Whiteboard<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('videocalls')"><div class="ic">▣</div>Video Calls<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('payroll')"><div class="ic">◐</div>Payroll<div class="ar">›</div></div>
+      </div>
+
+      <div class="menu-section">Workspace</div>
+      <div class="menu-list">
+        <div class="menu-row" onclick="openSheet('bizSheet')"><div class="ic">▦</div>Switch business<div class="ar">›</div></div>
+        <div class="menu-row" onclick="openSheet('addBizSheet')"><div class="ic">+</div>Add business<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('sync')"><div class="ic">↻</div>Sync &amp; backup<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('updates')"><div class="ic">⟳</div>Updates<div class="bdg">v5.2</div><div class="ar" style="margin-left:8px">›</div></div>
+      </div>
+
+      <div class="menu-section">Account</div>
+      <div class="menu-list">
+        <div class="menu-row" onclick="goPage('profile')"><div class="ic">◐</div>Profile &amp; Settings<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('subscription')"><div class="ic">$</div>Subscription<div class="ar">›</div></div>
+        <div class="menu-row" onclick="goPage('help')"><div class="ic">?</div>Help &amp; Support<div class="ar">›</div></div>
+        <div class="menu-row" style="color:var(--red)" onclick="alert('Signed out')"><div class="ic" style="color:var(--red)">↗</div>Sign out</div>
+      </div>
+
+      <p style="text-align:center;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);margin:14px 0 4px">v5.2 · Sync OK · <span style="color:var(--green)">● ONLINE</span></p>
+    </div>
+
+    <!-- ══ PROFILE & SETTINGS ══ -->
+    <div class="page" id="page-profile">
+      <div class="ph">
+        <div class="ps">Account · preferences · connected services</div>
+        <button class="iconbtn" aria-label="Save">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
+        </button>
+      </div>
+
+      <div class="form-card">
+        <div class="ft"><span class="ix">◐</span>Identity</div>
+        <div class="avatar-pick">
+          <div class="av-big">CR</div>
+          <div class="meta">
+            <div class="ti">Profile photo</div>
+            <div class="sb">PNG or JPG · Max 4MB</div>
+            <div class="ac">
+              <button class="btn btn-g btn-sm">Upload</button>
+              <button class="btn btn-g btn-sm">Remove</button>
+            </div>
+          </div>
+        </div>
+        <div class="form-row"><label>Full name</label><input type="text" value="cRes Operator"></div>
+        <div class="form-row"><label>Email</label><input type="email" value="operator@cresventures.io"><div class="hint">Verified · 2FA enabled</div></div>
+        <div class="form-grid2">
+          <div class="form-row"><label>Role / Title</label><input type="text" value="Founder · CRES Ventures"></div>
+          <div class="form-row"><label>Timezone</label><select><option>America / New York (EST)</option><option>America / Los Angeles</option><option>Europe / London</option></select></div>
+        </div>
+        <div class="form-grid2">
+          <div class="form-row"><label>Working hours start</label><input type="time" value="08:00"></div>
+          <div class="form-row"><label>Working hours end</label><input type="time" value="18:00"></div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="ft"><span class="ix">◈</span>Preferences</div>
+        <div class="form-row"><label>Appearance</label></div>
+        <div class="theme-row">
+          <button class="theme-pick light active"><div class="sw"></div>Light</button>
+          <button class="theme-pick dark"><div class="sw"></div>Dark</button>
+          <button class="theme-pick auto"><div class="sw"></div>Auto</button>
+        </div>
+        <div class="form-grid2" style="margin-top:14px">
+          <div class="form-row"><label>Default business</label><select><option>Stratus Labs</option><option>Atlas</option><option>CRES Ventures</option><option>Last used</option></select></div>
+          <div class="form-row"><label>Currency</label><select><option>USD ($)</option><option>EUR (€)</option><option>GBP (£)</option><option>CAD (C$)</option></select></div>
+        </div>
+        <div class="form-grid2">
+          <div class="form-row"><label>Date format</label><select><option>May 17, 2026</option><option>2026-05-17</option><option>17/05/2026</option></select></div>
+          <div class="form-row"><label>Week starts on</label><select><option>Sunday</option><option>Monday</option></select></div>
+        </div>
+      </div>
+
+      <div class="form-card" style="padding:0">
+        <div class="ft" style="padding:14px 16px 0">
+          <span class="ix">◊</span>Notifications
+        </div>
+        <div style="padding:6px 0 4px">
+          <div class="tg-row">
+            <div class="mid"><div class="lb">AXIS daily briefing</div><div class="sb">Every morning · 08:30 EST</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="tg-row">
+            <div class="mid"><div class="lb">Mission due reminders</div><div class="sb">30 min before due</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="tg-row">
+            <div class="mid"><div class="lb">Overdue bill alerts</div><div class="sb">Immediately</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="tg-row">
+            <div class="mid"><div class="lb">Weekly P&amp;L summary</div><div class="sb">Sunday 18:00</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="tg-row">
+            <div class="mid"><div class="lb">Calendar nudges</div><div class="sb">15 min before each event</div></div>
+            <div class="toggle" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="tg-row">
+            <div class="mid"><div class="lb">Product updates</div><div class="sb">Major releases only</div></div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card" style="padding:0">
+        <div class="ft" style="padding:14px 16px 0"><span class="ix">⤢</span>Connected accounts</div>
+        <div style="padding:5px 0 4px">
+          <div class="conn-row">
+            <div class="ic" style="background:#fff;border:.5px solid var(--border2)">G</div>
+            <div class="mid"><div class="nm">Google</div><div class="em">operator@cresventures.io · Calendar &amp; Gmail</div></div>
+            <button class="ac live">Connected</button>
+          </div>
+          <div class="conn-row">
+            <div class="ic" style="background:#0e0e0d;color:#fff"></div>
+            <div class="mid"><div class="nm">Apple</div><div class="em">Sign in &amp; iCloud sync</div></div>
+            <button class="ac live">Connected</button>
+          </div>
+          <div class="conn-row">
+            <div class="ic" style="background:#4a154b;color:#fff">#</div>
+            <div class="mid"><div class="nm">Slack</div><div class="em">Stratus + Atlas workspaces</div></div>
+            <button class="ac">Connect</button>
+          </div>
+          <div class="conn-row">
+            <div class="ic" style="background:#000;color:#fff">𝕏</div>
+            <div class="mid"><div class="nm">Stripe</div><div class="em">Invoice payouts</div></div>
+            <button class="ac live">Connected</button>
+          </div>
+          <div class="conn-row">
+            <div class="ic" style="background:#36c5f0;color:#fff">Z</div>
+            <div class="mid"><div class="nm">Zapier</div><div class="em">Automations &amp; webhooks</div></div>
+            <button class="ac">Connect</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="ft" style="color:var(--red)"><span class="ix" style="background:var(--red-bg);color:var(--red)">!</span>Danger zone</div>
+        <div class="col" style="gap:8px">
+          <button class="btn btn-g" style="justify-content:flex-start">↓ Download my data</button>
+          <button class="btn btn-g" style="justify-content:flex-start">⟲ Reset all preferences</button>
+          <button class="btn btn-g" style="justify-content:flex-start;color:var(--red);border-color:var(--red-bg)">⌫ Delete account</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SUBSCRIPTION ══ -->
+    <div class="page" id="page-subscription">
+      <div class="ph">
+        <div class="ps">Plan · usage · billing history</div>
+      </div>
+
+      <div class="sub-hero">
+        <div class="lbl">Current plan</div>
+        <div class="pl">Personal</div>
+        <div class="pr"><b>$11</b>/month · billed monthly</div>
+        <div class="row">
+          <button class="btn btn-p">Upgrade →</button>
+          <button class="btn btn-g">Manage</button>
+        </div>
+        <div class="meta-row">
+          <span>Renews <b>Jun 6, 2026</b></span>
+          <span>·</span>
+          <span>Card ending <b>•••• 4421</b></span>
+        </div>
+      </div>
+
+      <div class="card" style="padding:0">
+        <div class="sec-hdr" style="padding:11px 14px;margin:0;border-bottom:.5px solid var(--border)">
+          <div class="sec-title">Usage this cycle</div>
+          <span class="ps">Resets in 18d</span>
+        </div>
+        <div class="usage-row">
+          <div class="lbl"><span>Businesses</span><span class="v"><b>3</b> / Unlimited</span></div>
+          <div class="bar"><i style="width:30%"></i></div>
+        </div>
+        <div class="usage-row">
+          <div class="lbl"><span>Team seats</span><span class="v"><b>1</b> / 1</span></div>
+          <div class="bar"><i class="am" style="width:100%"></i></div>
+        </div>
+        <div class="usage-row">
+          <div class="lbl"><span>AXIS queries</span><span class="v"><b>147</b> / Unlimited</span></div>
+          <div class="bar"><i class="gr" style="width:14%"></i></div>
+        </div>
+        <div class="usage-row">
+          <div class="lbl"><span>Cloud storage</span><span class="v"><b>120 MB</b> / 5 GB</span></div>
+          <div class="bar"><i class="gr" style="width:2.4%"></i></div>
+        </div>
+      </div>
+
+      <div class="menu-section">Change plan</div>
+      <div class="col">
+        <div class="plan-card current">
+          <div class="now-pill">Current</div>
+          <div class="top">
+            <div>
+              <div class="tier">Personal</div>
+              <div class="pr"><sup>$</sup>11<span class="per">/mo</span></div>
+            </div>
+            <button class="cb">Your plan</button>
+          </div>
+          <div class="ds">Built for the solo operator. Full War Room, zero noise.</div>
+          <ul class="ft-list">
+            <li>Full War Room dashboard</li>
+            <li>Unlimited businesses</li>
+            <li>AXIS daily briefing</li>
+          </ul>
+        </div>
+        <div class="plan-card">
+          <div class="top">
+            <div>
+              <div class="tier">Small Business · Most popular</div>
+              <div class="pr"><sup>$</sup>14<span class="per">/mo</span></div>
+            </div>
+            <button class="cb" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)">Upgrade</button>
+          </div>
+          <div class="ds">Command your crew. One room, one mission.</div>
+          <ul class="ft-list">
+            <li>Everything in Personal</li>
+            <li>3 team seats included</li>
+            <li>Shared mission board + calendar</li>
+            <li>Business P&amp;L (owner-controlled)</li>
+          </ul>
+        </div>
+        <div class="plan-card">
+          <div class="top">
+            <div>
+              <div class="tier">Enterprise</div>
+              <div class="pr" style="font-size:18px">Custom</div>
+            </div>
+            <button class="cb">Contact</button>
+          </div>
+          <div class="ds">White-label, unlimited seats, direct line to CRES.</div>
+          <ul class="ft-list">
+            <li>Everything in Small Business</li>
+            <li>White-label / custom branding</li>
+            <li>Unlimited team seats</li>
+            <li>Dedicated onboarding</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="menu-section">Billing history</div>
+      <div class="card" style="padding:0">
+        <div class="bill-his-row">
+          <div class="ic">✓</div>
+          <div class="mid"><div class="nm">Personal · Monthly</div><div class="sub">Paid · May 6, 2026 · Card •••• 4421</div></div>
+          <div class="amt">$11.00</div>
+        </div>
+        <div class="bill-his-row">
+          <div class="ic">✓</div>
+          <div class="mid"><div class="nm">Personal · Monthly</div><div class="sub">Paid · Apr 6, 2026</div></div>
+          <div class="amt">$11.00</div>
+        </div>
+        <div class="bill-his-row">
+          <div class="ic">✓</div>
+          <div class="mid"><div class="nm">Personal · Monthly</div><div class="sub">Paid · Mar 6, 2026</div></div>
+          <div class="amt">$11.00</div>
+        </div>
+        <div class="bill-his-row">
+          <div class="ic">✓</div>
+          <div class="mid"><div class="nm">Personal · Monthly</div><div class="sub">Paid · Feb 6, 2026</div></div>
+          <div class="amt">$11.00</div>
+        </div>
+      </div>
+      <p style="text-align:center;font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin:14px 0 4px">Download invoices · Update payment method · Cancel anytime</p>
+    </div>
+
+    <!-- ══ HELP & SUPPORT ══ -->
+    <div class="page" id="page-help">
+      <div class="ph">
+        <div class="ps">Docs · FAQ · contact CRES Ventures</div>
+      </div>
+
+      <div class="note-search">
+        <input type="text" placeholder="Search help articles, e.g. 'add a business'">
+      </div>
+
+      <div class="help-quad">
+        <button class="help-tile" onclick="openSheet('axisSheet')">
+          <div class="ic" style="background:var(--bg);color:var(--text);border:.5px solid var(--border2)">◐</div>
+          <div class="ti">Ask AXIS</div>
+          <div class="ds">Live · 24/7 · in-app answers</div>
+        </button>
+        <button class="help-tile">
+          <div class="ic">📖</div>
+          <div class="ti">Docs &amp; guides</div>
+          <div class="ds">120 articles · v5.2</div>
+        </button>
+        <button class="help-tile" onclick="goPage('updates')">
+          <div class="ic">⟳</div>
+          <div class="ti">Changelog</div>
+          <div class="ds">v5.2 · May 20, 2026</div>
+        </button>
+        <button class="help-tile">
+          <div class="ic">✉</div>
+          <div class="ti">Contact us</div>
+          <div class="ds">support@cresventures.io</div>
+        </button>
+      </div>
+
+      <div class="menu-section">Top questions</div>
+      <div class="faq-card">
+        <div class="faq-row open" onclick="this.classList.toggle('open')">
+          <div class="q">How does AXIS know about my business?<span class="ch">⌄</span></div>
+          <div class="a">AXIS reads only what's inside your War Room — missions, P&amp;L entries, notes, calendar. It never reads outside data unless you explicitly connect a service. All processing runs against your data, scoped to your account.</div>
+        </div>
+        <div class="faq-row" onclick="this.classList.toggle('open')">
+          <div class="q">Is my data private?<span class="ch">⌄</span></div>
+          <div class="a">Yes. War Room is local-first with encrypted cloud sync. Your data is yours; we don't sell it, train on it, or share it. End-to-end encryption is on by default for everything in your vault.</div>
+        </div>
+        <div class="faq-row" onclick="this.classList.toggle('open')">
+          <div class="q">Can I run multiple businesses?<span class="ch">⌄</span></div>
+          <div class="a">Yes — unlimited businesses on every plan. Each business gets isolated P&amp;L, missions, calendar, and bills. Switch instantly from the topbar or with ⌘B.</div>
+        </div>
+        <div class="faq-row" onclick="this.classList.toggle('open')">
+          <div class="q">How do I add a teammate?<span class="ch">⌄</span></div>
+          <div class="a">Team seats are on Small Business and up. From Settings → Workspace → Invite Members, send an invite link. Each seat gets their own private layer and shared access to mission boards you choose.</div>
+        </div>
+        <div class="faq-row" onclick="this.classList.toggle('open')">
+          <div class="q">Can I cancel anytime?<span class="ch">⌄</span></div>
+          <div class="a">Anytime. Your data stays accessible (read-only) for 90 days after cancellation, then can be fully exported as JSON/CSV.</div>
+        </div>
+        <div class="faq-row" onclick="this.classList.toggle('open')">
+          <div class="q">Does War Room work offline?<span class="ch">⌄</span></div>
+          <div class="a">Yes. War Room is local-first — every module works offline. Changes sync when you're back online; no data is lost.</div>
+        </div>
+      </div>
+
+      <div class="menu-section">System status</div>
+      <div class="card" style="padding:0">
+        <div class="stat-row"><span class="pip"></span><span class="nm">War Room core</span><span class="vl">Operational</span></div>
+        <div class="stat-row"><span class="pip"></span><span class="nm">Cloud sync</span><span class="vl">Operational</span></div>
+        <div class="stat-row"><span class="pip"></span><span class="nm">AXIS AI</span><span class="vl">Operational</span></div>
+        <div class="stat-row"><span class="pip am"></span><span class="nm">Video Calls</span><span class="vl">Degraded · investigating</span></div>
+        <div class="stat-row"><span class="pip"></span><span class="nm">Stripe payouts</span><span class="vl">Operational</span></div>
+      </div>
+      <p style="text-align:center;font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin:14px 0 4px">Status page · status.warroom.app · last updated 2m ago</p>
+    </div>
+
+    <!-- ══ SYNC & BACKUP ══ -->
+    <div class="page" id="page-sync">
+      <div class="ph">
+        <div class="ps">Cloud sync · devices · backups · export</div>
+      </div>
+
+      <div class="sync-hero">
+        <div class="ring">☁</div>
+        <div class="ti">All systems synced</div>
+        <div class="sb">Last sync · 2 minutes ago · 4 modules</div>
+        <div class="row">
+          <button class="btn btn-p">↻ Sync now</button>
+          <button class="btn btn-g">⏸ Pause</button>
+        </div>
+      </div>
+
+      <div class="menu-section">Devices</div>
+      <div class="card" style="padding:0">
+        <div class="device-row">
+          <div class="ic now">▢</div>
+          <div class="mid"><div class="nm">iPhone 15 Pro <span class="me">This</span></div><div class="sub">iOS 18.4 · Last sync · just now</div></div>
+          <span class="ac live">ACTIVE</span>
+        </div>
+        <div class="device-row">
+          <div class="ic">◫</div>
+          <div class="mid"><div class="nm">MacBook Pro · M3</div><div class="sub">macOS 15.2 · Last sync · 14m ago</div></div>
+          <span class="ac">Idle</span>
+        </div>
+        <div class="device-row">
+          <div class="ic">▭</div>
+          <div class="mid"><div class="nm">iPad Pro · 12.9</div><div class="sub">iPadOS 18.4 · Last sync · 2d ago</div></div>
+          <span class="ac">Idle</span>
+        </div>
+        <div class="device-row">
+          <div class="ic">▣</div>
+          <div class="mid"><div class="nm">Web · Chrome</div><div class="sub">warroom.app · Last sync · 3d ago</div></div>
+          <span class="ac">Idle</span>
+        </div>
+      </div>
+
+      <div class="menu-section">Backup history</div>
+      <div class="card" style="padding:0">
+        <div class="backup-row">
+          <div class="ic">↻</div>
+          <div class="mid"><div class="nm">Auto · today</div><div class="sub">17 May 2026 · 11:00 EST</div></div>
+          <div class="sz">2.4 MB</div>
+          <button class="rb">Restore</button>
+        </div>
+        <div class="backup-row">
+          <div class="ic">↻</div>
+          <div class="mid"><div class="nm">Auto · yesterday</div><div class="sub">16 May 2026 · 11:00 EST</div></div>
+          <div class="sz">2.4 MB</div>
+          <button class="rb">Restore</button>
+        </div>
+        <div class="backup-row">
+          <div class="ic">★</div>
+          <div class="mid"><div class="nm">Manual · pre-pricing v2</div><div class="sub">14 May 2026 · 09:14 EST</div></div>
+          <div class="sz">2.3 MB</div>
+          <button class="rb">Restore</button>
+        </div>
+        <div class="backup-row">
+          <div class="ic">↻</div>
+          <div class="mid"><div class="nm">Auto · weekly</div><div class="sub">11 May 2026 · 03:00 EST</div></div>
+          <div class="sz">2.2 MB</div>
+          <button class="rb">Restore</button>
+        </div>
+      </div>
+
+      <div class="form-card" style="padding:0">
+        <div class="ft" style="padding:14px 16px 12px"><span class="ix">⚙</span>Sync settings</div>
+        <div class="tg-row">
+          <div class="mid"><div class="lb">Auto-sync</div><div class="sb">Continuous, in background</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="tg-row">
+          <div class="mid"><div class="lb">Sync over cellular</div><div class="sb">Wi-Fi only when off</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="tg-row">
+          <div class="mid"><div class="lb">End-to-end encryption</div><div class="sb">Default · cannot be disabled</div></div>
+          <div class="toggle on" style="opacity:.6;pointer-events:none"></div>
+        </div>
+        <div class="tg-row" style="border-bottom:none">
+          <div class="mid"><div class="lb">Daily backup</div><div class="sb">11:00 EST · keep last 30 days</div></div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+
+      <div class="menu-section">Export your data</div>
+      <div class="export-grid">
+        <button class="export-btn"><div class="ic">CSV</div><div class="mid"><div class="nm">Spreadsheet</div><div class="sb">P&amp;L + bills + invoices</div></div></button>
+        <button class="export-btn"><div class="ic">JSON</div><div class="mid"><div class="nm">Full vault</div><div class="sb">Everything · v5.2</div></div></button>
+        <button class="export-btn"><div class="ic">PDF</div><div class="mid"><div class="nm">Reports</div><div class="sb">Monthly summary</div></div></button>
+        <button class="export-btn"><div class="ic">MD</div><div class="mid"><div class="nm">Notes</div><div class="sb">Intel + Whiteboard</div></div></button>
+      </div>
+    </div>
+
+    <!-- ══ UPDATES / CHANGELOG ══ -->
+    <div class="page" id="page-updates">
+      <div class="ph">
+        <div class="ps">What's new · build notes · roadmap</div>
+        <button class="iconbtn" aria-label="Subscribe">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+        </button>
+      </div>
+
+      <div class="ver-hero">
+        <div class="vbox"><div class="lb">VER</div><div class="num">5.2</div></div>
+        <div class="mid">
+          <div class="ti">You're up to date<span class="ok">Latest</span></div>
+          <div class="sb">v5.2 · shipped May 20, 2026</div>
+        </div>
+      </div>
+
+      <div class="seg">
+        <button class="active">All</button>
+        <button>Features</button>
+        <button>Fixes</button>
+        <button>Roadmap</button>
+      </div>
+
+      <div class="cl-entry-card">
+        <div class="meta"><span class="date">May 20, 2026</span><span class="ver">v5.2</span><span class="tg new">New</span></div>
+        <div class="ti">Onboarding sync &amp; mobile layouts</div>
+        <div class="bd">Fixed a bug where onboarding data wasn't persisting after sign-up. New users now get the full setup wizard, with data synced to the cloud. Email/password accounts now properly connect to cloud sync. Mobile app shell shipped to TestFlight + Play Store internal.</div>
+        <div class="tags"><span class="pill">Onboarding</span><span class="pill">Cloud Sync</span><span class="pill">Mobile</span></div>
+      </div>
+
+      <div class="cl-entry-card">
+        <div class="meta"><span class="date">May 14, 2026</span><span class="ver">v5.1</span><span class="tg fix">Fix</span></div>
+        <div class="ti">Firebase OAuth &amp; PBKDF2 hardening</div>
+        <div class="bd">Replaced the mock Google sign-in with real Firebase OAuth. Upgraded password storage from btoa Base64 to PBKDF2 (150,000 iterations, SHA-256, per-email salt). Closes a quiet auth gap that shipped in 5.0.</div>
+        <div class="tags"><span class="pill">Security</span><span class="pill">Auth</span><span class="pill">OAuth</span></div>
+      </div>
+
+      <div class="cl-entry-card">
+        <div class="meta"><span class="date">May 6, 2026</span><span class="ver">v5.0</span><span class="tg feat">Feature</span></div>
+        <div class="ti">War Room goes live</div>
+        <div class="bd">Full public launch. AXIS AI co-pilot, multi-business P&amp;L, focus timer, payroll, video calls, Supabase cloud sync, team rooms, operator onboarding wizard. Single-file bundle — no install required.</div>
+        <div class="tags"><span class="pill">Launch</span><span class="pill">AXIS AI</span><span class="pill">Multi-business</span></div>
+      </div>
+
+      <div class="cl-entry-card">
+        <div class="meta"><span class="date">Apr 28, 2026</span><span class="ver">v4.9</span><span class="tg new">New</span></div>
+        <div class="ti">Whiteboard + Intel Notes search</div>
+        <div class="bd">Whiteboard now supports color-coded boards. Intel Notes gains full-text search across all entries and tags. AXIS uses both as context for daily briefings.</div>
+        <div class="tags"><span class="pill">Whiteboard</span><span class="pill">Intel</span><span class="pill">Search</span></div>
+      </div>
+
+      <div class="cl-entry-card">
+        <div class="meta"><span class="date">Apr 14, 2026</span><span class="ver">v4.8</span><span class="tg fix">Fix</span></div>
+        <div class="ti">Calendar performance + drag-to-reschedule</div>
+        <div class="bd">Calendar grid is now 3× faster on a 12-month view. Drag-to-reschedule works on touch. Recurring events properly respect timezone changes when traveling.</div>
+        <div class="tags"><span class="pill">Calendar</span><span class="pill">Perf</span></div>
+      </div>
+
+      <div class="cl-entry-card">
+        <div class="meta"><span class="date">Apr 2, 2026</span><span class="ver">v4.7</span><span class="tg feat">Feature</span></div>
+        <div class="ti">Payroll module + headcount tracking</div>
+        <div class="bd">New Payroll module with FT/PT/Contractor tracking, per-business breakdown, and "% of revenue" health score. Open roles tracked alongside active headcount.</div>
+        <div class="tags"><span class="pill">Payroll</span><span class="pill">Module</span></div>
+      </div>
+
+      <p style="text-align:center;font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin:14px 0 4px">Older entries · roadmap · feedback@warroom.app</p>
+    </div>
+
+    <!-- ══ FOCUS TIMER ══ -->
+    <div class="page" id="page-timer">
+      <div class="ph">
+        <div class="ps">Session tracking · <b>02:14:33</b> today</div>
+      </div>
+
+      <div class="big-timer-card">
+        <div class="lbl">Session Timer</div>
+        <div class="timer-big" id="bigTimer">00:00:00</div>
+        <div class="stxt">Awaiting orders, Sir.</div>
+        <div class="ctrls">
+          <button class="btn btn-p" onclick="toggleTimer()" id="bigBtn">Start Session</button>
+          <button class="btn btn-g" onclick="resetTimer()">Reset</button>
+        </div>
+        <div class="sess-form">
+          <div><label>Session Label</label><input type="text" placeholder="What are you working on?"></div>
+          <div><label>Business</label><select><option>Stratus Labs</option><option>Atlas</option><option>CRES Ventures</option><option>No business</option></select></div>
+        </div>
+      </div>
+
+      <div class="alarm-card">
+        <div class="lbl" style="font-size:8px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:12px">EST Alarm Clock</div>
+        <div class="alarm-time">
+          <div class="lab">CURRENT EST</div>
+          <div class="clk" id="alarmEst">01:09 PM</div>
+        </div>
+        <label>Set alarm</label>
+        <div class="row" style="margin-top:4px"><input type="time" style="flex:1"><button class="btn btn-p">Set</button></div>
+        <div class="alarm-list">
+          <div class="alarm-item"><span class="t">14:00</span><span style="color:var(--text2)">Investor call</span><span style="color:var(--green);font-size:9px">ACTIVE</span></div>
+          <div class="alarm-item"><span class="t">16:30</span><span style="color:var(--text2)">Pricing sync</span><span style="color:var(--green);font-size:9px">ACTIVE</span></div>
+        </div>
+      </div>
+
+      <div class="card mb14" style="margin-top:12px">
+        <div class="sec-hdr"><div class="sec-title">Session Log</div><span class="ps">Today · 3 sessions</span></div>
+        <div class="mission-row"><div class="ck">◷</div><div class="nm">Deep work · pricing v2</div><div class="biz">Stratus</div><div class="due">1h 42m</div></div>
+        <div class="mission-row"><div class="ck">◷</div><div class="nm">Investor email batch</div><div class="biz">Stratus</div><div class="due">38m</div></div>
+        <div class="mission-row"><div class="ck">◷</div><div class="nm">Q3 OKR draft</div><div class="biz">Atlas</div><div class="due">22m</div></div>
+      </div>
+    </div>
+
+    <!-- ══ INTEL NOTES ══ -->
+    <div class="page" id="page-intel">
+      <div class="ph">
+        <div class="ps"><b>47 entries</b> · 12 tags · last May 18</div>
+        <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="Add">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <div class="note-search">
+        <input type="text" placeholder="Search intel...">
+      </div>
+
+      <div class="seg" style="margin-bottom:14px">
+        <button class="active">All</button>
+        <button>Stratus</button>
+        <button>Atlas</button>
+        <button>CRES</button>
+      </div>
+
+      <div class="note-grid">
+        <div class="note-card">
+          <div class="nm">Notion pricing changed — May 18</div>
+          <div class="ds">Notion bumped Business tier from $15 to $18/seat. Plus stayed at $10. New "AI" add-on dropped from $10 to $8 per member. Worth watching their next move.</div>
+          <div class="ft"><span class="tag">competitor</span><span class="tag">pricing</span><span style="margin-left:auto">May 18</span></div>
+        </div>
+        <div class="note-card">
+          <div class="nm">Stratus churn hypothesis</div>
+          <div class="ds">Looking at the 6 churned accounts from Q1: 4 cited "too complex." Common pattern — they all bounced before completing onboarding step 3. Investigate.</div>
+          <div class="ft"><span class="tag">stratus</span><span class="tag">churn</span><span class="tag">onboarding</span><span style="margin-left:auto">May 14</span></div>
+        </div>
+        <div class="note-card">
+          <div class="nm">Atlas marketing idea — operator stories</div>
+          <div class="ds">Long-form testimonial series. 5 real operators, 1500w each. Less product, more story. Aim for Substack syndication first then own blog.</div>
+          <div class="ft"><span class="tag">atlas</span><span class="tag">marketing</span><span style="margin-left:auto">May 11</span></div>
+        </div>
+        <div class="note-card">
+          <div class="nm">Q2 lessons — speed wins</div>
+          <div class="ds">Three big wins this quarter all came from shipping fast and iterating in public. Three losses: over-engineering before talking to customers.</div>
+          <div class="ft"><span class="tag">retro</span><span class="tag">learnings</span><span style="margin-left:auto">May 8</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BILLS ══ -->
+    <div class="page" id="page-bills">
+      <div class="ph">
+        <div class="ps"><b>$4,820</b> due this month · 12 bills · 1 overdue</div>
+        <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="Add">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <div class="bills-summary">
+        <div class="card card-sm"><div class="cl">Due This Month</div><div class="cv neg">$4,820</div><div class="cs">12 bills</div></div>
+        <div class="card card-sm"><div class="cl">Paid YTD</div><div class="cv">$23,640</div><div class="cs">58 paid</div></div>
+        <div class="card card-sm"><div class="cl">Overdue</div><div class="cv neg">$214</div><div class="cs">1 bill</div></div>
+        <div class="card card-sm"><div class="cl">Recurring</div><div class="cv">$3,420</div><div class="cs">/ mo</div></div>
+      </div>
+
+      <div class="seg" style="margin-bottom:14px">
+        <button class="active">Upcoming</button>
+        <button>Recurring</button>
+        <button>Paid</button>
+        <button>All</button>
+      </div>
+
+      <div class="col">
+        <div class="bill-card overdue">
+          <div class="top">
+            <div><div class="nm">AWS · monthly</div><div class="meta"><span>Stratus</span><span>·</span><span>Infrastructure</span></div></div>
+            <div style="text-align:right"><div class="amt">$214</div><div class="due">11d overdue</div></div>
+          </div>
+        </div>
+        <div class="bill-card due-soon">
+          <div class="top">
+            <div><div class="nm">Figma · org plan</div><div class="meta"><span>Atlas</span><span>·</span><span>Tools</span></div></div>
+            <div style="text-align:right"><div class="amt">$45</div><div class="due">Due in 2d</div></div>
+          </div>
+        </div>
+        <div class="bill-card due-soon">
+          <div class="top">
+            <div><div class="nm">Office space · May rent</div><div class="meta"><span>CRES</span><span>·</span><span>Real estate</span></div></div>
+            <div style="text-align:right"><div class="amt">$1,650</div><div class="due">Due in 4d</div></div>
+          </div>
+        </div>
+        <div class="bill-card ok">
+          <div class="top">
+            <div><div class="nm">Contractor — design</div><div class="meta"><span>Stratus</span><span>·</span><span>Payroll</span></div></div>
+            <div style="text-align:right"><div class="amt">$1,650</div><div class="due">Due in 12d</div></div>
+          </div>
+        </div>
+        <div class="bill-card ok">
+          <div class="top">
+            <div><div class="nm">Adobe CC · annual</div><div class="meta"><span>Atlas</span><span>·</span><span>Tools</span></div></div>
+            <div style="text-align:right"><div class="amt">$599</div><div class="due">Due in 18d</div></div>
+          </div>
+        </div>
+        <div class="bill-card ok">
+          <div class="top">
+            <div><div class="nm">Linear · team</div><div class="meta"><span>Stratus</span><span>·</span><span>Tools</span></div></div>
+            <div style="text-align:right"><div class="amt">$72</div><div class="due">Due in 22d</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ INVOICES ══ -->
+    <div class="page" id="page-invoices">
+      <div class="ph">
+        <div class="ps"><b>$8,420</b> outstanding · 14 invoices · 2 overdue</div>
+        <div class="pa">
+          <button class="iconbtn" aria-label="Export">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+          </button>
+          <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="New Invoice">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="pnl-grid">
+        <div class="card card-sm"><div class="cl">Outstanding</div><div class="cv">$8,420</div><div class="cs">7 open</div></div>
+        <div class="card card-sm"><div class="cl">Paid YTD</div><div class="cv pos">$42,640</div><div class="cs">58 invoices</div></div>
+        <div class="card card-sm"><div class="cl">Overdue</div><div class="cv neg">$4,200</div><div class="cs">2 invoices</div></div>
+        <div class="card card-sm"><div class="cl">Avg DSO</div><div class="cv">18d</div><div class="cs">-3d vs LM</div></div>
+      </div>
+
+      <div class="seg">
+        <button class="active">Outstanding</button>
+        <button>Paid</button>
+        <button>Drafts</button>
+        <button>All</button>
+      </div>
+
+      <div class="col">
+        <div class="inv-card overdue">
+          <div class="top">
+            <div><div class="cl-name">Stratus retainer · May</div><div class="inv-no">INV-0142 · Stratus Labs</div></div>
+            <div style="text-align:right"><div class="amt">$4,200</div><span class="inv-status overdue">11d overdue</span></div>
+          </div>
+          <div class="ft"><span>Sent May 6</span><span>·</span><span>Due May 13</span><span style="margin-left:auto;color:var(--red)">Reminder sent 2d ago</span></div>
+        </div>
+        <div class="inv-card overdue">
+          <div class="top">
+            <div><div class="cl-name">Quarterly consult · Atlas</div><div class="inv-no">INV-0141 · Atlas Partners</div></div>
+            <div style="text-align:right"><div class="amt">$1,800</div><span class="inv-status overdue">4d overdue</span></div>
+          </div>
+          <div class="ft"><span>Sent May 9</span><span>·</span><span>Due May 16</span><span style="margin-left:auto">No reminder sent</span></div>
+        </div>
+        <div class="inv-card pending">
+          <div class="top">
+            <div><div class="cl-name">Workshop · Q2</div><div class="inv-no">INV-0143 · Beacon Co</div></div>
+            <div style="text-align:right"><div class="amt">$1,200</div><span class="inv-status pending">Due in 5d</span></div>
+          </div>
+          <div class="ft"><span>Sent May 15</span><span>·</span><span>Due May 22</span><span style="margin-left:auto">Net 7</span></div>
+        </div>
+        <div class="inv-card pending">
+          <div class="top">
+            <div><div class="cl-name">Course payment · cohort 3</div><div class="inv-no">INV-0144 · D. Mehra</div></div>
+            <div style="text-align:right"><div class="amt">$620</div><span class="inv-status pending">Due in 12d</span></div>
+          </div>
+          <div class="ft"><span>Sent May 13</span><span>·</span><span>Due May 27</span><span style="margin-left:auto">Net 14</span></div>
+        </div>
+        <div class="inv-card pending">
+          <div class="top">
+            <div><div class="cl-name">Advisory · May retainer</div><div class="inv-no">INV-0145 · Nimbus AI</div></div>
+            <div style="text-align:right"><div class="amt">$600</div><span class="inv-status pending">Due in 18d</span></div>
+          </div>
+          <div class="ft"><span>Sent May 17</span><span>·</span><span>Due Jun 4</span><span style="margin-left:auto">Net 18</span></div>
+        </div>
+        <div class="inv-card draft">
+          <div class="top">
+            <div><div class="cl-name">Brand audit · scoping</div><div class="inv-no">INV-0146 · Northwind</div></div>
+            <div style="text-align:right"><div class="amt">$2,400</div><span class="inv-status draft">Draft</span></div>
+          </div>
+          <div class="ft"><span>Not sent</span><span style="margin-left:auto">Last edit · today 11:08</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ GOALS ══ -->
+    <div class="page" id="page-goals">
+      <div class="ph">
+        <div class="ps"><b>10 goals</b> · 7 on track · 2 at risk · 1 behind</div>
+        <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="New Goal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <div class="goal-hero">
+        <div class="goal-ring">
+          <svg width="78" height="78" viewBox="0 0 78 78">
+            <circle cx="39" cy="39" r="32" fill="none" stroke="var(--bg2)" stroke-width="8"/>
+            <circle cx="39" cy="39" r="32" fill="none" stroke="var(--accent)" stroke-width="8" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="60" transform="rotate(-90 39 39)"/>
+          </svg>
+          <div class="pct">70%</div>
+        </div>
+        <div class="meta">
+          <div class="lbl">May · Composite</div>
+          <div class="ti">7 of 10 on track</div>
+          <div class="breakdown">
+            <span><span class="pip" style="background:var(--green)"></span>7 on track</span>
+            <span><span class="pip" style="background:var(--amber)"></span>2 at risk</span>
+            <span><span class="pip" style="background:var(--red)"></span>1 behind</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="seg">
+        <button class="active">Monthly</button>
+        <button>Quarterly</button>
+        <button>Annual</button>
+      </div>
+
+      <div class="col">
+        <div class="goal-card">
+          <div class="top"><div class="nm">Hit $50k MRR by EOM</div><div class="pc pos">64%</div></div>
+          <div class="bar"><i style="width:64%"></i></div>
+          <div class="ft"><span class="biz">Stratus Labs</span><span>$32k / $50k</span><span style="margin-left:auto">14d left</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="top"><div class="nm">Ship pricing page v2 to production</div><div class="pc pos">80%</div></div>
+          <div class="bar"><i style="width:80%"></i></div>
+          <div class="ft"><span class="biz">Stratus Labs</span><span>4 of 5 steps</span><span style="margin-left:auto">3d left</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="top"><div class="nm">Onboard 3 new Atlas clients</div><div class="pc amb">33%</div></div>
+          <div class="bar"><i class="amb" style="width:33%"></i></div>
+          <div class="ft"><span class="biz">Atlas</span><span>1 of 3 signed</span><span style="margin-left:auto;color:var(--amber)">At risk · 14d left</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="top"><div class="nm">Cut Atlas COGS by 5%</div><div class="pc neg">12%</div></div>
+          <div class="bar"><i class="neg" style="width:12%"></i></div>
+          <div class="ft"><span class="biz">Atlas</span><span>-0.6% so far</span><span style="margin-left:auto;color:var(--red)">Behind · 14d left</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="top"><div class="nm">Publish 4 long-form pieces</div><div class="pc pos">75%</div></div>
+          <div class="bar"><i style="width:75%"></i></div>
+          <div class="ft"><span class="biz">CRES Ventures</span><span>3 of 4 published</span><span style="margin-left:auto">14d left</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="top"><div class="nm">120 deep-work hours</div><div class="pc pos">88%</div></div>
+          <div class="bar"><i style="width:88%"></i></div>
+          <div class="ft"><span class="biz">Personal</span><span>106 / 120h</span><span style="margin-left:auto">14d left</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ WHITEBOARD ══ -->
+    <div class="page" id="page-whiteboard">
+      <div class="ph">
+        <div class="ps"><b>24 notes</b> · 4 boards · last edit today</div>
+        <div class="pa">
+          <button class="iconbtn" aria-label="Filter">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+          </button>
+          <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="New Note">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="wb-board-chips">
+        <button class="wb-chip active">Strategy <span class="count">12</span></button>
+        <button class="wb-chip">Product <span class="count">7</span></button>
+        <button class="wb-chip">Marketing <span class="count">3</span></button>
+        <button class="wb-chip">Personal <span class="count">2</span></button>
+      </div>
+
+      <div class="wb-masonry">
+        <div class="wb-note c1">
+          <div class="ti">Pricing thesis</div>
+          <div class="bd">SMB at $14 / mo is the unlock. Personal at $11 stays the lure. Annual saves 2mo.</div>
+          <div class="ft">◈ Strategy · today</div>
+        </div>
+        <div class="wb-note c2">
+          <div class="ti">Onboarding fix</div>
+          <div class="bd">Step 3 drops 40% of users. Cut the wizard to 2 steps and add a "skip for now."</div>
+          <div class="ft">◷ 2d ago</div>
+        </div>
+        <div class="wb-note c3">
+          <div class="ti">Renegotiate rent</div>
+          <div class="bd">CRES office escalator hit. Floor below leasing at -18%. Worth the call.</div>
+          <div class="ft">◫ 3d ago</div>
+        </div>
+        <div class="wb-note dark">
+          <div class="ti">AXIS next</div>
+          <div class="bd">Briefings should be audio-first. 60s on the commute. TTS + voice intent.</div>
+          <div class="ft">◐ today</div>
+        </div>
+        <div class="wb-note c4">
+          <div class="ti">Operator stories</div>
+          <div class="bd">5 real operators, 1500w each. Less product, more story. Syndicate first.</div>
+          <div class="ft">▣ 4d ago</div>
+        </div>
+        <div class="wb-note c5">
+          <div class="ti">Q3 themes</div>
+          <div class="bd">Margin, retention, AXIS depth. Drop everything else this quarter.</div>
+          <div class="ft">◎ 5d ago</div>
+        </div>
+        <div class="wb-note c6">
+          <div class="ti">Hire #3</div>
+          <div class="bd">Need an ops generalist. P&amp;L + payroll + vendor mgmt. Senior IC, no manage.</div>
+          <div class="ft">◐ 1w ago</div>
+        </div>
+        <div class="wb-note c1">
+          <div class="ti">Atlas content</div>
+          <div class="bd">Substack first. Own blog later. Test cadence: 1 post/wk for 6 wks.</div>
+          <div class="ft">▣ 1w ago</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ VIDEO CALLS ══ -->
+    <div class="page" id="page-videocalls">
+      <div class="ph">
+        <div class="ps"><b>12h 04m</b> on calls this week · 4 scheduled</div>
+        <button class="iconbtn" aria-label="History">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
+        </button>
+      </div>
+
+      <div class="vc-hero">
+        <div class="vc-lbl"><span class="pulse"></span>Instant room · ready</div>
+        <div class="vc-ti">Start a call right now.<br>No Zoom subscription.</div>
+        <div class="vc-row">
+          <button class="btn btn-p">▶ Start Now</button>
+          <button class="btn btn-g">＋ Schedule</button>
+          <button class="btn btn-g" style="flex:0 0 44px;padding:13px 0">⎘</button>
+        </div>
+        <div class="vc-room-id">ROOM · <b>warroom.app/c/cres-9k4z</b></div>
+      </div>
+
+      <div class="card" style="padding:0">
+        <div class="sec-hdr" style="padding:11px 14px;margin:0;border-bottom:.5px solid var(--border)">
+          <div class="sec-title">Upcoming</div>
+          <span class="ps">3 today · 1 tomorrow</span>
+        </div>
+        <div class="call-row">
+          <div class="ic up">▶</div>
+          <div class="mid">
+            <div class="nm">Investor follow-up · Stratus</div>
+            <div class="sub"><div class="stack-av"><span class="ja" style="background:#ffd9b3">CR</span><span class="ja" style="background:#c9e2ff">JS</span><span class="ja" style="background:#d9f5e3">MK</span></div>3 attendees</div>
+          </div>
+          <div class="when live"><b>14:00</b>in 47m</div>
+        </div>
+        <div class="call-row">
+          <div class="ic">●</div>
+          <div class="mid">
+            <div class="nm">Pricing sync w/ design</div>
+            <div class="sub"><div class="stack-av"><span class="ja" style="background:#ffd9b3">CR</span><span class="ja" style="background:#f5d9ed">LR</span></div>2 attendees</div>
+          </div>
+          <div class="when"><b>16:30</b>today</div>
+        </div>
+        <div class="call-row">
+          <div class="ic">●</div>
+          <div class="mid">
+            <div class="nm">Daily standup · Stratus</div>
+            <div class="sub"><div class="stack-av"><span class="ja" style="background:#ffd9b3">CR</span><span class="ja" style="background:#c9e2ff">JS</span><span class="ja" style="background:#d9f5e3">MK</span><span class="ja" style="background:#f5d9ed">LR</span></div>+4 recurring</div>
+          </div>
+          <div class="when"><b>09:00</b>tomorrow</div>
+        </div>
+      </div>
+
+      <div class="card mb14" style="margin-top:12px;padding:0">
+        <div class="sec-hdr" style="padding:11px 14px;margin:0;border-bottom:.5px solid var(--border)">
+          <div class="sec-title">Recent</div>
+          <span class="ps">Last 7 days</span>
+        </div>
+        <div class="call-row">
+          <div class="ic up">↗</div>
+          <div class="mid">
+            <div class="nm">Q3 P&amp;L review · Atlas</div>
+            <div class="sub">Outgoing · 1h 04m · today 11:30</div>
+          </div>
+          <div class="when"><b>1h 04m</b>2h ago</div>
+        </div>
+        <div class="call-row">
+          <div class="ic in">↘</div>
+          <div class="mid">
+            <div class="nm">Joel Markovich · advisor</div>
+            <div class="sub">Incoming · 38m · yesterday 16:14</div>
+          </div>
+          <div class="when"><b>38m</b>yesterday</div>
+        </div>
+        <div class="call-row">
+          <div class="ic miss">✕</div>
+          <div class="mid">
+            <div class="nm">Beacon Co · intro</div>
+            <div class="sub">Missed · they called back · 2d ago</div>
+          </div>
+          <div class="when"><b>—</b>2d ago</div>
+        </div>
+        <div class="call-row">
+          <div class="ic up">↗</div>
+          <div class="mid">
+            <div class="nm">Pricing kickoff · Stratus</div>
+            <div class="sub">Outgoing · 1h 22m · May 14</div>
+          </div>
+          <div class="when"><b>1h 22m</b>May 14</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PAYROLL ══ -->
+    <div class="page" id="page-payroll">
+      <div class="ph">
+        <div class="ps"><b>$18,420</b> / mo total · 5 people · 38% of revenue</div>
+        <button class="iconbtn" style="background:var(--accent);color:var(--accent-fg);border-color:var(--accent)" aria-label="Add person">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <div class="pay-summary">
+        <div class="top">
+          <div>
+            <div class="lbl">Monthly Payroll</div>
+            <div class="big">$18,420<span class="sup">/mo</span></div>
+          </div>
+          <div class="right">
+            <div class="v">38%</div>
+            <div class="s">of revenue</div>
+          </div>
+        </div>
+        <div class="pay-stack">
+          <div class="seg-bar" style="width:48%;background:#6c8fff" title="Stratus"></div>
+          <div class="seg-bar" style="width:32%;background:#d63a8a" title="Atlas"></div>
+          <div class="seg-bar" style="width:20%;background:#d99500" title="CRES"></div>
+        </div>
+        <div class="pay-legend">
+          <span><span class="pip" style="background:#6c8fff"></span>Stratus · $8.8k</span>
+          <span><span class="pip" style="background:#d63a8a"></span>Atlas · $5.9k</span>
+          <span><span class="pip" style="background:#d99500"></span>CRES · $3.7k</span>
+        </div>
+      </div>
+
+      <div class="pnl-grid">
+        <div class="card card-sm"><div class="cl">Full Time</div><div class="cv">2</div><div class="cs">$11,200 / mo</div></div>
+        <div class="card card-sm"><div class="cl">Part Time</div><div class="cv">1</div><div class="cs">$2,800 / mo</div></div>
+        <div class="card card-sm"><div class="cl">Contractor</div><div class="cv">2</div><div class="cs">$4,420 / mo</div></div>
+        <div class="card card-sm"><div class="cl">Open Roles</div><div class="cv">1</div><div class="cs">Ops · hiring</div></div>
+      </div>
+
+      <div class="seg">
+        <button class="active">All</button>
+        <button>Stratus</button>
+        <button>Atlas</button>
+        <button>CRES</button>
+      </div>
+
+      <div class="card" style="padding:0">
+        <div class="sec-hdr" style="padding:11px 14px;margin:0;border-bottom:.5px solid var(--border)">
+          <div class="sec-title">Team</div>
+          <span class="ps">5 active · 1 open</span>
+        </div>
+        <div class="pay-row">
+          <div class="av" style="background:#c9e2ff">JS</div>
+          <div class="mid">
+            <div class="nm">Jordan Singh</div>
+            <div class="sub"><span class="pay-type ft">Full Time</span><span class="biz">Stratus</span><span>Engineering Lead</span></div>
+          </div>
+          <div class="right"><div class="amt">$6,200</div><div class="freq">monthly</div></div>
+        </div>
+        <div class="pay-row">
+          <div class="av" style="background:#d9f5e3">MK</div>
+          <div class="mid">
+            <div class="nm">Mira Klein</div>
+            <div class="sub"><span class="pay-type ft">Full Time</span><span class="biz">Atlas</span><span>Strategy &amp; Ops</span></div>
+          </div>
+          <div class="right"><div class="amt">$5,000</div><div class="freq">monthly</div></div>
+        </div>
+        <div class="pay-row">
+          <div class="av" style="background:#f5d9ed">LR</div>
+          <div class="mid">
+            <div class="nm">Lex Reyes</div>
+            <div class="sub"><span class="pay-type pt">Part Time</span><span class="biz">Stratus</span><span>Design</span></div>
+          </div>
+          <div class="right"><div class="amt">$2,800</div><div class="freq">monthly</div></div>
+        </div>
+        <div class="pay-row">
+          <div class="av" style="background:#ffd9b3">DA</div>
+          <div class="mid">
+            <div class="nm">Diego Almeida</div>
+            <div class="sub"><span class="pay-type ct">Contractor</span><span class="biz">Stratus</span><span>iOS · $85/hr</span></div>
+          </div>
+          <div class="right"><div class="amt">$2,720</div><div class="freq">est / mo</div></div>
+        </div>
+        <div class="pay-row">
+          <div class="av" style="background:#fce5b8">PT</div>
+          <div class="mid">
+            <div class="nm">Priya Tan</div>
+            <div class="sub"><span class="pay-type ct">Contractor</span><span class="biz">CRES</span><span>Content · retainer</span></div>
+          </div>
+          <div class="right"><div class="amt">$1,700</div><div class="freq">monthly</div></div>
+        </div>
+        <div class="pay-row" style="opacity:.6">
+          <div class="av" style="background:var(--bg2);font-size:16px;color:var(--text3)">＋</div>
+          <div class="mid">
+            <div class="nm">Ops Generalist · Open</div>
+            <div class="sub"><span class="pay-type ft">Full Time</span><span class="biz">CRES</span><span>Posted 4d ago</span></div>
+          </div>
+          <div class="right"><div class="amt" style="color:var(--text3)">~$5,500</div><div class="freq">target</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+  <button class="fab" onclick="openSheet('axisSheet')" aria-label="Open AXIS">◐</button>
+
+  <!-- ── BOTTOM TABS ── -->
+  <div class="tabbar">
+    <div class="tab active" data-page="dashboard" onclick="goPage('dashboard')">
+      <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 12L12 4l8 8M6 10v10h12V10"/></svg></span>
+      <span class="lb">Home</span>
+    </div>
+    <div class="tab" data-page="missions" onclick="goPage('missions')">
+      <span class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="6" height="14" rx="1.5"/><rect x="14" y="5" width="6" height="9" rx="1.5"/></svg></span>
+      <span class="lb">Missions</span>
+      <span class="bdg">4</span>
+    </div>
+    <div class="tab" data-page="tracker" onclick="goPage('tracker')">
+      <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 16v-6M12 16V8M16 16v-3M20 16V6"/></svg></span>
+      <span class="lb">P&amp;L</span>
+    </div>
+    <div class="tab" data-page="calendar" onclick="goPage('calendar')">
+      <span class="ic"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
+      <span class="lb">Calendar</span>
+    </div>
+    <div class="tab" data-page="more" onclick="goPage('more')">
+      <span class="ic"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg></span>
+      <span class="lb">More</span>
+    </div>
+  </div>
+
+  <!-- ── AXIS SHEET ── -->
+  <div class="axis-sheet-back" id="axisSheetBack" onclick="closeSheet('axisSheet')"></div>
+  <div class="axis-sheet" id="axisSheet">
+    <div class="axis-sheet-handle"></div>
+    <div class="axis-sheet-hd">
+      <div class="av">◐</div>
+      <div>
+        <div class="nm">AXIS</div>
+        <div class="st"><span class="pulse"></span>operator-mode · v5.2</div>
+      </div>
+      <button class="axis-sheet-close" onclick="closeSheet('axisSheet')">✕</button>
+    </div>
+    <div class="ax-suggestion-row">
+      <button class="ax-chip" onclick="askAxis('briefing')">📋 Daily briefing</button>
+      <button class="ax-chip" onclick="askAxis('margin')">📉 What's dragging margin?</button>
+      <button class="ax-chip" onclick="askAxis('focus')">🎯 What should I focus on?</button>
+      <button class="ax-chip" onclick="askAxis('bills')">🧾 Bills this week</button>
+      <button class="ax-chip" onclick="askAxis('intel')">🔍 Summarize intel</button>
+    </div>
+    <div class="axis-msgs" id="axisMsgs">
+      <div class="ax-msg ai">
+        <b>Standing by, Operator.</b><br><br>
+        I've read your war room. Pick a suggestion above, or ask me anything about your missions, P&amp;L, calendar, or intel.
+      </div>
+    </div>
+    <form class="axis-sheet-input" onsubmit="sendAxis(event)">
+      <input type="text" id="axisInput" placeholder="Ask AXIS anything..." autocomplete="off">
+      <button type="submit">↑</button>
+    </form>
+  </div>
+
+  <!-- ── BIZ SHEET ── -->
+  <div class="axis-sheet-back" id="bizSheetBack" onclick="closeSheet('bizSheet')"></div>
+  <div class="biz-sheet" id="bizSheet">
+    <div class="biz-sheet-handle"></div>
+    <div class="biz-sheet-hd"><div class="ti">Switch business</div><button class="iconbtn" onclick="closeSheet('bizSheet')" style="width:32px;height:32px">✕</button></div>
+    <div class="biz-sheet-body">
+      <div class="biz-opt active" onclick="closeSheet('bizSheet')"><div class="pip" style="background:#6c8fff"></div>Stratus Labs<div class="ch">✓</div></div>
+      <div class="biz-opt" onclick="closeSheet('bizSheet')"><div class="pip" style="background:#d63a8a"></div>Atlas</div>
+      <div class="biz-opt" onclick="closeSheet('bizSheet')"><div class="pip" style="background:#d99500"></div>CRES Ventures</div>
+      <div class="biz-opt" onclick="closeSheet('bizSheet')"><div class="pip" style="background:#9a9a98"></div>My Project</div>
+      <div style="padding:14px 18px"><button class="btn btn-g full" onclick="closeSheet('bizSheet');openSheet('addBizSheet')">+ Add Business</button></div>
+    </div>
+  </div>
+
+  <!-- ── ADD BIZ SHEET ── -->
+  <div class="axis-sheet-back" id="addBizSheetBack" onclick="closeSheet('addBizSheet')"></div>
+  <div class="biz-sheet" id="addBizSheet" style="max-height:92vh">
+    <div class="biz-sheet-handle"></div>
+    <div class="biz-sheet-hd">
+      <div class="ti">Add a business</div>
+      <button class="iconbtn" onclick="closeSheet('addBizSheet')" style="width:32px;height:32px">✕</button>
+    </div>
+    <div class="ab-form">
+      <div class="form-row" style="margin-top:14px">
+        <label>Business name</label>
+        <input type="text" placeholder="e.g. Nimbus AI">
+      </div>
+      <div class="form-grid2">
+        <div class="form-row"><label>Type</label><select><option>SaaS</option><option>Agency</option><option>E-commerce</option><option>Consulting</option><option>Other</option></select></div>
+        <div class="form-row"><label>Stage</label><select><option>Idea</option><option>Pre-revenue</option><option>Revenue</option><option>Profitable</option></select></div>
+      </div>
+      <div class="form-row">
+        <label>Currency</label>
+        <select><option>USD ($)</option><option>EUR (€)</option><option>GBP (£)</option><option>CAD (C$)</option></select>
+      </div>
+      <div class="form-row">
+        <label>Identifier color</label>
+        <div class="ab-pip-row">
+          <div class="ab-pip active" style="background:#6c8fff">•</div>
+          <div class="ab-pip" style="background:#d63a8a">•</div>
+          <div class="ab-pip" style="background:#d99500">•</div>
+          <div class="ab-pip" style="background:#1ea96b">•</div>
+          <div class="ab-pip" style="background:#6c2ad0">•</div>
+          <div class="ab-pip" style="background:#922130">•</div>
+          <div class="ab-pip" style="background:#9a9a98">•</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Initial modules</label>
+        <div class="ab-pip-row" style="gap:6px">
+          <span class="chip on">P&amp;L Tracker</span>
+          <span class="chip on">Missions</span>
+          <span class="chip on">Calendar</span>
+          <span class="chip">Bills</span>
+          <span class="chip">Invoices</span>
+          <span class="chip">Payroll</span>
+        </div>
+        <div class="hint">Tap to toggle · you can change these later</div>
+      </div>
+      <div class="form-row">
+        <label>Starting cash balance <span style="color:var(--text3);font-weight:500">(optional)</span></label>
+        <input type="text" placeholder="$0">
+      </div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button class="btn btn-g" style="flex:1" onclick="closeSheet('addBizSheet')">Cancel</button>
+        <button class="btn btn-p" style="flex:1.5" onclick="closeSheet('addBizSheet')">Create business →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DRAWER ── -->
+  <div class="drawer-back" id="drawerBack" onclick="closeDrawer()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-hd">
+      <div class="av">CR</div>
+      <div>
+        <div class="nm">cRes Operator</div>
+        <div class="em">operator@cresventures.io</div>
+      </div>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-section">Command</div>
+      <div class="drawer-item active" onclick="goPage('dashboard');closeDrawer()"><span class="ic">◈</span>Dashboard</div>
+      <div class="drawer-item" onclick="goPage('missions');closeDrawer()"><span class="ic">◎</span>Mission Board<span class="bdg">14</span></div>
+      <div class="drawer-section">Operations</div>
+      <div class="drawer-item" onclick="goPage('intel');closeDrawer()"><span class="ic">◉</span>Intel Notes<span class="bdg">47</span></div>
+      <div class="drawer-item" onclick="goPage('tracker');closeDrawer()"><span class="ic">◇</span>P&amp;L Tracker</div>
+      <div class="drawer-item" onclick="goPage('goals');closeDrawer()"><span class="ic">◎</span>Goals</div>
+      <div class="drawer-item" onclick="goPage('whiteboard');closeDrawer()"><span class="ic">⤢</span>Whiteboard</div>
+      <div class="drawer-section">Schedule</div>
+      <div class="drawer-item" onclick="goPage('timer');closeDrawer()"><span class="ic">◷</span>Focus Timer</div>
+      <div class="drawer-item" onclick="goPage('calendar');closeDrawer()"><span class="ic">▦</span>Calendar</div>
+      <div class="drawer-section">Finance</div>
+      <div class="drawer-item" onclick="goPage('bills');closeDrawer()"><span class="ic">◫</span>Bills &amp; Expenses<span class="bdg">3</span></div>
+      <div class="drawer-item" onclick="goPage('invoices');closeDrawer()"><span class="ic">△</span>Invoices<span class="bdg">2</span></div>
+      <div class="drawer-item" onclick="goPage('payroll');closeDrawer()"><span class="ic">◐</span>Payroll</div>
+      <div class="drawer-section">Collaboration</div>
+      <div class="drawer-item" onclick="goPage('videocalls');closeDrawer()"><span class="ic">▣</span>Video Calls</div>
+      <div class="drawer-section">Account</div>
+      <div class="drawer-item" onclick="goPage('more');closeDrawer()"><span class="ic">◐</span>Profile &amp; Settings</div>
+      <div class="drawer-item" onclick="goPage('subscription');closeDrawer()"><span class="ic">$</span>Subscription</div>
+      <div class="drawer-item" onclick="goPage('help');closeDrawer()"><span class="ic">?</span>Help &amp; Support</div>
+      <div class="drawer-item" onclick="goPage('sync');closeDrawer()"><span class="ic">↻</span>Sync &amp; Backup</div>
+      <div class="drawer-item" onclick="goPage('updates');closeDrawer()"><span class="ic">⟳</span>Updates<span class="bdg">v5.2</span></div>
+    </div>
+    <div class="drawer-foot">
+      <button class="btn btn-g">☁ Sync</button>
+      <button class="btn btn-g">↓ Export</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Breadcrumb map — drives the topbar row 2 ──
+  const CRUMB={
+    dashboard:{now:'Dashboard'},
+    missions:{now:'Mission Board'},
+    tracker:{now:'P&L Tracker'},
+    calendar:{now:'Calendar'},
+    more:{now:'More'},
+    timer:{now:'Focus Timer',parent:'More'},
+    intel:{now:'Intel Notes',parent:'More'},
+    bills:{now:'Bills'  ,parent:'More'},
+    invoices:{now:'Invoices',parent:'More'},
+    goals:{now:'Goals',parent:'More'},
+    whiteboard:{now:'Whiteboard',parent:'More'},
+    videocalls:{now:'Video Calls',parent:'More'},
+    payroll:{now:'Payroll',parent:'More'},
+    profile:{now:'Profile & Settings',parent:'More'},
+    subscription:{now:'Subscription',parent:'More'},
+    help:{now:'Help & Support',parent:'More'},
+    sync:{now:'Sync & Backup',parent:'More'},
+    updates:{now:'Updates',parent:'More'},
+  };
+  function setCrumb(name){
+    const c=CRUMB[name]||{now:name};
+    const crumb=document.getElementById('topCrumb');
+    document.getElementById('crumbNow').textContent=c.now;
+    const p=document.getElementById('crumbParent'),s=document.getElementById('crumbSep');
+    if(c.parent){p.textContent=c.parent;p.style.display='';s.style.display='';crumb.dataset.secondary='1';}
+    else{p.style.display='none';s.style.display='none';crumb.dataset.secondary='0';}
+  }
+
+  // ── Page navigation ──
+  function goPage(name){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const tgt=document.getElementById('page-'+name);
+    if(tgt)tgt.classList.add('active');
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.page===name));
+    // tab activation: timer/intel/bills route stays on More tab visually
+    if(['timer','intel','bills','invoices','goals','whiteboard','videocalls','payroll','profile','subscription','help','sync','updates'].includes(name)){
+      document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.page==='more'));
+    }
+    setCrumb(name);
+    document.getElementById('content').scrollTo({top:0,behavior:'instant'});
+  }
+  // ── Sheets ──
+  function openSheet(id){
+    document.getElementById(id).classList.add('on');
+    document.getElementById(id+'Back').classList.add('on');
+    document.body.style.overflow='hidden';
+  }
+  function closeSheet(id){
+    document.getElementById(id).classList.remove('on');
+    document.getElementById(id+'Back').classList.remove('on');
+    document.body.style.overflow='';
+  }
+  function openDrawer(){document.getElementById('drawer').classList.add('on');document.getElementById('drawerBack').classList.add('on')}
+  function closeDrawer(){document.getElementById('drawer').classList.remove('on');document.getElementById('drawerBack').classList.remove('on')}
+
+  // ── Mission tabs ──
+  const missionData={
+    planned:[
+      {p:'high',b:'Stratus Labs',t:'Ship pricing page v2 to production',d:'Includes new tier copy, annual toggle, and SMB plan card.',due:'May 20',late:'2d late',avatar:'CR'},
+      {p:'med',b:'Atlas',t:'Q3 OKRs first draft',d:'Lock 3 company-level objectives + 2 KRs each. Review with team Wed.',due:'May 28',avatar:'CR'},
+      {p:'med',b:'Stratus Labs',t:'Investor follow-up emails',d:'12 outstanding. Group by status: hot/warm/cold.',due:'May 22',avatar:'CR'},
+      {p:'low',b:'CRES Ventures',t:'Annual report — collect financials',d:'Need P&L summaries from all 3 ventures.',due:'Jun 5',avatar:'CR'},
+      {p:'low',b:'Stratus Labs',t:'Refresh competitor intel doc',d:'Pricing changed for Notion and Linear.',due:'',avatar:'CR'},
+    ],
+    progress:[
+      {p:'high',b:'Stratus Labs',t:'Onboarding wizard v2',d:'Step 3 has the highest drop-off. Redesigning the value-prop screen.',due:'May 24',avatar:'CR'},
+      {p:'high',b:'Atlas',t:'Q3 P&L review prep',d:'Need slides ready by tomorrow 14:00. Margin slide blocking.',due:'May 18',avatar:'CR'},
+      {p:'med',b:'Stratus Labs',t:'Mobile responsive pass',d:'Landing + app dashboard. 90% done.',due:'May 21',avatar:'CR'},
+      {p:'low',b:'CRES Ventures',t:'Tax filings prep — Q1',d:'Waiting on accountant. Batch all 3 ventures.',due:'Jun 1',avatar:'CR'},
+    ],
+    done:[
+      {p:'high',b:'Stratus Labs',t:'Send pricing draft to investors',d:'Sent May 16. Confirmed delivery.',due:'Done May 16',avatar:'CR',done:1},
+      {p:'med',b:'Atlas',t:'Customer feedback synthesis',d:'18 calls. Top 5 themes pulled.',due:'Done May 15',avatar:'CR',done:1},
+      {p:'med',b:'Stratus Labs',t:'Hire contractor — design',d:'Signed offer. Starts Monday.',due:'Done May 13',avatar:'CR',done:1},
+      {p:'low',b:'CRES Ventures',t:'Update brand guidelines',d:'Logo lockups + color tokens.',due:'Done May 10',avatar:'CR',done:1},
+      {p:'low',b:'Atlas',t:'Refresh testimonial page',d:'New copy + 4 quotes.',due:'Done May 8',avatar:'CR',done:1},
+    ]
+  };
+  function setMissionTab(k,el){
+    document.querySelectorAll('.km-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    const list=document.getElementById('missionList');
+    list.innerHTML=missionData[k].map(m=>`
+      <div class="task-card" style="${m.done?'opacity:.65':''}">
+        <div class="meta"><span class="pri ${m.p}">${{high:'High',med:'Med',low:'Low'}[m.p]}</span><span class="biz">${m.b}</span></div>
+        <div class="ttl">${m.t}</div>
+        <div class="ds">${m.d}</div>
+        <div class="ft"><span>${m.due||'No due date'}</span>${m.late?`<span class="late">· ${m.late}</span>`:''}<span class="avatar">${m.avatar}</span></div>
+      </div>`).join('')+'<button class="add-task">+ Add Mission</button>';
+  }
+
+  // ── Calendar grid ──
+  (function(){
+    const g=document.getElementById('calGrid');
+    if(!g)return;
+    // May 2026: starts on Fri (1=Fri). Apr ends 30. We need 42 cells.
+    const startOffset=5; // Fri
+    const days=31, prev=30, today=17;
+    const events={3:['b1'],5:['b1','b3'],8:['b2'],12:['b1','b4'],15:['b3'],17:['b1','b2','b3','b4'],18:['b1'],19:['b2'],22:['b3'],25:['b4'],27:['b1','b2']};
+    let html='';
+    for(let i=0;i<startOffset;i++){html+=`<div class="cal-day other"><div class="n">${prev-startOffset+i+1}</div></div>`}
+    for(let d=1;d<=days;d++){
+      const evs=events[d]||[];
+      html+=`<div class="cal-day ${d===today?'today':''} ${d===today?'sel':''}">
+        <div class="n">${d}</div>
+        <div class="cal-evt-row">${evs.map(c=>`<span class="cal-evt ${c}"></span>`).join('')}</div>
+      </div>`;
+    }
+    const total=startOffset+days, fill=42-total;
+    for(let i=1;i<=fill;i++){html+=`<div class="cal-day other"><div class="n">${i}</div></div>`}
+    g.innerHTML=html;
+  })();
+
+  // ── Dash chart bars ──
+  function makeChart(elId,data){
+    const el=document.getElementById(elId);if(!el)return;
+    el.innerHTML=data.map(([r,e])=>`<div class="pair"><div class="rev" style="height:${r}%"></div><div class="exp" style="height:${e}%"></div></div>`).join('');
+  }
+  makeChart('dashChart',[[40,30],[55,32],[48,28],[68,40],[58,38],[80,55],[72,48],[88,52],[78,50],[92,58],[84,60],[100,65]]);
+  makeChart('trkChart',[[45,28],[68,32],[40,20],[80,40],[55,28],[88,45],[100,38]]);
+
+  // ── EST clocks ──
+  function pad(n){return String(n).padStart(2,'0')}
+  function tickClocks(){
+    const now=new Date();
+    const opts={timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hour12:true};
+    const el=document.getElementById('alarmEst');if(el)el.textContent=new Intl.DateTimeFormat('en-US',opts).format(now);
+  }
+  setInterval(tickClocks,1000);tickClocks();
+
+  // ── Focus timer ──
+  let timerRunning=false, timerSec=0;
+  function fmt(t){return pad(Math.floor(t/3600))+':'+pad(Math.floor(t%3600/60))+':'+pad(t%60)}
+  function renderTimer(){
+    ['dashTimer','bigTimer'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=fmt(timerSec)});
+  }
+  function toggleTimer(){timerRunning=!timerRunning;
+    const b=document.getElementById('bigBtn');if(b)b.textContent=timerRunning?'Pause Session':'Start Session';
+    document.getElementById('topbar').classList.toggle('running',timerRunning);
+  }
+  function resetTimer(){timerSec=0;timerRunning=false;renderTimer();
+    const b=document.getElementById('bigBtn');if(b)b.textContent='Start Session';
+    document.getElementById('topbar').classList.remove('running');
+  }
+  setInterval(()=>{if(timerRunning){timerSec++;renderTimer()}},1000);
+
+  // ── Greeting ──
+  (function(){
+    const h=new Date().getHours();
+    const g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+    const el=document.getElementById('dashGreeting');if(el)el.textContent=g+', Operator.';
+  })();
+
+  // ── Init from URL hash (e.g. #missions or #missions+axis) ──
+  (function(){
+    const h=(location.hash||'').replace(/^#/,'');
+    if(!h)return;
+    const parts=h.split('+');
+    const page=parts[0];
+    if(page)goPage(page);
+    if(parts.includes('axis'))setTimeout(()=>openSheet('axisSheet'),50);
+    if(parts.includes('biz'))setTimeout(()=>openSheet('bizSheet'),50);
+    if(parts.includes('drawer'))setTimeout(()=>openDrawer(),50);
+    if(parts.includes('progress'))setTimeout(()=>{const t=document.querySelectorAll('.km-tab')[1];if(t)t.click()},50);
+    if(parts.includes('done'))setTimeout(()=>{const t=document.querySelectorAll('.km-tab')[2];if(t)t.click()},50);
+  })();
+
+  // ── AXIS ──
+  const AX={
+    briefing:"<b>Daily briefing — Sat May 17</b><br><br>Three priorities:<br><b>(1)</b> Stratus invoice $4.2k 11 days past due → send reminder.<br><b>(2)</b> Q3 review 14:00 — agenda not finalized.<br><b>(3)</b> Atlas COGS up 8% MoM — investigate margin drag.<br><br>Wins so far this week: closed 2 clients, shipped onboarding v2.",
+    margin:"<b>Margin drag — Atlas, May.</b><br><br>COGS jumped 8.4% MoM. Biggest line items:<br>• Contractor design — +$1,650 (one-off)<br>• Adobe CC annual — +$599<br>• Office space — +$420 (rent bump)<br><br>Strip the one-offs and you're flat. Real concern: rent escalator. Worth renegotiating.",
+    focus:"<b>What you should focus on today:</b><br><br>The Stratus invoice. It's $4.2k, 11 days late, and the longer it sits the harder it gets. 2-line email, 3 minutes. Then prep the 14:00 review — that's the rest of the morning. Push everything else to tomorrow.",
+    bills:"<b>Bills due this week:</b><br><br>• AWS — $214 (Stratus) — <b>11d overdue</b><br>• Figma — $45 (Atlas) — due Mon<br>• Office rent — $1,650 (CRES) — due Wed<br><br>Total: <b>$1,909</b>. AWS is overdue — pay today.",
+    intel:"<b>Intel summary — last 30 days:</b><br><br>47 entries. Top themes:<br>• Notion pricing changes (3 entries)<br>• Stratus onboarding drop-off (4 entries)<br>• Atlas content strategy (5 entries)<br><br>Action: the Stratus drop-off pattern is becoming a thesis. Worth a working doc."
+  };
+  function askAxis(k){
+    const m=document.getElementById('axisMsgs');
+    const labels={briefing:'Daily briefing',margin:"What's dragging margin?",focus:'What should I focus on?',bills:'Bills this week',intel:'Summarize intel'};
+    const u=document.createElement('div');u.className='ax-msg user';u.textContent=labels[k];m.appendChild(u);
+    const a=document.createElement('div');a.className='ax-msg ai';a.innerHTML='<span style="opacity:.5">●●●</span>';m.appendChild(a);
+    m.scrollTop=m.scrollHeight;
+    setTimeout(()=>{a.innerHTML=AX[k];m.scrollTop=m.scrollHeight},600);
+  }
+  function sendAxis(e){e.preventDefault();const inp=document.getElementById('axisInput');const t=inp.value.trim();if(!t)return;inp.value='';
+    const m=document.getElementById('axisMsgs');
+    const u=document.createElement('div');u.className='ax-msg user';u.textContent=t;m.appendChild(u);
+    const a=document.createElement('div');a.className='ax-msg ai';a.innerHTML='<span style="opacity:.5">●●●</span>';m.appendChild(a);
+    m.scrollTop=m.scrollHeight;
+    setTimeout(()=>{a.innerHTML="That's a live query — wire AXIS to your actual data inside the full War Room. Try the suggestions above for a demo.";m.scrollTop=m.scrollHeight},700);
+  }
+</script>
+</body>
+</html>

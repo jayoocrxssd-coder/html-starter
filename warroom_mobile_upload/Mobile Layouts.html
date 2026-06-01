@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAR ROOM — Mobile Layouts</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#f0eee9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif}
+  /* iframe styling — strip default border, fill its container */
+  iframe.screen{width:100%;height:100%;border:0;display:block;background:#f4f4f2}
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="frames/ios-frame.jsx"></script>
+<script type="text/babel" src="frames/design-canvas.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+  const { useState } = React;
+
+  // Screen = clean phone-shaped frame wrapping an iframe pointed at one of our mobile HTML files.
+  // (Apple status bar / dynamic island / home indicator stripped — frame only.)
+  function Screen({ src, dark=false, height=844, tall=true }) {
+    const h = tall ? height : 520;
+    return (
+      <div style={{
+        width:390, height:h, borderRadius:48, overflow:'hidden',
+        position:'relative', background: dark ? '#000' : '#F2F2F7',
+        boxShadow:'0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)',
+      }}>
+        <iframe className="screen" src={src} style={{width:'100%',height:'100%',border:0,display:'block',background:dark?'#0e0e0d':'#f4f4f2'}} />
+      </div>
+    );
+  }
+
+  const APP = 'mobile/app.html';
+  const LANDING = 'mobile/landing.html';
+
+  function App() {
+    return (
+      <DesignCanvas
+        title="WAR ROOM · Mobile Layouts"
+        subtitle="Mobile-optimized versions of the landing page and the app — built from the original Syne / DM Mono / oklch system."
+      >
+        <DCSection id="nav-explore" title="Top nav — 4 directions" subtitle="Pick one and I'll roll it across every screen. Each shows the same Dashboard snippet underneath so you can compare hierarchy at a glance.">
+          <DCArtboard id="nav-a" label="A · Two-row · Structure first" width={390} height={520}>
+            <Screen src="mobile/nav-variants.html#a" tall={false} />
+          </DCArtboard>
+          <DCArtboard id="nav-b" label="B · Brand-led · Pill title" width={390} height={520}>
+            <Screen src="mobile/nav-variants.html#b" tall={false} />
+          </DCArtboard>
+          <DCArtboard id="nav-c" label="C · Avatar-led · Greeting" width={390} height={520}>
+            <Screen src="mobile/nav-variants.html#c" tall={false} />
+          </DCArtboard>
+          <DCArtboard id="nav-d" label="D · Command bar · Search first" width={390} height={520}>
+            <Screen src="mobile/nav-variants.html#d" tall={false} />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="landing" title="Marketing site" subtitle="Single-column scroll · sticky CTA · drawer for nav · all sections preserved">
+          <DCArtboard id="lp-1" label="Hero · CTA · preview" width={390} height={844}>
+            <Screen src={LANDING} />
+          </DCArtboard>
+          <DCArtboard id="lp-2" label="Features · AXIS" width={390} height={844}>
+            <Screen src={LANDING + '#features'} />
+          </DCArtboard>
+          <DCArtboard id="lp-3" label="Compare · Stats · Pricing" width={390} height={844}>
+            <Screen src={LANDING + '#compare'} />
+          </DCArtboard>
+          <DCArtboard id="lp-4" label="Menu drawer (open)" width={390} height={844}>
+            <Screen src={LANDING + '#menu'} />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="app-primary" title="App · Primary tabs" subtitle="Bottom tab bar replaces the desktop sidebar — 5 destinations + AXIS FAB. Drawer & 'More' surface the rest.">
+          <DCArtboard id="app-dash" label="Dashboard (Home)" width={390} height={844}>
+            <Screen src={APP + '#dashboard'} />
+          </DCArtboard>
+          <DCArtboard id="app-missions" label="Mission Board · Planned" width={390} height={844}>
+            <Screen src={APP + '#missions'} />
+          </DCArtboard>
+          <DCArtboard id="app-missions-prog" label="Mission Board · In Progress" width={390} height={844}>
+            <Screen src={APP + '#missions+progress'} />
+          </DCArtboard>
+          <DCArtboard id="app-missions-done" label="Mission Board · Done" width={390} height={844}>
+            <Screen src={APP + '#missions+done'} />
+          </DCArtboard>
+          <DCArtboard id="app-tracker" label="P&L Tracker" width={390} height={844}>
+            <Screen src={APP + '#tracker'} />
+          </DCArtboard>
+          <DCArtboard id="app-cal" label="Calendar" width={390} height={844}>
+            <Screen src={APP + '#calendar'} />
+          </DCArtboard>
+          <DCArtboard id="app-more" label="More (Profile + every module)" width={390} height={844}>
+            <Screen src={APP + '#more'} />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="app-secondary" title="App · Secondary screens" subtitle="Routed through More & the drawer. Same bottom-tab chrome.">
+          <DCArtboard id="app-timer" label="Focus Timer" width={390} height={844}>
+            <Screen src={APP + '#timer'} />
+          </DCArtboard>
+          <DCArtboard id="app-intel" label="Intel Notes" width={390} height={844}>
+            <Screen src={APP + '#intel'} />
+          </DCArtboard>
+          <DCArtboard id="app-bills" label="Bills & Expenses" width={390} height={844}>
+            <Screen src={APP + '#bills'} />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="app-modules" title="App · New modules" subtitle="The remaining ‘More’ destinations — Invoices, Goals, Whiteboard, Calls, Payroll. Same Syne/DM Mono system, same bottom-tab chrome.">
+          <DCArtboard id="app-invoices" label="Invoices" width={390} height={844}>
+            <Screen src={APP + '#invoices'} />
+          </DCArtboard>
+          <DCArtboard id="app-goals" label="Goals" width={390} height={844}>
+            <Screen src={APP + '#goals'} />
+          </DCArtboard>
+          <DCArtboard id="app-whiteboard" label="Whiteboard" width={390} height={844}>
+            <Screen src={APP + '#whiteboard'} />
+          </DCArtboard>
+          <DCArtboard id="app-videocalls" label="Video Calls" width={390} height={844}>
+            <Screen src={APP + '#videocalls'} />
+          </DCArtboard>
+          <DCArtboard id="app-payroll" label="Payroll" width={390} height={844}>
+            <Screen src={APP + '#payroll'} />
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="app-overlays" title="App · Overlays" subtitle="Sheets and drawers — same modal pattern reused for AXIS, business switching, and the global menu.">
+          <DCArtboard id="app-axis" label="AXIS · bottom sheet" width={390} height={844}>
+            <Screen src={APP + '#dashboard+axis'} dark={true} />
+          </DCArtboard>
+          <DCArtboard id="app-biz" label="Business switcher" width={390} height={844}>
+            <Screen src={APP + '#dashboard+biz'} />
+          </DCArtboard>
+          <DCArtboard id="app-drawer" label="Drawer · full nav" width={390} height={844}>
+            <Screen src={APP + '#dashboard+drawer'} />
+          </DCArtboard>
+        </DCSection>
+
+        <DCPostIt top={140} left={36} rotate={-3} width={200}>
+          Same brand DNA — Syne + DM Mono, same color tokens. No new visual language; just mobile patterns layered on top.
+        </DCPostIt>
+
+        <DCPostIt top={780} right={32} rotate={2} width={220}>
+          Desktop sidebar → bottom tab bar (5 max) + drawer for the rest. AXIS gets a FAB and a bottom-sheet — it's the most-used surface.
+        </DCPostIt>
+
+        <DCPostIt bottom={520} left={48} rotate={-1.5} width={220}>
+          Kanban columns become a horizontal seg-control. Tables (P&amp;L, bills) become cards with leading icons and trailing amounts.
+        </DCPostIt>
+
+        <DCPostIt bottom={140} right={36} rotate={2.5} width={230}>
+          New modules drop into the same chrome — More menu, drawer entry, breadcrumb back to More. No new visual language; just new content slots.
+        </DCPostIt>
+      </DesignCanvas>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
