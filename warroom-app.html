@@ -889,17 +889,56 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   html, body { font-size: 13px; }
   .shell { height: 100svh; overflow: hidden; }
 
-  /* ── Topbar ── */
-  .topbar { padding: 0 13px; gap: 7px; }
-  .logo { font-size: 10px; letter-spacing: .1em; }
-  .topbar-timer { font-size: 12px; min-width: 58px; }
-  .tsep { display: none !important; }
-  .est-display, .date-display, .sync-indicator, .invert-btn { display: none !important; }
-  #alarmChip { display: none !important; }
-  #timerChip { font-size: 8px; padding: 4px 8px; }
+  /* ── Topbar — mobile optimised ── */
+  .topbar {
+    padding: 0 12px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-top: env(safe-area-inset-top, 0px);
+    gap: 8px;
+    height: calc(52px + env(safe-area-inset-top, 0px));
+  }
+
+  /* Hide all desktop-only topbar items */
+  .tsep,
+  .est-display,
+  .date-display,
+  .sync-indicator,
+  .invert-btn,
+  #alarmChip,
+  #cloudSignInBtn,
+  .appear-btn-wrap,
+  #meetChip,
+  #userPill { display: none !important; }
+
+  /* Logo: show only the mark + name, compact */
+  .logo { font-size: 11px; letter-spacing: .14em; gap: 7px; }
+
+  /* Timer: compact mono chip on mobile */
+  .topbar-timer {
+    font-size: 11px;
+    min-width: 0;
+    padding: 3px 8px;
+    background: var(--bg2);
+    border: .5px solid var(--border2);
+    border-radius: 100px;
+    letter-spacing: .04em;
+  }
+  .topbar-timer.running {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  /* Session start chip — keep but slim it down */
+  #timerChip {
+    font-size: 8px;
+    padding: 4px 9px;
+    letter-spacing: .06em;
+  }
+
+  /* Push hamburger to the far right, remove leftover desktop gap */
   .topbar-right { gap: 6px; margin-left: auto; }
-  .appear-toggle-btn { padding: 4px 9px; gap: 5px; font-size: 9px; }
-  #cloudSignInBtn { font-size: 8px; padding: 3px 7px; }
 
   /* ── Hamburger button ── */
   .mob-menu-btn {
@@ -1094,7 +1133,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   #kpiStrip { grid-template-columns: repeat(2,1fr) !important; gap: 8px; }
 
   /* Hide desktop goal/chart column on dashboard (chart still in tracker) */
-  #page-dashboard .col[style*="flex:.85"] { display: none !important; }
+  #dashRightCol { display: none !important; }
 
   /* ── Phase D: AXIS page — full-height native feel ── */
   #page-axis { padding: 0 !important; display: flex; flex-direction: column; height: 100%; }
@@ -1103,10 +1142,12 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
   #page-axis [style*="padding:22px"] { padding: 12px 16px 10px !important; }
   /* AXIS messages: full remaining height */
   .axis-overlay-msgs { padding: 14px 16px !important; }
+  /* AXIS page inner container: remove inline max-width via override on parent */
+  #page-axis { max-width: 100% !important; }
+  #page-axis > div { max-width: 100% !important; width: 100% !important; }
   /* AXIS input bar: safe-area aware */
-  #page-axis [style*="padding:14px 26px"] {
-    padding: 10px 12px calc(env(safe-area-inset-bottom, 0px) + 10px) 12px !important;
-  }
+  #aiChatInputAxis, #aiChatSendBtnAxis { font-size: 16px; }
+  .axis-overlay-msgs + div { padding: 10px 12px calc(env(safe-area-inset-bottom, 0px) + 10px) !important; }
   /* Briefing/Clear buttons: smaller on mobile */
   #briefingBtnAxis { font-size: 9px !important; padding: 5px 9px !important; }
 
@@ -2222,7 +2263,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
       </div>
     </div>
     <!-- Chart + Timer -->
-    <div class="col" style="flex:.85">
+    <div class="col" id="dashRightCol" style="flex:.85">
       <div class="card" style="flex:1.6">
         <div class="sec-hdr">
           <div class="sec-title" style="font-size:11px">Revenue vs Expenses</div>
@@ -3955,11 +3996,11 @@ const DEFAULT = {
     {id:5,title:'Onboard first 3 beta users',status:'Done',priority:'High',bizId:1,notes:'Completed June 1',due:'',createdAt:Date.now()}
   ],
   entries: [
-    {id:6,type:'revenue',amount:4200,category:'Sales',bizId:1,date:'2026-05-01',note:'Client retainer'},
-    {id:7,type:'revenue',amount:1800,category:'Sales',bizId:1,date:'2026-05-15',note:'One-time project'},
-    {id:8,type:'expense',amount:890,category:'Software',bizId:1,date:'2026-05-05',note:'SaaS tools'},
-    {id:9,type:'expense',amount:400,category:'Marketing',bizId:1,date:'2026-05-20',note:'Ads'},
-    {id:10,type:'revenue',amount:5100,category:'Sales',bizId:1,date:'2026-06-01',note:'June retainer'}
+    {id:6,rev:4200,exp:0,desc:'Client retainer',cat:'Sales',bizId:1,date:'2026-05-01'},
+    {id:7,rev:1800,exp:0,desc:'One-time project',cat:'Sales',bizId:1,date:'2026-05-15'},
+    {id:8,rev:0,exp:890,desc:'SaaS tools',cat:'Software',bizId:1,date:'2026-05-05'},
+    {id:9,rev:0,exp:400,desc:'Ads',cat:'Marketing',bizId:1,date:'2026-05-20'},
+    {id:10,rev:5100,exp:0,desc:'June retainer',cat:'Sales',bizId:1,date:'2026-06-01'}
   ],
   notes: [
     {id:11,title:'Competitor analysis',content:'Researched 5 competitors. Gap: no mobile-first option in our space.',bizId:1,tags:['intel','strategy'],createdAt:Date.now()}
