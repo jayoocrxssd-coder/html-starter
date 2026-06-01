@@ -903,8 +903,17 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .ob-footer{padding:0 40px 32px;display:flex;align-items:center;justify-content:space-between}
 .ob-skip{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);cursor:pointer;transition:color .15s}
 .ob-skip:hover{color:var(--text)}
-.ob-input{width:100%;background:var(--bg2);border:.5px solid var(--border2);color:var(--text);font-family:'Syne',sans-serif;font-size:15px;font-weight:600;padding:14px 16px;border-radius:var(--r);outline:none;transition:border-color .15s;margin-bottom:10px}
-.ob-input:focus{border-color:var(--accent)}
+.ob-input{width:100%;background:var(--bg2);border:.5px solid var(--border2);color:var(--text);font-family:'Syne',sans-serif;font-size:15px;font-weight:600;padding:14px 16px;border-radius:var(--r);outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:10px}
+.ob-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.ob-input.ob-input-valid{border-color:var(--green,#22c55e);box-shadow:0 0 0 3px color-mix(in srgb,var(--green,#22c55e) 15%,transparent)}
+.ob-input.ob-input-error{border-color:#e05;box-shadow:0 0 0 3px rgba(238,0,85,.12);animation:ob-shake .35s cubic-bezier(.36,.07,.19,.97)}
+@keyframes ob-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.ob-error{display:none;font-size:11px;color:#e05;font-weight:700;margin-top:8px;padding:8px 12px;background:rgba(238,0,85,.07);border-radius:8px;animation:ob-child-in .2s ease both}
+/* Live name echo in step-2 title */
+.ob-title-echo{color:var(--accent)}
+@media(prefers-reduced-motion:reduce){
+  .ob-input,.ob-input:focus,.ob-input.ob-input-valid,.ob-input.ob-input-error{transition:none!important;animation:none!important;box-shadow:none!important}
+}
 .ob-input-sub{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:-5px;margin-bottom:16px}
 .ob-role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
 .ob-role-card{border:.5px solid var(--border2);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .15s;background:transparent}
@@ -10073,6 +10082,7 @@ function showObStep(step){
   }
   _obPrevStep=step;
   renderObProgress();
+  obAutoFocus(step);
   // Step-specific setup
   if(step===7) renderObThemePreview();
   if(step===8) renderObSummary();
@@ -10091,7 +10101,13 @@ function obNext(){
   }
   if(obStep===2){
     const name=document.getElementById('obName').value.trim();
-    if(!name){document.getElementById('obName').focus();showObError('obNameError','Please enter your name.');return;}
+    if(!name){
+      obInputState('obName','error');
+      document.getElementById('obName').focus();
+      showObError('obNameError','Please enter your name.');
+      return;
+    }
+    obInputState('obName','valid');
     hideObError('obNameError');
     obData.name=name;
     obData.role=document.getElementById('obRole').value.trim();
@@ -10106,11 +10122,48 @@ function obNext(){
 }
 function showObError(id, msg){
   const el=document.getElementById(id);
-  if(el){el.textContent=msg;el.style.display='block';}
+  if(!el)return;
+  el.textContent=msg;el.style.display='block';
+  // Re-trigger animation on repeat errors
+  el.style.animation='none';void el.offsetWidth;el.style.animation='';
 }
 function hideObError(id){
   const el=document.getElementById(id);
   if(el){el.textContent='';el.style.display='none';}
+}
+
+// ── Phase 2: input helpers ──
+
+// Mark input valid (green glow) or error (red shake)
+function obInputState(inputId, state){
+  const el=document.getElementById(inputId);
+  if(!el)return;
+  el.classList.remove('ob-input-valid','ob-input-error');
+  if(state==='valid')el.classList.add('ob-input-valid');
+  else if(state==='error'){el.classList.add('ob-input-error');void el.offsetWidth;}
+}
+
+// Live echo: update step-2 title as user types their name
+function obNameEcho(val){
+  const title=document.getElementById('obNameTitle');
+  if(!title)return;
+  const name=val.trim();
+  if(name){
+    title.innerHTML='Hey, <span class="ob-title-echo">'+esc(name)+'</span>.';
+  } else {
+    title.innerHTML='What should War Room<br>call you?';
+  }
+  // Clear error state while typing
+  obInputState('obName','');
+  hideObError('obNameError');
+}
+
+// Auto-focus the primary input when a step becomes visible
+function obAutoFocus(step){
+  const focusMap={1:'obTosCheck',2:'obName',5:'obBizName',6:'obGoalText'};
+  const id=focusMap[step];
+  if(!id)return;
+  setTimeout(()=>{const el=document.getElementById(id);if(el)el.focus();},320); // after slide-in
 }
 
 function obBack(){
@@ -11858,11 +11911,11 @@ function renderSeatCount() {
       <div id="obStep2" class="ob-step-wrap" style="display:none">
         <div class="ob-header">
           <div class="ob-eyebrow">Step 2 of 8 · Identity</div>
-          <div class="ob-title">What should War Room<br>call you?</div>
+          <div class="ob-title" id="obNameTitle">What should War Room<br>call you?</div>
           <div class="ob-sub">This personalizes your dashboard greeting and briefings.</div>
         </div>
         <div class="ob-body">
-          <input class="ob-input" id="obName" placeholder="Your name..." maxlength="40" onkeydown="if(event.key==='Enter')obNext()">
+          <input class="ob-input" id="obName" placeholder="Your name..." maxlength="40" oninput="obNameEcho(this.value)" onkeydown="if(event.key==='Enter')obNext()">
           <div class="ob-input-sub">e.g. Marcus, Jordan, Alex</div>
           <div class="ob-error" id="obNameError"></div>
           <div style="margin-top:12px">
