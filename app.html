@@ -945,14 +945,25 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
 .ob-role-name{font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px}
 .ob-role-desc{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;line-height:1.5}
 .ob-biz-added{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:200px;overflow-y:auto}
-.ob-biz-row{display:flex;align-items:center;gap:10px;background:var(--bg2);border-radius:var(--rs);padding:10px 14px}
+.ob-biz-row{display:flex;align-items:center;gap:10px;background:var(--bg2);border-radius:var(--rs);padding:10px 14px;transition:opacity .18s,transform .18s}
+.ob-biz-row.ob-item-in{animation:ob-item-spring-in .28s cubic-bezier(.34,1.4,.64,1) both}
+.ob-biz-row.ob-item-out{animation:ob-item-shrink-out .18s ease-in forwards}
 .ob-biz-pip{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .ob-biz-name{flex:1;font-size:13px;font-weight:700;color:var(--text)}
 .ob-biz-type{font-size:10px;color:var(--text3);font-family:'DM Mono',monospace}
 .ob-add-biz-row{display:flex;gap:8px}
 .ob-goal-list{display:flex;flex-direction:column;gap:7px;margin-bottom:12px;max-height:180px;overflow-y:auto}
-.ob-goal-item{display:flex;align-items:center;gap:9px;background:var(--bg2);border-radius:var(--rs);padding:9px 13px}
+.ob-goal-item{display:flex;align-items:center;gap:9px;background:var(--bg2);border-radius:var(--rs);padding:9px 13px;transition:opacity .18s,transform .18s}
+.ob-goal-item.ob-item-in{animation:ob-item-spring-in .28s cubic-bezier(.34,1.4,.64,1) both}
+.ob-goal-item.ob-item-out{animation:ob-item-shrink-out .18s ease-in forwards}
 .ob-goal-txt{flex:1;font-size:12px;font-weight:600;color:var(--text)}
+@keyframes ob-item-spring-in{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes ob-item-shrink-out{to{opacity:0;transform:scale(.92) translateY(4px);max-height:0;margin:0;padding:0;overflow:hidden}}
+.ob-list-empty{text-align:center;padding:18px 0;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;opacity:.7;animation:ob-child-in .25s ease both}
+@media(prefers-reduced-motion:reduce){
+  .ob-biz-row.ob-item-in,.ob-biz-row.ob-item-out,
+  .ob-goal-item.ob-item-in,.ob-goal-item.ob-item-out{animation:none!important;transition:none!important}
+}
 .ob-theme-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .ob-theme-chip{border:.5px solid var(--border2);border-radius:100px;padding:7px 14px;cursor:pointer;font-size:11px;font-weight:700;transition:all .15s;display:flex;align-items:center;gap:7px}
 .ob-theme-chip:hover{border-color:var(--accent)}
@@ -10241,24 +10252,60 @@ function obAddBiz(){
   const inp=document.getElementById('obBizName');
   const name=inp.value.trim(); if(!name)return;
   const status=document.getElementById('obBizStatus').value;
-  obData.businesses.push({name,status});
+  const idx=obData.businesses.push({name,status})-1;
   inp.value=''; inp.focus();
-  renderObBizList();
+  _obAppendBizRow(idx);
+}
+
+function _obBizRowHTML(b,i){
+  return`<div class="ob-biz-row ob-item-in">
+    <div class="ob-biz-pip" style="background:${BIZ_COLORS[i%BIZ_COLORS.length]}"></div>
+    <div class="ob-biz-name">${esc(b.name)}</div>
+    <div class="ob-biz-type">${esc(b.status)}</div>
+    <button onclick="obRemoveBiz(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px" aria-label="Remove">✕</button>
+  </div>`;
+}
+
+function _obAppendBizRow(i){
+  const el=document.getElementById('obBizList');if(!el)return;
+  // Remove empty placeholder if present
+  const empty=el.querySelector('.ob-list-empty');if(empty)empty.remove();
+  el.insertAdjacentHTML('beforeend',_obBizRowHTML(obData.businesses[i],i));
+}
+
+function _obUpdateBizEmpty(){
+  const el=document.getElementById('obBizList');if(!el)return;
+  if(!obData.businesses.length&&!el.querySelector('.ob-biz-row')){
+    el.innerHTML='<div class="ob-list-empty">No businesses yet — add one above.</div>';
+  }
 }
 
 function renderObBizList(){
   const el=document.getElementById('obBizList');if(!el)return;
-  if(!obData.businesses.length){el.innerHTML='';return;}
-  el.innerHTML=obData.businesses.map((b,i)=>`
-    <div class="ob-biz-row">
-      <div class="ob-biz-pip" style="background:${BIZ_COLORS[i%BIZ_COLORS.length]}"></div>
-      <div class="ob-biz-name">${b.name}</div>
-      <div class="ob-biz-type">${b.status}</div>
-      <button onclick="obRemoveBiz(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px">✕</button>
-    </div>`).join('');
+  if(!obData.businesses.length){
+    el.innerHTML='<div class="ob-list-empty">No businesses yet — add one above.</div>';
+    return;
+  }
+  el.innerHTML=obData.businesses.map((b,i)=>_obBizRowHTML(b,i)).join('');
 }
 
 function obRemoveBiz(i){
+  const el=document.getElementById('obBizList');
+  if(el){
+    const rows=el.querySelectorAll('.ob-biz-row');
+    const row=rows[i];
+    if(row){
+      // Disable button immediately so double-clicks can't queue a second removal
+      const btn=row.querySelector('button');if(btn)btn.disabled=true;
+      row.classList.add('ob-item-out');
+      const capturedIdx=i;
+      setTimeout(()=>{
+        obData.businesses.splice(capturedIdx,1);
+        renderObBizList();
+      },180);
+      return;
+    }
+  }
   obData.businesses.splice(i,1);
   renderObBizList();
 }
@@ -10267,23 +10314,57 @@ function obAddGoal(){
   const inp=document.getElementById('obGoalText');
   const text=inp.value.trim(); if(!text)return;
   const type=document.getElementById('obGoalType').value;
-  obData.goals.push({text,type});
+  const idx=obData.goals.push({text,type})-1;
   inp.value=''; inp.focus();
-  renderObGoalList();
+  _obAppendGoalRow(idx);
+}
+
+function _obGoalRowHTML(g,i){
+  return`<div class="ob-goal-item ob-item-in">
+    <div class="ob-goal-txt">${esc(g.text)}</div>
+    <span class="badge b-muted">${esc(g.type)}</span>
+    <button onclick="obRemoveGoal(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;flex-shrink:0" aria-label="Remove">✕</button>
+  </div>`;
+}
+
+function _obAppendGoalRow(i){
+  const el=document.getElementById('obGoalList');if(!el)return;
+  const empty=el.querySelector('.ob-list-empty');if(empty)empty.remove();
+  el.insertAdjacentHTML('beforeend',_obGoalRowHTML(obData.goals[i],i));
+}
+
+function _obUpdateGoalEmpty(){
+  const el=document.getElementById('obGoalList');if(!el)return;
+  if(!obData.goals.length&&!el.querySelector('.ob-goal-item')){
+    el.innerHTML='<div class="ob-list-empty">No goals yet — add one above.</div>';
+  }
 }
 
 function renderObGoalList(){
   const el=document.getElementById('obGoalList');if(!el)return;
-  if(!obData.goals.length){el.innerHTML='';return;}
-  el.innerHTML=obData.goals.map((g,i)=>`
-    <div class="ob-goal-item">
-      <div class="ob-goal-txt">${esc(g.text)}</div>
-      <span class="badge b-muted">${g.type}</span>
-      <button onclick="obRemoveGoal(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;flex-shrink:0">✕</button>
-    </div>`).join('');
+  if(!obData.goals.length){
+    el.innerHTML='<div class="ob-list-empty">No goals yet — add one above.</div>';
+    return;
+  }
+  el.innerHTML=obData.goals.map((g,i)=>_obGoalRowHTML(g,i)).join('');
 }
 
 function obRemoveGoal(i){
+  const el=document.getElementById('obGoalList');
+  if(el){
+    const items=el.querySelectorAll('.ob-goal-item');
+    const item=items[i];
+    if(item){
+      const btn=item.querySelector('button');if(btn)btn.disabled=true;
+      item.classList.add('ob-item-out');
+      const capturedIdx=i;
+      setTimeout(()=>{
+        obData.goals.splice(capturedIdx,1);
+        renderObGoalList();
+      },180);
+      return;
+    }
+  }
   obData.goals.splice(i,1);
   renderObGoalList();
 }
