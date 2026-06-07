@@ -10737,14 +10737,15 @@ function renderSeatCount() {
     _cloudSynced = true;
     currentUser = user;
 
+    // Snapshot BEFORE the reset so a user signing into a brand-new account
+    // for the first time can still push their existing local data to the cloud.
+    const localOnboarded = S.onboarded;
+
     // Wipe any previous user's in-memory state before loading the new user's cloud data.
     // Without this, a different account signing in inherits the prior user's S object,
     // which (a) leaks their data visually and (b) causes the "no cloud doc" branch to
     // push the wrong user's data up to the new account's Firestore document.
     S = JSON.parse(JSON.stringify(DEFAULT));
-
-    // Snapshot local onboarded flag BEFORE cloud load may overwrite S
-    const localOnboarded = S.onboarded;
 
     setSyncState('syncing');
 
