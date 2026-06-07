@@ -9965,8 +9965,15 @@ async function gateHandleSubmit() {
   } catch(e) {
     gateSetLoading(false);
     if (btn) btn.disabled = false;
+    if (e.code === 'auth/email-already-in-use') {
+      // Auto-switch to sign-in and pre-fill the email so the user doesn't have to do anything
+      gateSetMode('signin');
+      const emailEl = document.getElementById('gateEmail');
+      if (emailEl) emailEl.value = email;
+      gateSetError('That email already has an account — we switched to sign in for you.');
+      return;
+    }
     const msg = {
-      'auth/email-already-in-use': 'An account with this email already exists. Try signing in.',
       'auth/user-not-found': 'No account found with this email.',
       'auth/wrong-password': 'Incorrect password.',
       'auth/invalid-email': 'Invalid email address.',
@@ -10412,8 +10419,15 @@ async function handleAuth(){
         setTimeout(()=>{ if(!S.onboarded && typeof initOnboarding==='function') initOnboarding(); },500);
       },900);
     }catch(e){
-      const msg=e.code==='auth/email-already-in-use'?'An account with this email already exists. Sign in instead.':
-               e.code==='auth/weak-password'?'Password must be at least 6 characters.':
+      if(e.code==='auth/email-already-in-use'){
+        // Auto-switch to sign-in and pre-fill the email
+        setAuthMode('signin');
+        const emailEl=document.getElementById('authEmail');
+        if(emailEl) emailEl.value=emailVal;
+        if(errEl)errEl.textContent='That email already has an account — we switched to sign in for you.';
+        return;
+      }
+      const msg=e.code==='auth/weak-password'?'Password must be at least 6 characters.':
                e.code==='auth/invalid-email'?'Enter a valid email address.':
                'Sign up failed: '+(e.message||e.code);
       if(errEl)errEl.textContent=msg;
