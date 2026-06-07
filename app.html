@@ -3914,10 +3914,10 @@ async function sendChat() {
       ? [contextMsg, ...aiChatHistory]
       : [contextMsg, ...aiChatHistory.slice(-10)];
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/chat', {
       method:'POST',
       headers: getAIFetchHeaders(),
-      body: JSON.stringify({model:AI_MODEL, max_tokens:800, system: getAISystemPrompt(), messages})
+      body: JSON.stringify({...getAIKeyField(), model:AI_MODEL, max_tokens:800, system: getAISystemPrompt(), messages})
     });
     const data = await res.json();
     if(data.error){ throw new Error(data.error.message); }
@@ -3964,10 +3964,11 @@ Generate a tactical daily briefing for the operator. Return ONLY valid JSON, no 
 }`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/chat', {
       method:'POST',
       headers: getAIFetchHeaders(),
       body: JSON.stringify({
+        ...getAIKeyField(),
         model:AI_MODEL,
         max_tokens:1200,
         system: SYSTEM,
@@ -4059,10 +4060,13 @@ function renderApiKeyStatus(){
 }
 
 function getAIFetchHeaders(){
+  return {'Content-Type':'application/json'};
+}
+
+// Returns the payload key field to pass through the server proxy.
+function getAIKeyField(){
   const key=getApiKey();
-  const headers={'Content-Type':'application/json','anthropic-dangerous-direct-browser-access':'true'};
-  if(key)headers['x-api-key']=key;
-  return headers;
+  return key ? {_key:key} : {};
 }
 
 async function axisCheckReachability() {
@@ -4275,9 +4279,9 @@ async function sendChatOverlay(){
       ? [contextMsg, ...aiChatHistory]
       : [contextMsg, ...aiChatHistory.slice(-10)];
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/chat', {
       method:'POST', headers: getAIFetchHeaders(),
-      body: JSON.stringify({model:AI_MODEL, max_tokens:800, system: getAISystemPrompt(), messages})
+      body: JSON.stringify({...getAIKeyField(), model:AI_MODEL, max_tokens:800, system: getAISystemPrompt(), messages})
     });
     const data = await res.json();
     if(data.error) throw new Error(data.error.message);
@@ -4332,9 +4336,9 @@ Generate a tactical daily briefing for the operator. Return ONLY valid JSON, no 
 {"callout":"2 sharp sentences that immediately orient the operator to what matters most today. Be specific to their actual data — reference real numbers, business names, or task names. No fluff.","priorities":[{"title":"Short action-oriented task title","why":"One precise tactical sentence explaining the impact or urgency","biz":"Business name this applies to"},{"title":"Short action-oriented task title","why":"One precise tactical sentence","biz":"Business name"},{"title":"Short action-oriented task title","why":"One precise tactical sentence","biz":"Business name"}],"insight":"One sharp strategic observation the operator might be missing — a pattern, risk, or opportunity visible in their data.","watchlist":"One sentence flagging any overdue items, unpaid bills, stalled goals, or blocked tasks. If nothing critical, say so."}`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const res = await fetch('/api/chat', {
       method:'POST', headers: getAIFetchHeaders(),
-      body: JSON.stringify({model:AI_MODEL, max_tokens:1200, system: SYSTEM, messages:[{role:'user',content:prompt}]})
+      body: JSON.stringify({...getAIKeyField(), model:AI_MODEL, max_tokens:1200, system: SYSTEM, messages:[{role:'user',content:prompt}]})
     });
     const data = await res.json();
     if(data.error) throw new Error(data.error.message);
@@ -4871,7 +4875,7 @@ function renderDashTasks(){
   const active=S.tasks.filter(t=>t.status!=='Done').slice(0,5);
   const el=document.getElementById('dashTasks');
   if(!active.length){el.innerHTML='<div style="font-size:10px;color:var(--text3)">No active missions yet. Add missions from the Mission Board.</div>';return;}
-  el.innerHTML=active.map(t=>{const biz=bizById(t.bizId);return`<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--bg2);border-radius:var(--rs);margin-bottom:6px"><div><div style="font-size:11px;font-weight:600;color:var(--text)">${t.title}</div><div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace">${biz?biz.name:''} · ${t.type||''}</div></div><span class="badge ${t.priority==='High'?'b-red':t.priority==='Medium'?'b-amber':'b-green'}">${t.priority}</span></div>`;}).join('');
+  el.innerHTML=active.map(t=>{const biz=bizById(t.bizId);return`<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--bg2);border-radius:var(--rs);margin-bottom:6px"><div><div style="font-size:11px;font-weight:600;color:var(--text)">${esc(t.title)}</div><div style="font-size:9px;color:var(--text3);font-family:'DM Mono',monospace">${biz?esc(biz.name):''} · ${esc(t.type||'')}</div></div><span class="badge ${t.priority==='High'?'b-red':t.priority==='Medium'?'b-amber':'b-green'}">${esc(t.priority)}</span></div>`;}).join('');
 }
 
 function renderNetSummary(){
@@ -4973,7 +4977,7 @@ function openTaskDetail(id){
   overlay.querySelector('.task-popup-card').style.setProperty('--tp-color',bizColor||typeColor);
   document.getElementById('taskPopupHeaderBg').style.background=bizColor||typeColor;
   document.getElementById('taskPopupEyebrow').style.color=bizColor||typeColor;
-  document.getElementById('taskPopupEyebrow').innerHTML=`<div style="width:6px;height:6px;border-radius:50%;background:${bizColor||typeColor};flex-shrink:0"></div>${(t.type||'Task').toUpperCase()}${biz?' · '+biz.name:''}`;
+  document.getElementById('taskPopupEyebrow').innerHTML=`<div style="width:6px;height:6px;border-radius:50%;background:${bizColor||typeColor};flex-shrink:0"></div>${esc((t.type||'Task').toUpperCase())}${biz?' · '+esc(biz.name):''}`;
   document.getElementById('taskPopupTitle').textContent=t.title;
 
   // Meta grid
@@ -9637,11 +9641,10 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelect
 // FIREBASE INIT & AUTH
 // ══════════════════════════════════════════
 
-const FB_CONFIG = {
-  apiKey: 'AIzaSyBcdKlkPBlLxs6barPZDAgoPlB9iU82Zkg',
-  authDomain: 'createwarrom.firebaseapp.com',
-  projectId: 'createwarrom'
-};
+// Reuse options from the module-script-initialized app to avoid duplicating raw keys.
+const FB_CONFIG = window.firebaseApp
+  ? window.firebaseApp.options
+  : { apiKey: 'AIzaSyBcdKlkPBlLxs6barPZDAgoPlB9iU82Zkg', authDomain: 'createwarrom.firebaseapp.com', projectId: 'createwarrom' };
 
 let _fbAuth = null;
 let _fbDb = null;
@@ -9696,7 +9699,7 @@ async function saveToCloud(immediate = false) {
         updated_at: new Date().toISOString()
       });
       setSyncState('synced');
-    } catch(e) { console.error('Cloud save error:', e); setSyncState('synced'); }
+    } catch(e) { console.error('Cloud save error:', e); setSyncState('error'); }
   };
   if(immediate){ await doSave(); }
   else { clearTimeout(syncTimeout); syncTimeout = setTimeout(doSave, 1200); }
@@ -9797,7 +9800,7 @@ function setSyncState(state){
   const el=document.getElementById('syncIndicator'); if(!el)return;
   el.style.display='inline-block';
   el.className='sync-indicator '+state;
-  el.textContent=state==='syncing'?'↻ syncing':'● synced';
+  el.textContent=state==='syncing'?'↻ syncing':state==='error'?'✕ sync failed':'● synced';
 }
 
 function updateAppName(){
