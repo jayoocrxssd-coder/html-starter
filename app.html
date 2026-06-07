@@ -12948,6 +12948,21 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px color-mix(in srgb, 
 .plan-small-biz{background:var(--blue-bg);color:var(--blue)}
 .plan-enterprise{background:var(--amber-bg);color:var(--amber)}
 .toast-msg{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--surface);border:.5px solid var(--border2);color:var(--text);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:.06em;padding:9px 20px;border-radius:100px;z-index:99999;animation:toastIn .2s ease;white-space:nowrap;box-shadow:0 4px 24px rgba(0,0,0,.2);pointer-events:none}
+
+/* ── Custom dialog (confirm / alert / prompt) ── */
+.cdlg-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:100000;align-items:center;justify-content:center}
+.cdlg-backdrop.open{display:flex}
+.cdlg-box{background:var(--surface);border:.5px solid var(--border2);border-radius:16px;padding:28px 28px 22px;min-width:300px;max-width:420px;width:90%;box-shadow:0 24px 60px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:12px;animation:cdlgIn .18s ease}
+@keyframes cdlgIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.cdlg-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.cdlg-msg{font-family:'Syne',sans-serif;font-size:13px;color:var(--text2);line-height:1.6}
+.cdlg-inp{background:var(--bg2);border:.5px solid var(--border2);border-radius:8px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:10px 14px;outline:none;width:100%;box-sizing:border-box;transition:border-color .15s}
+.cdlg-inp:focus{border-color:var(--accent)}
+.cdlg-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.cdlg-btn{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;letter-spacing:.04em;padding:9px 20px;border-radius:100px;border:.5px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;transition:background .15s,color .15s}
+.cdlg-btn:hover{background:var(--bg3);color:var(--text)}
+.cdlg-btn-p{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.cdlg-btn-p:hover{opacity:.88}
 </style>
 
 <!-- Aurora background canvas -->
