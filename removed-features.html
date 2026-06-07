@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAR ROOM — Removed Features Log</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0e0d;
+    --bg2: #161614;
+    --bg3: #1e1e1c;
+    --surface: #1a1a18;
+    --border: rgba(255,255,255,.07);
+    --border2: rgba(255,255,255,.13);
+    --text: #f0f0ee;
+    --text2: #a0a09e;
+    --text3: #606060;
+    --accent: #f0f0ee;
+    --red: #e05252;
+    --red-bg: rgba(224,82,82,.1);
+    --amber: #d4935a;
+    --amber-bg: rgba(212,147,90,.1);
+    --green: #52c497;
+    --green-bg: rgba(82,196,151,.1);
+    --blue: #6c8fff;
+    --blue-bg: rgba(108,143,255,.1);
+    --r: 10px;
+    --rs: 6px;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 0;
+    min-height: 100vh;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&display=swap');
+
+  .shell {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+  .logo {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+  .sep {
+    width: 1px;
+    height: 16px;
+    background: var(--border2);
+  }
+  .page-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: var(--text);
+  }
+  .page-sub {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .badge-removed { background: var(--red-bg); color: var(--red); }
+  .badge-reason { background: var(--amber-bg); color: var(--amber); }
+
+  .feature-card {
+    background: var(--surface);
+    border: .5px solid var(--border2);
+    border-radius: var(--r);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .feature-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: .5px solid var(--border);
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .feature-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--red-bg);
+    border: .5px solid var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .feature-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.01em;
+  }
+  .feature-body {
+    padding: 20px 24px;
+  }
+
+  .section-label {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+    margin-top: 18px;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  p {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  .deleted-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .deleted-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--bg3);
+    border: .5px solid var(--border);
+    border-radius: var(--rs);
+    font-size: 11px;
+    color: var(--text2);
+  }
+  .deleted-list .del-icon {
+    color: var(--red);
+    font-size: 9px;
+    font-weight: 800;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .08em;
+    background: var(--red-bg);
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .deleted-list .del-icon.css { background: var(--blue-bg); color: var(--blue); }
+  .deleted-list .del-icon.js { background: var(--amber-bg); color: var(--amber); }
+  .deleted-list .del-icon.nav { background: var(--green-bg); color: var(--green); }
+
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    background: var(--bg3);
+    border: .5px solid var(--border2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--text2);
+  }
+
+  .summary-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+  .summary-card {
+    background: var(--surface);
+    border: .5px solid var(--border2);
+    border-radius: var(--r);
+    padding: 16px;
+    text-align: center;
+  }
+  .summary-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -.04em;
+    line-height: 1;
+  }
+  .summary-lbl {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .divider {
+    height: .5px;
+    background: var(--border);
+    margin: 40px 0;
+  }
+
+  .footer {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    letter-spacing: .06em;
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  @media (max-width: 600px) {
+    .summary-row { grid-template-columns: repeat(2, 1fr); }
+    .shell { padding: 28px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="topbar">
+    <span class="logo">WAR ROOM</span>
+    <div class="sep"></div>
+    <div>
+      <div class="page-title">Removed Features Log</div>
+      <div class="page-sub">Beta streamlining · 4 features removed</div>
+    </div>
+  </div>
+
+  <!-- Summary strip -->
+  <div class="summary-row">
+    <div class="summary-card">
+      <div class="summary-num">4</div>
+      <div class="summary-lbl">Features Removed</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-num">~1,870</div>
+      <div class="summary-lbl">Lines Removed</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-num">103</div>
+      <div class="summary-lbl">KB Saved</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-num">0</div>
+      <div class="summary-lbl">Breaking Changes</div>
+    </div>
+  </div>
+
+  <!-- ── AXIS STANDALONE ── -->
+  <div class="feature-card">
+    <div class="feature-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="feature-icon">✦</div>
+        <div>
+          <div class="feature-name">AXIS Standalone Page</div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px">AI Command Interface · Dedicated nav page</div>
+        </div>
+      </div>
+      <span class="badge badge-removed">Removed</span>
+    </div>
+    <div class="feature-body">
+
+      <div class="section-label">What it did</div>
+      <p>AXIS had its own dedicated full-page view accessible from the sidebar under a "AXIS" nav item. This page mirrored the AXIS chat panel already embedded on the Dashboard — it displayed the same conversation history, offered the same Briefing button, and showed an AI status indicator. It was essentially a full-screen version of the Dashboard's AI panel.</p>
+
+      <div class="section-label">Why removed</div>
+      <p>The AXIS panel embedded on the Dashboard (and the floating overlay accessible via the ⤢ expand button) fully covers this use case. Having a third entry point — the standalone nav page — created redundancy in the nav and confusion about which "AXIS" was canonical. The Dashboard panel is the primary home for AXIS; the overlay is the immersive mode. The standalone page added nothing unique.</p>
+
+      <div class="section-label">What was deleted</div>
+      <ul class="deleted-list">
+        <li><span class="del-icon nav">NAV</span> Sidebar nav item: <code>id="nav-axis"</code> (<code>onclick="showPage('axis')"</code>)</li>
+        <li><span class="del-icon nav">NAV</span> Mobile "more" sheet entry: Axis item in <code>.mob-more-sheet</code></li>
+        <li><span class="del-icon">HTML</span> Full standalone page: <code>id="page-axis"</code> — entire div block including AXIS page header, no-key banner, chat message container, and input textarea</li>
+        <li><span class="del-icon js">JS</span> <code>renderAxisPage()</code> — synced overlay messages to the standalone page on navigation</li>
+        <li><span class="del-icon js">JS</span> <code>resetAxisChat()</code> — delegated to <code>resetAIChat()</code> and synced standalone panel</li>
+        <li><span class="del-icon js">JS</span> <code>sendAxisChat()</code> — routed input to overlay and synced results back</li>
+        <li><span class="del-icon js">JS</span> <code>runBriefingAxis()</code> — triggered briefing from standalone page context</li>
+        <li><span class="del-icon js">JS</span> Removed <code>'axis'</code> from the <code>_morePages</code> array in <code>showPage()</code></li>
+        <li><span class="del-icon js">JS</span> Removed <code>if(page==='axis'){renderAxisPage();}</code> dispatch from <code>showPage()</code></li>
+      </ul>
+
+      <div class="section-label">What was kept</div>
+      <p>The AXIS panel embedded on the Dashboard page is fully intact. The floating AXIS overlay (accessible via the ⤢ expand button on the Dashboard) is fully intact. All AI logic, API key handling, briefing generation, and chat functionality is unchanged.</p>
+
+    </div>
+  </div>
+
+  <!-- ── TAX TRACKER ── -->
+  <div class="feature-card">
+    <div class="feature-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="feature-icon">◫</div>
+        <div>
+          <div class="feature-name">Tax Tracker</div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px">Estimated quarterly taxes · Deductible categories</div>
+        </div>
+      </div>
+      <span class="badge badge-removed">Removed</span>
+    </div>
+    <div class="feature-body">
+
+      <div class="section-label">What it did</div>
+      <p>The Tax Tracker was a secondary tab within the Bills &amp; Expenses page. It displayed estimated quarterly tax payments based on a 25% effective rate, a grid of deductible expense categories (with amounts auto-pulled from P&amp;L data), a year-over-year summary chart, and a filing checklist. It supported both Business and Personal modes and let users select the tax year. All figures were estimates — the feature explicitly noted users should consult a tax professional.</p>
+
+      <div class="section-label">Why removed</div>
+      <p>The Tax Tracker was built on rough estimations (fixed 25% rate) rather than real tax logic, making its figures unreliable for actual financial decisions. It added complexity to the Bills page UI without delivering actionable data. Beta streamlining prioritizes the P&amp;L Tracker and Invoices for financial tracking — tax estimation is out of scope for this release.</p>
+
+      <div class="section-label">What was deleted</div>
+      <ul class="deleted-list">
+        <li><span class="del-icon nav">TAB</span> Bills page tab bar button: <code>id="bmtab-tax"</code> (<code>onclick="setBillsMainTab('tax')"</code>)</li>
+        <li><span class="del-icon nav">TAB</span> Entire Bills page tab bar (<code>.bills-main-tab-bar</code>) removed since only one tab remained</li>
+        <li><span class="del-icon">HTML</span> <code>id="taxSection"</code> div — entire Tax Tracker HTML block including: quarterly payment strip, KPI grid, deductible categories list, year summary chart, filing checklist</li>
+        <li><span class="del-icon js">JS</span> <code>renderTaxTracker()</code> — main render function populating all tax UI</li>
+        <li><span class="del-icon js">JS</span> <code>setBillsMainTab(tab)</code> — tab switcher between Bills and Tax sections</li>
+        <li><span class="del-icon js">JS</span> <code>setTaxMode(mode)</code> — toggled between Business and Personal tax modes</li>
+        <li><span class="del-icon js">JS</span> Variable <code>_taxMode</code> declaration</li>
+        <li><span class="del-icon css">CSS</span> <code>.tax-kpi-grid</code>, <code>.tax-q-strip</code>, <code>.tax-q-card</code>, <code>.tax-q-card.active-q</code>, <code>.tax-q-card.paid-q</code>, <code>.tax-q-card-accent</code>, <code>.tax-q-label</code>, <code>.tax-q-amount</code>, <code>.tax-q-due</code></li>
+        <li><span class="del-icon css">CSS</span> <code>.tax-cat-row</code>, <code>.tax-cat-icon</code>, <code>.tax-cat-name</code>, <code>.tax-cat-sub</code>, <code>.tax-cat-amount</code></li>
+        <li><span class="del-icon css">CSS</span> <code>.tax-toggle</code>, <code>.tax-toggle-btn</code>, <code>.tax-year-sel</code></li>
+        <li><span class="del-icon css">CSS</span> <code>.bills-main-tab</code>, <code>.bills-main-tab-bar</code> (tab bar CSS removed along with the tab bar)</li>
+        <li><span class="del-icon css">CSS</span> Responsive: <code>.tax-kpi-grid</code> media query override (2-column on mobile)</li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── VIDEO MEET ── -->
+  <div class="feature-card">
+    <div class="feature-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="feature-icon">▶</div>
+        <div>
+          <div class="feature-name">Video Meet</div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px">WAR ROOM · MEET · In-app video conferencing UI</div>
+        </div>
+      </div>
+      <span class="badge badge-removed">Removed</span>
+    </div>
+    <div class="feature-body">
+
+      <div class="section-label">What it did</div>
+      <p>Video Meet was a full-screen video conferencing overlay (<code>id="vcallOverlay"</code>) accessible via a "MEET" chip in the topbar. It included a lobby screen where users could preview their camera and start/join a meeting with a randomly generated room code. The in-call view showed a participant grid, picture-in-picture, a timer, mute/camera/screen share controls, an in-call chat panel, and a participant list. Meeting history was stored in <code>S.vcMeetings</code>. Note: the feature simulated video (no actual WebRTC peer connections were established) — it was a UI prototype.</p>
+
+      <div class="section-label">Why removed</div>
+      <p>Video Meet was a simulated prototype — it had no real WebRTC infrastructure, meaning no actual video calls could occur between users. Including a non-functional video conferencing feature in a beta release is misleading. The substantial CSS (~90 lines) and JS (~480 lines) was dead weight. Users expecting real video calls would be confused or disappointed.</p>
+
+      <div class="section-label">What was deleted</div>
+      <ul class="deleted-list">
+        <li><span class="del-icon nav">CHIP</span> Topbar "MEET" button: <code>id="meetChip"</code> (<code>onclick="openVCallLobby()"</code>) and its preceding separator</li>
+        <li><span class="del-icon">HTML</span> Entire video call overlay: <code>id="vcallOverlay"</code> — all lobby, participant grid, controls, chat panel, screen picker, and share bar HTML (~246 lines)</li>
+        <li><span class="del-icon js">JS</span> <code>openVCallLobby()</code>, <code>joinVCall()</code>, <code>endVCall()</code></li>
+        <li><span class="del-icon js">JS</span> <code>renderVCallHistory()</code>, <code>renderVCallParticipants()</code>, <code>_renderVCallParticipantList()</code></li>
+        <li><span class="del-icon js">JS</span> <code>setVCallTab()</code>, <code>updateVCallControls()</code>, <code>toggleVCallControl()</code></li>
+        <li><span class="del-icon js">JS</span> <code>toggleVCallChat()</code>, <code>toggleVCallParticipants()</code>, <code>toggleVCallParticipantsList()</code></li>
+        <li><span class="del-icon js">JS</span> <code>sendVCallChat()</code></li>
+        <li><span class="del-icon js">JS</span> State object <code>_vcState</code> and all associated timer/stream management code</li>
+        <li><span class="del-icon css">CSS</span> Full <code>.vcall-*</code> CSS block (~92 lines): <code>.vcall-overlay</code>, <code>.vcall-topbar</code>, <code>.vcall-logo</code>, <code>.vcall-grid</code>, <code>.vcall-tile</code>, <code>.vcall-controls</code>, <code>.vcall-btn</code>, <code>.vcall-lobby</code>, <code>.vcall-chat-panel</code>, screen picker styles, share bar styles, lobby styles, etc.</li>
+        <li><span class="del-icon css">CSS</span> Responsive: vcall mobile safe-area overrides, <code>.vcall-chat-panel { display:none }</code> portrait fix, mobile tap-target enlargements, lobby camera size override</li>
+        <li><span class="del-icon js">JS</span> Removed <code>meetChip</code> insertion-before logic from FUN mode button initializer</li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- ── UPDATE MANAGER ── -->
+  <div class="feature-card">
+    <div class="feature-header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="feature-icon">⟳</div>
+        <div>
+          <div class="feature-name">Update Manager</div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);margin-top:2px">Safe updates · Data merging · Backup history · Data patcher</div>
+        </div>
+      </div>
+      <span class="badge badge-removed">Removed</span>
+    </div>
+    <div class="feature-body">
+
+      <div class="section-label">What it did</div>
+      <p>The Update Manager was a dedicated page (<code>id="page-update"</code>) with a 3-step workflow for upgrading the War Room HTML file without losing user data. Step 1: export a backup. Step 2: load a new <code>.html</code> update file. Step 3: preview the merge and apply. It also included a "Data Patcher" collapsible panel with 6 database maintenance patches (fix duplicate IDs, remove orphaned tasks/events/entries/streams, recalibrate ID counter) runnable on demand. A backup history list tracked past exports with timestamps and record counts.</p>
+
+      <div class="section-label">Why removed</div>
+      <p>The Update Manager addressed a very specific distribution model where the entire app is a single HTML file passed around and upgraded manually. In a hosted/deployed context, app updates are pushed server-side — no merge workflow is needed. The data patcher utilities, while useful for data hygiene, are advanced developer tools not appropriate for general beta users. The feature added a full page of complex UI and ~430 lines of JS for an edge-case workflow.</p>
+
+      <div class="section-label">What was deleted</div>
+      <ul class="deleted-list">
+        <li><span class="del-icon nav">NAV</span> Sidebar nav item: <code>id="nav-update"</code> (<code>onclick="showPage('update')"</code>)</li>
+        <li><span class="del-icon">HTML</span> Full Update Manager page: <code>id="page-update"</code> — 3-step card flow, status strip, data summary list, backup history list, data patcher collapsible panel with patch list and log</li>
+        <li><span class="del-icon">HTML</span> Profile &amp; Settings: "Update Manager" card (blue-bordered call-to-action with load-update file input)</li>
+        <li><span class="del-icon js">JS</span> <code>loadUpdateFile()</code> — reads a War Room HTML update file</li>
+        <li><span class="del-icon js">JS</span> <code>showUpdatePreview()</code> — populates step 3 preview with record counts and version diff</li>
+        <li><span class="del-icon js">JS</span> <code>_applyUpdateExec()</code>, <code>applyUpdate()</code> — executes the data-preserving merge</li>
+        <li><span class="del-icon js">JS</span> <code>cancelUpdate()</code> — resets the update flow UI</li>
+        <li><span class="del-icon js">JS</span> <code>exportAndMarkStep1()</code> — export + unlock step 2 flow</li>
+        <li><span class="del-icon js">JS</span> <code>renderUpdatePage()</code>, <code>renderUpdateStatusStrip()</code>, <code>renderDataSummary()</code>, <code>renderBackupHistory()</code></li>
+        <li><span class="del-icon js">JS</span> <code>renderPatchList()</code>, <code>selectPatch()</code>, <code>runSelectedPatch()</code>, <code>patchLog()</code>, <code>clearPatchLog()</code>, <code>setPatcherStatus()</code>, <code>togglePatcher()</code></li>
+        <li><span class="del-icon js">JS</span> Data patcher functions: <code>patchFixDuplicateIds()</code>, <code>patchOrphanedTasks()</code>, <code>patchOrphanedEvents()</code>, <code>patchOrphanedEntries()</code>, <code>patchOrphanedStreams()</code>, <code>patchRecalibrateNextId()</code>, <code>patchRunAll()</code></li>
+        <li><span class="del-icon js">JS</span> <code>PATCHES</code> array, <code>selectedPatchId</code>, <code>step1Done</code>, <code>pendingUpdateHTML</code> variable declarations</li>
+        <li><span class="del-icon js">JS</span> Command palette entry: "Update Manager" navigate action</li>
+        <li><span class="del-icon js">JS</span> Removed <code>if(page==='update'){renderUpdatePage();}</code> dispatch from <code>showPage()</code></li>
+        <li><span class="del-icon css">CSS</span> <code>.backup-card</code>, <code>.backup-card-header</code>, <code>.backup-card-body</code>, <code>.backup-history-row</code>, <code>.backup-icon</code></li>
+        <li><span class="del-icon css">CSS</span> <code>.update-status</code>, <code>.update-dot</code>, <code>.update-dot.green</code>, <code>.update-dot.amber</code>, <code>.update-dot.red</code></li>
+        <li><span class="del-icon css">CSS</span> <code>.update-preview-row</code>, <code>.update-preview-icon</code> variants</li>
+        <li><span class="del-icon css">CSS</span> <code>.diff-added</code>, <code>.diff-removed</code>, <code>.diff-unchanged</code></li>
+        <li><span class="del-icon css">CSS</span> Responsive: <code>#page-update .row { flex-direction: column }</code> mobile stack</li>
+      </ul>
+
+      <div class="section-label">What was kept</div>
+      <p>The standard "Restore from Backup" functionality in Profile &amp; Settings (import JSON backup) is fully intact. The <code>exportAllData()</code> function and auto-backup-on-save logic remain. Backup history is still tracked in <code>S.backups</code> and exported with data. Only the dedicated Update Manager UI and data patcher were removed.</p>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="footer">WAR ROOM — REMOVED FEATURES LOG · BETA STREAMLINING · 4 FEATURES · ~1,870 LINES REMOVED</div>
+
+</div>
+</body>
+</html>
