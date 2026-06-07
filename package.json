@@ -1,6 +1,23 @@
 {
   "private": true,
   "dependencies": {
-    "@vercel/edge": "^0.1.2"
-  }
+    "@playwright/test": "^1.60.0",
+    "@vercel/edge": "^0.1.2",
+    "playwright": "^1.60.0",
+    "playwright-core": "^1.60.0"
+  },
+  "name": "html-starter",
+  "version": "1.0.0",
+  "description": "--- name: HTML Starter slug: html-starter-with-analytics description: HTML5 template with analytics and advanced routing configuration. deployUrl: https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/html&project-name=html relatedTemplates:   - nextjs-boilerplate ---",
+  "main": "middleware.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:42159/git/jayoocrxssd-coder/html-starter"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
