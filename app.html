@@ -10711,6 +10711,12 @@ function renderSeatCount() {
   load();
   bootApp();
 
+  // Final sync attempt when user closes/navigates away — catches changes
+  // that didn't make it through the 1.2s debounce before tab was closed.
+  window.addEventListener('beforeunload', () => {
+    if(currentUser && _fbDb && _fbDb.collection) saveToCloud(true);
+  });
+
   // ── STEP 2: Init Firebase in background ───────────────────────
   // Non-blocking — app is already running, this just connects cloud
   await initFirebase();
