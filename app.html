@@ -4737,6 +4737,7 @@ function refreshBizNav(){
       : '<div class="biz-pip" style="background:' + color + (isPinned ? ';box-shadow:0 0 0 2px ' + color + '33' : '') + '"></div>';
     const pinnedBadge = isPinned
       ? '<span style="font-size:7px;font-family:DM Mono,monospace;margin-left:auto;padding:1px 5px;border-radius:100px;background:' + color + '22;color:' + color + ';letter-spacing:.04em">PROJECT</span>'
+        + (b.status && b.status !== 'Active' ? '<span style="font-size:7px;font-family:DM Mono,monospace;margin-left:3px;padding:1px 5px;border-radius:100px;' + statusStyle + '">' + b.status + '</span>' : '')
       : '<span style="font-size:8px;font-family:DM Mono,monospace;margin-left:auto;padding:1px 6px;border-radius:100px;' + statusStyle + '">' + (b.status||'') + '</span>';
     const cls = 'biz-item' + (isPinned ? ' biz-item-pinned' : '');
     // Use data-bizid only — clicks handled by delegated listener on bizNav
@@ -5851,7 +5852,7 @@ function ctxEditBiz(){
   showPage('bizprofile',id);
 }
 function ctxToggleStatus(){
-  const biz=bizById(ctxBizId);if(!biz)return;
+  const biz=bizById(ctxBizId)||S.businesses.find(b=>b._pinned==='__stratus_project__'&&(ctxBizId===-1||ctxBizId===b.id));if(!biz)return;
   const statuses=['Active','Building','On Hold','Idea Stage'];
   const cur=statuses.indexOf(biz.status||'Active');
   biz.status=statuses[(cur+1)%statuses.length];
