@@ -6613,7 +6613,9 @@ function renderBackupHistory(){
 
 // Flush final save + stamp auto-backup when tab is closed
 window.addEventListener('beforeunload', function(){
-  if(typeof saveToCloud === 'function' && currentUser) saveToCloud(true);
+  // Async Firestore writes are killed when the tab closes, so flush to localStorage
+  // synchronously instead — this survives tab close and is picked up on next boot.
+  try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
 });
 
 function importData(input){
@@ -9792,9 +9794,11 @@ async function signIn(email, password) {
 }
 
 async function signOut() {
-  // Stamp a cloud-side backup snapshot before wiping local state
+  // Stamp cloud snapshot first — must complete before Firebase auth is cleared,
+  // otherwise the Firestore write is rejected by security rules (no currentUser).
   if(currentUser) await createBackupSnapshot('Auto-backup · sign-out');
-  if(_fbAuth) _fbAuth.signOut().catch(()=>{});
+  // Sign out of Firebase only after the snapshot write has resolved.
+  if(_fbAuth) await _fbAuth.signOut().catch(()=>{});
   currentUser = null;
   _cloudSynced = false;
   _cloudSyncedUid = null;
