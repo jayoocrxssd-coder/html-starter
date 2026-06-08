@@ -2764,6 +2764,7 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
             <div>
               <div class="settings-label">Export Full Backup</div>
               <div class="settings-sub">Versioned JSON snapshot — all data preserved</div>
+              <div class="settings-sub" id="lastBackupLabel" style="margin-top:3px;color:var(--green);font-family:'DM Mono',monospace;font-size:9px">No backup recorded yet</div>
             </div>
             <button class="btn btn-p btn-sm" onclick="exportAllData()">↓ Backup Now</button>
           </div>
@@ -2792,6 +2793,12 @@ label{display:block;font-size:8px;font-weight:700;letter-spacing:.12em;text-tran
             <button class="btn btn-g btn-sm" onclick="document.getElementById('importInput').click()">Restore</button>
           </div>
           <input type="file" id="importInput" accept=".json" style="display:none" onchange="importData(this)">
+          <div style="margin-top:14px">
+            <div style="font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Backup History</div>
+            <div id="backupHistoryList" style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:10px;color:var(--text3)">No backups recorded yet.</div>
+            </div>
+          </div>
         </div>
         <div class="card">
           <div class="sec-title mb12">Onboarding</div>
@@ -6559,6 +6566,56 @@ function updateLastBackupLabel(){
   el.textContent = 'Last: '+d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' at '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
 }
 
+// Silent cloud-side snapshot — no file download, just records to S.backups + syncs to Firestore
+async function createBackupSnapshot(label){
+  if(!S.backups) S.backups=[];
+  S.backups.unshift({
+    date: new Date().toISOString(),
+    label: label||'Auto-backup',
+    filename: null,
+    counts: {
+      businesses: (S.businesses||[]).length,
+      tasks: (S.tasks||[]).length,
+      entries: (S.entries||[]).length,
+      events: (S.events||[]).length,
+      bills: (S.bills||[]).length,
+      notes: (S.notes||[]).length,
+    }
+  });
+  if(S.backups.length > 20) S.backups = S.backups.slice(0,20);
+  save();
+  updateLastBackupLabel();
+  renderBackupHistory();
+  if(typeof saveToCloud === 'function') await saveToCloud(true);
+}
+
+function renderBackupHistory(){
+  const el = document.getElementById('backupHistoryList'); if(!el)return;
+  if(!S.backups||!S.backups.length){
+    el.innerHTML='<div style="font-size:10px;color:var(--text3)">No backups recorded yet.</div>';
+    return;
+  }
+  el.innerHTML = S.backups.map(function(b){
+    const d = new Date(b.date);
+    const dateStr = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+    const counts = b.counts ? Object.entries(b.counts).map(function([k,v]){return v+' '+k;}).join(' · ') : '';
+    const isAuto = (b.label||'').toLowerCase().includes('auto');
+    return '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:8px 10px;background:var(--bg2);border-radius:8px">'
+      +'<div>'
+      +'<div style="font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px">'+(b.label||'Backup')+'</div>'
+      +'<div style="font-size:9px;font-family:\'DM Mono\',monospace;color:var(--text3)">'+dateStr+'</div>'
+      +(counts?'<div style="font-size:9px;color:var(--text3);margin-top:2px">'+counts+'</div>':'')
+      +'</div>'
+      +'<span style="font-size:8px;font-weight:700;padding:2px 7px;border-radius:100px;flex-shrink:0;'+(isAuto?'background:var(--blue-bg);color:var(--blue)':'background:var(--green-bg);color:var(--green)')+'">'+( isAuto?'AUTO':'MANUAL')+'</span>'
+      +'</div>';
+  }).join('');
+}
+
+// Flush final save + stamp auto-backup when tab is closed
+window.addEventListener('beforeunload', function(){
+  if(typeof saveToCloud === 'function' && currentUser) saveToCloud(true);
+});
+
 function importData(input){
   const file=input.files[0]; if(!file)return;
   const reader=new FileReader();
@@ -9735,6 +9792,8 @@ async function signIn(email, password) {
 }
 
 async function signOut() {
+  // Stamp a cloud-side backup snapshot before wiping local state
+  if(currentUser) await createBackupSnapshot('Auto-backup · sign-out');
   if(_fbAuth) _fbAuth.signOut().catch(()=>{});
   currentUser = null;
   _cloudSynced = false;
@@ -10150,7 +10209,7 @@ function bootApp() {
     showPage('dashboard');
   }
 
-  renderAlarms(); updateAlarmChip(); updateLastBackupLabel();
+  renderAlarms(); updateAlarmChip(); updateLastBackupLabel(); renderBackupHistory();
 
   if(Notification?.permission==='default') Notification.requestPermission();
   // Safety net: re-render bizNav after data settles (catches any timing edge cases)
