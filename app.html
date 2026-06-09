@@ -3540,12 +3540,10 @@ function recalculateNextId() {
 }
 
 function save() {
-  S._savedAt = new Date().toISOString();
   try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
   saveToCloud();
 }
 function saveImmediate() {
-  S._savedAt = new Date().toISOString();
   try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
   saveToCloud(true);
 }
@@ -6617,8 +6615,6 @@ function renderBackupHistory(){
 window.addEventListener('beforeunload', function(){
   // Async Firestore writes are killed when the tab closes, so flush to localStorage
   // synchronously instead — this survives tab close and is picked up on next boot.
-  // Stamp _savedAt so syncFromCloud can detect that local is newer than cloud.
-  S._savedAt = new Date().toISOString();
   try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
 });
 
@@ -9718,12 +9714,24 @@ let _cloudSyncedUid = null; // tracks which UID has been synced this session
 let driveToken = null;
 let syncTimeout = null;
 
+function _enableFirestorePersistence(db) {
+  if(!db || typeof db.enablePersistence !== 'function') return;
+  db.enablePersistence({ synchronizeTabs: true }).catch(err => {
+    // failed-precondition = multiple tabs open, persistence only works in one
+    // unimplemented = browser doesn't support it (e.g. Firefox private mode)
+    // Both are non-fatal — app still works, just without offline cache.
+    if(err.code !== 'failed-precondition' && err.code !== 'unimplemented') {
+      console.warn('Firestore persistence error:', err);
+    }
+  });
+}
+
 async function initFirebase() {
   if(typeof firebase !== 'undefined' && firebase.apps) {
     try {
       const app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(FB_CONFIG);
       _fbAuth = firebase.auth();
-      if(firebase.firestore){ _fbDb = firebase.firestore(); window._fbDb = _fbDb; }
+      if(firebase.firestore){ _fbDb = firebase.firestore(); _enableFirestorePersistence(_fbDb); window._fbDb = _fbDb; }
       return app;
     } catch(e){ console.warn('Firebase init failed:', e); return null; }
   }
@@ -9739,7 +9747,7 @@ async function initFirebase() {
       try {
         const app = firebase.apps.length ? firebase.apps[0] : firebase.initializeApp(FB_CONFIG);
         _fbAuth = firebase.auth();
-        if(firebase.firestore){ _fbDb = firebase.firestore(); window._fbDb = _fbDb; }
+        if(firebase.firestore){ _fbDb = firebase.firestore(); _enableFirestorePersistence(_fbDb); window._fbDb = _fbDb; }
         resolve(app);
       } catch(e){ console.warn('Firebase init failed:', e); resolve(null); }
     };
@@ -10835,14 +10843,7 @@ function renderSeatCount() {
     }
 
     // Snapshot local state BEFORE reset — capture savedAt and onboarded so we
-    // can compare recency against the cloud doc after loadFromCloud() runs.
     const localOnboarded = S.onboarded;
-    let localSavedAt = null;
-    let localRaw = null;
-    try {
-      const _lr = localStorage.getItem('warRoomWR_v31');
-      if(_lr) { localRaw = JSON.parse(_lr); localSavedAt = localRaw._savedAt || null; }
-    } catch(e){}
 
     // Wipe any previous user's in-memory state before loading the new user's cloud data.
     // Without this, a different account signing in inherits the prior user's S object,
@@ -10863,23 +10864,10 @@ function renderSeatCount() {
     const cloudLoaded = await loadFromCloud();
 
     if(cloudLoaded && S.onboarded) {
-      // Compare cloud vs local recency. localStorage is written synchronously on
-      // every save and on tab close; Firestore writes are async and may have been
-      // killed by a tab close before the debounce fired. If local is newer, use
-      // it as authoritative and push it up to bring cloud back in sync.
-      const cloudSavedAt = S._savedAt || null;
-      const localIsNewer = localSavedAt && cloudSavedAt && localSavedAt > cloudSavedAt && localRaw && localRaw.onboarded;
-      if(localIsNewer) {
-        // Local is more recent — delegate to load() for full normalization (same
-        // guards as loadFromCloud: arrays, objects, nextId, monthlyBudgets, etc.)
-        // then persist back to localStorage and push to cloud to re-converge.
-        load();
-        try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
-        await saveToCloud(true);
-      } else {
-        // Cloud is authoritative — persist locally so next offline boot is instant
-        try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
-      }
+      // Firestore persistence cache is the source of truth — it holds the latest
+      // committed writes including any that survived a tab close. Persist to
+      // localStorage so the next offline boot is instant.
+      try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
       dismissCloudRestoreOverlay(false);
 
       // Dismiss onboarding overlay if it opened before sync completed
