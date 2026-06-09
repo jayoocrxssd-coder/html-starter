@@ -6636,6 +6636,11 @@ function importData(input){
         S.onboarded = true;
         recalculateNextId();
         save();
+        // Stamp a guard so syncFromCloud skips the cloud overwrite on the
+        // next boot — the Firestore write below may not complete before the
+        // reload kills it, so localStorage (written synchronously above) is
+        // the authoritative source until the guard is consumed.
+        localStorage.setItem('wr_restore_pending', '1');
         await saveToCloud(true);
         location.reload();
       }
@@ -10799,6 +10804,31 @@ function renderSeatCount() {
     _cloudSynced = true;
     currentUser = user;
 
+    // If a restore just completed, localStorage is authoritative — skip the cloud
+    // overwrite entirely, push local data up to Firestore, and resume normally.
+    // This prevents the post-reload onAuthStateChanged from clobbering restored data
+    // with the stale Firestore doc (which may not have received the pre-reload write).
+    if(localStorage.getItem('wr_restore_pending')) {
+      localStorage.removeItem('wr_restore_pending');
+      dismissCloudRestoreOverlay(false);
+      const pill = document.getElementById('userPill');
+      if(pill) pill.style.display = 'flex';
+      const cloudBtn = document.getElementById('cloudSignInBtn');
+      if(cloudBtn) cloudBtn.style.display = 'none';
+      const em = document.getElementById('userEmailDisplay');
+      if(em) em.textContent = user.email.split('@')[0].toUpperCase();
+      document.getElementById('app').classList.toggle('dark', !!S.dark);
+      document.body.classList.toggle('dark', !!S.dark);
+      applyTheme();
+      refreshBizNav();
+      renderProfileBizGrid();
+      updateBadges();
+      showPage(currentPage || 'dashboard');
+      await saveToCloud(true);
+      setSyncState('synced');
+      return;
+    }
+
     // Snapshot BEFORE the reset so a user signing into a brand-new account
     // for the first time can still push their existing local data to the cloud.
     const localOnboarded = S.onboarded;
@@ -12106,6 +12136,7 @@ function renderSeatCount() {
                   S.backups = hist;
                   S.onboarded = true;
                   save();
+                  localStorage.setItem('wr_restore_pending', '1');
                   setStatus('⏳ Syncing to cloud...');
                   await saveToCloud(true);
                   setStatus('✅ Loaded: ' + file.name);
