@@ -10004,8 +10004,9 @@ async function gateHandleGoogle() {
   if (typeof handleGoogleSignIn === 'function') {
     try { await handleGoogleSignIn(true); } catch(e) { gateSetLoading(false); gateSetError(e.message || 'Google sign-in failed.'); }
   } else {
-    // Firebase SDK not loaded yet — offline stub
-    setTimeout(() => { localStorage.setItem('wr_access','1'); gateAuthSuccess('google'); }, 1000);
+    // Firebase SDK not loaded yet — set access flag only; do not call gateAuthSuccess
+    // here as syncFromCloud hasn't run yet and S.onboarded would be wrong.
+    localStorage.setItem('wr_access', '1');
   }
 }
 
@@ -10063,7 +10064,13 @@ async function gateHandleSubmit() {
 }
 
 function gateAuthSuccess(method) {
-  // Auth done — advance to plan selection (Phase 2)
+  // Returning users who already have cloud data (S.onboarded=true after syncFromCloud)
+  // skip the plan/onboarding gate and go straight to the dashboard.
+  if(S.onboarded) {
+    gateHide(() => { showPage(currentPage || 'dashboard'); });
+    return;
+  }
+  // New users — advance to plan selection (Phase 2)
   gateSetLoading(true, 'Auth confirmed.', 'Loading plan options...');
   setTimeout(() => {
     gateHide(() => {
@@ -10346,24 +10353,31 @@ function handleGoogleSignIn() {
               await _fbAuth.signInWithCredential(credential);
               // onAuthStateChanged will fire and handle syncFromCloud
             } catch(fbErr) {
-              console.warn('Firebase Google sign-in:', fbErr);
-              // Fall back: set currentUser manually so cloud sync still runs
-              fbInitUser({uid: profile.id||'', displayName: profile.name||'', email: profile.email||'', photoURL: profile.picture||''});
+              console.warn('Firebase Google sign-in failed, falling back to local auth:', fbErr);
+              // Only set currentUser — do NOT call fbInitUser/save() here because
+              // that would stamp local/default S into Firestore before syncFromCloud
+              // has had a chance to load the user's real cloud data.
+              currentUser = { uid: profile.id||'', email: profile.email||'', displayName: profile.name||'' };
+              await syncFromCloud(currentUser);
             }
           } else {
-            fbInitUser({uid: profile.id||'', displayName: profile.name||'', email: profile.email||'', photoURL: profile.picture||''});
+            // No Firebase — set currentUser directly and sync
+            currentUser = { uid: profile.id||'', email: profile.email||'', displayName: profile.name||'' };
+            await syncFromCloud(currentUser);
           }
-          // Dismiss whichever auth overlay is currently visible
+          // Dismiss auth overlays. Do NOT call gateAuthSuccess or advance the
+          // onboarding gate here — onAuthStateChanged → syncFromCloud will fire
+          // immediately after signInWithCredential resolves and is the single
+          // authority for loading cloud data and routing the user. Calling
+          // gateAuthSuccess here races with syncFromCloud and causes the gate
+          // flow to overwrite S.onboarded before cloud data has loaded.
           const gateOv = document.getElementById('gateOverlay');
           const authOv = document.getElementById('authOverlay');
           if(gateOv && !gateOv.classList.contains('hidden')) {
-            // Called from the pre-auth gate — advance through the new signup flow
-            gateAuthSuccess('google');
-          } else {
-            if(authOv){ authOv.classList.add('fading'); setTimeout(()=>{ authOv.style.display='none'; authOv.classList.remove('fading'); }, 400); }
-            // Legacy path: trigger onboarding if new user
-            const isNew = !S.profile.name && !S.profile.googleName;
-            if(isNew && typeof initOnboarding === 'function') initOnboarding();
+            gateHide(() => {});
+          } else if(authOv) {
+            authOv.classList.add('fading');
+            setTimeout(()=>{ authOv.style.display='none'; authOv.classList.remove('fading'); }, 400);
           }
         } catch(e) {
           if(btn){ btn.disabled=false; }
@@ -10870,11 +10884,17 @@ function renderSeatCount() {
       try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
       dismissCloudRestoreOverlay(false);
 
-      // Dismiss onboarding overlay if it opened before sync completed
+      // Dismiss any gate/onboarding overlays that opened before sync completed
       const obOverlay = document.getElementById('obOverlay');
       if(obOverlay && obOverlay.style.display !== 'none') {
         obOverlay.classList.add('fading');
         setTimeout(() => { obOverlay.style.display = 'none'; obOverlay.classList.remove('fading'); }, 400);
+      }
+      // If the gate is still visible (Google sign-in of a returning user),
+      // dismiss it now that we have the real data loaded.
+      const gateOv = document.getElementById('gateOverlay');
+      if(gateOv && !gateOv.classList.contains('hidden')) {
+        gateHide(() => {});
       }
 
       // Re-apply theme from cloud data (S was fully overwritten by loadFromCloud)
