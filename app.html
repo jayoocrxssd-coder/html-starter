@@ -6611,12 +6611,66 @@ function renderBackupHistory(){
   }).join('');
 }
 
-// Flush final save + stamp auto-backup when tab is closed
-window.addEventListener('beforeunload', function(){
-  // Async Firestore writes are killed when the tab closes, so flush to localStorage
-  // synchronously instead — this survives tab close and is picked up on next boot.
+// ── AXIS CHECKPOINT SAVE ─────────────────────────────────────────────────────
+// Stamps the current state as the authoritative boot version in both
+// localStorage (synchronous, survives tab close) and Firestore (async).
+function saveCheckpoint() {
+  S._checkpointAt = new Date().toISOString();
   try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
+  if(typeof saveToCloud === 'function') saveToCloud(true);
+}
+
+let _axisBeforeUnloadSaved = false;
+
+function showAxisCheckpointToast() {
+  const existing = document.getElementById('axisCheckpointToast');
+  if(existing) existing.remove();
+  const t = document.createElement('div');
+  t.id = 'axisCheckpointToast';
+  const persona = (S.profile && S.profile.aiPersona) || 'axis';
+  const name = (S.profile && S.profile.aiName) || (persona === 'axis' ? 'AXIS' : 'AI');
+  t.innerHTML = `
+    <div style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:9999;background:var(--surface);border:.5px solid var(--border2);border-radius:14px;padding:16px 20px;box-shadow:0 8px 32px rgba(0,0,0,.18);display:flex;flex-direction:column;gap:10px;min-width:320px;animation:toastIn .2s ease">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:10px;background:var(--bg2);border:.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">⚡</div>
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--text1);text-transform:uppercase">${name} · Checkpoint Saved</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace">State locked in. Next boot loads this version.</div>
+        </div>
+        <button onclick="document.getElementById('axisCheckpointToast').remove()" style="margin-left:auto;background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer;padding:2px 4px;line-height:1">×</button>
+      </div>
+    </div>`;
+  document.body.appendChild(t);
+  setTimeout(() => { const el = document.getElementById('axisCheckpointToast'); if(el) el.remove(); }, 4000);
+}
+
+// On tab close: intercept with native browser dialog, flush save immediately.
+// If the user stays, show Axis confirmation that the checkpoint was locked in.
+window.addEventListener('beforeunload', function(e) {
+  saveCheckpoint();
+  _axisBeforeUnloadSaved = true;
+  // Prompt the browser's native "Leave site?" dialog so the user has a chance
+  // to stay and confirm their state is saved.
+  e.preventDefault();
+  e.returnValue = '';
 });
+
+// If the user chose to stay after the beforeunload dialog, show Axis confirmation.
+window.addEventListener('focus', function() {
+  if(_axisBeforeUnloadSaved) {
+    _axisBeforeUnloadSaved = false;
+    showAxisCheckpointToast();
+  }
+});
+
+// On tab hide (switch away): silently flush to both localStorage and Firestore
+// so the state is always current without any UI noise.
+document.addEventListener('visibilitychange', function() {
+  if(document.visibilityState === 'hidden') {
+    saveCheckpoint();
+  }
+});
+
 
 function importData(input){
   const file=input.files[0]; if(!file)return;
@@ -10878,8 +10932,9 @@ function renderSeatCount() {
     const cloudLoaded = await loadFromCloud();
 
     if(cloudLoaded && S.onboarded) {
-      // Firestore persistence cache is the source of truth — it holds the latest
-      // committed writes including any that survived a tab close. Persist to
+      // Firestore persistence cache (with offline persistence enabled) is the
+      // source of truth — it holds the latest checkpoint including any writes
+      // that were flushed synchronously on tab close/hide. Persist to
       // localStorage so the next offline boot is instant.
       try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
       dismissCloudRestoreOverlay(false);
