@@ -6617,7 +6617,10 @@ function renderBackupHistory(){
 function saveCheckpoint() {
   S._checkpointAt = new Date().toISOString();
   try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
-  if(typeof saveToCloud === 'function') saveToCloud(true);
+  // Only flush to Firestore when a user is authenticated — pre-login tab switches
+  // have no cloud destination and saveToCloud() would silently no-op anyway, but
+  // guarding here makes the intent explicit and avoids unnecessary calls.
+  if(typeof currentUser !== 'undefined' && currentUser && typeof saveToCloud === 'function') saveToCloud(true);
 }
 
 let _axisBeforeUnloadSaved = false;
@@ -10118,13 +10121,15 @@ async function gateHandleSubmit() {
 }
 
 function gateAuthSuccess(method) {
-  // Returning users who already have cloud data (S.onboarded=true after syncFromCloud)
-  // skip the plan/onboarding gate and go straight to the dashboard.
-  if(S.onboarded) {
+  // Use _cloudSynced (set by syncFromCloud after a successful Firestore load) as
+  // the returning-user signal rather than S.onboarded, which may still reflect
+  // stale localStorage state before syncFromCloud has run on this session.
+  if(_cloudSynced && S.onboarded) {
     gateHide(() => { showPage(currentPage || 'dashboard'); });
     return;
   }
-  // New users — advance to plan selection (Phase 2)
+  // New users (or returning users whose cloud sync hasn't completed yet) —
+  // advance to plan selection (Phase 2).
   gateSetLoading(true, 'Auth confirmed.', 'Loading plan options...');
   setTimeout(() => {
     gateHide(() => {
@@ -10412,12 +10417,12 @@ function handleGoogleSignIn() {
               // that would stamp local/default S into Firestore before syncFromCloud
               // has had a chance to load the user's real cloud data.
               currentUser = { uid: profile.id||'', email: profile.email||'', displayName: profile.name||'' };
-              await syncFromCloud(currentUser);
+              if(typeof window._syncFromCloud === 'function') await window._syncFromCloud(currentUser);
             }
           } else {
             // No Firebase — set currentUser directly and sync
             currentUser = { uid: profile.id||'', email: profile.email||'', displayName: profile.name||'' };
-            await syncFromCloud(currentUser);
+            if(typeof window._syncFromCloud === 'function') await window._syncFromCloud(currentUser);
           }
           // Dismiss auth overlays. Do NOT call gateAuthSuccess or advance the
           // onboarding gate here — onAuthStateChanged → syncFromCloud will fire
@@ -10877,6 +10882,9 @@ function renderSeatCount() {
   // ── STEP 3: Listen for auth state (sign in / sign out / token refresh) ──
 
   async function syncFromCloud(user) {
+    // Expose on window so handleGoogleSignIn (outside this IIFE) can call it
+    // from the Firebase-fallback and no-Firebase paths without a ReferenceError.
+    window._syncFromCloud = syncFromCloud;
     // Skip if this exact user UID was already synced this session.
     // Using UID (not a boolean) means a different user signing in always gets a fresh load.
     if(_cloudSyncedUid === user.uid) return;
