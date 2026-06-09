@@ -3540,10 +3540,12 @@ function recalculateNextId() {
 }
 
 function save() {
+  S._savedAt = new Date().toISOString();
   try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
   saveToCloud();
 }
 function saveImmediate() {
+  S._savedAt = new Date().toISOString();
   try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
   saveToCloud(true);
 }
@@ -6615,6 +6617,8 @@ function renderBackupHistory(){
 window.addEventListener('beforeunload', function(){
   // Async Firestore writes are killed when the tab closes, so flush to localStorage
   // synchronously instead — this survives tab close and is picked up on next boot.
+  // Stamp _savedAt so syncFromCloud can detect that local is newer than cloud.
+  S._savedAt = new Date().toISOString();
   try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
 });
 
@@ -10829,9 +10833,15 @@ function renderSeatCount() {
       return;
     }
 
-    // Snapshot BEFORE the reset so a user signing into a brand-new account
-    // for the first time can still push their existing local data to the cloud.
+    // Snapshot local state BEFORE reset — capture savedAt and onboarded so we
+    // can compare recency against the cloud doc after loadFromCloud() runs.
     const localOnboarded = S.onboarded;
+    let localSavedAt = null;
+    let localRaw = null;
+    try {
+      const _lr = localStorage.getItem('warRoomWR_v31');
+      if(_lr) { localRaw = JSON.parse(_lr); localSavedAt = localRaw._savedAt || null; }
+    } catch(e){}
 
     // Wipe any previous user's in-memory state before loading the new user's cloud data.
     // Without this, a different account signing in inherits the prior user's S object,
@@ -10852,8 +10862,28 @@ function renderSeatCount() {
     const cloudLoaded = await loadFromCloud();
 
     if(cloudLoaded && S.onboarded) {
-      // Cloud is authoritative — persist locally so next offline boot is instant
-      try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
+      // Compare cloud vs local recency. localStorage is written synchronously on
+      // every save and on tab close; Firestore writes are async and may have been
+      // killed by a tab close before the debounce fired. If local is newer, use
+      // it as authoritative and push it up to bring cloud back in sync.
+      const cloudSavedAt = S._savedAt || null;
+      const localIsNewer = localSavedAt && cloudSavedAt && localSavedAt > cloudSavedAt && localRaw && localRaw.onboarded;
+      if(localIsNewer) {
+        S = {...JSON.parse(JSON.stringify(DEFAULT)), ...localRaw};
+        ['businesses','tasks','entries','notes','goals','goalLog','recent','wins','alarms','sessions','events','bills','employees','backups','invoices','clients','monthlyReviews'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[];});
+        if(!S.streams||typeof S.streams!=='object')S.streams={};
+        if(!S.whiteboards||typeof S.whiteboards!=='object')S.whiteboards={};
+        if(!S.monthlyBudgets||typeof S.monthlyBudgets!=='object'||Array.isArray(S.monthlyBudgets))S.monthlyBudgets={};
+        if(typeof S.xp!=='number'||S.xp<0)S.xp=0;
+        if(!Array.isArray(S.achievements))S.achievements=[];
+        if(!S.nextId)S.nextId=1;
+        recalculateNextId();
+        // Push the newer local data to cloud so they re-converge
+        await saveToCloud(true);
+      } else {
+        // Cloud is authoritative — persist locally so next offline boot is instant
+        try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
+      }
       dismissCloudRestoreOverlay(false);
 
       // Dismiss onboarding overlay if it opened before sync completed
