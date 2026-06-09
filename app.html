@@ -10824,6 +10824,7 @@ function renderSeatCount() {
       document.getElementById('app').classList.toggle('dark', !!S.dark);
       document.body.classList.toggle('dark', !!S.dark);
       applyTheme();
+      updateAINameUI();
       refreshBizNav();
       renderProfileBizGrid();
       updateBadges();
@@ -10869,16 +10870,11 @@ function renderSeatCount() {
       const cloudSavedAt = S._savedAt || null;
       const localIsNewer = localSavedAt && cloudSavedAt && localSavedAt > cloudSavedAt && localRaw && localRaw.onboarded;
       if(localIsNewer) {
-        S = {...JSON.parse(JSON.stringify(DEFAULT)), ...localRaw};
-        ['businesses','tasks','entries','notes','goals','goalLog','recent','wins','alarms','sessions','events','bills','employees','backups','invoices','clients','monthlyReviews'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[];});
-        if(!S.streams||typeof S.streams!=='object')S.streams={};
-        if(!S.whiteboards||typeof S.whiteboards!=='object')S.whiteboards={};
-        if(!S.monthlyBudgets||typeof S.monthlyBudgets!=='object'||Array.isArray(S.monthlyBudgets))S.monthlyBudgets={};
-        if(typeof S.xp!=='number'||S.xp<0)S.xp=0;
-        if(!Array.isArray(S.achievements))S.achievements=[];
-        if(!S.nextId)S.nextId=1;
-        recalculateNextId();
-        // Push the newer local data to cloud so they re-converge
+        // Local is more recent — delegate to load() for full normalization (same
+        // guards as loadFromCloud: arrays, objects, nextId, monthlyBudgets, etc.)
+        // then persist back to localStorage and push to cloud to re-converge.
+        load();
+        try { localStorage.setItem('warRoomWR_v31', JSON.stringify(S)); } catch(e){}
         await saveToCloud(true);
       } else {
         // Cloud is authoritative — persist locally so next offline boot is instant
