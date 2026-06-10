@@ -1,0 +1,3010 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e0e0d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="WAR ROOM">
+<meta name="mobile-web-app-capable" content="yes">
+<title>WAR ROOM — Your personal business command center</title>
+<meta name="description" content="A single command center for every business you run. Missions, P&amp;L, focus timer, intel notes, calendar, bills — and AXIS, your AI co-pilot.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://warroom.app/">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230e0e0d'/><text y='.9em' font-size='72' x='50%' dominant-baseline='middle' text-anchor='middle' fill='white' font-weight='900'>W</text></svg>">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://warroom.app/">
+<meta property="og:title" content="WAR ROOM — Your personal business command center">
+<meta property="og:description" content="A single command center for every business you run. Missions, P&amp;L, focus timer, intel notes, calendar, bills — and AXIS, your AI co-pilot.">
+<meta property="og:image" content="https://warroom.app/og-image.png">
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WAR ROOM — Your personal business command center">
+<meta name="twitter:description" content="A single command center for every business you run. Missions, P&amp;L, focus timer, intel notes, calendar, bills — and AXIS, your AI co-pilot.">
+<meta name="twitter:image" content="https://warroom.app/og-image.png">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&display=swap">
+<style>
+  /* ── Auth Overlay ─────────────────────────────── */
+  .auth-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,.72);
+    display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    transition: opacity .3s ease;
+  }
+  .auth-overlay.open { display: flex; }
+  .auth-overlay.fading { opacity: 0; pointer-events: none; }
+  .auth-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 20px;
+    width: 400px; max-width: 94vw;
+    padding: 36px 40px;
+    box-shadow: 0 32px 80px rgba(0,0,0,.28);
+    animation: authCardIn .3s cubic-bezier(.34,1.4,.64,1);
+    position: relative;
+  }
+  @keyframes authCardIn {
+    from { transform: translateY(20px) scale(.97); opacity: 0; }
+    to   { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  .auth-close-btn {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--bg2); border: 0.5px solid var(--border2);
+    border-radius: 50%; width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--ink2); font-size: 14px;
+    transition: background .15s;
+  }
+  .auth-close-btn:hover { background: var(--bg3); color: var(--ink); }
+  .auth-logo {
+    font-size: 11px; font-weight: 800; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--ink3);
+    margin-bottom: 24px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .auth-logo-mark {
+    width: 24px; height: 24px; background: var(--ink);
+    border-radius: 5px; display: flex; align-items: center;
+    justify-content: center; font-size: 11px; color: var(--bg); font-weight: 800;
+  }
+  .auth-title {
+    font-size: 24px; font-weight: 800; color: var(--ink);
+    letter-spacing: -.02em; margin-bottom: 6px;
+  }
+  .auth-sub {
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    color: var(--ink3); margin-bottom: 24px; line-height: 1.7;
+  }
+  .auth-tabs {
+    display: flex; border: 0.5px solid var(--border2);
+    border-radius: 8px; overflow: hidden; margin-bottom: 20px;
+  }
+  .auth-tab {
+    flex: 1; padding: 9px; font-size: 10px; font-weight: 700;
+    letter-spacing: .07em; text-transform: uppercase;
+    background: transparent; border: none;
+    color: var(--ink3); cursor: pointer; transition: all .15s;
+    font-family: 'Syne', -apple-system, sans-serif;
+  }
+  .auth-tab.active { background: var(--ink); color: var(--bg); }
+  .auth-input {
+    width: 100%; background: var(--bg2);
+    border: 0.5px solid var(--border2); color: var(--ink);
+    font-family: 'Syne', -apple-system, sans-serif;
+    font-size: 13px; padding: 12px 14px; border-radius: 10px;
+    outline: none; transition: border-color .15s; margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+  .auth-input:focus { border-color: var(--ink); }
+  .auth-btn {
+    width: 100%; background: var(--ink); color: var(--bg);
+    border: none; font-family: 'Syne', -apple-system, sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: .09em;
+    text-transform: uppercase; padding: 13px; border-radius: 10px;
+    cursor: pointer; transition: all .15s; margin-top: 6px;
+  }
+  .auth-btn:hover { opacity: .85; }
+  .auth-btn:disabled { opacity: .45; cursor: not-allowed; }
+  .auth-error {
+    font-size: 11px; color: var(--red);
+    font-family: 'DM Mono', monospace; margin-top: 8px; min-height: 16px;
+  }
+  .auth-success {
+    font-size: 11px; color: var(--green);
+    font-family: 'DM Mono', monospace; margin-top: 8px;
+  }
+  .auth-footer {
+    font-size: 9px; color: var(--ink3); font-family: 'DM Mono', monospace;
+    margin-top: 20px; text-align: center; line-height: 1.8;
+  }
+  .auth-divider {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+  }
+  .auth-divider-line { flex: 1; height: 0.5px; background: var(--border2); }
+  .auth-divider-text {
+    font-size: 10px; font-weight: 700; letter-spacing: .1em;
+    color: var(--ink3); text-transform: uppercase;
+  }
+  .auth-google-btn {
+    width: 100%; display: flex; align-items: center; justify-content: center;
+    gap: 10px; padding: 11px 16px; background: #fff;
+    border: 0.5px solid #dadce0; border-radius: 10px; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: #3c4043; letter-spacing: .01em;
+    margin-bottom: 16px; transition: box-shadow .15s;
+    font-family: 'Syne', -apple-system, sans-serif;
+  }
+  .auth-google-btn:hover { box-shadow: 0 1px 6px rgba(0,0,0,.15); }
+  .btn-login {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 9px 16px; border-radius: 8px;
+    border: 0.5px solid var(--border2);
+    background: transparent; color: var(--ink);
+    transition: background .15s, color .15s;
+    cursor: pointer;
+  }
+  .btn-login:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  /* ── Pricing Section ─────────────────────────────────────── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  @media (max-width: 860px) {
+    .pricing-grid { grid-template-columns: 1fr; max-width: 440px; }
+  }
+  .pricing-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 20px;
+    padding: 32px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .pricing-card:hover {
+    box-shadow: 0 20px 50px -20px rgba(0,0,0,.22);
+    transform: translateY(-2px);
+  }
+  .pricing-card.featured {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--bg);
+  }
+  .pricing-badge {
+    position: absolute;
+    top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--red);
+    color: #fff;
+    font-size: 9px; font-weight: 800;
+    letter-spacing: .12em; text-transform: uppercase;
+    padding: 4px 14px; border-radius: 100px;
+    white-space: nowrap;
+  }
+  .pricing-tier {
+    font-size: 10px; font-weight: 800;
+    letter-spacing: .16em; text-transform: uppercase;
+    margin-bottom: 14px;
+    color: var(--ink3);
+  }
+  .pricing-card.featured .pricing-tier { color: rgba(255,255,255,.55); }
+  .pricing-price {
+    font-size: 44px; font-weight: 800;
+    letter-spacing: -.04em; line-height: 1;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .pricing-card.featured .pricing-price { color: var(--bg); }
+  .pricing-price sup {
+    font-size: 20px; font-weight: 700;
+    vertical-align: super; letter-spacing: 0;
+  }
+  .pricing-price .per {
+    font-size: 14px; font-weight: 600;
+    letter-spacing: 0; opacity: .5;
+  }
+  .pricing-annual {
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    color: var(--green); margin-bottom: 6px;
+    min-height: 18px;
+  }
+  .pricing-card.featured .pricing-annual { color: #6ee7b7; }
+  .pricing-desc {
+    font-size: 12px; color: var(--ink2); line-height: 1.5;
+    margin-bottom: 24px; flex: 0;
+  }
+  .pricing-card.featured .pricing-desc { color: rgba(255,255,255,.6); }
+  .pricing-divider {
+    height: 0.5px; background: var(--border2);
+    margin-bottom: 20px;
+  }
+  .pricing-card.featured .pricing-divider { background: rgba(255,255,255,.15); }
+  .pricing-features {
+    list-style: none; flex: 1;
+    display: flex; flex-direction: column; gap: 10px;
+    margin-bottom: 28px;
+  }
+  .pricing-features li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 12px; color: var(--ink2); line-height: 1.4;
+  }
+  .pricing-card.featured .pricing-features li { color: rgba(255,255,255,.75); }
+  .pricing-features li .pf-check {
+    flex-shrink: 0; margin-top: 1px;
+    width: 15px; height: 15px; border-radius: 50%;
+    background: rgba(26,112,72,.15);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pricing-card.featured .pricing-features li .pf-check {
+    background: rgba(255,255,255,.15);
+  }
+  .pricing-features li .pf-x {
+    flex-shrink: 0; margin-top: 1px;
+    width: 15px; height: 15px; border-radius: 50%;
+    background: rgba(220,38,38,.1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pricing-features li.dim { opacity: .45; }
+  .pricing-cta {
+    display: block; width: 100%; text-align: center;
+    padding: 13px; border-radius: 10px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase;
+    cursor: pointer; transition: all .15s;
+    border: 0.5px solid var(--ink);
+    background: var(--ink); color: var(--bg);
+    text-decoration: none;
+  }
+  .pricing-cta:hover { opacity: .82; transform: translateY(-1px); }
+  .pricing-card.featured .pricing-cta {
+    background: var(--bg); color: var(--ink);
+    border-color: var(--bg);
+  }
+  .pricing-cta.ghost {
+    background: transparent; color: var(--ink);
+    border-color: var(--border2);
+  }
+  .pricing-cta.ghost:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .pricing-toggle {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin-bottom: 40px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: .04em; color: var(--ink2);
+  }
+  .pricing-toggle-btn {
+    position: relative;
+    width: 44px; height: 24px; border-radius: 100px;
+    background: var(--bg3); border: 0.5px solid var(--border2);
+    cursor: pointer; transition: background .2s;
+  }
+  .pricing-toggle-btn.annual { background: var(--ink); }
+  .pricing-toggle-btn::after {
+    content: ''; position: absolute;
+    top: 3px; left: 3px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--surface);
+    transition: transform .2s cubic-bezier(.34,1.4,.64,1);
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  }
+  .pricing-toggle-btn.annual::after { transform: translateX(20px); }
+  .pricing-save-chip {
+    display: inline-flex; align-items: center;
+    background: rgba(26,112,72,.12); color: var(--green);
+    font-size: 9px; font-weight: 800; letter-spacing: .1em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 100px;
+    margin-left: 4px;
+  }
+</style>
+<style>
+  /* ── STRATUS light — warm cream neutrals + editorial semantic palette ── */
+  :root {
+    --bg: #f4f4f2;
+    --bg2: #ececea;
+    --bg3: #e2e2e0;
+    --surface: #ffffff;
+    --ink: #0e0e0d;
+    --ink2: #525250;
+    --ink3: #9a9a98;
+    --border: rgba(0, 0, 0, 0.08);
+    --border2: rgba(0, 0, 0, 0.14);
+    --red: #c53020;
+    --red-bg: #faeae7;
+    --green: #1a7048;
+    --green-bg: #e4f4ec;
+    --amber: #c07c00;
+    --amber-bg: #f9eccc;
+    --blue: #1e4890;
+    --blue-bg: #e3edf8;
+    --violet: #5825b8;
+    --violet-bg: #eee2fb;
+    --pink: #c02e7a;
+    --pink-bg: #fae4f0;
+    --r: 12px;
+    --rs: 8px;
+  }
+
+  /* ── OBSIDIAN dark — pure black neutrals + electric semantic palette ── */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #000000;
+      --bg2: #0d0d0d;
+      --bg3: #1a1a1a;
+      --surface: #111111;
+      --ink: #f5f5f5;
+      --ink2: #909090;
+      --ink3: #4a4a4a;
+      --border: rgba(255, 255, 255, 0.05);
+      --border2: rgba(255, 255, 255, 0.10);
+      --red: #f06860;
+      --red-bg: #1a0808;
+      --green: #3de090;
+      --green-bg: #051309;
+      --amber: #f0b030;
+      --amber-bg: #160e00;
+      --blue: #5ab0f8;
+      --blue-bg: #030c1c;
+      --violet: #9c6ee8;
+      --violet-bg: #0c0418;
+      --pink: #f068a8;
+      --pink-bg: #190312;
+    }
+    .topbar { background: rgba(0, 0, 0, 0.88) !important; }
+    @keyframes pulseDot {
+      0%   { box-shadow: 0 0 0 0 rgba(61,224,144,.55); }
+      70%  { box-shadow: 0 0 0 8px rgba(61,224,144,0); }
+      100% { box-shadow: 0 0 0 0 rgba(61,224,144,0); }
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--ink); color: var(--bg); }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  input { font-family: inherit; }
+
+  .mono { font-family: 'DM Mono', monospace; }
+  .label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink3);
+  }
+  .label-ink { color: var(--ink); }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 0.5px solid var(--border2);
+    background: var(--surface);
+  }
+  .pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 0 currentColor;
+    animation: pulseDot 2s infinite;
+  }
+  @keyframes pulseDot {
+    0%   { box-shadow: 0 0 0 0 rgba(26,112,72,.55); }
+    70%  { box-shadow: 0 0 0 8px rgba(26,112,72,0); }
+    100% { box-shadow: 0 0 0 0 rgba(26,112,72,0); }
+  }
+
+  /* ── TOPBAR ──────────────────────────── */
+  .topbar {
+    position: -webkit-sticky;
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(244,244,242,.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 0.5px solid var(--border2);
+  }
+  .topbar-inner {
+    max-width: 1280px; margin: 0 auto;
+    padding: 14px 28px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; font-weight: 800; letter-spacing: 0.2em;
+  }
+  .brand-mark {
+    width: 26px; height: 26px;
+    background: var(--ink); color: var(--bg);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+  .topbar-nav {
+    margin-left: 24px;
+    display: flex; align-items: center; gap: 22px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+    color: var(--ink2);
+  }
+  .topbar-nav a { transition: color .15s; }
+  .topbar-nav a:hover { color: var(--ink); }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .topbar-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--ink2);
+    letter-spacing: 0.06em;
+    padding: 6px 10px;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+  }
+  .btn {
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 9px 16px;
+    border-radius: 8px;
+    border: 0.5px solid var(--ink);
+    background: var(--ink); color: var(--bg);
+    transition: transform .15s, box-shadow .15s, background .15s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+  .btn-ghost {
+    background: transparent; color: var(--ink);
+    border-color: var(--border2);
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  /* ── HERO ────────────────────────────── */
+  .hero {
+    max-width: 1280px; margin: 0 auto;
+    padding: 56px 28px 24px;
+    display: grid; grid-template-columns: 1.05fr 1fr;
+    gap: 48px; align-items: center;
+    position: relative;
+  }
+  .hero-left { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    padding: 6px 12px; border-radius: 100px;
+    margin-bottom: 22px;
+  }
+  .hero-eyebrow .new-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+  .hero h1 {
+    font-size: clamp(48px, 7.2vw, 104px);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    margin-bottom: 22px;
+  }
+  .hero h1 .swap { position: relative; display: inline-block; }
+  .hero h1 .swap-word {
+    background: var(--ink); color: var(--bg);
+    padding: 0 12px;
+    display: inline-block;
+    border-radius: 10px;
+    transform: rotate(-2deg);
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--red);
+  }
+  .hero-sub {
+    font-size: 18px; color: var(--ink2);
+    max-width: 540px;
+    margin-bottom: 30px;
+    line-height: 1.45;
+  }
+  .hero-sub b { color: var(--ink); font-weight: 700; }
+
+  /* email form */
+  .signup {
+    display: flex; gap: 8px;
+    padding: 6px;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 14px;
+    max-width: 520px;
+    transition: box-shadow .2s, border-color .2s, transform .15s;
+    box-shadow: 0 12px 40px -20px rgba(0,0,0,.25);
+  }
+  .signup:focus-within { border-color: var(--ink); box-shadow: 0 20px 50px -20px rgba(0,0,0,.32); }
+  .signup input {
+    flex: 1;
+    padding: 14px 14px;
+    font-size: 16px;
+    background: transparent;
+    border: none; outline: none;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .signup input::placeholder { color: var(--ink3); }
+  .signup button {
+    padding: 14px 20px;
+    background: var(--ink); color: var(--bg);
+    border-radius: 10px;
+    font-size: 12px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background .15s, transform .15s;
+  }
+  .signup button:hover { background: var(--red); }
+  .signup button .arr { transition: transform .2s; }
+  .signup button:hover .arr { transform: translateX(3px); }
+  .signup-meta {
+    margin-top: 14px;
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    color: var(--ink3); letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap;
+  }
+  .signup-meta .ok { color: var(--green); }
+  .signup-meta .joiner-stack {
+    display: flex; align-items: center;
+  }
+  .joiner-stack .ja {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1.5px solid var(--surface);
+    margin-left: -7px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 800; color: var(--ink);
+  }
+  .joiner-stack .ja:first-child { margin-left: 0; }
+  .joiner-stack .ja-1 { background: #ffd9b3; }
+  .joiner-stack .ja-2 { background: #c9e2ff; }
+  .joiner-stack .ja-3 { background: #d9f5e3; }
+  .joiner-stack .ja-4 { background: #f5d9ed; }
+
+  .signup.success {
+    background: var(--ink); border-color: var(--ink);
+  }
+  .signup.success .signup-success {
+    display: flex !important;
+    color: var(--bg);
+    width: 100%;
+    align-items: center; gap: 12px;
+    padding: 10px 8px;
+  }
+  .signup-success { display: none; }
+  .signup-success .check {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--green); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800;
+  }
+
+  /* ── HERO RIGHT — Live Status Panel ──── */
+  .status-card {
+    position: relative;
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow:
+      0 32px 60px -30px rgba(0,0,0,.35),
+      0 4px 14px -8px rgba(0,0,0,.18);
+    transform: perspective(1200px) rotateY(-3deg) rotateX(2deg);
+    transition: transform .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .status-card:hover { transform: perspective(1200px) rotateY(0) rotateX(0); }
+  .status-bar {
+    height: 32px;
+    background: var(--bg2);
+    border-bottom: 0.5px solid var(--border2);
+    display: flex; align-items: center; padding: 0 12px;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; color: var(--ink3);
+  }
+  .status-bar .traf { display: flex; gap: 5px; margin-right: 8px; }
+  .status-bar .traf i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  .status-bar .traf i:nth-child(1) { background: #ff5f57; }
+  .status-bar .traf i:nth-child(2) { background: #febc2e; }
+  .status-bar .traf i:nth-child(3) { background: #28c840; }
+  .status-bar .url { margin-left: auto; }
+  .status-body { padding: 18px; }
+  .status-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .status-row h2 {
+    font-size: 22px; font-weight: 800; letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .status-row .ps {
+    font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink3);
+    margin-top: 3px;
+  }
+  .status-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; margin-bottom: 14px;
+  }
+  .st-cell {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .st-cell .cl {
+    font-size: 8px; font-weight: 800; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink3);
+    margin-bottom: 4px;
+  }
+  .st-cell .cv {
+    font-size: 18px; font-weight: 800; letter-spacing: -0.02em;
+    line-height: 1; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .st-cell .cs {
+    font-size: 9px; font-family: 'DM Mono', monospace;
+    margin-top: 4px;
+  }
+  .st-cell .cs.pos { color: var(--green); }
+  .st-cell .cs.neg { color: var(--red); }
+
+  /* sparkline + mini ui blocks */
+  .mini-row { display: flex; gap: 10px; margin-bottom: 12px; }
+  .mini-block {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    flex: 1;
+  }
+  .mini-block .bpl { font-size: 8px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink3); margin-bottom: 8px; }
+  .mini-block .bv { font-size: 14px; font-weight: 800; line-height: 1; }
+  .bar-row { display: flex; align-items: flex-end; gap: 3px; height: 36px; margin-top: 8px; }
+  .bar-row .b { flex: 1; background: var(--ink); border-radius: 2px 2px 0 0; opacity: .85; }
+
+  .mini-mission {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; padding: 6px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .mini-mission:last-child { border-bottom: none; }
+  .mini-mission .ck {
+    width: 14px; height: 14px;
+    border: 1.2px solid var(--ink2);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+  }
+  .mini-mission.done .ck { background: var(--green); border-color: var(--green); color: #fff; }
+  .mini-mission.done span { text-decoration: line-through; color: var(--ink3); }
+  .mini-mission .mt {
+    margin-left: auto;
+    font-size: 8px; font-family: 'DM Mono', monospace; color: var(--ink3);
+  }
+  .mini-mission b { font-weight: 600; }
+
+  .status-footer {
+    display: flex; align-items: center; gap: 10px;
+    padding-top: 12px; border-top: 0.5px solid var(--border);
+    font-size: 10px; color: var(--ink3); font-family: 'DM Mono', monospace;
+  }
+  .status-footer .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 0 0 rgba(26,112,72,.55);
+    animation: pulseDot 1.8s infinite;
+  }
+
+  /* floating glyphs */
+  .glyph {
+    position: absolute;
+    font-size: 18px;
+    color: var(--ink3);
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.5;
+  }
+  .g1 { top: 12%; left: 38%; font-size: 28px; animation: float 9s ease-in-out infinite; }
+  .g2 { top: 70%; left: 30%; font-size: 22px; color: var(--red); animation: float 11s ease-in-out infinite -2s; }
+  .g3 { top: 30%; left: 6%; font-size: 24px; color: var(--blue); animation: float 12s ease-in-out infinite -5s; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-16px) rotate(8deg); }
+  }
+
+  /* ── MARQUEE ─────────────────────────── */
+  .marquee {
+    margin-top: 20px;
+    border-block: 0.5px solid var(--border2);
+    background: var(--ink); color: var(--bg);
+    overflow: hidden;
+    position: relative;
+  }
+  .marquee-track {
+    display: flex; gap: 60px;
+    padding: 14px 0;
+    white-space: nowrap;
+    animation: marq 30s linear infinite;
+    width: max-content;
+  }
+  .marquee-item {
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .marquee-item .sep { color: var(--red); font-size: 10px; }
+  @keyframes marq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── SECTIONS ────────────────────────── */
+  section { padding: 96px 28px; }
+  section .wrap { max-width: 1280px; margin: 0 auto; }
+  .sec-head { margin-bottom: 56px; max-width: 720px; }
+  .sec-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink2);
+    margin-bottom: 18px;
+  }
+  .sec-eyebrow .lin { width: 28px; height: 0.5px; background: var(--ink2); }
+  .sec-title {
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+  .sec-sub {
+    margin-top: 18px;
+    font-size: 17px; color: var(--ink2);
+    max-width: 580px;
+    line-height: 1.5;
+  }
+
+  /* ── BENTO MODULES ───────────────────── */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 220px;
+    gap: 14px;
+  }
+  .mod {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s, border-color .25s;
+    display: flex; flex-direction: column;
+  }
+  .mod:hover { transform: translateY(-4px); box-shadow: 0 24px 50px -28px rgba(0,0,0,.3); border-color: var(--ink); }
+  .mod-head {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 12px;
+  }
+  .mod-glyph {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--bg2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    transition: transform .3s, background .3s, color .3s;
+  }
+  .mod:hover .mod-glyph { transform: rotate(15deg) scale(1.1); }
+  .mod-num {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--ink3);
+  }
+  .mod-title {
+    font-size: 18px; font-weight: 800;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .mod-desc {
+    font-size: 13px; color: var(--ink2);
+    line-height: 1.45;
+    margin-bottom: 14px;
+  }
+  .mod-body { margin-top: auto; }
+
+  /* module color variants */
+  .mod-mission .mod-glyph { background: var(--red-bg); color: var(--red); }
+  .mod-goals .mod-glyph { background: var(--blue-bg); color: var(--blue); }
+  .mod-tracker .mod-glyph { background: var(--green-bg); color: var(--green); }
+  .mod-focus .mod-glyph { background: var(--violet-bg); color: var(--violet); }
+  .mod-intel .mod-glyph { background: var(--amber-bg); color: var(--amber); }
+  .mod-cal .mod-glyph { background: var(--pink-bg); color: var(--pink); }
+  .mod-bills .mod-glyph { background: var(--blue-bg); color: var(--blue); }
+  .mod-jarvis .mod-glyph { background: var(--ink); color: var(--bg); }
+
+  .mod-jarvis {
+    grid-column: span 2;
+    background: var(--ink); color: var(--bg);
+    border-color: var(--ink);
+  }
+  .mod-jarvis .mod-desc { color: rgba(255,255,255,.65); }
+  .mod-jarvis .mod-num { color: rgba(255,255,255,.45); }
+  .mod-jarvis:hover { border-color: var(--red); }
+
+  .mod-tracker { grid-column: span 2; }
+
+  /* tiny chart for tracker */
+  .mod-tracker .mod-body {
+    display: flex; align-items: flex-end; gap: 4px;
+    height: 60px;
+  }
+  .mod-tracker .b {
+    flex: 1; background: var(--green); border-radius: 3px 3px 0 0;
+    opacity: .55;
+  }
+  .mod-tracker .b.hi { opacity: 1; }
+
+  /* timer module */
+  .mod-focus .timer-display {
+    font-family: 'DM Mono', monospace;
+    font-size: 32px; font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--violet);
+  }
+  .mod-focus .timer-display .ms { font-size: 18px; opacity: .5; }
+
+  /* goal ring */
+  .ring-wrap { position: relative; width: 64px; height: 64px; }
+  .ring-wrap .pct {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+  }
+
+  /* calendar mini */
+  .mini-cal {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px;
+  }
+  .mini-cal div {
+    aspect-ratio: 1;
+    background: var(--bg2);
+    border-radius: 3px;
+    font-size: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink3);
+    font-family: 'DM Mono', monospace;
+  }
+  .mini-cal div.has { background: var(--pink-bg); color: var(--pink); font-weight: 700; }
+  .mini-cal div.today { background: var(--pink); color: #fff; font-weight: 800; }
+
+  /* bills donut */
+  .bills-vis { display: flex; align-items: center; gap: 12px; }
+
+  /* jarvis preview */
+  .jarvis-msg {
+    background: rgba(255,255,255,.06);
+    border: 0.5px solid rgba(255,255,255,.1);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-bottom: 6px;
+    color: rgba(255,255,255,.85);
+  }
+  .jarvis-msg.user { background: var(--red); border-color: var(--red); color: #fff; max-width: 80%; margin-left: auto; }
+  .jarvis-cursor {
+    display: inline-block; width: 7px; height: 12px;
+    background: var(--red); margin-left: 3px;
+    animation: blink 1s steps(1) infinite;
+    vertical-align: middle;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── DEMO SCREENSHOT ────────────────── */
+  .demo-shot {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 50px 80px -40px rgba(0,0,0,.4);
+  }
+  .demo-shot-body { display: grid; grid-template-columns: 220px 1fr; }
+  .demo-side {
+    background: var(--bg2);
+    border-right: 0.5px solid var(--border2);
+    padding: 16px 0;
+  }
+  .demo-side .lbl {
+    padding: 8px 18px 4px;
+    font-size: 8px; font-weight: 800;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink3);
+  }
+  .demo-side .ni {
+    padding: 7px 18px;
+    display: flex; align-items: center; gap: 9px;
+    font-size: 12px; font-weight: 600;
+    color: var(--ink2);
+    border-left: 2px solid transparent;
+    cursor: pointer;
+    transition: background .12s, color .12s;
+  }
+  .demo-side .ni:hover { color: var(--ink); background: var(--bg3); }
+  .demo-side .ni.act { color: var(--ink); background: var(--bg3); border-left-color: var(--ink); }
+  .demo-side .ni .ic { font-size: 11px; width: 14px; text-align: center; }
+  .demo-content { padding: 24px; }
+  .demo-content .pt { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+  .demo-content .ps { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink3); margin-top: 3px; }
+  .demo-g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 18px; }
+  .demo-g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+  .demo-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .demo-card .cl { font-size: 8px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink3); margin-bottom: 6px; }
+  .demo-card .cv { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .demo-card .cs { font-size: 9px; font-family: 'DM Mono', monospace; margin-top: 5px; }
+
+  /* ── AXIS LIVE ─────────────────────── */
+  .jarvis-stage {
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 60px 120px -40px rgba(0,0,0,.6);
+    position: relative;
+    overflow: hidden;
+  }
+  .jarvis-stage::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(216,58,38,.18) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(26,112,72,.12) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .jarvis-grid {
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 36px; position: relative;
+    align-items: stretch;
+  }
+  .jarvis-stage h3 {
+    font-size: 36px; font-weight: 800;
+    letter-spacing: -0.02em; line-height: 1.05;
+    margin-bottom: 14px;
+    text-wrap: balance;
+  }
+  .jarvis-stage .jdesc { color: rgba(255,255,255,.65); font-size: 15px; line-height: 1.5; margin-bottom: 24px; }
+  .jarvis-stage .prompt-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+  .jarvis-stage .pchip {
+    font-size: 11px; font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 100px;
+    border: 0.5px solid rgba(255,255,255,.2);
+    color: rgba(255,255,255,.85);
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+  }
+  .jarvis-stage .pchip:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
+  .jarvis-chat {
+    background: rgba(255,255,255,.04);
+    border: 0.5px solid rgba(255,255,255,.1);
+    border-radius: 14px;
+    display: flex; flex-direction: column;
+    min-height: 360px;
+  }
+  .jarvis-chat-head {
+    padding: 14px 18px;
+    border-bottom: 0.5px solid rgba(255,255,255,.1);
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    color: rgba(255,255,255,.6);
+    letter-spacing: 0.06em;
+  }
+  .jarvis-chat-head .who {
+    font-size: 13px; font-weight: 800;
+    color: var(--bg);
+    font-family: 'Syne', sans-serif;
+    letter-spacing: 0.04em;
+  }
+  .jarvis-chat-head .status {
+    margin-left: auto; display: flex; align-items: center; gap: 6px;
+  }
+  .jarvis-chat-head .status .d {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    animation: pulseDot 1.8s infinite;
+  }
+  .jarvis-chat-body {
+    flex: 1; padding: 18px;
+    display: flex; flex-direction: column; gap: 10px;
+    overflow-y: auto;
+    max-height: 400px;
+  }
+  .jmsg {
+    max-width: 86%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
+  .jmsg.user {
+    background: var(--bg); color: var(--ink);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .jmsg.ai {
+    background: rgba(255,255,255,.07);
+    border: 0.5px solid rgba(255,255,255,.1);
+    color: rgba(255,255,255,.92);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .jmsg.ai b, .jmsg.ai strong { color: #fff; font-weight: 700; }
+  .jthinking {
+    display: inline-flex; gap: 4px; padding: 4px 0;
+  }
+  .jthinking span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,.55);
+    animation: jbounce 1.2s infinite ease-in-out;
+  }
+  .jthinking span:nth-child(2) { animation-delay: 0.15s; }
+  .jthinking span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes jbounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: .5; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+  .jarvis-chat-input {
+    padding: 12px;
+    border-top: 0.5px solid rgba(255,255,255,.1);
+    display: flex; gap: 8px;
+  }
+  .jarvis-chat-input input {
+    flex: 1;
+    background: rgba(255,255,255,.06);
+    border: 0.5px solid rgba(255,255,255,.12);
+    color: var(--bg);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .jarvis-chat-input input::placeholder { color: rgba(255,255,255,.4); }
+  .jarvis-chat-input input:focus { border-color: var(--red); }
+  .jarvis-chat-input button {
+    background: var(--red); color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    transition: background .15s, transform .15s;
+  }
+  .jarvis-chat-input button:hover:not(:disabled) { background: #fff; color: var(--ink); }
+  .jarvis-chat-input button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── STATS ───────────────────────────── */
+  .stats-section { background: var(--ink); color: var(--bg); }
+  .stats-section .sec-eyebrow { color: rgba(255,255,255,.65); }
+  .stats-section .sec-eyebrow .lin { background: rgba(255,255,255,.65); }
+  .stats-section .sec-title { color: var(--bg); }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 40px;
+    border-top: 0.5px solid rgba(255,255,255,.18);
+  }
+  .stat {
+    padding: 36px 24px 30px;
+    border-right: 0.5px solid rgba(255,255,255,.18);
+    border-bottom: 0.5px solid rgba(255,255,255,.18);
+  }
+  .stat:last-child { border-right: none; }
+  .stat .sv {
+    font-size: 64px; font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 12px;
+  }
+  .stat .sv .unit { font-size: 28px; color: var(--red); }
+  .stat .sl {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(255,255,255,.65);
+    margin-bottom: 6px;
+  }
+  .stat .sd {
+    font-size: 12px; font-family: 'DM Mono', monospace;
+    color: rgba(255,255,255,.45);
+  }
+
+  /* ── COMPARE ─────────────────────────── */
+  .compare-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 14px; margin-top: 40px;
+  }
+  .compare-card {
+    border: 0.5px solid var(--border2);
+    border-radius: 16px;
+    padding: 28px;
+    background: var(--surface);
+  }
+  .compare-card.bad { background: var(--bg2); }
+  .compare-card .ch { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink3); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .compare-card.good .ch { color: var(--green); }
+  .compare-card.bad .ch { color: var(--red); }
+  .compare-card h4 { font-size: 22px; font-weight: 800; margin-bottom: 18px; letter-spacing: -0.01em; }
+  .compare-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .compare-card li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; color: var(--ink2);
+    line-height: 1.45;
+  }
+  .compare-card li::before {
+    content: ''; flex-shrink: 0;
+    width: 18px; height: 18px; border-radius: 5px;
+    margin-top: 1px;
+    background: var(--red-bg);
+    background-image: linear-gradient(45deg, transparent 45%, var(--red) 45%, var(--red) 55%, transparent 55%), linear-gradient(-45deg, transparent 45%, var(--red) 45%, var(--red) 55%, transparent 55%);
+  }
+  .compare-card.good li::before {
+    background: var(--green-bg);
+    background-image: none;
+    position: relative;
+  }
+  .compare-card.good li::before {
+    background:
+      linear-gradient(45deg, transparent 45%, var(--green) 45%, var(--green) 75%, transparent 75%),
+      linear-gradient(-45deg, transparent 45%, var(--green) 45%, var(--green) 55%, transparent 55%),
+      var(--green-bg);
+  }
+
+  /* ── PRICING / CTA ───────────────────── */
+  .cta-stage {
+    background: var(--surface);
+    border: 0.5px solid var(--border2);
+    border-radius: 24px;
+    padding: 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-stage::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(216,58,38,.08), transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(26,112,72,.06), transparent 60%);
+    pointer-events: none;
+  }
+  .cta-stage h2 {
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.95;
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .cta-stage h2 em { color: var(--red); font-style: normal; }
+  .cta-stage p {
+    font-size: 18px; color: var(--ink2);
+    margin-bottom: 36px;
+    max-width: 540px;
+    margin-inline: auto;
+    position: relative;
+  }
+  .cta-stage .signup { margin-inline: auto; position: relative; }
+  .perks {
+    display: flex; justify-content: center; gap: 26px;
+    margin-top: 28px;
+    font-size: 12px; font-family: 'DM Mono', monospace;
+    color: var(--ink3); letter-spacing: 0.04em;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .perks span { display: inline-flex; align-items: center; gap: 6px; }
+  .perks .ck { color: var(--green); font-weight: 700; }
+
+  /* ── FOOTER ──────────────────────────── */
+  footer {
+    border-top: 0.5px solid var(--border2);
+    padding: 36px 28px 28px;
+  }
+  footer .wrap {
+    max-width: 1280px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 20px;
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    color: var(--ink3); letter-spacing: 0.04em;
+    flex-wrap: wrap;
+  }
+  footer .links { display: flex; gap: 22px; }
+  footer .links a { transition: color .15s; }
+  footer .links a:hover { color: var(--ink); }
+
+  /* ── RESPONSIVE ──────────────────────── */
+  @media (max-width: 980px) {
+    .hero { grid-template-columns: 1fr; padding: 36px 22px 12px; gap: 36px; }
+    .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; }
+    .mod-jarvis, .mod-tracker { grid-column: span 2; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat:nth-child(2) { border-right: none; }
+    .jarvis-grid { grid-template-columns: 1fr; gap: 24px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .demo-shot-body { grid-template-columns: 1fr; }
+    .demo-side { display: none; }
+    section { padding: 64px 22px; }
+    .topbar-nav { display: none; }
+    .cta-stage { padding: 40px 26px; }
+    .stat .sv { font-size: 48px; }
+  }
+  @media (max-width: 560px) {
+    .signup { flex-direction: column; padding: 8px; }
+    .signup button { width: 100%; justify-content: center; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .stat { border-right: none; }
+    .topbar-time { display: none; }
+    .demo-g4 { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ── MOBILE GLOBAL ── */
+  * { -webkit-tap-highlight-color: transparent; }
+  html { overflow-x: hidden; }
+  body { overflow-x: hidden; overscroll-behavior-x: none; -webkit-font-smoothing: antialiased; }
+
+  /* ── TOPBAR SAFE AREA ── */
+  .topbar {
+    padding-top: max(14px, env(safe-area-inset-top));
+    padding-left: max(28px, env(safe-area-inset-left));
+    padding-right: max(28px, env(safe-area-inset-right));
+  }
+  .topbar-inner {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  /* ── TOUCH TARGETS — minimum 44×44px ── */
+  .btn, .btn-ghost, .btn-login {
+    min-height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .pricing-cta { min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .auth-btn { min-height: 44px; }
+  .auth-google-btn { min-height: 44px; }
+  .auth-tab { min-height: 44px; display: flex; align-items: center; justify-content: center; }
+  .auth-close-btn { width: 44px; height: 44px; }
+  .pchip { min-height: 44px; display: inline-flex; align-items: center; }
+  footer .links a { display: inline-flex; align-items: center; min-height: 44px; }
+
+  /* ── AUTH INPUT: prevent iOS zoom (font-size >= 16px) ── */
+  .auth-input { font-size: 16px !important; }
+  .signup input { font-size: 16px; }
+  .jarvis-chat-input input { font-size: 16px !important; }
+
+  /* ── IOS SCROLL FIX on scrollable containers ── */
+  .jarvis-chat-body { -webkit-overflow-scrolling: touch; }
+  .jarvis-chat-body { overscroll-behavior: contain; }
+
+  /* ── DVH fallback for 100vh ── */
+  .hero { min-height: min(100svh, 100vh); }
+
+  /* ── FOOTER SAFE AREA ── */
+  footer {
+    padding-bottom: max(28px, env(safe-area-inset-bottom));
+  }
+
+  /* ── Sticky topbar: fix iOS position:sticky ── */
+  .topbar { position: -webkit-sticky; }
+
+  /* ── Will-change for actively animating elements ── */
+  .mod { will-change: transform; }
+  .status-card { will-change: transform; }
+
+  /* ── Android: overscroll glow prevention (mobile only) ── */
+  @media (max-width: 768px) {
+    body { overscroll-behavior: none; }
+  }
+
+  /* ── Focus styles for accessibility ── */
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* ── AUTH OVERLAY — full-screen on mobile with keyboard handling ── */
+  @media (max-width: 640px) {
+    .auth-overlay {
+      align-items: flex-end;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 20px 20px 0 0;
+      padding-bottom: max(24px, env(safe-area-inset-bottom));
+      max-height: 92svh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  /* ── TOPBAR NAV: show hamburger on mobile ── */
+  @media (max-width: 980px) {
+    .topbar-inner { padding: max(12px, env(safe-area-inset-top)) 18px 12px; }
+  }
+
+  /* ── HERO full-column on small screens ── */
+  @media (max-width: 640px) {
+    .hero { padding: max(32px, calc(env(safe-area-inset-top) + 20px)) 16px 24px; gap: 28px; }
+    section { padding: 56px 16px; }
+    .sec-head { margin-bottom: 36px; }
+    .bento { grid-template-columns: 1fr 1fr !important; grid-auto-rows: 180px !important; }
+    .mod-jarvis, .mod-tracker, .mod-axis { grid-column: span 2 !important; }
+    .cta-stage { padding: 32px 18px; }
+    .jarvis-stage { padding: 24px 18px; }
+    .jarvis-stage h3 { font-size: 26px; }
+    .compare-card { padding: 20px 18px; }
+    .pricing-card { padding: 24px 18px 20px; }
+    footer { padding: 28px 16px max(20px, env(safe-area-inset-bottom)); }
+    footer .wrap { flex-direction: column; gap: 14px; }
+    .stat .sv { font-size: 40px; }
+    .hero h1 { font-size: clamp(36px, 11vw, 56px); }
+    .hero-sub { font-size: 16px; }
+    .status-card { transform: none !important; }
+    .hero-right { width: 100%; }
+    /* Changelog: single column layout */
+    .cl-entry { grid-template-columns: 1fr !important; gap: 6px !important; }
+    .cl-meta { display: flex; gap: 10px; align-items: center; }
+  }
+
+  @media (max-width: 400px) {
+    .bento { grid-template-columns: 1fr !important; }
+    .mod-jarvis, .mod-tracker, .mod-axis { grid-column: span 1 !important; }
+    .signup-meta { flex-direction: column; gap: 8px; }
+    .hero-eyebrow { font-size: 9px; }
+  }
+
+
+  /* ─── Portrait / narrow phone (≤ 480px) ─── */
+  @media (max-width: 480px) {
+    /* Topbar: hide all non-essential items to avoid overflow */
+    .topbar-time, .topbar-right .btn-ghost { display: none !important; }
+    .topbar-inner { padding: 10px 14px; }
+    .brand-mark { width: 24px; height: 24px; font-size: 11px; }
+    .brand-name { font-size: 9px; letter-spacing: .12em; }
+
+    /* Hero: compact vertical rhythm */
+    .hero { padding: max(24px, calc(env(safe-area-inset-top) + 16px)) 14px 20px; gap: 20px; }
+    .hero h1 { font-size: clamp(30px, 9vw, 40px); }
+    .hero-eyebrow { font-size: 8px; gap: 6px; padding: 5px 10px; }
+    .hero-sub { font-size: 14px; line-height: 1.6; }
+
+    /* Status card: flatten fully on portrait (no 3D tilt) */
+    .status-card { transform: none !important; width: 100% !important; box-sizing: border-box; }
+    .hero-right { width: 100%; overflow: hidden; }
+
+    /* Bento grid: truly single column (handles 390px–480px iPhones) */
+    .bento { grid-template-columns: 1fr !important; grid-auto-rows: auto !important; }
+    .mod, .mod-jarvis, .mod-tracker, .mod-axis { grid-column: span 1 !important; }
+    .mod { min-height: 160px; }
+    .mod-jarvis, .mod-tracker { min-height: 220px; }
+
+    /* Signup forms: full width */
+    .signup { flex-direction: column; gap: 8px; padding: 10px 0; }
+    .signup input, .signup button { width: 100%; box-sizing: border-box; }
+    .signup-meta { flex-direction: column; gap: 8px; }
+
+    /* Marquee: contain it */
+    .marquee { overflow: hidden; }
+
+    /* Demo section: already hidden demo-side, stack the grid cards */
+    .demo-g4 { grid-template-columns: 1fr 1fr !important; gap: 8px; }
+    .demo-g2 { grid-template-columns: 1fr !important; }
+
+    /* Sections: tighter padding */
+    section { padding: 44px 14px; }
+    .sec-head { margin-bottom: 28px; }
+    .cta-stage { padding: 28px 14px; }
+    .jarvis-stage { padding: 20px 14px; }
+    .jarvis-stage h3 { font-size: 22px; }
+
+    /* Pricing: tighter */
+    .pricing-card { padding: 20px 14px 18px; }
+
+    /* Compare cards: ensure they don't overflow */
+    .compare-card { padding: 16px 14px; }
+
+    /* Stats: single column and smaller numbers */
+    .stats-grid { grid-template-columns: 1fr !important; }
+    .stat .sv { font-size: 36px; }
+
+    /* Auth overlay: full-height bottom sheet with enough room */
+    .auth-card { padding: 24px 16px; }
+    .auth-card .auth-title { font-size: 20px; }
+
+    /* Footer */
+    footer { padding: 24px 14px max(20px, env(safe-area-inset-bottom)); }
+    footer .links { flex-wrap: wrap; gap: 4px; }
+  }
+
+  /* ── Smooth scroll ── */
+  html { scroll-behavior: smooth; }
+
+  /* ── Reduced motion: disable all animations for users who prefer it ── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .marquee-track { animation: none; }
+    .g1, .g2, .g3 { animation: none; }
+    .pill .dot, .status-footer .pulse { animation: none; }
+    .jarvis-cursor { animation: none; }
+    .jthinking span { animation: none; }
+    .status-card { transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═════════ TOPBAR ═════════ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-mark">◈</div>
+      <span>WAR&nbsp;ROOM</span>
+    </div>
+    <nav class="topbar-nav">
+      <a href="#features">Features</a>
+      <a href="#axis">AXIS</a>
+      <a href="#dashboard">Inside</a>
+      <a href="#features">Video</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#compare">vs. Tabs</a>
+      <a href="#changelog">Changelog</a>
+    </nav>
+    <div class="topbar-right">
+      <div class="topbar-time mono" id="topTime">— · EST</div>
+      <button class="btn-login" onclick="openAuthOverlay('signin')">Log In</button>
+      <button class="btn" onclick="openAuthOverlay('signup')">Get Access →</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═════════ HERO ═════════ -->
+<section class="hero">
+  <span class="glyph g1">◈</span>
+  <span class="glyph g2">◎</span>
+  <span class="glyph g3">◇</span>
+
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span class="new-dot"></span>
+      v5.1 · Video Calls · Payroll · SVG Icons
+    </div>
+    <h1>
+      Run every<br>
+      business from<br>
+      <em>one</em> <span class="swap"><span class="swap-word">war room</span></span>.
+    </h1>
+    <p class="hero-sub">
+      Your personal command center for the operator running 3 businesses out of 17 browser tabs. <b>Missions, P&amp;L, payroll, calendar, video calls, intel, bills, focus</b> — and an AI co-pilot that has read all of it.
+    </p>
+
+    <form class="signup" id="heroForm" onsubmit="return handleSignup(event, 'heroForm')">
+      <input type="email" id="heroEmail" placeholder="operator@yourdomain.com" required="" autocomplete="email">
+      <button type="submit"><span>Reserve Access</span><span class="arr">→</span></button>
+      <div class="signup-success">
+        <div class="check">✓</div>
+        <div>
+          <div style="font-weight:700; font-size:14px; letter-spacing:0.02em;">You're in. Operator status: <span style="color:var(--green)">CONFIRMED</span></div>
+          <div style="font-size:11px; opacity:.6; font-family:'DM Mono',monospace; margin-top:2px;">Check your inbox for keys.</div>
+        </div>
+      </div>
+    </form>
+    <div class="signup-meta">
+      <span class="joiner-stack">
+        <span class="ja ja-1">M</span>
+        <span class="ja ja-2">J</span>
+        <span class="ja ja-3">K</span>
+        <span class="ja ja-4">A</span>
+      </span>
+      <span><b id="joinerCount" style="color:var(--ink);font-weight:700;">2,147</b> operators on the list</span>
+      <span class="ok">● No spam. Beta keys roll out weekly.</span>
+    </div>
+  </div>
+
+  <!-- LIVE STATUS PANEL -->
+  <div class="hero-right">
+    <div class="status-card">
+      <div class="status-bar">
+        <div class="traf"><i></i><i></i><i></i></div>
+        <span>warroom.app</span>
+        <span class="url" id="liveClock">— EST</span>
+      </div>
+      <div class="status-body">
+        <div class="status-row">
+          <div>
+            <h2>Good morning, Operator</h2>
+            <div class="ps" id="liveDate">— · day in session</div>
+          </div>
+          <span class="pill"><span class="dot"></span> Online</span>
+        </div>
+
+        <div class="status-grid">
+          <div class="st-cell">
+            <div class="cl">Today P/L</div>
+            <div class="cv">$<span id="liveRev">3,420</span></div>
+            <div class="cs pos">▲ 12.4%</div>
+          </div>
+          <div class="st-cell">
+            <div class="cl">Missions</div>
+            <div class="cv"><span id="liveMissions">7</span><span style="color:var(--ink3);font-size:13px;font-weight:600">/12</span></div>
+            <div class="cs">3 due today</div>
+          </div>
+          <div class="st-cell">
+            <div class="cl">Focus</div>
+            <div class="cv mono" id="liveFocus">02:14:33</div>
+            <div class="cs pos">running</div>
+          </div>
+        </div>
+
+        <div class="mini-row">
+          <div class="mini-block" style="flex:1.2">
+            <div class="bpl">Week revenue</div>
+            <div class="bv">$<span id="weekRev">18,402</span></div>
+            <div class="bar-row" id="weekBars"></div>
+          </div>
+          <div class="mini-block" style="flex:1.1">
+            <div class="bpl">Today's missions</div>
+            <div class="mini-mission done">
+              <div class="ck">✓</div>
+              <span>Ship landing page</span>
+              <span class="mt">09:14</span>
+            </div>
+            <div class="mini-mission">
+              <div class="ck"></div>
+              <span>Call supplier</span>
+              <span class="mt">11:30</span>
+            </div>
+            <div class="mini-mission">
+              <div class="ck"></div>
+              <span>Q3 P&amp;L review</span>
+              <span class="mt">14:00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-footer">
+          <span class="pulse"></span>
+          <span>AXIS · ready</span>
+          <span style="margin-left:auto;">v5.1 // sync · OK</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ MARQUEE ═════════ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="marquee-item">Mission Board <span class="sep">◆</span></span>
+    <span class="marquee-item">P&amp;L Tracker <span class="sep">◆</span></span>
+    <span class="marquee-item">AXIS Co-Pilot <span class="sep">◆</span></span>
+    <span class="marquee-item">Video Calls <span class="sep">◆</span></span>
+    <span class="marquee-item">Payroll <span class="sep">◆</span></span>
+    <span class="marquee-item">Focus Timer <span class="sep">◆</span></span>
+    <span class="marquee-item">Intel Notes <span class="sep">◆</span></span>
+    <span class="marquee-item">Calendar <span class="sep">◆</span></span>
+    <span class="marquee-item">Bills &amp; Expenses <span class="sep">◆</span></span>
+    <span class="marquee-item">Goals <span class="sep">◆</span></span>
+    <span class="marquee-item">Daily Debrief <span class="sep">◆</span></span>
+    <span class="marquee-item">Cloud Sync <span class="sep">◆</span></span>
+    <!-- duplicate -->
+    <span class="marquee-item">Mission Board <span class="sep">◆</span></span>
+    <span class="marquee-item">P&amp;L Tracker <span class="sep">◆</span></span>
+    <span class="marquee-item">AXIS Co-Pilot <span class="sep">◆</span></span>
+    <span class="marquee-item">Video Calls <span class="sep">◆</span></span>
+    <span class="marquee-item">Payroll <span class="sep">◆</span></span>
+    <span class="marquee-item">Focus Timer <span class="sep">◆</span></span>
+    <span class="marquee-item">Intel Notes <span class="sep">◆</span></span>
+    <span class="marquee-item">Calendar <span class="sep">◆</span></span>
+    <span class="marquee-item">Bills &amp; Expenses <span class="sep">◆</span></span>
+    <span class="marquee-item">Goals <span class="sep">◆</span></span>
+    <span class="marquee-item">Daily Debrief <span class="sep">◆</span></span>
+    <span class="marquee-item">Cloud Sync <span class="sep">◆</span></span>
+  </div>
+</div>
+
+<!-- ═════════ FEATURES BENTO ═════════ -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow"><span class="lin"></span> The Modules</div>
+      <h2 class="sec-title">Ten purpose-built modules. <em style="color:var(--ink2);font-style:normal">One unified surface.</em></h2>
+      <p class="sec-sub">Hover anything. Every module knows about every other module — your AI co-pilot pulls from all of them at once.</p>
+    </div>
+
+    <div class="bento">
+      <!-- AXIS (wide) -->
+      <div class="mod mod-axis" onclick="document.getElementById('axisInput').focus()">
+        <div class="mod-head">
+          <div class="mod-glyph">◈</div>
+          <div class="mod-title" style="color:var(--bg)">AXIS</div>
+          <div class="mod-num">01</div>
+        </div>
+        <div class="mod-desc">An AI co-pilot that has read every mission, every dollar, every note in your war room. Ask anything. Get a briefing every morning.</div>
+        <div class="mod-body">
+          <div class="jarvis-msg user">What should I focus on today?</div>
+          <div class="jarvis-msg">
+            You've got <b>$4,200 in receivables</b> aging past 30 days at Stratus — chase those first. Then your Q3 review at 14:00.<span class="jarvis-cursor"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mission Board -->
+      <div class="mod mod-mission">
+        <div class="mod-head">
+          <div class="mod-glyph">◎</div>
+          <div class="mod-title">Mission Board</div>
+          <div class="mod-num">02</div>
+        </div>
+        <div class="mod-desc">Kanban for the things that move the needle. Drag, drop, ship.</div>
+        <div class="mod-body">
+          <div class="mini-mission done"><div class="ck">✓</div><span>Onboard pilot client</span></div>
+          <div class="mini-mission"><div class="ck"></div><span>Q3 supplier audit</span></div>
+          <div class="mini-mission"><div class="ck"></div><span>Hire ops lead</span></div>
+        </div>
+      </div>
+
+      <!-- Goals -->
+      <div class="mod mod-goals">
+        <div class="mod-head">
+          <div class="mod-glyph">◉</div>
+          <div class="mod-title">Goals</div>
+          <div class="mod-num">03</div>
+        </div>
+        <div class="mod-desc">Quarterly targets with rings. See drift before it costs you.</div>
+        <div class="mod-body" style="display:flex;align-items:center;gap:14px">
+          <div class="ring-wrap">
+            <svg width="64" height="64" viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="26" fill="none" stroke="var(--bg3)" stroke-width="6"></circle>
+              <circle cx="32" cy="32" r="26" fill="none" stroke="var(--blue)" stroke-width="6" stroke-dasharray="163" stroke-dashoffset="50" stroke-linecap="round" transform="rotate(-90 32 32)"></circle>
+            </svg>
+            <div class="pct" style="color:var(--blue)">69%</div>
+          </div>
+          <div style="font-size:11px;color:var(--ink2);line-height:1.5">
+            <div><b style="color:var(--ink);font-weight:700">Q3 Revenue</b></div>
+            <div class="mono" style="color:var(--ink3);font-size:10px;">$69k / $100k</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Calls -->
+      <div class="mod mod-vcall">
+        <div class="mod-head">
+          <div class="mod-glyph">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+          </div>
+          <div class="mod-title">Video Calls</div>
+          <div class="mod-num">09</div>
+        </div>
+        <div class="mod-desc">Built-in video meetings — lobby preview, screen share, live chat, speaking detection.</div>
+        <div class="mod-body" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+          <div style="width:36px;height:36px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">M</div>
+          <div style="width:36px;height:36px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">J</div>
+          <div style="width:36px;height:36px;border-radius:8px;background:var(--green);opacity:.7;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff">YOU</div>
+          <div style="font-size:9px;font-family:'DM Mono',monospace;color:var(--green);letter-spacing:0.06em;margin-left:4px">● LIVE · 3 IN CALL</div>
+        </div>
+      </div>
+
+      <!-- P&L Tracker (wide) -->
+      <div class="mod mod-tracker">
+        <div class="mod-head">
+          <div class="mod-glyph">◇</div>
+          <div class="mod-title">P&amp;L Tracker</div>
+          <div class="mod-num">04</div>
+        </div>
+        <div class="mod-desc">Real numbers per business. Daily entries. Auto-rolling weekly/monthly views.</div>
+        <div class="mod-body" id="trackerBars"></div>
+      </div>
+
+      <!-- Focus Timer -->
+      <div class="mod mod-focus">
+        <div class="mod-head">
+          <div class="mod-glyph">◷</div>
+          <div class="mod-title">Focus Timer</div>
+          <div class="mod-num">05</div>
+        </div>
+        <div class="mod-desc">Pomodoro that logs to your session ledger.</div>
+        <div class="mod-body" style="text-align:center">
+          <div class="timer-display"><span id="fmodMin">25</span>:<span id="fmodSec">00</span><span class="ms"> </span></div>
+          <div style="font-size:9px;font-family:'DM Mono',monospace;color:var(--ink3);letter-spacing:0.08em;margin-top:6px">DEEP WORK · 04 / 08</div>
+        </div>
+      </div>
+
+      <!-- Intel Notes -->
+      <div class="mod mod-intel">
+        <div class="mod-head">
+          <div class="mod-glyph">◉</div>
+          <div class="mod-title">Intel Notes</div>
+          <div class="mod-num">06</div>
+        </div>
+        <div class="mod-desc">A second brain for client tells, market signals, ideas that wake you at 2am.</div>
+        <div class="mod-body">
+          <div style="font-size:11px;color:var(--ink2);line-height:1.5;padding:8px 10px;background:var(--bg2);border-radius:6px;border-left:2px solid var(--amber)">
+            <b style="color:var(--ink);font-weight:600">Supplier B</b> raised lead times to 14d. Margin risk on SKU-44.
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar -->
+      <div class="mod mod-cal">
+        <div class="mod-head">
+          <div class="mod-glyph">▦</div>
+          <div class="mod-title">Calendar</div>
+          <div class="mod-num">07</div>
+        </div>
+        <div class="mod-desc">Month / week / day. Color-coded per business.</div>
+        <div class="mod-body">
+          <div class="mini-cal" id="miniCal"></div>
+        </div>
+      </div>
+
+      <!-- Bills & Expenses -->
+      <div class="mod mod-bills">
+        <div class="mod-head">
+          <div class="mod-glyph">◫</div>
+          <div class="mod-title">Bills</div>
+          <div class="mod-num">08</div>
+        </div>
+        <div class="mod-desc">Recurring bills with due-soon alerts.</div>
+        <div class="mod-body">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+            <div style="font-size:11px;color:var(--ink2)">Due this week</div>
+            <div style="font-size:18px;font-weight:800;letter-spacing:-0.02em" class="mono">$2,840</div>
+          </div>
+          <div style="height:6px;background:var(--bg2);border-radius:100px;overflow:hidden">
+            <div style="width:64%;height:100%;background:var(--blue);border-radius:100px"></div>
+          </div>
+          <div style="font-size:9px;font-family:'DM Mono',monospace;color:var(--ink3);margin-top:6px;letter-spacing:0.06em">5 OF 8 PAID · NEXT: STRIPE $89 IN 2D</div>
+        </div>
+      </div>
+
+      <!-- Payroll -->
+      <div class="mod mod-payroll">
+        <div class="mod-head">
+          <div class="mod-glyph">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div class="mod-title">Payroll</div>
+          <div class="mod-num">10</div>
+        </div>
+        <div class="mod-desc">Employee roster per business. Hourly, salary, contractor — headcount and cost at a glance.</div>
+        <div class="mod-body">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+            <div style="font-size:11px;color:var(--ink2)">Monthly payroll</div>
+            <div style="font-size:18px;font-weight:800;letter-spacing:-0.02em" class="mono">$18,400</div>
+          </div>
+          <div style="font-size:9px;font-family:'DM Mono',monospace;color:var(--ink3);letter-spacing:0.06em">6 EMPLOYEES · $220.8K / YR</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ INSIDE / DEMO ═════════ -->
+<section id="dashboard" style="background:var(--bg2);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow"><span class="lin"></span> What you get on day one</div>
+      <h2 class="sec-title">A dashboard that <em style="color:var(--red);font-style:normal">already knows</em> what you'd ask.</h2>
+      <p class="sec-sub">No setup-day pain. Drop in your numbers, your businesses, your goals — the war room organizes itself.</p>
+    </div>
+
+    <div class="demo-shot">
+      <div class="status-bar" style="height:36px;">
+        <div class="traf"><i></i><i></i><i></i></div>
+        <span style="margin-left:6px">WAR ROOM · v5.1</span>
+        <span class="url">⌘K  Quick command</span>
+      </div>
+      <div class="demo-shot-body">
+        <div class="demo-side">
+          <div class="lbl">Command</div>
+          <div class="ni act"><span class="ic">◈</span>Dashboard</div>
+          <div class="ni"><span class="ic">◎</span>Mission Board <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:9px;color:var(--ink3)">7</span></div>
+          <div class="ni"><span class="ic">◉</span>Goals</div>
+          <div class="ni"><span class="ic">◇</span>P&amp;L Tracker</div>
+          <div class="ni"><span class="ic">◷</span>Focus Timer</div>
+          <div class="ni"><span class="ic">◉</span>Intel Notes <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:9px;color:var(--red)">2</span></div>
+          <div class="ni"><span class="ic">▦</span>Calendar</div>
+          <div class="ni"><span class="ic">◫</span>Bills</div>
+          <div class="ni"><span class="ic">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </span>Video Calls</div>
+          <div class="ni"><span class="ic">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </span>Payroll</div>
+          <div class="lbl" style="margin-top:14px">Businesses</div>
+          <div class="ni"><span style="width:6px;height:6px;border-radius:50%;background:#6c8fff"></span>Stratus</div>
+          <div class="ni"><span style="width:6px;height:6px;border-radius:50%;background:#1ea96b"></span>Forge Studio</div>
+          <div class="ni"><span style="width:6px;height:6px;border-radius:50%;background:#d99500"></span>Outpost Labs</div>
+        </div>
+        <div class="demo-content">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div>
+              <div class="pt">Dashboard</div>
+              <div class="ps">All systems · 3 businesses synced</div>
+            </div>
+            <span class="pill"><span class="dot"></span> Live</span>
+          </div>
+          <div class="demo-g4">
+            <div class="demo-card"><div class="cl">Net (mo)</div><div class="cv">$42,318</div><div class="cs" style="color:var(--green)">▲ 18% vs LM</div></div>
+            <div class="demo-card"><div class="cl">Active Missions</div><div class="cv">12</div><div class="cs" style="color:var(--ink3)">3 due today</div></div>
+            <div class="demo-card"><div class="cl">Focus (wk)</div><div class="cv">28h 42m</div><div class="cs" style="color:var(--green)">▲ 4h</div></div>
+            <div class="demo-card"><div class="cl">Bills due</div><div class="cv">$2,840</div><div class="cs" style="color:var(--amber)">5 of 8 paid</div></div>
+          </div>
+          <div class="demo-g2">
+            <div class="demo-card">
+              <div class="cl">Revenue · last 8 weeks</div>
+              <div style="display:flex;align-items:flex-end;gap:5px;height:64px;margin-top:8px">
+                <div style="flex:1;background:var(--green);opacity:.5;border-radius:3px 3px 0 0;height:38%"></div>
+                <div style="flex:1;background:var(--green);opacity:.5;border-radius:3px 3px 0 0;height:54%"></div>
+                <div style="flex:1;background:var(--green);opacity:.5;border-radius:3px 3px 0 0;height:46%"></div>
+                <div style="flex:1;background:var(--green);opacity:.7;border-radius:3px 3px 0 0;height:68%"></div>
+                <div style="flex:1;background:var(--green);opacity:.7;border-radius:3px 3px 0 0;height:62%"></div>
+                <div style="flex:1;background:var(--green);opacity:.85;border-radius:3px 3px 0 0;height:84%"></div>
+                <div style="flex:1;background:var(--green);opacity:.85;border-radius:3px 3px 0 0;height:76%"></div>
+                <div style="flex:1;background:var(--green);border-radius:3px 3px 0 0;height:100%"></div>
+              </div>
+            </div>
+            <div class="demo-card">
+              <div class="cl">AXIS — Morning Brief</div>
+              <div style="font-size:12px;line-height:1.55;color:var(--ink2);margin-top:8px">
+                3 priorities for today: <b style="color:var(--ink)">close pilot deal</b>, <b style="color:var(--ink)">chase $4.2k receivable</b>, and the <b style="color:var(--ink)">Q3 P&amp;L review at 14:00</b>. Stratus revenue is up 18% — protect that momentum.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ AXIS LIVE ═════════ -->
+<section id="axis">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow"><span class="lin"></span> Ask the co-pilot live</div>
+      <h2 class="sec-title">Meet <em style="color:var(--red);font-style:normal">AXIS</em>. Built for operators.</h2>
+      <p class="sec-sub">No sign-up needed. Click a question below, or type your own. AXIS answers like an operator, not a chatbot.</p>
+    </div>
+
+    <div class="jarvis-stage">
+      <div class="jarvis-grid">
+        <div>
+          <h3>An AI that lives inside your business.</h3>
+          <p class="jdesc">AXIS reads your P&amp;L, your missions, your calendar, your intel notes — and answers in your voice. Calm. Precise. Tactical. No rambling.</p>
+          <div class="label" style="color:rgba(255,255,255,.5);margin-bottom:8px">Common questions</div>
+          <div class="prompt-list">
+            <button class="pchip" onclick="askFAQ('whats-different')">What makes WAR ROOM different?</button>
+            <button class="pchip" onclick="askFAQ('is-private')">Is my data private?</button>
+            <button class="pchip" onclick="askFAQ('how-axis-works')">How does AXIS know my business?</button>
+            <button class="pchip" onclick="askFAQ('what-does-it-cost')">What does it cost?</button>
+            <button class="pchip" onclick="askFAQ('works-offline')">Does it work offline?</button>
+            <button class="pchip" onclick="askFAQ('mobile')">Does it work on mobile?</button>
+          </div>
+        </div>
+
+        <div class="jarvis-chat">
+          <div class="jarvis-chat-head">
+            <span style="color:var(--red);font-size:14px">◈</span>
+            <span class="who">AXIS</span>
+            <span style="opacity:.5">v5.1</span>
+            <span class="status"><span class="d"></span> ONLINE</span>
+          </div>
+          <div class="jarvis-chat-body" id="axisBody">
+            <div class="jmsg ai">AXIS online. I'm your WAR ROOM co-pilot — click a question or type your own. I answer from your actual data: missions, P&amp;L, calendar, intel. Straight talk only.</div>
+          </div>
+          <form class="jarvis-chat-input" id="axisForm" onsubmit="return submitAxis(event)">
+            <input id="axisInput" type="text" placeholder="Ask AXIS anything…" autocomplete="off">
+            <button id="axisSend" type="submit">Send →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ STATS ═════════ -->
+<section class="stats-section">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow"><span class="lin"></span> Operator metrics</div>
+      <h2 class="sec-title">Built by an operator. Battle-tested by <em style="color:var(--red);font-style:normal">thousands</em>.</h2>
+    </div>
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="sv" data-target="2147"><span class="counter">0</span></div>
+        <div class="sl">Operators on the list</div>
+        <div class="sd">+38 this week</div>
+      </div>
+      <div class="stat">
+        <div class="sv"><span class="counter" data-target="184">0</span><span class="unit">k</span></div>
+        <div class="sl">Missions shipped</div>
+        <div class="sd">across all rooms</div>
+      </div>
+      <div class="stat">
+        <div class="sv"><span class="counter" data-target="92">0</span><span class="unit">k</span></div>
+        <div class="sl">Hours of deep focus</div>
+        <div class="sd">logged by Focus Timer</div>
+      </div>
+      <div class="stat">
+        <div class="sv"><span class="counter" data-target="4">0</span><span class="unit">.9</span></div>
+        <div class="sl">Avg. operator rating</div>
+        <div class="sd">out of 5.0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ WHY WAR ROOM ═════════ -->
+<section style="background:var(--bg2);padding:56px 0 56px">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow"><span class="lin"></span> Why operators switch</div>
+      <h2 class="sec-title">Not another tool. <em style="color:var(--red);font-style:normal">A command center.</em></h2>
+      <p class="sec-sub">These are the things that make operators stay — not features from a roadmap, but fundamentals baked into the architecture.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;max-width:1280px;margin:0 auto">
+
+      <div style="background:var(--surface);border:0.5px solid var(--border2);border-radius:14px;padding:22px 24px">
+        <div style="font-size:24px;margin-bottom:10px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px;letter-spacing:0.02em">One file. No install.</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.6">WAR ROOM is a single HTML file. Bookmark it, email it to yourself, drop it on a USB. It opens in any browser. No app store, no account, no setup wizard. Just open and run.</div>
+      </div>
+
+      <div style="background:var(--surface);border:0.5px solid var(--border2);border-radius:14px;padding:22px 24px">
+        <div style="font-size:24px;margin-bottom:10px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px;letter-spacing:0.02em">Your data never leaves — unless you want it to.</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.6">Local-first by default. Your P&amp;L, payroll, and intel notes live in your browser. Cloud sync is opt-in — you choose the destination and hold the keys. We have no access to your data. Ever.</div>
+      </div>
+
+      <div style="background:var(--surface);border:0.5px solid var(--border2);border-radius:14px;padding:22px 24px">
+        <div style="font-size:24px;margin-bottom:10px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px;letter-spacing:0.02em">Multi-business from day one.</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.6">Not an add-on. Not a workspace upgrade. Every module — P&amp;L, missions, payroll, calendar — is business-aware by default. Switch contexts in one click. No context switching tax.</div>
+      </div>
+
+      <div style="background:var(--surface);border:0.5px solid var(--border2);border-radius:14px;padding:22px 24px">
+        <div style="font-size:24px;margin-bottom:10px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px;letter-spacing:0.02em">AXIS knows your whole business.</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.6">Most AI tools are blank-slate chatbots. AXIS is different — it reads your P&amp;L, missions, payroll, calendar, and intel notes before it answers. No copy-pasting context. No generic advice. Real answers from real data.</div>
+      </div>
+
+      <div style="background:var(--surface);border:0.5px solid var(--border2);border-radius:14px;padding:22px 24px">
+        <div style="font-size:24px;margin-bottom:10px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        </div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px;letter-spacing:0.02em">Built-in video calls. No Zoom tax.</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.6">Client calls, team standups, partner check-ins — all inside WAR ROOM. Lobby preview, screen share (monitor, window, or browser tab), live chat, speaking detection. Cancel your Zoom subscription.</div>
+      </div>
+
+      <div style="background:var(--surface);border:0.5px solid var(--border2);border-radius:14px;padding:22px 24px">
+        <div style="font-size:24px;margin-bottom:10px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div style="font-size:13px;font-weight:800;margin-bottom:6px;letter-spacing:0.02em">Payroll visibility built in.</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.6">Headcount, monthly burn, annual cost — per business, always visible. Add employees as hourly, salary, or contractor. No separate spreadsheet, no HR software subscription for a 4-person team.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ PRICING ═════════ -->
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow"><span class="lin"></span> Pricing</div>
+      <h2 class="sec-title">Simple pricing. <em style="color:var(--red);font-style:normal">No surprises.</em></h2>
+      <p class="sec-sub">Built for the operator who hates subscriptions that nickel-and-dime. Pick your tier — upgrade when you're ready.</p>
+    </div>
+
+    <!-- Monthly / Annual toggle -->
+    <div class="pricing-toggle">
+      <span id="toggleLabelMonthly" style="color:var(--ink)">Monthly</span>
+      <button class="pricing-toggle-btn" id="billingToggle" onclick="toggleBilling()" aria-label="Toggle annual billing"></button>
+      <span id="toggleLabelAnnual">Annual <span class="pricing-save-chip">2 months free</span></span>
+    </div>
+
+    <div class="pricing-grid">
+
+      <!-- ── Personal ── -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Personal</div>
+        <div class="pricing-price">
+          <sup>$</sup><span id="personalPrice">11</span><span class="per"> / mo</span>
+        </div>
+        <div class="pricing-annual" id="personalAnnual">&nbsp;</div>
+        <div class="pricing-desc">Built for the solo operator. Full War Room, zero noise.</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Full War Room dashboard
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            P&amp;L tracker + CSV export
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Mission board + whiteboard
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Calendar + AXIS daily briefing
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            1 workspace / user
+          </li>
+          <li class="dim">
+            <span class="pf-x">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </span>
+            Team accounts
+          </li>
+        </ul>
+        <button class="pricing-cta" onclick="openAuthOverlay('signup')">Get Started →</button>
+      </div>
+
+      <!-- ── Small Business (featured) ── -->
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-tier">Small Business</div>
+        <div class="pricing-price">
+          <sup>$</sup><span id="sbPrice">14</span><span class="per" id="sbPer"> / mo</span>
+        </div>
+        <div class="pricing-annual" id="sbAnnual">&nbsp;</div>
+        <div class="pricing-desc">Command your crew. One room, one mission.</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Everything in Personal
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <strong>3 team seats included</strong>
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Shared mission board + calendar
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Shared whiteboard
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Team task assignment
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Business P&amp;L (owner-controlled)
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Private layers per member
+          </li>
+        </ul>
+        <button class="pricing-cta" disabled style="opacity:.45;cursor:not-allowed;transform:none;pointer-events:none;">Coming Soon</button>
+      </div>
+
+      <!-- ── Enterprise ── -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Enterprise</div>
+        <div class="pricing-price" style="font-size:32px;letter-spacing:-.02em;padding-top:6px">Custom</div>
+        <div class="pricing-annual">&nbsp;</div>
+        <div class="pricing-desc">We build it around you. Direct line to CRES.</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Everything in Small Business
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            White-label / custom branding
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Unlimited team seats
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Dedicated onboarding
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Custom feature builds
+          </li>
+          <li>
+            <span class="pf-check">
+              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="3.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            Direct line to CRES Ventures
+          </li>
+        </ul>
+        <a class="pricing-cta ghost" href="mailto:hello@cresventures.io?subject=WAR ROOM Enterprise">Contact Us →</a>
+      </div>
+
+    </div><!-- /pricing-grid -->
+
+    <!-- Fine print -->
+    <p style="text-align:center;font-size:10px;font-family:'DM Mono',monospace;color:var(--ink3);margin-top:28px;letter-spacing:.04em">
+      Beta access is free · Personal saves $32/yr · Small Business saves $48/yr (2 months free) · Founder pricing locks in at launch.
+    </p>
+
+  </div>
+</section>
+
+<!-- ═════════ COMPARE ═════════ -->
+<section id="changelog" style="background:var(--bg2);padding:80px 28px;">
+  <div class="wrap">
+    <div class="sec-eyebrow"><span class="lin"></span>Updates<span class="lin"></span></div>
+    <div class="sec-title" style="margin-bottom:8px;">What's new in War Room</div>
+    <div class="sec-sub" style="margin-bottom:48px;">Every build, shipped live. No changelog theater.</div>
+    <div class="cl-feed" style="display:flex;flex-direction:column;gap:0;max-width:720px;margin:0 auto;">
+
+      <!-- Entry -->
+      <div class="cl-entry" style="display:grid;grid-template-columns:120px 1fr;gap:0 28px;border-top:.5px solid var(--rule);padding:28px 0;">
+        <div class="cl-meta" style="padding-top:2px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace;">May 20 2026</div>
+          <span style="display:inline-block;margin-top:8px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:100px;background:var(--green-bg,rgba(16,185,129,.08));color:var(--green,#10b981);">New</span>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-bottom:6px;">v5.2 — Onboarding sync &amp; Blog</div>
+          <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;">Fixed a critical bug where onboarding data was not persisting after account creation. New users now get the full setup wizard immediately after sign-up, with data synced to the cloud once the wizard completes. Email/password accounts now properly connect to Supabase cloud sync (the same sync that Google sign-in users had). Added this changelog page.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text3);">Onboarding</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text3);">Cloud Sync</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text3);">Auth</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entry -->
+      <div class="cl-entry" style="display:grid;grid-template-columns:120px 1fr;gap:0 28px;border-top:.5px solid var(--rule);padding:28px 0;">
+        <div class="cl-meta" style="padding-top:2px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace;">May 20 2026</div>
+          <span style="display:inline-block;margin-top:8px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:100px;background:rgba(59,130,246,.08);color:#3b82f6;">Fix</span>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-bottom:6px;">v5.1 — Firebase OAuth &amp; PBKDF2 hashing</div>
+          <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;">Replaced the mock Google sign-in (a bare setTimeout that just wrote to localStorage) with real Firebase OAuth using signInWithPopup. Upgraded password storage from btoa Base64 to PBKDF2 (150,000 iterations, SHA-256, per-email salt). Fixed a JSON bundler round-trip bug that caused "Unexpected non-whitespace character after JSON" errors for some browsers.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text3);">Security</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text3);">Google Auth</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text3);">Bundler</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entry -->
+      <div class="cl-entry" style="display:grid;grid-template-columns:120px 1fr;gap:0 28px;border-top:.5px solid var(--rule);padding:28px 0;">
+        <div class="cl-meta" style="padding-top:2px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace;">May 2026</div>
+          <span style="display:inline-block;margin-top:8px;font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:100px;background:rgba(168,85,247,.08);color:#a855f7;">Feature</span>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-bottom:6px;">v5.0 — War Room goes live</div>
+          <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:12px;">Full public launch. War Room v5 ships with AXIS AI co-pilot, multi-business P&amp;L tracking, focus timer, payroll, video calls, a Supabase cloud sync backbone, invite-link team rooms, and the operator onboarding wizard. Built as a single-file bundle — no install required.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text3);">Launch</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text3);">AXIS AI</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;background:var(--bg3);color:var(--text3);">Multi-business</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ CTA ═════════ -->
+<section style="padding-top: 24px">
+  <div class="wrap">
+    <div class="cta-stage">
+      <span class="glyph" style="top:14%;left:8%;font-size:32px;animation:float 9s ease-in-out infinite">◈</span>
+      <span class="glyph" style="top:18%;right:10%;font-size:26px;color:var(--red);animation:float 11s ease-in-out infinite -3s">◎</span>
+      <span class="glyph" style="bottom:18%;left:14%;font-size:22px;color:var(--green);animation:float 10s ease-in-out infinite -5s">◉</span>
+      <span class="glyph" style="bottom:14%;right:8%;font-size:28px;color:var(--blue);animation:float 12s ease-in-out infinite -7s">◇</span>
+
+      <div class="label" style="margin-bottom:14px;color:var(--red)">◆ Beta · Closed Access</div>
+      <h2>Step into your<br><em>war room</em>.</h2>
+      <p>Drop your email. We'll send a beta key to the next 50 operators on the list. Free during beta. Lifetime founder pricing after.</p>
+
+      <form class="signup" id="ctaForm" onsubmit="return handleSignup(event, 'ctaForm')">
+        <input type="email" id="ctaEmail" placeholder="operator@yourdomain.com" required="" autocomplete="email">
+        <button type="submit"><span>Reserve Access</span><span class="arr">→</span></button>
+        <div class="signup-success">
+          <div class="check">✓</div>
+          <div>
+            <div style="font-weight:700; font-size:14px; letter-spacing:0.02em;">You're in. Operator status: <span style="color:var(--green)">CONFIRMED</span></div>
+            <div style="font-size:11px; opacity:.6; font-family:'DM Mono',monospace; margin-top:2px;">Check your inbox for keys.</div>
+          </div>
+        </div>
+      </form>
+
+      <div class="perks">
+        <span><span class="ck">✓</span> No credit card</span>
+        <span><span class="ck">✓</span> Free during beta</span>
+        <span><span class="ck">✓</span> Founder pricing locked in</span>
+        <span><span class="ck">✓</span> Cancel anytime</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ CHANGELOG / BLOG ═════════ -->
+<section id="compare">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-eyebrow"><span class="lin"></span> Why operators switch</div>
+      <h2 class="sec-title">The way you run your business <em style="color:var(--red);font-style:normal">right now</em> is the problem.</h2>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card bad">
+        <div class="ch">◌ Operator stack today</div>
+        <h4>17 tabs, 4 apps, zero clarity.</h4>
+        <ul>
+          <li>Notion for missions, Sheets for P&amp;L, Apple Calendar for time, Notes for ideas</li>
+          <li>Five tools that don't talk — and none of them know your business</li>
+          <li>Every Monday: 90 minutes of "where am I?" before you start</li>
+          <li>ChatGPT, but you copy-paste context into it for 10 minutes first</li>
+          <li>You stop tracking the moment a quarter gets busy</li>
+        </ul>
+      </div>
+      <div class="compare-card good">
+        <div class="ch">◆ With War Room</div>
+        <h4>One surface. Ten modules. One brain.</h4>
+        <ul>
+          <li>Missions, P&amp;L, calendar, bills, notes — all native, all interlinked</li>
+          <li>AXIS reads everything. Briefs you in 60s every morning</li>
+          <li>One ⌘K command runs the entire app</li>
+          <li>Multi-business by default. Switch contexts without losing focus</li>
+          <li>Local-first, cloud-synced. Your data is yours.</li>
+          <li>Built-in video calls — no Zoom subscription needed</li>
+          <li>Payroll tracker — headcount and cost per business, always visible</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════ FOOTER ═════════ -->
+<footer>
+  <div class="wrap">
+    <div>© 2026 War Room · A CRES Ventures product</div>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#axis">AXIS</a>
+      <a href="#dashboard">Inside</a>
+      <a href="#changelog">Changelog</a>
+      <a href="mailto:hello@cresventures.io?subject=Privacy+Inquiry">Privacy</a>
+    </div>
+    <div>v5.1 · Sync OK · <span style="color:var(--green)">● ONLINE</span></div>
+  </div>
+</footer>
+
+<script>
+  /* ── Dynamic script loader (used by Firebase lazy-load) ── */
+  function _loadScript(src) {
+    return new Promise(function(resolve, reject) {
+      if (document.querySelector('script[src="' + src + '"]')) { resolve(); return; }
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = function() { reject(new Error('Failed to load ' + src)); };
+      document.head.appendChild(s);
+    });
+  }
+
+  /* ── Live clock ── */
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function tickClock() {
+    const now = new Date();
+    const opts = { timeZone: 'America/New_York', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+    const est = new Intl.DateTimeFormat('en-US', opts).format(now);
+    const dateOpts = { timeZone: 'America/New_York', month: 'short', day: 'numeric', weekday: 'short' };
+    const ddate = new Intl.DateTimeFormat('en-US', dateOpts).format(now).toUpperCase();
+    const top = document.getElementById('topTime');
+    const live = document.getElementById('liveClock');
+    const ld = document.getElementById('liveDate');
+    if (top) top.textContent = est + ' · EST';
+    if (live) live.textContent = est + ' EST';
+    if (ld) ld.textContent = ddate + ' · day 248 in session';
+  }
+  setInterval(tickClock, 1000);
+  tickClock();
+
+  /* ── Hero status panel: live counters + focus timer ── */
+  let focusH = 2, focusM = 14, focusS = 33;
+  function tickFocus() {
+    focusS++;
+    if (focusS >= 60) { focusS = 0; focusM++; }
+    if (focusM >= 60) { focusM = 0; focusH++; }
+    const el = document.getElementById('liveFocus');
+    if (el) el.textContent = pad(focusH) + ':' + pad(focusM) + ':' + pad(focusS);
+  }
+  setInterval(tickFocus, 1000);
+
+  /* mini timer card in bento */
+  let modSec = 0;
+  function tickFocusMod() {
+    modSec++;
+    let totalSec = 25 * 60 - modSec;
+    if (totalSec < 0) { modSec = 0; totalSec = 25 * 60; }
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    const m = document.getElementById('fmodMin');
+    const s = document.getElementById('fmodSec');
+    if (m) m.textContent = pad(min);
+    if (s) s.textContent = pad(sec);
+  }
+  setInterval(tickFocusMod, 1000);
+
+  /* hero revenue jitter */
+  let baseRev = 3420;
+  setInterval(() => {
+    baseRev += Math.floor(Math.random() * 8) + 1;
+    const el = document.getElementById('liveRev');
+    if (el) el.textContent = baseRev.toLocaleString();
+  }, 3500);
+
+  /* week bars */
+  (function () {
+    const wb = document.getElementById('weekBars');
+    if (!wb) return;
+    const heights = [0.46, 0.58, 0.42, 0.78, 0.64, 0.92, 0.5];
+    heights.forEach((h, i) => {
+      const b = document.createElement('div');
+      b.className = 'b';
+      b.style.height = (h * 100) + '%';
+      if (i === 5) b.style.background = 'var(--red)';
+      wb.appendChild(b);
+    });
+  })();
+
+  /* tracker bento bars */
+  (function () {
+    const tb = document.getElementById('trackerBars');
+    if (!tb) return;
+    const heights = [0.32, 0.48, 0.4, 0.6, 0.55, 0.72, 0.65, 0.85, 0.78, 0.92, 0.84, 1];
+    heights.forEach((h, i) => {
+      const b = document.createElement('div');
+      b.className = 'b';
+      if (i >= heights.length - 3) b.classList.add('hi');
+      b.style.height = (h * 100) + '%';
+      tb.appendChild(b);
+    });
+  })();
+
+  /* mini calendar */
+  (function () {
+    const mc = document.getElementById('miniCal');
+    if (!mc) return;
+    const events = [3, 5, 8, 12, 15, 18, 22, 25, 27];
+    const today = 15;
+    for (let i = 1; i <= 28; i++) {
+      const d = document.createElement('div');
+      d.textContent = i;
+      if (events.includes(i)) d.classList.add('has');
+      if (i === today) d.classList.add('today');
+      mc.appendChild(d);
+    }
+  })();
+
+  /* ── Joiner count ticker ── */
+  (function () {
+    const el = document.getElementById('joinerCount');
+    if (!el) return;
+    let n = 2147;
+    setInterval(() => {
+      if (Math.random() > 0.6) {
+        n++;
+        el.textContent = n.toLocaleString();
+        el.style.transition = 'color .2s';
+        el.style.color = 'var(--green)';
+        setTimeout(() => { el.style.color = 'var(--ink)'; }, 400);
+      }
+    }, 4000);
+  })();
+
+  /* ── Stats counter on scroll ── */
+  function animateCounters() {
+    document.querySelectorAll('.counter').forEach((el) => {
+      if (el.dataset.done) return;
+      const target = parseInt(el.dataset.target || el.parentElement.dataset.target || '0', 10);
+      if (!target) return;
+      el.dataset.done = '1';
+      let current = 0;
+      const dur = 1400;
+      const start = performance.now();
+      function step(t) {
+        const p = Math.min(1, (t - start) / dur);
+        // ease out cubic
+        const eased = 1 - Math.pow(1 - p, 3);
+        current = Math.floor(target * eased);
+        el.textContent = current.toLocaleString();
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = target.toLocaleString();
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) animateCounters(); });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.stats-section').forEach((s) => io.observe(s));
+
+  /* ── Email signup ── */
+  function handleSignup(e, formId) {
+    e.preventDefault();
+    const form = document.getElementById(formId);
+    if (!form) return false;
+    const input = form.querySelector('input[type=email]');
+    const email = input.value.trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      input.style.color = 'var(--red)';
+      input.focus();
+      return false;
+    }
+    // Persist to localStorage as a stand-in
+    try {
+      const list = JSON.parse(localStorage.getItem('warroom_waitlist') || '[]');
+      if (!list.includes(email)) list.push(email);
+      localStorage.setItem('warroom_waitlist', JSON.stringify(list));
+    } catch (_) {}
+    // Success state
+    form.classList.add('success');
+    // Fire confetti
+    confetti();
+    // Bump joiner count
+    const jc = document.getElementById('joinerCount');
+    if (jc) {
+      const n = parseInt(jc.textContent.replace(/,/g, ''), 10) + 1;
+      jc.textContent = n.toLocaleString();
+    }
+    return false;
+  }
+
+  /* ── Confetti (operator glyphs) ── */
+  function confetti() {
+    const glyphs = ['◈', '◎', '◉', '◇', '◷', '▦', '◫'];
+    const colors = ['var(--red)', 'var(--green)', 'var(--blue)', 'var(--amber)', 'var(--violet)', 'var(--pink)', 'var(--ink)'];
+    for (let i = 0; i < 28; i++) {
+      const el = document.createElement('span');
+      el.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      el.style.cssText = `
+        position: fixed; left: ${50 + (Math.random() - 0.5) * 60}%; top: 38%;
+        font-size: ${14 + Math.random() * 14}px;
+        color: ${colors[Math.floor(Math.random() * colors.length)]};
+        pointer-events: none; z-index: 9999;
+        transform: translate(-50%, -50%);
+      `;
+      document.body.appendChild(el);
+      const dx = (Math.random() - 0.5) * 600;
+      const dy = -200 - Math.random() * 220;
+      const dy2 = 600;
+      const rot = (Math.random() - 0.5) * 720;
+      el.animate(
+        [
+          { transform: `translate(-50%, -50%) rotate(0deg)`, opacity: 1 },
+          { transform: `translate(calc(-50% + ${dx * 0.6}px), calc(-50% + ${dy}px)) rotate(${rot * 0.5}deg)`, opacity: 1, offset: 0.3 },
+          { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy2}px)) rotate(${rot}deg)`, opacity: 0 },
+        ],
+        { duration: 1600 + Math.random() * 600, easing: 'cubic-bezier(.4,1.6,.6,1)' }
+      ).onfinish = () => el.remove();
+    }
+  }
+
+  /* ── AXIS Live Chat ── */
+  const AXIS_SYSTEM = `You are AXIS — the AI command intelligence inside the operator's WAR ROOM. You are calm, precise, tactical. Think less "customer service AI" and more "war room advisor who has seen everything."
+
+GROUND RULES:
+- Address the operator as "Operator".
+- Be conversational but sharp.
+- Use **bold** to highlight key terms, numbers, or action items.
+- Use line breaks generously — no walls of text.
+- When asked for strategy, give specific steps, not theory.
+- When something is a red flag, call it out without sugarcoating.
+- Keep responses concise — typically under 120 words unless asked for depth.
+- If asked for diagnostics, walk through them step by step.
+
+You are loyal to the operator's mission.`;
+
+  let axisHistory = [];
+  let axisBusy = false;
+
+  function appendAxisMsg(text, who, isHtml) {
+    const body = document.getElementById('axisBody');
+    const m = document.createElement('div');
+    m.className = 'jmsg ' + who;
+    if (isHtml) m.innerHTML = text; else m.textContent = text;
+    body.appendChild(m);
+    body.scrollTop = body.scrollHeight;
+    return m;
+  }
+
+  function renderMarkdown(text) {
+    // Minimal: bold + line breaks
+    let html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+      .replace(/\n/g, '<br>');
+    return html;
+  }
+
+  /* ── AXIS FAQ answers ── */
+  const FAQ_ANSWERS = {
+    'whats-different': [
+      "**Good question. Here's the honest answer:**",
+      "Notion is a blank canvas. Trello is a board. Sheets is a spreadsheet. None of them know you run *three businesses*, track payroll, have $4.2k in aging receivables, and a call at 14:00.",
+      "WAR ROOM is purpose-built for the multi-business operator. Ten modules — missions, P&L, payroll, calendar, intel notes, bills, focus timer, video calls, goals, and daily debrief — all wired together.",
+      "**AXIS pulls from all of them at once.** Ask 'what should I focus on?' and it answers from your *actual data*. That's the difference."
+    ],
+    'is-private': [
+      "**Local-first. Always.**",
+      "Your data lives in your browser's localStorage by default. No accounts. No servers. No surveillance. We can't read your P&L because it never touches our infrastructure.",
+      "Cloud sync is **opt-in**. You pick the destination (Google Drive, Dropbox, or a custom endpoint). You hold the keys.",
+      "One file. Your machine. Your data."
+    ],
+    'how-axis-works': [
+      "**AXIS is context-aware, not generic.**",
+      "When you use WAR ROOM, you're building a structured picture of your businesses: P&L entries, mission lists, calendar events, intel notes, bill schedules, payroll data. AXIS indexes all of it.",
+      "Ask *'What's dragging my margin at Stratus?'* and AXIS has your actual numbers. Ask *'What should I tackle today?'* and it knows your open missions, due bills, and calendar — not a generic tip.",
+      "**Reserve access to connect AXIS to your live data.**"
+    ],
+    'what-does-it-cost': [
+      "**Free during beta. Founder pricing after.**",
+      "No credit card to reserve a spot. While we're in closed beta, access is free — full features, no limits.",
+      "Early operators who join the list lock in **founder pricing** when we launch paid tiers. That price will never increase for you.",
+      "We're building for operators who want a permanent command center, not a subscription that raises rates every year."
+    ],
+    'works-offline': [
+      "**Yes. That's by design.**",
+      "WAR ROOM is a single HTML file. Open it once and it works with zero internet connection. Every module runs entirely client-side.",
+      "AXIS AI features require a connection for live queries, but your data, UI, and all non-AI functionality are fully offline.",
+      "Bookmark the file locally or host it yourself. Either way, it's yours."
+    ],
+    'mobile': [
+      "**Fully responsive.**",
+      "The layout reflows to a single-column command center on small screens. Touch-friendly tap targets, swipeable module panels — built in, not bolted on.",
+      "Focus timer, mission board, and daily debrief work especially well on mobile. Video calls use your device's camera and mic natively.",
+      "No app store. No download. Just the file saved to your home screen."
+    ]
+  };
+
+  const FAQ_LABELS = {
+    'whats-different': 'What makes WAR ROOM different?',
+    'is-private': 'Is my data private?',
+    'how-axis-works': 'How does AXIS know my business?',
+    'what-does-it-cost': 'What does it cost?',
+    'works-offline': 'Does it work offline?',
+    'mobile': 'Does it work on mobile?'
+  };
+
+  function askFAQ(key) {
+    const answers = FAQ_ANSWERS[key];
+    if (!answers) return;
+    appendAxisMsg(FAQ_LABELS[key] || key, 'user', false);
+    const loading = appendAxisMsg('<div class="jthinking"><span></span><span></span><span></span></div>', 'ai', true);
+    setTimeout(() => {
+      loading.innerHTML = answers.map(p => renderMarkdown(p)).join('<br>');
+      const body = document.getElementById('axisBody');
+      if (body) body.scrollTop = body.scrollHeight;
+    }, 650);
+  }
+
+  function askAxis(prompt) {
+    const input = document.getElementById('axisInput');
+    if (input) { input.value = prompt; }
+    submitAxis(new Event('submit'));
+  }
+
+  function submitAxis(e) {
+    if (e) e.preventDefault();
+    const input = document.getElementById('axisInput');
+    const text = (input ? input.value : '').trim();
+    if (!text) return false;
+    if (input) input.value = '';
+    const lower = text.toLowerCase();
+    const faqMap = [
+      [['different', 'vs notion', 'vs other', 'unique', 'special'], 'whats-different'],
+      [['private', 'data', 'security', 'secure', 'local'], 'is-private'],
+      [['how does axis', 'axis know', 'how axis', 'ai know'], 'how-axis-works'],
+      [['cost', 'price', 'pricing', 'pay', 'free', 'subscription'], 'what-does-it-cost'],
+      [['offline', 'without internet', 'no internet', 'no wifi'], 'works-offline'],
+      [['mobile', 'phone', 'iphone', 'android', 'tablet'], 'mobile'],
+    ];
+    for (const [keywords, key] of faqMap) {
+      if (keywords.some(kw => lower.includes(kw))) {
+        askFAQ(key);
+        return false;
+      }
+    }
+    appendAxisMsg(text, 'user', false);
+    const loading = appendAxisMsg('<div class="jthinking"><span></span><span></span><span></span></div>', 'ai', true);
+    setTimeout(() => {
+      loading.innerHTML = renderMarkdown(
+        "**That's a live AXIS query — only available inside the full War Room.**\n\n" +
+        "Click one of the questions on the left to see how AXIS thinks. " +
+        "Reserve access above to wire AXIS to your actual P&L, missions, and businesses."
+      );
+      const body = document.getElementById('axisBody');
+      if (body) body.scrollTop = body.scrollHeight;
+    }, 600);
+    return false;
+  }
+
+  /* ── Smooth scroll for nav links ── */
+  document.querySelectorAll('a[href^="#"]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  /* ── Parallax glyphs ── */
+  window.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 16;
+    const y = (e.clientY / window.innerHeight - 0.5) * 16;
+    document.querySelectorAll('.hero .glyph').forEach((g, i) => {
+      const f = (i + 1) * 0.5;
+      g.style.translate = `${x * f}px ${y * f}px`;
+    });
+  });
+
+  /* ── Auth Overlay ──────────────────────────────── */
+  let _authMode = 'signin';
+
+  function openAuthOverlay(mode) {
+    _authMode = mode || 'signin';
+    setAuthMode(_authMode);
+    const ov = document.getElementById('authOverlay');
+    if (ov) { ov.classList.add('open'); }
+    setTimeout(() => {
+      const el = document.getElementById('authEmail');
+      if (el) el.focus();
+    }, 80);
+  }
+
+  function closeAuthOverlay() {
+    const ov = document.getElementById('authOverlay');
+    if (!ov) return;
+    ov.classList.add('fading');
+    setTimeout(() => { ov.classList.remove('open', 'fading'); }, 300);
+  }
+
+  // Close on backdrop click
+  document.getElementById('authOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeAuthOverlay();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAuthOverlay();
+  });
+
+  function setAuthMode(mode, opts) {
+    // opts: { keepMessages: bool, title: string, subtitle: string }
+    opts = opts || {};
+    _authMode = mode;
+    const siTab    = document.getElementById('authTabSignin');
+    const suTab    = document.getElementById('authTabSignup');
+    const titleEl  = document.getElementById('authTitle');
+    const sub      = document.getElementById('authSubtitle');
+    const btnTxt   = document.getElementById('authBtnText');
+    const emailEl  = document.getElementById('authEmail');
+    const passEl   = document.getElementById('authPassword');
+    const confirmEl= document.getElementById('authConfirmPassword');
+    const forgotLnk= document.getElementById('authForgotLink');
+    const backLnk  = document.getElementById('authBackLink');
+    const tabs     = document.querySelector('.auth-tabs');
+    const err = document.getElementById('authError');
+    const suc = document.getElementById('authSuccess');
+    if (!opts.keepMessages) { if (err) err.textContent = ''; if (suc) suc.textContent = ''; }
+    if (mode === 'signin') {
+      if (siTab) siTab.className = 'auth-tab active';
+      if (suTab) suTab.className = 'auth-tab';
+      if (titleEl) titleEl.textContent = opts.title || 'Command Access';
+      if (sub)   sub.textContent = opts.subtitle || 'Sign in to access your War Room — your data follows you everywhere.';
+      if (btnTxt) btnTxt.textContent = 'SIGN IN';
+      if (emailEl) { emailEl.style.display = ''; emailEl.placeholder = 'Email address'; emailEl.readOnly = false; }
+      if (passEl)  { passEl.style.display = ''; passEl.placeholder = 'Password'; passEl.autocomplete = 'current-password'; passEl.value = ''; }
+      if (confirmEl) confirmEl.style.display = 'none';
+      if (forgotLnk) forgotLnk.style.display = '';
+      if (backLnk)   backLnk.style.display = 'none';
+      if (tabs) tabs.style.display = '';
+    } else if (mode === 'signup') {
+      if (siTab) siTab.className = 'auth-tab';
+      if (suTab) suTab.className = 'auth-tab active';
+      if (titleEl) titleEl.textContent = opts.title || 'Create Account';
+      if (sub)   sub.textContent = opts.subtitle || 'Create your account. Your War Room syncs across every device, instantly.';
+      if (btnTxt) btnTxt.textContent = 'CREATE ACCOUNT';
+      if (emailEl) { emailEl.style.display = ''; emailEl.placeholder = 'Email address'; emailEl.readOnly = false; }
+      if (passEl)  { passEl.style.display = ''; passEl.placeholder = 'Password'; passEl.autocomplete = 'new-password'; passEl.value = ''; }
+      if (confirmEl) { confirmEl.style.display = ''; confirmEl.value = ''; }
+      if (forgotLnk) forgotLnk.style.display = 'none';
+      if (backLnk)   backLnk.style.display = 'none';
+      if (tabs) tabs.style.display = '';
+    } else if (mode === 'forgot') {
+      if (siTab) siTab.className = 'auth-tab';
+      if (suTab) suTab.className = 'auth-tab';
+      if (sub)   sub.textContent = 'Enter your email and we’ll let you reset your password.';
+      if (btnTxt) btnTxt.textContent = 'CONTINUE';
+      if (emailEl) { emailEl.style.display = ''; emailEl.placeholder = 'Email address'; emailEl.readOnly = false; }
+      if (passEl)  passEl.style.display = 'none';
+      if (confirmEl) confirmEl.style.display = 'none';
+      if (forgotLnk) forgotLnk.style.display = 'none';
+      if (backLnk)   backLnk.style.display = '';
+      if (tabs) tabs.style.display = 'none';
+    } else if (mode === 'reset') {
+      if (sub)   sub.textContent = 'Choose a new password for your account.';
+      if (btnTxt) btnTxt.textContent = 'UPDATE PASSWORD';
+      if (emailEl) emailEl.style.display = 'none';
+      if (passEl)  { passEl.style.display = ''; passEl.placeholder = 'New password'; passEl.autocomplete = 'new-password'; passEl.value = ''; }
+      if (confirmEl) { confirmEl.style.display = ''; confirmEl.placeholder = 'Confirm new password'; confirmEl.value = ''; }
+      if (forgotLnk) forgotLnk.style.display = 'none';
+      if (backLnk)   backLnk.style.display = '';
+      if (tabs) tabs.style.display = 'none';
+    }
+  }
+
+  async function handleAuthSubmit() {
+    if (_authMode === 'forgot') { handleForgotPassword(); return; }
+    if (_authMode === 'reset')  { handleResetPassword();  return; }
+    const _sb = document.getElementById('authSubmitBtn');
+    if (_sb) _sb.disabled = true;
+    try { await handleAuth(); } finally { if (_sb) _sb.disabled = false; }
+  }
+
+  async function handleAuth() {
+    const emailVal = (document.getElementById('authEmail').value || '').trim().toLowerCase();
+    const passVal  = document.getElementById('authPassword').value || '';
+    const errEl    = document.getElementById('authError');
+    const sucEl    = document.getElementById('authSuccess');
+    if (errEl) errEl.textContent = '';
+    if (sucEl) sucEl.textContent = '';
+    if (!emailVal || !passVal) { if (errEl) errEl.textContent = 'Email and password required.'; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { if (errEl) errEl.textContent = 'Enter a valid email address.'; return; }
+    // Lazy-load Firebase compat SDK if not already loaded
+    if (!window._fbAuthApp) {
+      try {
+        await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+        await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js');
+        window._fbAuthApp = firebase.apps.length
+          ? firebase.apps[0]
+          : firebase.initializeApp({
+              apiKey: 'AIzaSyBcdKlkPBlLxs6barPZDAgoPlB9iU82Zkg',
+              authDomain: 'createwarrom.firebaseapp.com',
+              projectId: 'createwarrom'
+            });
+      } catch(e) {
+        if (errEl) errEl.textContent = 'Cloud service unavailable. Please check your connection.';
+        return;
+      }
+    }
+    const auth = firebase.auth();
+    if (_authMode === 'signup') {
+      const confirmEl = document.getElementById('authConfirmPassword');
+      const confirmVal = confirmEl ? confirmEl.value : '';
+      if (passVal !== confirmVal) { if (errEl) errEl.textContent = 'Passwords do not match.'; return; }
+      if (passVal.length < 6)     { if (errEl) errEl.textContent = 'Password must be at least 6 characters.'; return; }
+      try {
+        await auth.createUserWithEmailAndPassword(emailVal, passVal);
+        localStorage.setItem('wr_access', '1');
+        localStorage.setItem('wr_user_email', emailVal);
+        if (sucEl) sucEl.textContent = '\u2713 Account created. Launching War Room...';
+        setTimeout(() => { closeAuthOverlay(); setTimeout(() => window.location.replace('app.html'), 400); }, 1000);
+      } catch(e) {
+        const msg = e.code === 'auth/email-already-in-use' ? 'An account with this email already exists. Sign in instead.' :
+                    e.code === 'auth/weak-password'        ? 'Password must be at least 6 characters.' :
+                    e.code === 'auth/invalid-email'        ? 'Enter a valid email address.' :
+                    'Sign up failed: ' + (e.message || e.code);
+        if (errEl) errEl.textContent = msg;
+      }
+    } else {
+      try {
+        await auth.signInWithEmailAndPassword(emailVal, passVal);
+        localStorage.setItem('wr_access', '1');
+        localStorage.setItem('wr_user_email', emailVal);
+        if (sucEl) sucEl.textContent = '\u2713 Access granted. Launching War Room...';
+        setTimeout(() => { closeAuthOverlay(); setTimeout(() => window.location.replace('app.html'), 400); }, 900);
+      } catch(e) {
+        const msg = e.code === 'auth/user-not-found' || e.code === 'auth/invalid-credential' ? 'No account found or incorrect password.' :
+                    e.code === 'auth/wrong-password'    ? 'Incorrect password. Please try again.' :
+                    e.code === 'auth/too-many-requests' ? 'Too many attempts. Please wait and try again.' :
+                    e.code === 'auth/invalid-email'     ? 'Enter a valid email address.' :
+                    'Sign in failed: ' + (e.message || e.code);
+        if (errEl) errEl.textContent = msg;
+      }
+    }
+  }
+  async function handleForgotPassword() {
+    const emailEl = document.getElementById('authEmail');
+    const email = (emailEl ? emailEl.value : '').trim().toLowerCase();
+    const errEl = document.getElementById('authError');
+    const sucEl = document.getElementById('authSuccess');
+    if (errEl) errEl.textContent = '';
+    if (sucEl) sucEl.textContent = '';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (errEl) errEl.textContent = 'Enter your email address first.'; return; }
+    if (!window._fbAuthApp) {
+      try {
+        await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+        await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js');
+        window._fbAuthApp = firebase.apps.length
+          ? firebase.apps[0]
+          : firebase.initializeApp({ apiKey: 'AIzaSyBcdKlkPBlLxs6barPZDAgoPlB9iU82Zkg', authDomain: 'createwarrom.firebaseapp.com', projectId: 'createwarrom' });
+      } catch(e) { if (errEl) errEl.textContent = 'Cloud service unavailable. Please check your connection.'; return; }
+    }
+    firebase.auth().sendPasswordResetEmail(email)
+      .then(() => { if (sucEl) sucEl.textContent = '\u2713 Reset email sent. Check your inbox.'; })
+      .catch(e => {
+        const msg = e.code === 'auth/user-not-found' ? 'No account found for that email.' :
+                    'Could not send reset email: ' + (e.message || e.code);
+        if (errEl) errEl.textContent = msg;
+      });
+  }
+  async function handleResetPassword() {
+    await handleForgotPassword();
+  }
+
+  /* ── Google Sign-In ── */
+  async function handleGoogleSignIn() {
+    const errEl = document.getElementById('authError');
+    const sucEl = document.getElementById('authSuccess');
+    if (errEl) errEl.textContent = '';
+    if (sucEl) sucEl.textContent = '';
+    if (!window._fbAuthApp) {
+      try {
+        await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js');
+        await _loadScript('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js');
+        window._fbAuthApp = firebase.apps.length
+          ? firebase.apps[0]
+          : firebase.initializeApp({
+              apiKey: 'AIzaSyBcdKlkPBlLxs6barPZDAgoPlB9iU82Zkg',
+              authDomain: 'createwarrom.firebaseapp.com',
+              projectId: 'createwarrom'
+            });
+      } catch(e) {
+        if (errEl) errEl.textContent = 'Cloud service unavailable.';
+        return;
+      }
+    }
+    try {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const result = await firebase.auth().signInWithPopup(provider);
+      localStorage.setItem('wr_access', '1');
+      localStorage.setItem('wr_user_email', result.user.email || '');
+      if (sucEl) sucEl.textContent = '✓ Signed in. Launching War Room...';
+      setTimeout(() => { closeAuthOverlay(); setTimeout(() => window.location.replace('app.html'), 400); }, 900);
+    } catch(e) {
+      if (e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') {
+        if (errEl) errEl.textContent = 'Google sign-in failed: ' + (e.message || e.code);
+      }
+    }
+  }
+</script>
+
+<!-- ── Auth Overlay ────────────────────────────────────── -->
+<div id="authOverlay" class="auth-overlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <div class="auth-card">
+    <button class="auth-close-btn" onclick="closeAuthOverlay()" aria-label="Close dialog">✕</button>
+    <div class="auth-logo">
+      <span class="auth-logo-mark">W</span>
+      WAR ROOM
+    </div>
+    <div id="authTitle" class="auth-title">Command Access</div>
+    <div id="authSubtitle" class="auth-sub">Sign in to access your War Room — your data follows you everywhere.</div>
+    <div class="auth-tabs">
+      <button id="authTabSignin" class="auth-tab active" onclick="setAuthMode('signin')" type="button">Sign In</button>
+      <button id="authTabSignup" class="auth-tab" onclick="setAuthMode('signup')" type="button">Create Account</button>
+    </div>
+    <button class="auth-google-btn" onclick="handleGoogleSignIn()" type="button" aria-label="Continue with Google">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 01-7.18-2.54H1.83v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 010-3.04V5.41H1.83a8 8 0 000 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 001.83 5.4L4.5 7.49a4.77 4.77 0 014.48-3.31z"/></svg>
+      Continue with Google
+    </button>
+    <div class="auth-divider">
+      <div class="auth-divider-line"></div>
+      <span class="auth-divider-text">or</span>
+      <div class="auth-divider-line"></div>
+    </div>
+    <form onsubmit="handleAuthSubmit(); return false;" novalidate>
+      <input id="authEmail" class="auth-input" type="email" placeholder="Email address" autocomplete="email" aria-label="Email address">
+      <input id="authPassword" class="auth-input" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
+      <input id="authConfirmPassword" class="auth-input" type="password" placeholder="Confirm password" autocomplete="new-password" aria-label="Confirm password" style="display:none">
+      <div id="authError" class="auth-error" role="alert" aria-live="polite"></div>
+      <div id="authSuccess" class="auth-success" role="status" aria-live="polite"></div>
+      <button type="submit" class="auth-btn" id="authSubmitBtn">
+        <span id="authBtnText">SIGN IN</span>
+      </button>
+    </form>
+    <div class="auth-footer">
+      <a id="authForgotLink" href="#" onclick="setAuthMode('forgot'); return false;">Forgot password?</a>
+      <a id="authBackLink" href="#" onclick="setAuthMode('signin'); return false;" style="display:none">← Back to sign in</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
