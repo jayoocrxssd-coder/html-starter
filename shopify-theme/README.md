@@ -21,23 +21,25 @@ native Shopify Liquid section. It is ready to upload as-is.
    splash screen with no header/footer.
 4. **`templates/page.shop.json`** (new) — your **original** homepage content
    (Hero + Featured Collection + Marquee) was moved here, unchanged, so
-   nothing was lost. The landing page's **SHOP** nav pill links to
-   `/pages/shop`, which uses this template.
+   nothing was lost. It's kept in the theme as an optional page template in
+   case you ever want a dedicated "Shop" landing page in addition to your
+   catalog — see below.
 
-## One manual step required in Shopify admin
+## No manual setup required
 
-Shopify page templates must be attached to an actual **Page** — that can't be
-done from a theme file alone. After uploading the theme:
+The landing page's **SHOP** nav pill links straight to `/collections/all`
+— Shopify's built-in "all products" catalog — so it works immediately after
+upload, no admin setup needed. Contact and Return Policy also point at
+things that already exist in this theme (`page.contact`,
+`/policies/refund-policy`).
 
-1. Go to **Online Store → Pages → Add page**.
-2. Title it `Shop` (this also sets its URL to `/pages/shop`, matching the
-   nav link already wired up).
-3. In the **Theme template** dropdown on the right, choose **`page.shop`**.
-4. Save.
-
-That's the only manual step. Everything else — nav links, social icons,
-Contact page, Return Policy — points at URLs/templates that already exist in
-this theme (`page.contact`, `/policies/refund-policy`).
+**Optional:** if you'd rather SHOP land on the custom page built from your
+old homepage (Hero + Featured Collection + Marquee) instead of the raw
+catalog, you can wire that up later:
+1. **Online Store → Pages → Add page**, title it `Shop`, set its
+   **Theme template** to `page.shop`, save.
+2. Customize the theme → `Landing page` section → edit the **SHOP** block's
+   **Link** to `/pages/shop`.
 
 ## After uploading
 
