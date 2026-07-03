@@ -29,9 +29,10 @@ native Shopify Liquid section. It is ready to upload as-is.
 
 The landing page's **SHOP** nav pill links straight to `/collections/all`
 — Shopify's built-in "all products" catalog — so it works immediately after
-upload, no admin setup needed. Contact and Return Policy also point at
-things that already exist in this theme (`page.contact`,
-`/policies/refund-policy`).
+upload, no admin setup needed. Contact and Policies also point at
+things that already exist automatically in every Shopify store
+(`page.contact`, `/policies` — the built-in index of refund, privacy,
+terms, and shipping policies).
 
 **Optional:** if you'd rather SHOP land on the custom page built from your
 old homepage (Hero + Featured Collection + Marquee) instead of the raw
