@@ -37,6 +37,24 @@ native Shopify Liquid section. It is ready to upload as-is.
    now renders `contact-page` on the same header/footer-free `landing`
    layout, so it matches the new splash-screen aesthetic. The **← BACK**
    link returns to `/` (the landing page).
+7. **`snippets/site-skin.liquid`** (new) — a site-wide visual skin, rendered
+   from `layout/theme.liquid` so it applies everywhere the standard Horizon
+   header shows up (catalog, product pages, cart, search, blog, etc.):
+   - **Header/nav**: white background, Bebas Neue wordmark and nav links
+     (uppercase, letter-spaced), a subtle glow on hover/active — the same
+     visual language as the landing page's nav pills, without changing any
+     of the header's underlying functionality (mega menu, search modal,
+     account, cart drawer all work exactly as before).
+   - **Catalog grid**: filter labels ("Availability", "Price"), the item
+     count, and the sort control now use Share Tech Mono, matching the
+     landing page's clock/data styling. Product card titles and prices pick
+     up the same mono treatment for a consistent "terminal" look.
+   - This is pure CSS layered on top of the existing markup — no Liquid
+     logic, JS, or functionality was touched, so cart, checkout, filtering,
+     and search behave exactly as they did before.
+   - Note: the skin forces the header to a solid white background, which
+     will override Horizon's "transparent header" setting if you ever
+     enable it (it's off by default in this theme).
 
 ## No manual setup required
 
@@ -54,6 +72,16 @@ catalog, you can wire that up later:
    **Theme template** to `page.shop`, save.
 2. Customize the theme → `Landing page` section → edit the **SHOP** block's
    **Link** to `/pages/shop`.
+
+**Optional — restyle your nav menu labels to "Home / Catalog / Contact":**
+the header's nav links come from your **Main menu** (Online Store →
+Navigation), which is store content, not theme code, so it can't be set from
+a theme file. To match the reference layout:
+1. **Online Store → Navigation → Main menu → Edit**.
+2. Set/reorder the links: `Home` → `/`, `Catalog` → `/collections/all`,
+   `Contact` → `/pages/contact`.
+3. Save. The new Bebas Neue styling applies automatically — no theme changes
+   needed for this step.
 
 ## After uploading
 
