@@ -84,4 +84,40 @@
   .product-card:hover {
     opacity: 0.85;
   }
+
+  /* Page transitions — swipe instead of Horizon's default fade/slide-up.
+     Overrides the same custom properties base.css already animates via
+     the View Transitions API, so this covers standard page navigation
+     (catalog, product, contact, policies, etc.) and the product page's
+     detail panel when navigating in from a collection grid. */
+  @media (prefers-reduced-motion: no-preference) {
+    :root {
+      --view-transition-old-main-content: 0.32s ease-in-out both site-skin-swipe-out;
+      --view-transition-new-main-content: 0.32s ease-in-out both site-skin-swipe-in;
+    }
+
+    @keyframes site-skin-swipe-out {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+
+      to {
+        transform: translateX(-3%);
+        opacity: 0;
+      }
+    }
+
+    @keyframes site-skin-swipe-in {
+      from {
+        transform: translateX(3%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  }
 </style>

@@ -25,19 +25,20 @@ native Shopify Liquid section. It is ready to upload as-is.
    case you ever want a dedicated "Shop" landing page in addition to your
    catalog — see below.
 5. **`sections/contact-page.liquid`** (new) — the full-viewport contact
-   screen from `design-handoff` (starfield canvas, "← BACK" link, CONTACT
-   heading, minimalist Name/Email/Message form, social icons), built on a
-   **real, working Shopify contact form** (`{% form 'contact' %}` — the same
-   engine `blocks/contact-form.liquid` already used) so submissions actually
-   reach your Shopify inbox and get spam-filtered like normal. On submit,
-   Shopify reloads the page and this section shows "MESSAGE SENT — THANK
-   YOU." in place of the status line, or the email-validation error if one
-   occurred.
+   screen from `design-handoff` (starfield canvas, CONTACT heading,
+   minimalist Name/Email/Message form, social icons), built on a **real,
+   working Shopify contact form** (`{% form 'contact' %}` — the same engine
+   `blocks/contact-form.liquid` already used) so submissions actually reach
+   your Shopify inbox and get spam-filtered like normal. On submit, Shopify
+   reloads the page and this section shows "MESSAGE SENT — THANK YOU." in
+   place of the status line, or the email-validation error if one occurred.
+   The original design's "← BACK" link was removed — navigation is handled
+   by the site nav bar instead (see item 8).
 6. **`templates/page.contact.json`** (replaced) — your existing Contact page
    renders the `contact-page` section, matching the splash-screen aesthetic.
-   The **← BACK** link returns to `/` (the landing page). It now runs on the
-   **standard** theme layout (not the header-free `landing` layout), so the
-   site nav bar and footer appear above/below it — see item 8.
+   It runs on the **standard** theme layout (not the header-free `landing`
+   layout), so the site nav bar and footer appear above/below it — see item
+   8.
 7. **`snippets/site-skin.liquid`** (new) — a site-wide visual skin, rendered
    from `layout/theme.liquid` so it applies everywhere the standard Horizon
    header shows up (catalog, product pages, cart, search, blog, etc.):
@@ -71,6 +72,22 @@ native Shopify Liquid section. It is ready to upload as-is.
    can't guarantee is filled in, the **POLICIES** nav button points at the
    `/pages/policies` Page instead, which always renders (with an empty list
    until you add policy text, never a 404). Needs one setup step — see below.
+10. **Swipe page transitions** (`snippets/site-skin.liquid`) — Horizon
+    already ships a full page-transition system built on the browser's View
+    Transitions API (`assets/view-transitions.js`, and the
+    `--view-transition-old-main-content` / `--view-transition-new-main-content`
+    custom properties in `assets/base.css`); by default it's a fade + slide
+    up. The skin overrides just those two custom properties with a
+    horizontal swipe (old content slides out left, new content slides in
+    from the right) — no JS changes, so it's the same battle-tested
+    transition engine Horizon already uses, just a different animation.
+    Because product pages reuse the same `--view-transition-new-main-content`
+    property for their detail-panel entrance, the swipe applies there too
+    when you land on a product from the catalog. Applies to standard
+    navigation everywhere `site-skin` renders (catalog, product, cart,
+    search, contact, policies) — the landing splash page is intentionally
+    excluded since it isn't part of that page-to-page flow. Respects
+    `prefers-reduced-motion` automatically, same as Horizon's default.
 
 ## Manual setup required — 2 steps
 
@@ -114,9 +131,13 @@ a theme file. To match the reference layout:
   editor if they ever change.
 - **Nav links**: editable as blocks on the `Landing page` section (label,
   URL, and glow-animation delay per link) — no code changes needed.
-- **Contact page copy**: the heading, subheading, back link, and social URLs
-  are all editable from Customize → the `Contact page` section — no code
-  changes needed there either.
+- **Contact page copy**: the heading, subheading, and social URLs are all
+  editable from Customize → the `Contact page` section — no code changes
+  needed there either.
+- **Page transitions**: if you'd rather not have the swipe effect, turn it
+  off entirely from Theme settings → the existing Horizon **"Page
+  transition"** checkbox (`settings.page_transition_enabled`) — no code
+  changes needed. That checkbox is what the swipe is layered on top of.
 - **Policies index heading**: editable from Customize → the `Policy` section
   on the `page.policies` template, if you ever want something other than
   "Policies".

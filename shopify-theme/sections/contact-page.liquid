@@ -1,7 +1,6 @@
 {%- liquid
   assign instagram_url = section.settings.instagram_url
   assign youtube_url = section.settings.youtube_url
-  assign back_link = section.settings.back_link | default: '/'
   assign form_id = 'ContactPageForm-' | append: section.id
 -%}
 
@@ -11,8 +10,6 @@
 
 <div class="contact-page" id="contact-page-{{ section.id }}">
   <canvas class="contact-page__canvas" id="contact-page-canvas-{{ section.id }}"></canvas>
-
-  <a href="{{ back_link }}" class="contact-page__back-link">&larr; BACK</a>
 
   <div class="contact-page__content">
     <div class="contact-page__heading">
@@ -121,23 +118,6 @@
     inset: 0;
     width: 100%;
     height: 100%;
-  }
-
-  .contact-page__back-link {
-    position: absolute;
-    top: 24px;
-    left: 24px;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    color: rgba(0, 0, 0, 0.45);
-    text-decoration: none;
-    z-index: 10;
-    transition: color 0.15s ease;
-  }
-
-  .contact-page__back-link:hover {
-    color: #000000;
   }
 
   .contact-page__content {
@@ -409,12 +389,6 @@
       "id": "subheading",
       "label": "Subheading",
       "default": "Get in touch"
-    },
-    {
-      "type": "url",
-      "id": "back_link",
-      "label": "Back link",
-      "info": "Defaults to the homepage if left blank."
     },
     {
       "type": "header",
