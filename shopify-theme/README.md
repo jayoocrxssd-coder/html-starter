@@ -12,6 +12,18 @@ native Shopify Liquid section. It is ready to upload as-is.
    pixel-accurate to `design-handoff/landing-page/README.md` using Horizon's
    own conventions (`{% stylesheet %}`, section-scoped script, `image_picker`,
    block-based nav links).
+   - **Entrance preloader** (from `design-handoff/preloader/`): a full-black
+     overlay — glowing logo that scales/spins in, a progress bar that fills
+     over ~3.6s with a shimmer sweep, and a scanning highlight line — that
+     covers the landing page on arrival, then fades away to reveal it.
+     Reuses the same **Logo image** setting (inverted to render white on the
+     black overlay), so no second image upload is needed. Plays **once per
+     browser session** (tracked via `sessionStorage`, so bouncing between
+     the shop and home again doesn't replay it), is skipped entirely for
+     visitors with `prefers-reduced-motion` set, and can be clicked to skip.
+     Toggle it off anytime from Customize → `Landing page` → **"Show
+     entrance preloader"**. Lives **only** on this section/page — no other
+     template references it.
 2. **`layout/landing.liquid`** (new) — a header/footer-free layout (same
    pattern Horizon already uses for `layout/password.liquid`). It still
    includes `content_for_header`, so theme/app-embed blocks (chat widget,
@@ -131,6 +143,9 @@ a theme file. To match the reference layout:
   editor if they ever change.
 - **Nav links**: editable as blocks on the `Landing page` section (label,
   URL, and glow-animation delay per link) — no code changes needed.
+- **Preloader**: uses the same Logo image as the rest of the landing page —
+  no separate upload needed. Toggle it on/off from Customize → `Landing
+  page` → "Show entrance preloader".
 - **Contact page copy**: the heading, subheading, and social URLs are all
   editable from Customize → the `Contact page` section — no code changes
   needed there either.
