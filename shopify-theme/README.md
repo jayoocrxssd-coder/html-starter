@@ -34,9 +34,10 @@ native Shopify Liquid section. It is ready to upload as-is.
    YOU." in place of the status line, or the email-validation error if one
    occurred.
 6. **`templates/page.contact.json`** (replaced) — your existing Contact page
-   now renders `contact-page` on the same header/footer-free `landing`
-   layout, so it matches the new splash-screen aesthetic. The **← BACK**
-   link returns to `/` (the landing page).
+   renders the `contact-page` section, matching the splash-screen aesthetic.
+   The **← BACK** link returns to `/` (the landing page). It now runs on the
+   **standard** theme layout (not the header-free `landing` layout), so the
+   site nav bar and footer appear above/below it — see item 8.
 7. **`snippets/site-skin.liquid`** (new) — a site-wide visual skin, rendered
    from `layout/theme.liquid` so it applies everywhere the standard Horizon
    header shows up (catalog, product pages, cart, search, blog, etc.):
@@ -55,15 +56,36 @@ native Shopify Liquid section. It is ready to upload as-is.
    - Note: the skin forces the header to a solid white background, which
      will override Horizon's "transparent header" setting if you ever
      enable it (it's off by default in this theme).
+8. **`sections/main-policy.liquid` + `templates/policies.json`** (new) — a
+   real, styled Policies page. Horizon's raw export ships **no** template for
+   `/policies`, so Shopify was falling back to its generic, unbranded,
+   theme-less page. This adds one:
+   - **`/policies`** (index) — lists every policy you've filled in under
+     **Settings → Policies** (Refund, Privacy, Terms of Service, Shipping,
+     etc.) as a simple Share Tech Mono link list. Policies you haven't
+     written are automatically skipped.
+   - **`/policies/<handle>`** (e.g. `/policies/refund-policy`) — renders that
+     policy's title and body text, with a "← All policies" link back to the
+     index.
+   - Both routes are **auto-detected by Shopify** the moment
+     `templates/policies.json` exists in the theme — no admin setup, no page
+     to create, nothing to assign. It just starts working on upload.
+   - Runs on the standard layout, so it gets the same nav bar/footer as the
+     rest of the site (see item 7).
 
 ## No manual setup required
 
 The landing page's **SHOP** nav pill links straight to `/collections/all`
 — Shopify's built-in "all products" catalog — so it works immediately after
-upload, no admin setup needed. Contact and Policies also point at
-things that already exist automatically in every Shopify store
-(`page.contact`, `/policies` — the built-in index of refund, privacy,
-terms, and shipping policies).
+upload, no admin setup needed. **CONTACT** and **POLICIES** also point at
+routes that work immediately: `/pages/contact` (your existing Contact page)
+and `/policies` (now styled by `templates/policies.json` — see item 8).
+
+The only thing to check: **Settings → Policies** in your Shopify admin
+should have your Refund/Privacy/Terms/Shipping policy text filled in — that's
+store content, not theme code, so it can't be shipped in the zip. Any policy
+left blank there is simply skipped on the `/policies` index (no broken links,
+no errors).
 
 **Optional:** if you'd rather SHOP land on the custom page built from your
 old homepage (Hero + Featured Collection + Marquee) instead of the raw
@@ -96,12 +118,15 @@ a theme file. To match the reference layout:
 - **Contact page copy**: the heading, subheading, back link, and social URLs
   are all editable from Customize → the `Contact page` section — no code
   changes needed there either.
+- **Policies index heading**: editable from Customize → the `Policy` section
+  on the Policies template, if you ever want something other than "Policies".
 
 ## Validation performed
 
-- Every `{% schema %}` block in the theme (137 total) parses as valid JSON.
-- `templates/index.json`, `templates/page.shop.json`, and
-  `templates/page.contact.json` are strict, valid JSON.
+- Every `{% schema %}` block in the theme (138 total) parses as valid JSON.
+- `templates/index.json`, `templates/page.shop.json`,
+  `templates/page.contact.json`, and `templates/policies.json` are strict,
+  valid JSON.
 - All Liquid snippets referenced by `layout/landing.liquid`
   (`meta-tags`, `stylesheets`, `fonts`, `scripts`, `theme-styles-variables`,
   `color-palette`, `theme-editor`, `skip-to-content-link`) exist in

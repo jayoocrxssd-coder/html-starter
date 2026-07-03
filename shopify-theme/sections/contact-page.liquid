@@ -109,10 +109,10 @@
 
 {% stylesheet %}
   .contact-page {
-    position: fixed;
-    inset: 0;
+    position: relative;
+    min-height: calc(100svh - var(--header-group-height, 0px));
     background: #ffffff;
-    overflow: hidden auto;
+    overflow: hidden;
     z-index: 0;
   }
 
@@ -147,7 +147,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 96px 24px 48px;
+    padding: 64px 24px 48px;
     box-sizing: border-box;
     animation: contact-page-fade-up 0.6s ease both;
   }

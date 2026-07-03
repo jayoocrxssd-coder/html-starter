@@ -1,0 +1,126 @@
+{%- liquid
+  assign is_index = true
+  if policy != blank
+    assign is_index = false
+  endif
+  assign policies_url = routes.root_url | append: 'policies'
+-%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<div class="policy-page">
+  <div class="policy-page__inner">
+    {%- if is_index -%}
+      <h1 class="policy-page__heading">{{ section.settings.heading | default: 'Policies' }}</h1>
+      <ul class="policy-page__list" role="list">
+        {%- for p in shop.policies -%}
+          {%- if p.body != blank -%}
+            <li class="policy-page__list-item">
+              <a href="{{ p.url }}" class="policy-page__link">{{ p.title }}</a>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <h1 class="policy-page__heading">{{ policy.title }}</h1>
+      <div class="policy-page__body rte">{{ policy.body }}</div>
+      <a href="{{ policies_url }}" class="policy-page__back-link">&larr; All policies</a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .policy-page {
+    background: #ffffff;
+    min-height: calc(100svh - var(--header-group-height, 0px));
+    box-sizing: border-box;
+    padding: 64px 24px 96px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .policy-page__inner {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .policy-page__heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #000000;
+    margin: 0 0 32px;
+  }
+
+  .policy-page__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .policy-page__list-item {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .policy-page__link {
+    display: block;
+    padding: 12px 2px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.7);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .policy-page__link:hover {
+    color: #000000;
+  }
+
+  .policy-page__body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .policy-page__body :first-child {
+    margin-top: 0;
+  }
+
+  .policy-page__back-link {
+    display: inline-block;
+    margin-top: 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: rgba(0, 0, 0, 0.45);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+
+  .policy-page__back-link:hover {
+    color: #000000;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Policy",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Index heading",
+      "default": "Policies",
+      "info": "Shown only on the /policies index page listing all your policies."
+    }
+  ]
+}
+{% endschema %}
