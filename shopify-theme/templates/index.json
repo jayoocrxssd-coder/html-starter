@@ -24,7 +24,7 @@
           "type": "nav_link",
           "settings": {
             "label": "POLICIES",
-            "link": "\/policies",
+            "link": "\/pages\/policies",
             "glow_delay": 0.6
           }
         },

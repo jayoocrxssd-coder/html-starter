@@ -56,44 +56,43 @@ native Shopify Liquid section. It is ready to upload as-is.
    - Note: the skin forces the header to a solid white background, which
      will override Horizon's "transparent header" setting if you ever
      enable it (it's off by default in this theme).
-8. **`sections/main-policy.liquid` + `templates/policies.json`** (new) — a
-   real, styled Policies page. Horizon's raw export ships **no** template for
-   `/policies`, so Shopify was falling back to its generic, unbranded,
-   theme-less page. This adds one:
-   - **`/policies`** (index) — lists every policy you've filled in under
-     **Settings → Policies** (Refund, Privacy, Terms of Service, Shipping,
-     etc.) as a simple Share Tech Mono link list. Policies you haven't
-     written are automatically skipped.
-   - **`/policies/<handle>`** (e.g. `/policies/refund-policy`) — renders that
-     policy's title and body text, with a "← All policies" link back to the
-     index.
-   - Both routes are **auto-detected by Shopify** the moment
-     `templates/policies.json` exists in the theme — no admin setup, no page
-     to create, nothing to assign. It just starts working on upload.
-   - Runs on the standard layout, so it gets the same nav bar/footer as the
-     rest of the site (see item 7).
+8. **`sections/main-policy.liquid`** (new) — a real, styled Policies page:
+   lists every policy you've filled in under **Settings → Policies** (Refund,
+   Privacy, Terms of Service, Shipping, etc.) as a simple Share Tech Mono
+   link list, skipping any you haven't written. On an individual policy
+   page it renders that policy's title/body with a "← All policies" link.
+   Runs on the standard layout, so it gets the same nav bar/footer as the
+   rest of the site (see item 7).
+9. **`templates/page.policies.json`** (new) — the reliable home for the
+   Policies list, at **`/pages/policies`**. Shopify also has its own
+   built-in `/policies` route (`templates/policies.json`, included too), but
+   that route **404s until at least one policy has real text in Settings →
+   Policies** — it doesn't fail gracefully. Since that's store content we
+   can't guarantee is filled in, the **POLICIES** nav button points at the
+   `/pages/policies` Page instead, which always renders (with an empty list
+   until you add policy text, never a 404). Needs one setup step — see below.
 
-## No manual setup required
+## Manual setup required — 2 steps
 
-The landing page's **SHOP** nav pill links straight to `/collections/all`
-— Shopify's built-in "all products" catalog — so it works immediately after
-upload, no admin setup needed. **CONTACT** and **POLICIES** also point at
-routes that work immediately: `/pages/contact` (your existing Contact page)
-and `/policies` (now styled by `templates/policies.json` — see item 8).
+Both are the same "create a Page, assign its template" pattern, needed
+because Shopify Pages are store content and can't be created from theme
+files:
 
-The only thing to check: **Settings → Policies** in your Shopify admin
-should have your Refund/Privacy/Terms/Shipping policy text filled in — that's
-store content, not theme code, so it can't be shipped in the zip. Any policy
-left blank there is simply skipped on the `/policies` index (no broken links,
-no errors).
+1. **Shop page** (optional — SHOP currently links straight to
+   `/collections/all`, which works with no setup):
+   - **Online Store → Pages → Add page**, title it `Shop`, set its
+     **Theme template** to `page.shop`, save.
+   - Customize the theme → `Landing page` section → edit the **SHOP**
+     block's **Link** to `/pages/shop`.
+2. **Policies page** (needed — this is what POLICIES links to):
+   - **Online Store → Pages → Add page**, title it `Policies` (this makes
+     its URL `/pages/policies`, matching the nav link already wired up).
+   - In the **Theme template** dropdown, choose **`page.policies`**.
+   - Save. The page will render even if no policies are filled in yet — it
+     just shows an empty list until you add text in **Settings → Policies**.
 
-**Optional:** if you'd rather SHOP land on the custom page built from your
-old homepage (Hero + Featured Collection + Marquee) instead of the raw
-catalog, you can wire that up later:
-1. **Online Store → Pages → Add page**, title it `Shop`, set its
-   **Theme template** to `page.shop`, save.
-2. Customize the theme → `Landing page` section → edit the **SHOP** block's
-   **Link** to `/pages/shop`.
+**CONTACT** needs no setup — it links to `/pages/contact`, which already
+exists in this theme/store.
 
 **Optional — restyle your nav menu labels to "Home / Catalog / Contact":**
 the header's nav links come from your **Main menu** (Online Store →
@@ -119,14 +118,15 @@ a theme file. To match the reference layout:
   are all editable from Customize → the `Contact page` section — no code
   changes needed there either.
 - **Policies index heading**: editable from Customize → the `Policy` section
-  on the Policies template, if you ever want something other than "Policies".
+  on the `page.policies` template, if you ever want something other than
+  "Policies".
 
 ## Validation performed
 
 - Every `{% schema %}` block in the theme (138 total) parses as valid JSON.
 - `templates/index.json`, `templates/page.shop.json`,
-  `templates/page.contact.json`, and `templates/policies.json` are strict,
-  valid JSON.
+  `templates/page.contact.json`, `templates/policies.json`, and
+  `templates/page.policies.json` are strict, valid JSON.
 - All Liquid snippets referenced by `layout/landing.liquid`
   (`meta-tags`, `stylesheets`, `fonts`, `scripts`, `theme-styles-variables`,
   `color-palette`, `theme-editor`, `skip-to-content-link`) exist in
