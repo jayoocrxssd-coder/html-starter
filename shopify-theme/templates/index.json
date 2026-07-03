@@ -1,0 +1,46 @@
+{
+  "layout": "landing",
+  "sections": {
+    "landing_page": {
+      "type": "landing-page",
+      "blocks": {
+        "nav_shop": {
+          "type": "nav_link",
+          "settings": {
+            "label": "SHOP",
+            "link": "\/pages\/shop",
+            "glow_delay": 0
+          }
+        },
+        "nav_contact": {
+          "type": "nav_link",
+          "settings": {
+            "label": "CONTACT",
+            "link": "\/pages\/contact",
+            "glow_delay": 0.3
+          }
+        },
+        "nav_returns": {
+          "type": "nav_link",
+          "settings": {
+            "label": "RETURN POLICY",
+            "link": "\/policies\/refund-policy",
+            "glow_delay": 0.6
+          }
+        },
+        "nav_coming_soon": {
+          "type": "coming_soon",
+          "settings": {
+            "label": "COMING SOON"
+          }
+        }
+      },
+      "block_order": ["nav_shop", "nav_contact", "nav_returns", "nav_coming_soon"],
+      "settings": {
+        "instagram_url": "https:\/\/www.instagram.com\/crxsswei",
+        "youtube_url": "https:\/\/www.youtube.com\/@forevercrxss"
+      }
+    }
+  },
+  "order": ["landing_page"]
+}

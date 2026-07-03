@@ -1,0 +1,450 @@
+{%- liquid
+  assign logo_image = section.settings.logo_image
+  assign instagram_url = section.settings.instagram_url
+  assign youtube_url = section.settings.youtube_url
+-%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<div class="landing-page" id="landing-page-{{ section.id }}">
+  <canvas class="landing-page__canvas" id="landing-page-canvas-{{ section.id }}"></canvas>
+
+  <div class="landing-page__shooting-star" aria-hidden="true"></div>
+
+  <div class="landing-page__content">
+    <div class="landing-page__brand">
+      {%- if logo_image != blank -%}
+        {{
+          logo_image
+          | image_url: width: 320
+          | image_tag:
+            class: 'landing-page__logo',
+            widths: '160, 320',
+            alt: logo_image.alt | default: shop.name,
+            loading: 'eager',
+            fetchpriority: 'high'
+        }}
+      {%- else -%}
+        <div class="landing-page__logo landing-page__logo--placeholder">{{ shop.name }}</div>
+      {%- endif -%}
+      <span class="landing-page__clock" id="landing-page-clock-{{ section.id }}"></span>
+    </div>
+
+    <nav class="landing-page__nav" aria-label="Main navigation">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'nav_link' -%}
+            <a
+              href="{{ block.settings.link | default: '#' }}"
+              class="landing-page__nav-link"
+              style="animation-delay: {{ block.settings.glow_delay }}s;"
+              {{ block.shopify_attributes }}
+            >
+              {{ block.settings.label }}
+            </a>
+          {%- when 'coming_soon' -%}
+            <div class="landing-page__nav-link landing-page__nav-link--disabled" {{ block.shopify_attributes }}>
+              <svg width="9" height="11" viewBox="0 0 9 11" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="1" y="4.5" width="7" height="6" rx="1"></rect>
+                <path d="M2.5 4.5V3a2 2 0 0 1 4 0v1.5"></path>
+              </svg>
+              {{ block.settings.label | default: 'Coming soon' }}
+            </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </nav>
+
+    <div class="landing-page__social">
+      {%- if instagram_url != blank -%}
+        <a href="{{ instagram_url }}" class="landing-page__social-link" aria-label="Instagram" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+            <circle cx="12" cy="12" r="4"></circle>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </a>
+      {%- endif -%}
+      {%- if youtube_url != blank -%}
+        <a href="{{ youtube_url }}" class="landing-page__social-link" aria-label="YouTube" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M23.5 6.2s-.3-1.9-1.1-2.7c-1.1-1.1-2.3-1.1-2.8-1.2C16.8 2 12 2 12 2s-4.8 0-7.6.3c-.6.1-1.8.1-2.8 1.2C.8 4.3.5 6.2.5 6.2S.2 8.4.2 10.6v2.1c0 2.2.3 4.4.3 4.4s.3 1.9 1.1 2.7c1.1 1.1 2.5 1.1 3.1 1.2C6.7 21.1 12 21.1 12 21.1s4.8 0 7.6-.3c.6-.1 1.8-.1 2.8-1.2.8-.8 1.1-2.7 1.1-2.7s.3-2.2.3-4.4v-2.1c0-2.2-.3-4.4-.3-4.4zM9.7 15.5V8.4l7.6 3.6-7.6 3.5z"></path>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .landing-page {
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .landing-page__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .landing-page__shooting-star {
+    position: absolute;
+    top: 48%;
+    right: 15%;
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.4), transparent);
+    transform: rotate(-5deg);
+  }
+
+  .landing-page__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .landing-page__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 32px;
+    animation: landing-page-float 4s ease-in-out infinite;
+  }
+
+  .landing-page__logo {
+    width: 160px;
+    height: 120px;
+    object-fit: contain;
+  }
+
+  .landing-page__logo--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 120px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    color: #000000;
+    text-align: center;
+  }
+
+  .landing-page__clock {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    color: rgba(0, 0, 0, 0.45);
+    letter-spacing: 0.08em;
+  }
+
+  .landing-page__nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 48px;
+  }
+
+  .landing-page__nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: #000000;
+    text-decoration: none;
+    border: 1px solid rgba(0, 0, 0, 0.55);
+    padding: 4px 20px 2px;
+    min-width: 110px;
+    text-align: center;
+    animation: landing-page-glow-pulse 3s ease-in-out infinite;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    cursor: pointer;
+  }
+
+  .landing-page__nav-link:hover {
+    border-color: #000000;
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .landing-page__nav-link--disabled {
+    color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(0, 0, 0, 0.2);
+    cursor: default;
+    animation: none;
+  }
+
+  .landing-page__nav-link--disabled:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    background: transparent;
+  }
+
+  .landing-page__social {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .landing-page__social-link {
+    display: flex;
+    color: rgba(0, 0, 0, 0.5);
+    transition: color 0.15s ease;
+  }
+
+  .landing-page__social-link:hover {
+    color: #000000;
+  }
+
+  @keyframes landing-page-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes landing-page-glow-pulse {
+    0%, 100% { text-shadow: 0 0 4px rgba(0, 0, 0, 0.12); }
+    50% { text-shadow: 0 0 8px rgba(0, 0, 0, 0.25); }
+  }
+{% endstylesheet %}
+
+<script>
+  (function () {
+    var root = document.getElementById('landing-page-{{ section.id }}');
+    if (!root || root.dataset.landingPageInit === 'true') return;
+    root.dataset.landingPageInit = 'true';
+
+    var clockEl = document.getElementById('landing-page-clock-{{ section.id }}');
+    var clockInterval = null;
+    function startClock() {
+      if (!clockEl) return;
+      function tick() {
+        var now = new Date();
+        var est = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        var mm = String(est.getMonth() + 1).padStart(2, '0');
+        var dd = String(est.getDate()).padStart(2, '0');
+        var yyyy = est.getFullYear();
+        var h = est.getHours();
+        var ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        var min = String(est.getMinutes()).padStart(2, '0');
+        var sec = String(est.getSeconds()).padStart(2, '0');
+        clockEl.textContent = mm + '/' + dd + '/' + yyyy + ' ' + h + ':' + min + ':' + sec + ' ' + ampm + ' EST';
+      }
+      tick();
+      clockInterval = setInterval(tick, 1000);
+    }
+
+    var canvas = document.getElementById('landing-page-canvas-{{ section.id }}');
+    var animFrame = null;
+    var resizeHandler = null;
+
+    function initStarfield() {
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var W = (canvas.width = canvas.offsetWidth);
+      var H = (canvas.height = canvas.offsetHeight);
+
+      var stars = Array.from({ length: 320 }, function () {
+        return {
+          x: Math.random() * W,
+          y: Math.random() * H,
+          baseR: Math.random() * 1.4 + 0.3,
+          baseAlpha: Math.random() * 0.55 + 0.1,
+          twinkleSpeed: Math.random() * 1.8 + 0.6,
+          twinklePhase: Math.random() * Math.PI * 2,
+          driftX: (Math.random() - 0.5) * 0.18,
+          driftY: (Math.random() - 0.5) * 0.12,
+          pulseSpeed: Math.random() * 1.2 + 0.4,
+          pulsePhase: Math.random() * Math.PI * 2,
+          burstTimer: Math.random() * 8,
+          burstDuration: 0,
+          colored: Math.random() > 0.96
+        };
+      });
+
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        var t = Date.now() / 1000;
+        stars.forEach(function (s) {
+          s.x += s.driftX * 0.016;
+          s.y += s.driftY * 0.016;
+          if (s.x < -2) s.x = W + 2;
+          if (s.x > W + 2) s.x = -2;
+          if (s.y < -2) s.y = H + 2;
+          if (s.y > H + 2) s.y = -2;
+
+          var twinkle = 0.45 + 0.55 * Math.sin(t * s.twinkleSpeed + s.twinklePhase);
+          var pulse = 0.8 + 0.2 * Math.sin(t * s.pulseSpeed + s.pulsePhase);
+
+          s.burstTimer -= 0.016;
+          var burst = 0;
+          if (s.burstTimer <= 0) {
+            s.burstDuration = 0.35;
+            s.burstTimer = 7 + Math.random() * 10;
+          }
+          if (s.burstDuration > 0) {
+            burst = s.burstDuration / 0.35;
+            s.burstDuration -= 0.016;
+          }
+
+          var a = Math.min(1, s.baseAlpha * twinkle + burst * 0.6);
+          var r = s.baseR * pulse * (1 + burst * 1.2);
+
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, r, 0, Math.PI * 2);
+          ctx.fillStyle = s.colored ? 'rgba(80,100,180,' + a + ')' : 'rgba(0,0,0,' + a + ')';
+          ctx.fill();
+
+          if (burst > 0.5) {
+            ctx.strokeStyle = 'rgba(0,0,0,' + burst * 0.25 + ')';
+            ctx.lineWidth = 0.5;
+            var len = r * 3;
+            ctx.beginPath();
+            ctx.moveTo(s.x - len, s.y);
+            ctx.lineTo(s.x + len, s.y);
+            ctx.moveTo(s.x, s.y - len);
+            ctx.lineTo(s.x, s.y + len);
+            ctx.stroke();
+          }
+        });
+        animFrame = requestAnimationFrame(animate);
+      }
+
+      if (animFrame) cancelAnimationFrame(animFrame);
+      animate();
+    }
+
+    startClock();
+    initStarfield();
+
+    resizeHandler = function () {
+      initStarfield();
+    };
+    window.addEventListener('resize', resizeHandler);
+
+    document.addEventListener('shopify:section:unload', function (event) {
+      if (event.target.id !== 'landing-page-{{ section.id }}' && !event.target.contains(root)) return;
+      if (animFrame) cancelAnimationFrame(animFrame);
+      if (clockInterval) clearInterval(clockInterval);
+      if (resizeHandler) window.removeEventListener('resize', resizeHandler);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Landing page",
+  "tag": "section",
+  "class": "landing-page-section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image"
+    },
+    {
+      "type": "header",
+      "content": "Social links"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Nav link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "SHOP"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "range",
+          "id": "glow_delay",
+          "label": "Glow animation delay (seconds)",
+          "min": 0,
+          "max": 2,
+          "step": 0.1,
+          "default": 0
+        }
+      ]
+    },
+    {
+      "type": "coming_soon",
+      "name": "Coming soon slot",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "COMING SOON"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Landing page",
+      "blocks": [
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "SHOP",
+            "link": "\/pages\/shop",
+            "glow_delay": 0
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "CONTACT",
+            "link": "\/pages\/contact",
+            "glow_delay": 0.3
+          }
+        },
+        {
+          "type": "nav_link",
+          "settings": {
+            "label": "RETURN POLICY",
+            "link": "\/policies\/refund-policy",
+            "glow_delay": 0.6
+          }
+        },
+        {
+          "type": "coming_soon"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
