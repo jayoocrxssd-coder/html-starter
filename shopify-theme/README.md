@@ -100,6 +100,29 @@ native Shopify Liquid section. It is ready to upload as-is.
     search, contact, policies) — the landing splash page is intentionally
     excluded since it isn't part of that page-to-page flow. Respects
     `prefers-reduced-motion` automatically, same as Horizon's default.
+11. **`sections/password-page.liquid` + `layout/password-page.liquid`**
+    (new) — restyles Shopify's storefront password page (shown automatically
+    when your store is password-protected under Online Store → Preferences)
+    to match the design in `design-handoff/password-page/`: starfield
+    canvas, floating wordmark + live EST clock, lock icon, "Coming soon"
+    heading, and a password field with the same glow/mono aesthetic as the
+    rest of the site.
+    - **Important:** the prototype file used a hardcoded JavaScript password
+      check (`if (val === 'crxsswei')`) purely for the design preview — that
+      check does **not** exist anywhere in this theme. The real password
+      field is wired to Shopify's actual `{% form 'storefront_password' %}`,
+      the same one `layout/password.liquid` already used, so it validates
+      against the real password you set in **Online Store → Preferences**
+      and genuinely unlocks the store. A wrong password re-shows the page
+      with a shake animation and "Wrong password" hint (via Shopify's real
+      `form.errors`); a correct one redirects immediately, server-side —
+      there's no client-side "Access granted" moment to show, since Shopify
+      never returns control to the page on a correct password.
+    - The original `layout/password.liquid` (dialog-based password modal)
+      is left in the theme untouched, just no longer referenced — nothing
+      was deleted.
+    - Wordmark, heading, and hint text are all editable from Customize →
+      the `Password page` section — no code changes needed.
 
 ## Manual setup required — 2 steps
 
@@ -156,13 +179,22 @@ a theme file. To match the reference layout:
 - **Policies index heading**: editable from Customize → the `Policy` section
   on the `page.policies` template, if you ever want something other than
   "Policies".
+- **Password page**: your actual store password is set (and password
+  protection turned on/off) from **Online Store → Preferences**, same as
+  always — that's unrelated to this theme. Wordmark, heading, hint text,
+  and social URLs are editable from Customize → open the `password` template
+  → the `Password page` section.
 
 ## Validation performed
 
-- Every `{% schema %}` block in the theme (138 total) parses as valid JSON.
+- Every `{% schema %}` block in the theme (139 total) parses as valid JSON.
 - `templates/index.json`, `templates/page.shop.json`,
-  `templates/page.contact.json`, `templates/policies.json`, and
-  `templates/page.policies.json` are strict, valid JSON.
+  `templates/page.contact.json`, `templates/policies.json`,
+  `templates/page.policies.json`, and `templates/password.json` are strict,
+  valid JSON.
+- The password form uses the same `name="password"` field and
+  `form.errors` handling as Shopify's own `layout/password.liquid` dialog,
+  so it's the genuine `storefront_password` form, not a decorative one.
 - All Liquid snippets referenced by `layout/landing.liquid`
   (`meta-tags`, `stylesheets`, `fonts`, `scripts`, `theme-styles-variables`,
   `color-palette`, `theme-editor`, `skip-to-content-link`) exist in
