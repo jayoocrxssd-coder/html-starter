@@ -129,6 +129,10 @@ each one lives.
       was deleted.
     - Wordmark, heading, and hint text are all editable from Customize →
       the `Password page` section — no code changes needed.
+    - **Logo image (optional)**: set one and it replaces the text wordmark
+      entirely; leave it blank and the text wordmark (or your store name,
+      if that's blank too) is used instead — same fallback pattern as the
+      landing page's logo.
 
 ## Manual setup required — 2 steps
 
