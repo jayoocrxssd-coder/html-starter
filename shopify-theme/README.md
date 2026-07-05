@@ -4,6 +4,12 @@ This package is the **Horizon** theme export (`crxsswei.myshopify.com`) with the
 custom landing-page design from `design-handoff/landing-page/` implemented as a
 native Shopify Liquid section. It is ready to upload as-is.
 
+**Every piece of copy on every custom page/section — headings, field labels,
+placeholders, button text, hint/success messages, social URLs, nav links —
+is a Shopify setting, editable from Customize. Nothing requires a code
+change to update wording.** See "After uploading" below for exactly where
+each one lives.
+
 ## What changed vs. the raw theme export
 
 1. **`sections/landing-page.liquid`** (new) — the full-viewport splash screen:
@@ -169,20 +175,22 @@ a theme file. To match the reference layout:
 - **Preloader**: uses the same Logo image as the rest of the landing page —
   no separate upload needed. Toggle it on/off from Customize → `Landing
   page` → "Show entrance preloader".
-- **Contact page copy**: the heading, subheading, and social URLs are all
-  editable from Customize → the `Contact page` section — no code changes
-  needed there either.
+- **Contact page copy**: heading, subheading, every field label/placeholder
+  (Name, Email, Message), the submit button label, the success message, and
+  the social URLs are all editable from Customize → the `Contact page`
+  section — no code changes needed for any of it.
 - **Page transitions**: if you'd rather not have the swipe effect, turn it
   off entirely from Theme settings → the existing Horizon **"Page
   transition"** checkbox (`settings.page_transition_enabled`) — no code
   changes needed. That checkbox is what the swipe is layered on top of.
-- **Policies index heading**: editable from Customize → the `Policy` section
-  on the `page.policies` template, if you ever want something other than
-  "Policies".
+- **Policies page copy**: the index heading and the "← All policies" back
+  link text are both editable from Customize → the `Policy` section on the
+  `page.policies` template.
 - **Password page**: your actual store password is set (and password
   protection turned on/off) from **Online Store → Preferences**, same as
   always — that's unrelated to this theme. Wordmark, heading, hint text,
-  and social URLs are editable from Customize → open the `password` template
+  the password field placeholder, the submit button label, and social URLs
+  are all editable from Customize → open the `password` template
   → the `Password page` section.
 
 ## Validation performed

@@ -4,6 +4,7 @@
     assign is_index = false
   endif
   assign policies_url = routes.root_url | append: 'pages/policies'
+  assign back_link_label = section.settings.back_link_label | default: '← All policies'
 -%}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +27,7 @@
     {%- else -%}
       <h1 class="policy-page__heading">{{ policy.title }}</h1>
       <div class="policy-page__body rte">{{ policy.body }}</div>
-      <a href="{{ policies_url }}" class="policy-page__back-link">&larr; All policies</a>
+      <a href="{{ policies_url }}" class="policy-page__back-link">{{ back_link_label }}</a>
     {%- endif -%}
   </div>
 </div>
@@ -120,6 +121,13 @@
       "label": "Index heading",
       "default": "Policies",
       "info": "Shown only on the /policies index page listing all your policies."
+    },
+    {
+      "type": "text",
+      "id": "back_link_label",
+      "label": "Back link text",
+      "default": "← All policies",
+      "info": "Shown only on an individual policy page (e.g. Refund policy)."
     }
   ]
 }

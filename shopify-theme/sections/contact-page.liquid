@@ -2,6 +2,14 @@
   assign instagram_url = section.settings.instagram_url
   assign youtube_url = section.settings.youtube_url
   assign form_id = 'ContactPageForm-' | append: section.id
+  assign name_label = section.settings.name_label | default: 'NAME'
+  assign name_placeholder = section.settings.name_placeholder | default: 'Your name'
+  assign email_label = section.settings.email_label | default: 'EMAIL'
+  assign email_placeholder = section.settings.email_placeholder | default: 'your@email.com'
+  assign message_label = section.settings.message_label | default: 'MESSAGE'
+  assign message_placeholder = section.settings.message_placeholder | default: 'Write your message...'
+  assign submit_label = section.settings.submit_label | default: 'SEND MESSAGE'
+  assign success_message = section.settings.success_message | default: 'MESSAGE SENT — THANK YOU.'
 -%}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +36,7 @@
       -%}
 
       <div class="contact-page__field">
-        <label class="contact-page__label" for="ContactPage-name-{{ section.id }}">NAME</label>
+        <label class="contact-page__label" for="ContactPage-name-{{ section.id }}">{{ name_label }}</label>
         <input
           type="text"
           id="ContactPage-name-{{ section.id }}"
@@ -36,12 +44,12 @@
           autocomplete="name"
           name="contact[name]"
           value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-          placeholder="Your name"
+          placeholder="{{ name_placeholder }}"
         >
       </div>
 
       <div class="contact-page__field">
-        <label class="contact-page__label" for="ContactPage-email-{{ section.id }}">EMAIL</label>
+        <label class="contact-page__label" for="ContactPage-email-{{ section.id }}">{{ email_label }}</label>
         <input
           type="email"
           id="ContactPage-email-{{ section.id }}"
@@ -56,27 +64,27 @@
             aria-invalid="true"
             aria-describedby="ContactPage-email-error-{{ section.id }}"
           {% endif %}
-          placeholder="your@email.com"
+          placeholder="{{ email_placeholder }}"
           required
         >
       </div>
 
       <div class="contact-page__field">
-        <label class="contact-page__label" for="ContactPage-body-{{ section.id }}">MESSAGE</label>
+        <label class="contact-page__label" for="ContactPage-body-{{ section.id }}">{{ message_label }}</label>
         <textarea
           rows="4"
           id="ContactPage-body-{{ section.id }}"
           class="contact-page__input contact-page__input--textarea"
           name="contact[body]"
-          placeholder="Write your message..."
+          placeholder="{{ message_placeholder }}"
         >{{- form.body -}}</textarea>
       </div>
 
-      <button type="submit" class="contact-page__submit">SEND MESSAGE</button>
+      <button type="submit" class="contact-page__submit">{{ submit_label }}</button>
 
       <div class="contact-page__status" id="contact-page-status-{{ section.id }}" tabindex="-1">
         {%- if form.posted_successfully? and form_matches -%}
-          MESSAGE SENT — THANK YOU.
+          {{ success_message }}
         {%- elsif form.errors and form_matches -%}
           {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
         {%- endif -%}
@@ -389,6 +397,58 @@
       "id": "subheading",
       "label": "Subheading",
       "default": "Get in touch"
+    },
+    {
+      "type": "header",
+      "content": "Form text"
+    },
+    {
+      "type": "text",
+      "id": "name_label",
+      "label": "Name field label",
+      "default": "NAME"
+    },
+    {
+      "type": "text",
+      "id": "name_placeholder",
+      "label": "Name field placeholder",
+      "default": "Your name"
+    },
+    {
+      "type": "text",
+      "id": "email_label",
+      "label": "Email field label",
+      "default": "EMAIL"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email field placeholder",
+      "default": "your@email.com"
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "Message field label",
+      "default": "MESSAGE"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Message field placeholder",
+      "default": "Write your message..."
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "SEND MESSAGE"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "MESSAGE SENT — THANK YOU."
     },
     {
       "type": "header",
