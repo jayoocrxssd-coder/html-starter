@@ -133,6 +133,10 @@ each one lives.
       entirely; leave it blank and the text wordmark (or your store name,
       if that's blank too) is used instead — same fallback pattern as the
       landing page's logo.
+    - **Logo height**: a slider (20–160px, default 40px) that appears once
+      a logo image is set, so you can resize your own logo from Customize
+      without ever needing a code change. Width scales automatically to
+      match the image's real aspect ratio — no stretching.
 
 ## Manual setup required — 2 steps
 
