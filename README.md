@@ -1,26 +1,28 @@
 # War Room — Beta
 
 Static frontend for **War Room**, a personal business command center
-(goals, tasks, invoices, team rooms, and the AXIS AI assistant).
-Deployed on Vercel.
+(goals, tasks, invoices, and the AXIS AI assistant).
+Backend: **Supabase** (auth + cloud sync). Hosting: **Vercel**.
 
 ## Layout
 
 | Path | What it is |
 |---|---|
-| `index.html` | Landing page (beta) — links into the app |
-| `app/index.html` | The War Room app (self-contained single-file build, v6) |
+| `index.html` | The War Room app, v6.1 — self-contained single-file build, served at `/` |
+| `vercel.json` | Redirects the old `/app` path to `/` |
 | `middleware.js` | Vercel Edge Middleware — security headers |
 | `BACKEND.md` | Backend wiring checklist for the phased beta launch |
 | `stratus_mobile (2) (1).html` | Unrelated Stratus mobile build (kept as-is) |
 
 ## Deploy
 
-Push to the connected branch — Vercel serves the repo statically:
-landing page at `/`, app at `/app/`.
+Push to the connected branch — Vercel serves the repo statically with the
+app at `/`.
 
 ## Before inviting users
 
-Work through `BACKEND.md`. The short version: Firebase auth domains +
-Firestore security rules, Google OAuth origins/consent, and an `/api/axis`
-proxy for the Anthropic key. Billing (Stripe) is Phase 3.
+Work through `BACKEND.md`. The short version: create the `war_room_data`
+table with RLS in Supabase (SQL included there), configure Supabase Auth
+(site URL, email, Google provider), and add the production domain to the
+Google OAuth client's JavaScript origins. AXIS proxy and team rooms are
+Phase 2; Stripe is Phase 3.
