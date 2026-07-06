@@ -15,6 +15,9 @@ top to bottom and the beta is live.
 - **AXIS AI** in the app now calls `/api/axis` (proxy). Users can paste their
   own Anthropic key day one; set `ANTHROPIC_API_KEY` in Vercel and it works
   for everyone, with per-IP rate limiting and a max-token cap on your key.
+- **Donations** → `/api/create-checkout` → Stripe Checkout (one-time and
+  monthly, $1–$20,000, success/cancel return to the donate page). Just needs
+  the `STRIPE_SECRET_KEY` env var.
 - Old `/app` redirect config removed; app genuinely lives at `/app/`.
 
 ---
@@ -112,6 +115,10 @@ Email sign-in works even if you skip this step.
 4. Project → Settings → Environment Variables:
    - `ANTHROPIC_API_KEY` = your key from console.anthropic.com
      (optional — without it AXIS is bring-your-own-key only).
+   - `STRIPE_SECRET_KEY` = from dashboard.stripe.com → Developers → API keys
+     (optional — without it the donate page shows "not configured").
+     Start with the `sk_test_...` key, test with card `4242 4242 4242 4242`,
+     then swap in `sk_live_...` once your Stripe account is activated.
 
 ## STEP 5 — Legal pages (blocking for public traffic)
 
