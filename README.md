@@ -1,14 +1,26 @@
----
-name: HTML Starter
-slug: html-starter-with-analytics
-description: HTML5 template with analytics and advanced routing configuration.
-deployUrl: https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/html&project-name=html
-relatedTemplates:
-  - nextjs-boilerplate
----
+# War Room — Beta
 
-# HTML Starter
+Static frontend for **War Room**, a personal business command center
+(goals, tasks, invoices, team rooms, and the AXIS AI assistant).
+Deployed on Vercel.
 
-This is a starter HTML5 templates which is configured with Vercel Analytics (through a `script` tag), advanced routing with [Vercel Edge Middleware](https://vercel.com/docs/concepts/functions/edge-middleware), as well as some basic styles
+## Layout
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/html&project-name=html)
+| Path | What it is |
+|---|---|
+| `index.html` | Landing page (beta) — links into the app |
+| `app/index.html` | The War Room app (self-contained single-file build, v6) |
+| `middleware.js` | Vercel Edge Middleware — security headers |
+| `BACKEND.md` | Backend wiring checklist for the phased beta launch |
+| `stratus_mobile (2) (1).html` | Unrelated Stratus mobile build (kept as-is) |
+
+## Deploy
+
+Push to the connected branch — Vercel serves the repo statically:
+landing page at `/`, app at `/app/`.
+
+## Before inviting users
+
+Work through `BACKEND.md`. The short version: Firebase auth domains +
+Firestore security rules, Google OAuth origins/consent, and an `/api/axis`
+proxy for the Anthropic key. Billing (Stripe) is Phase 3.
