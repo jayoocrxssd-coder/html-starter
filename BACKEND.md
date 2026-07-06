@@ -1,30 +1,36 @@
-# War Room — Beta Launch Backend Checklist (Supabase + Vercel)
+# War Room — Beta Launch Runbook (Supabase + Vercel)
 
-Current build: **Warroom v6.1** served at `/` (the old `/app` path redirects
-home via `vercel.json`). The app is Supabase-native: auth (email/password +
-Google) and cloud sync both go through Supabase project
-`xtvvbylcejvkgvyrcist`. Everything below is what has to exist server-side
-before real users touch it.
+**Layout:** marketing site at `/` (8 pages), the Warroom v6.1 app at `/app/`,
+serverless functions in `/api/`. Everything below is ordered — do the steps
+top to bottom and the beta is live.
+
+## What is already wired in code (no action needed)
+
+- Landing **Sign in** → Supabase password auth → `access.html` animation → `/app/`
+  (the session persists in localStorage, so the app picks it up automatically).
+- Landing + contact **Request beta access** forms → insert into `beta_requests`.
+- **Contact** form → `contact_messages`. **Partners** form → `partner_inquiries`.
+- **Forgot password** page → `/api/forgot-password` → Supabase recovery email
+  → `/reset-password.html` (fully wired, including token handling).
+- **AXIS AI** in the app now calls `/api/axis` (proxy). Users can paste their
+  own Anthropic key day one; set `ANTHROPIC_API_KEY` in Vercel and it works
+  for everyone, with per-IP rate limiting and a max-token cap on your key.
+- Old `/app` redirect config removed; app genuinely lives at `/app/`.
 
 ---
 
-## Phase 1 — Go live (required before sharing any link)
+## STEP 1 — Supabase SQL (5 min, blocking)
 
-### 1. Supabase database — create the sync table + RLS
-
-The app upserts one row per user into `war_room_data`
-(`user_id`, `data` = the serialized app state, `updated_at`).
-Run this in the Supabase SQL editor:
+SQL Editor → run all of this:
 
 ```sql
+-- App cloud sync: one row per user
 create table if not exists public.war_room_data (
   user_id    uuid primary key references auth.users (id) on delete cascade,
   data       text,
   updated_at timestamptz not null default now()
 );
-
 alter table public.war_room_data enable row level security;
-
 create policy "select own data" on public.war_room_data
   for select using (auth.uid() = user_id);
 create policy "insert own data" on public.war_room_data
@@ -33,100 +39,129 @@ create policy "update own data" on public.war_room_data
   for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "delete own data" on public.war_room_data
   for delete using (auth.uid() = user_id);
+
+-- Beta access requests (landing + contact page forms)
+create table if not exists public.beta_requests (
+  id bigint generated always as identity primary key,
+  first_name text, last_name text,
+  email text not null,
+  company text, use_case text,
+  marketing_opt_in boolean not null default false,
+  source text,
+  created_at timestamptz not null default now()
+);
+alter table public.beta_requests enable row level security;
+create policy "anyone can request access" on public.beta_requests
+  for insert to anon, authenticated with check (true);
+
+-- Contact form
+create table if not exists public.contact_messages (
+  id bigint generated always as identity primary key,
+  first_name text, last_name text,
+  email text not null,
+  subject text, message text,
+  created_at timestamptz not null default now()
+);
+alter table public.contact_messages enable row level security;
+create policy "anyone can send a message" on public.contact_messages
+  for insert to anon, authenticated with check (true);
+
+-- Partner / creator applications
+create table if not exists public.partner_inquiries (
+  id bigint generated always as identity primary key,
+  first_name text, last_name text,
+  email text not null,
+  platform text, handle text, audience_size text, details text,
+  created_at timestamptz not null default now()
+);
+alter table public.partner_inquiries enable row level security;
+create policy "anyone can apply" on public.partner_inquiries
+  for insert to anon, authenticated with check (true);
 ```
 
-RLS is what makes the embedded anon key safe to ship — do not skip it.
+No select policies on the three form tables = the public can submit but
+never read them. You read them in the Supabase dashboard (Table Editor).
 
-### 2. Supabase Auth configuration
+## STEP 2 — Supabase Auth config (5 min, blocking)
 
-- **Site URL / Redirect URLs** (Auth → URL Configuration): set to the
-  production domain so password-reset emails link to the right place.
-- **Email provider**: enabled by default. Decide whether "Confirm email"
-  is on (safer) or off (less signup friction for beta).
-- **Google provider**: the app signs in with `signInWithIdToken` using
-  Google Identity Services client
-  `190616282170-hkcq273fdvm3740p6h222u6pohlbjdih.apps.googleusercontent.com`.
-  - In Supabase: Auth → Providers → Google → enable, and add that client ID
-    to **Authorized Client IDs**.
-  - In Google Cloud Console → Credentials → that OAuth client: add the
-    production domain (and `*.vercel.app` preview domain) to
-    **Authorized JavaScript origins**.
+Authentication → URL Configuration:
+- **Site URL** = your production domain (e.g. `https://warroom.aionvsn.com`)
+- **Redirect URLs**: add `https://<your-domain>/reset-password.html`
+  (password-reset emails will not land on the page without this).
 
-### 3. Vercel
+Authentication → Providers:
+- **Email**: on by default. Decide if "Confirm email" is on (safer) or off
+  (fewer signup steps during beta).
 
-- Import this repo, production branch = your default branch.
-- Attach the custom domain. The app is served at `/`; `vercel.json`
-  already redirects `/app` → `/`; `middleware.js` already sets security
-  headers.
+## STEP 3 — Google sign-in for the app (10 min, only blocks the Google button)
 
-### 4. Legal pages
+- Supabase → Auth → Providers → **Google**: enable; add client ID
+  `190616282170-hkcq273fdvm3740p6h222u6pohlbjdih.apps.googleusercontent.com`
+  to Authorized Client IDs.
+- Google Cloud Console → Credentials → that client → **Authorized JavaScript
+  origins**: add your production domain and your `*.vercel.app` domain.
 
-The auth gate links to **Terms of Service** and **Privacy Policy** — those
-pages need to exist (or the links need a target) before public signups.
+Email sign-in works even if you skip this step.
 
----
+## STEP 4 — Vercel (10 min, blocking)
 
-## Phase 2 — Beta hardening
+1. Merge the working branch into your default branch.
+2. Import the repo at vercel.com (if not already) — it deploys statically
+   with `/api/*` as serverless functions automatically.
+3. Attach your custom domain.
+4. Project → Settings → Environment Variables:
+   - `ANTHROPIC_API_KEY` = your key from console.anthropic.com
+     (optional — without it AXIS is bring-your-own-key only).
 
-### 5. AXIS AI proxy (Anthropic)
+## STEP 5 — Legal pages (blocking for public traffic)
 
-The app currently calls `api.anthropic.com` **directly from the browser**
-with a user-pasted `sk-ant` key (session-only). Works day one for users who
-bring their own key; for everyone else:
+The app's signup gate links to Terms of Service and Privacy Policy.
+Generate both, host them anywhere (two more static pages in this repo is
+fine), and make sure the links resolve.
 
-- Vercel function `api/axis.js` holding `ANTHROPIC_API_KEY` as an env var,
-  verifying the caller's Supabase JWT (`supabase.auth.getUser(token)`),
-  enforcing per-user daily quotas, forwarding to Anthropic.
-- Point the app's AI fetch at `/api/axis` (one constant +
-  `getAIFetchHeaders()` change), keep paste-your-own-key as fallback.
-- Model is pinned to `claude-sonnet-4-20250514`; pick the beta model and
-  `max_tokens` budget deliberately (cost control).
+## STEP 6 — Test the loop end to end (15 min)
 
-### 6. Team rooms / invite links — currently disabled
+1. Open the landing page → submit **Request beta access** → confirm the row
+   appears in `beta_requests` in the Supabase dashboard.
+2. Supabase → Authentication → **Add user / Invite** yourself.
+3. Landing → **Sign in** → confirm you pass through `access.html` into the
+   app and land signed-in.
+4. In the app: add data, sign out, sign back in on another device/browser —
+   confirm it synced.
+5. **Forgot password** → confirm the email arrives and the reset page works.
+6. If you set `ANTHROPIC_API_KEY`: open AXIS in the app and send a message.
 
-`handlePendingJoin` is stubbed (`var db = null; // TODO: migrate warrooms
-to Supabase Realtime`), so `?join=<roomId>` links silently do nothing.
-Solo use is unaffected. To enable multiplayer:
+## STEP 7 — Run the beta in phases
 
-- Tables: `warrooms` (id, owner, name) + `warroom_members`
-  (room_id, user_id, role, joined_at) with membership-scoped RLS.
-- Live sync via Supabase Realtime (`postgres_changes` on the room's data).
+The invite-only mechanics are already the phasing tool:
 
-Either ship Phase 1 as solo-only (recommended) or build this first.
-
-### 7. Google Drive backup (optional feature in Settings)
-
-Uses the same Google client + `drive.file` scope. If keeping it:
-OAuth consent screen must be published (testing mode = 100 users max +
-"unverified app" warning) and the Drive API enabled. Alternative: replace
-with Supabase Storage snapshots and delete the Google dependency.
-
-### 8. Ops
-
-- Scheduled Supabase backups (dashboard → Database → Backups).
-- Error monitoring (e.g. Sentry snippet) once real users are in.
+- **Phase 1 (friends & family):** share the URL; approve requests by
+  creating users manually in Supabase Auth (Invite user → they get an email).
+- **Phase 2 (waves):** work through `beta_requests` in batches; invite each
+  cohort from the dashboard. The landing FAQ already tells users
+  "reviewed within 48h, credentials sent by email" — match that promise.
+- **Phase 3 (open):** turn on self-serve signup by pointing the landing CTA
+  at the app's own create-account gate (one-line change — ask Claude).
 
 ---
 
-## Phase 3 — Paid launch
+## Hardening backlog (post-launch, in rough priority order)
 
-The in-app plan gate (Personal / Small Business / Enterprise, founder
-pricing) is **UI only** — no payment rails exist.
+1. **Team rooms**: invite links in the app are stubbed
+   (`TODO: migrate warrooms to Supabase Realtime`) — needs `warrooms` +
+   `warroom_members` tables with membership RLS and Realtime sync.
+2. **Vendor React locally**: the landing pages load React from unpkg.com at
+   runtime; serving those two files from this repo removes a third-party
+   point of failure.
+3. **AXIS metering**: per-user quotas in Postgres (current limiter is
+   per-IP, per warm instance — good enough for a small beta only).
+4. **Google Drive backup** (app Settings): needs the OAuth consent screen
+   published, or replace it with Supabase Storage snapshots.
+5. **Email notifications**: a Supabase webhook/cron that emails you when a
+   new `beta_requests` row lands, so approvals stay inside 48h.
+6. **Error monitoring** (Sentry) + scheduled Supabase backups.
 
-- Stripe Products/Prices for the tiers (+ annual), Checkout session via a
-  Vercel function, Customer Portal, webhook writing `plan` to a `profiles`
-  table in Supabase.
-- Entitlement enforcement in RLS + the AXIS proxy quotas.
+## Phase: paid launch (later)
 
----
-
-## Quick reference — what the frontend already talks to
-
-| Service | Used for | Status |
-|---|---|---|
-| Supabase Auth (`xtvvbylcejvkgvyrcist`) | Email + Google sign-in | Needs providers + URL config |
-| Supabase Postgres | Cloud sync (`war_room_data`) | Needs table + RLS (SQL above) |
-| Google Identity Services | Google login + Drive backup | Needs JS origins (+ consent screen if Drive kept) |
-| Anthropic API | AXIS assistant | Direct-from-browser today; proxy in Phase 2 |
-| Stripe | Billing (Phase 3) | Not wired at all |
-| Vercel | Hosting, redirects, headers | Repo-ready |
+Plan gates in the app are UI-only. Stripe Checkout + webhook →
+`profiles.plan` column → entitlement checks in RLS and `/api/axis` quotas.
