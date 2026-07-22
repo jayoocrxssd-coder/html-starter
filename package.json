@@ -1,6 +1,15 @@
 {
+  "name": "athlyst-affiliate-dashboard",
+  "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "@vercel/edge": "^0.1.2"
+  "description": "Embedded Shopify admin app for ATHLYST — affiliate roster, live sales matching, view logging, monthly leaderboard, and payout calculation (Phase 1: owner dashboard).",
+  "scripts": {
+    "setup": "npm --prefix server install && npm --prefix web install && npm run db:setup && npm run seed",
+    "db:setup": "cd server && npx prisma generate && npx prisma db push",
+    "seed": "npm --prefix server run seed",
+    "dev:server": "npm --prefix server run dev",
+    "dev:web": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "start": "npm --prefix server start"
   }
 }

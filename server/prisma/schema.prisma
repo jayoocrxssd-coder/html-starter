@@ -1,0 +1,126 @@
+// ATHLYST Affiliate Dashboard — data model for everything Shopify does NOT hold.
+// SQLite for a single-store app (zero DB cost). Swap `provider` to "postgresql"
+// and set DATABASE_URL to migrate to managed Postgres later — no code changes.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Affiliate roster (feature 1)
+// ---------------------------------------------------------------------------
+model Affiliate {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String
+  payoutEmail  String   // PayPal email
+  country      String?
+  platform     String?  // primary platform, e.g. Instagram / TikTok / YouTube
+  handle       String?  // handle on that platform
+  tier         String   // "Athlete" | "Influencer" | "Ambassador"
+  discountCode String   @unique // the code we match Shopify orders against
+  commissionPct Float   @default(0) // their commission %, e.g. 15
+  monthlyBase  Float    @default(0) // ambassadors only; 0 otherwise
+  status       String   @default("active") // "active" | "inactive"
+  archived     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  views   ViewLog[]
+  sales   Sale[]
+  payouts Payout[]
+}
+
+// ---------------------------------------------------------------------------
+// View logging (feature 3) — one row per logged post
+// ---------------------------------------------------------------------------
+model ViewLog {
+  id          Int      @id @default(autoincrement())
+  affiliate   Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  affiliateId Int
+  postLink    String
+  platform    String
+  viewCount   Int
+  postedAt    DateTime // the date the post/views are attributed to
+  month       String   // "YYYY-MM" bucket, derived from postedAt for fast monthly rollups
+  verified    Boolean  @default(false) // owner-verified: features product AND code. Unverified => no bonus.
+  bonusTierId Int?     // auto-tagged tier this post hit (null if below lowest threshold / unverified)
+  bonusTier   BonusTier? @relation(fields: [bonusTierId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([month])
+  @@index([affiliateId, month])
+}
+
+// ---------------------------------------------------------------------------
+// Matched Shopify sales (feature 2) — one row per matched order
+// ---------------------------------------------------------------------------
+model Sale {
+  id             Int      @id @default(autoincrement())
+  affiliate      Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  affiliateId    Int
+  shopifyOrderId String   @unique // GraphQL gid, so re-syncs upsert rather than duplicate
+  orderName      String?  // human order number e.g. #1042
+  discountCode   String   // the code that matched this order to the affiliate
+  amount         Float    // net eligible sales amount used for commission math
+  orderedAt      DateTime
+  month          String   // "YYYY-MM" bucket
+  createdAt      DateTime @default(now())
+
+  @@index([month])
+  @@index([affiliateId, month])
+}
+
+// ---------------------------------------------------------------------------
+// Configurable view-bonus tiers (settings) — editable, never hardcoded
+// ---------------------------------------------------------------------------
+model BonusTier {
+  id                   Int    @id @default(autoincrement())
+  label                String // e.g. "10K", "25K", "50K+"
+  threshold            Int    // minimum views to hit this tier
+  rewardDescription    String // human description of the reward
+  cashAmount           Float  @default(0) // cash portion of the reward
+  productWholesaleCost Float  @default(0) // budget math (real cost to you)
+  productRetailValue   Float  @default(0) // perceived value to the affiliate
+  commissionBumpPct    Float  @default(0) // e.g. 50K+ bumps commission by this many points
+  sortOrder            Int    @default(0)
+
+  views ViewLog[]
+}
+
+// ---------------------------------------------------------------------------
+// Payout status (feature 5) — computed live; this row stores what's manual
+// (paid flag, payout-type override) plus a snapshot taken when marked paid.
+// ---------------------------------------------------------------------------
+model Payout {
+  id           Int      @id @default(autoincrement())
+  affiliate    Affiliate @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  affiliateId  Int
+  month        String   // "YYYY-MM"
+  paid         Boolean  @default(false)
+  paidAt       DateTime?
+  payoutType   String   @default("cash") // "cash" | "product" | "split"
+  notes        String?
+  snapshotJson String?  // JSON breakdown captured at the moment it was marked paid
+  updatedAt    DateTime @updatedAt
+
+  @@unique([affiliateId, month])
+  @@index([month])
+}
+
+// ---------------------------------------------------------------------------
+// Singleton settings (id = 1): commission defaults, budget ceiling,
+// leaderboard prize structure. JSON blobs keep it flexible & editable.
+// ---------------------------------------------------------------------------
+model Settings {
+  id                    Int    @id @default(1)
+  commissionDefaults    String @default("{\"Athlete\":15,\"Influencer\":11,\"Ambassador\":10}") // per-tier default %
+  monthlyBudgetCeiling  Float  @default(0) // 0 = no ceiling set
+  leaderboardPrizes     String @default("[]") // JSON: [{rank,board,cashAmount,productDescription,productWholesaleCost,productRetailValue}]
+  updatedAt             DateTime @updatedAt
+}
